@@ -1,3 +1,5 @@
-const App = () => <div>Hello, world!</div>;
+import { Wrapper } from "./App.styled";
+
+const App = () => <Wrapper>Hello, world!</Wrapper>;
 
 export default App;
