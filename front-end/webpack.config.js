@@ -40,12 +40,10 @@ module.exports = () => {
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
     resolve: {
-      extensions: [".tsx", ".ts", ".js"],
+      extensions: [".tsx", ".ts", ".js", "jsx"],
     },
     performance: {
       hints: isDevelopment ? "warning" : "error",
     },
-    // Check this out: https://github.com/webpack/webpack-dev-server/issues/2758
-    target: isDevelopment ? "web" : "browserslist",
   };
 };
