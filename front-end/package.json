@@ -1,0 +1,42 @@
+{
+  "name": "gpu-is-mine-client",
+  "version": "0.0.1",
+  "main": "src/index.tsx",
+  "repository": "https://github.com/woowacourse-teams/2021-gpu-is-mine.git",
+  "contributors": [
+    {
+      "name": "bigsaigon333",
+      "email": "likepeppermint@gmail.com",
+      "url": "https://velog.io/@bigsaigon333"
+    },
+    {
+      "name": "2SOOY",
+      "email": "1401660@naver.com"
+    }
+  ],
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/react": "^17.0.13",
+    "@types/react-dom": "^17.0.8",
+    "babel-loader": "^8.2.2",
+    "html-webpack-plugin": "^5.3.2",
+    "typescript": "^4.3.5",
+    "webpack": "^5.42.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production webpack serve",
+    "dev": "NODE_ENV=development webpack serve",
+    "build": "NODE_ENV=production webpack"
+  }
+}
