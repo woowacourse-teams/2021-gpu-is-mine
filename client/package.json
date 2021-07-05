@@ -1,0 +1,19 @@
+{
+  "name": "gpu-is-mine-client",
+  "version": "0.0.1",
+  "main": "src/index.tsx",
+  "repository": "https://github.com/woowacourse-teams/2021-gpu-is-mine.git",
+  "contributors": [
+    {
+      "name": "bigsaigon333",
+      "email": "likepeppermint@gmail.com",
+      "url": "https://velog.io/@bigsaigon333"
+    },
+    {
+      "name": "2SOOY",
+      "email": "1401660@naver.com"
+    }
+  ],
+  "license": "MIT",
+  "private": true
+}
