@@ -12,9 +12,8 @@ public class Jobs {
     List<Job> jobs = new ArrayList<>();
 
     public List<Job> getWaitingJobs() {
-        List<Job> waitingJobs = jobs.stream()
-                .filter(job -> job.isWaiting())
+        return jobs.stream()
+                .filter(Job::isWaiting)
                 .collect(Collectors.toList());
-        return waitingJobs;
     }
 }
