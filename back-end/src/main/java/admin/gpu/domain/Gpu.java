@@ -28,7 +28,25 @@ public class Gpu extends BaseEntity {
     protected Gpu() {
     }
 
+    public Gpu(String gpuName, String modelName, Boolean running, Integer teraflop, Integer ramCapacity, Integer diskCapacity, Lab lab) {
+        this.gpuName = gpuName;
+        this.modelName = modelName;
+        this.running = running;
+        this.teraflop = teraflop;
+        this.ramCapacity = ramCapacity;
+        this.diskCapacity = diskCapacity;
+        this.lab = lab;
+    }
+
     public List<Job> getWaitingJobs() {
         return jobs.getWaitingJobs();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Lab getLab() {
+        return lab;
     }
 }

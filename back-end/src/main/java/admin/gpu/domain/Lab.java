@@ -15,4 +15,11 @@ public class Lab extends BaseEntity {
     protected Lab() {
     }
 
+    public Lab(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }
