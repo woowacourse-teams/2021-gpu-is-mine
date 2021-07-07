@@ -49,4 +49,21 @@ public class GpuRepositoryTest {
         Gpu persistGpu = gpus.findById(lab.getId()).get();
         assertThat(persistGpu.getLab()).isNotNull();
     }
+
+    @DisplayName("Gpu를 삭제한다.")
+    @Test
+    void delete() {
+        Lab lab = new Lab("better랩");
+        labs.save(lab);
+        Gpu gpu = new Gpu("새로운GPU1", "nvidia", false, 500, 1024, 1000, lab);
+        gpus.save(gpu);
+
+        Optional<Gpu> persistGpu = gpus.findById(gpu.getId());
+        assertThat(persistGpu.isPresent()).isTrue();
+
+        gpus.delete(gpu);
+
+        Optional<Gpu> actual = gpus.findById(gpu.getId());
+        assertThat(actual.isPresent()).isFalse();
+    }
 }
