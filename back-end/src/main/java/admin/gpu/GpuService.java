@@ -7,7 +7,11 @@ public class GpuService {
     public GpuService() {
     }
 
-    public int register(GpuRequset gpuRequset) {
+    public int register(GpuRequest gpuRequest) {
         return 0;
+    }
+
+    public GpuResponse detail(Long labId, Long gpuId) {
+        return new GpuResponse();
     }
 }
