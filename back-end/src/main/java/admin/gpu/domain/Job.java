@@ -7,10 +7,18 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
-
+    @Column(nullable = false)
+    private Boolean waiting = true;
     @ManyToOne
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "gpu_id", nullable = false)
+    private Gpu gpu;
+
+    protected Job() {
+    }
 }
