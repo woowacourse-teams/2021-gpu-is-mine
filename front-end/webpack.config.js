@@ -32,6 +32,10 @@ module.exports = () => {
           },
           exclude: /node_modules/,
         },
+        {
+          test: /\.(woff|woff2|eot|ttf|otf)$/i,
+          type: "asset/resource",
+        },
       ],
     },
     plugins: [
