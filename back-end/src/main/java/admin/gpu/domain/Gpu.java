@@ -1,6 +1,7 @@
 package admin.gpu.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Gpu extends BaseEntity {
@@ -21,6 +22,13 @@ public class Gpu extends BaseEntity {
     @JoinColumn(name = "lab_id")
     private Lab lab;
 
+    @Embedded
+    private Jobs jobs;
+
     protected Gpu() {
+    }
+
+    public List<Job> getWaitingJobs() {
+        return null;
     }
 }
