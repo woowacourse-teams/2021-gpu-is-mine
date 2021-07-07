@@ -1,5 +1,7 @@
 package admin.gpu.domain;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -49,4 +51,5 @@ public class Gpu extends BaseEntity {
     public Lab getLab() {
         return lab;
     }
+
 }

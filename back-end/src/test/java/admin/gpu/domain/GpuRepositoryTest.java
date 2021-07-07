@@ -44,10 +44,13 @@ public class GpuRepositoryTest {
         assertThat(lab.getId()).isNotNull();
         assertThat(gpu.getId()).isNotNull();
 
+        assertThat(gpu.getCreatedAt()).isNotNull();
+
         em.clear();
 
-        Gpu persistGpu = gpus.findById(lab.getId()).get();
+        Gpu persistGpu = gpus.findById(gpu.getId()).get();
         assertThat(persistGpu.getLab()).isNotNull();
+        assertThat(persistGpu.getCreatedAt()).isNotNull();
     }
 
     @DisplayName("Gpu를 삭제한다.")
