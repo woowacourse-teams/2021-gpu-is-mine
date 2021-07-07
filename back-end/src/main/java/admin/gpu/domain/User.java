@@ -11,6 +11,9 @@ public class User extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private UserType userType;
+    @ManyToOne
+    @JoinColumn(name = "lab_id")
+    private Lab lab;
 
     protected User() {
     }

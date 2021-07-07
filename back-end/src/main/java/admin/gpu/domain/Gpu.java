@@ -17,6 +17,9 @@ public class Gpu extends BaseEntity {
     private Integer teraflop;
     private Integer ramCapacity;
     private Integer diskCapacity;
+    @ManyToOne
+    @JoinColumn(name = "lab_id")
+    private Lab lab;
 
     protected Gpu() {
     }
