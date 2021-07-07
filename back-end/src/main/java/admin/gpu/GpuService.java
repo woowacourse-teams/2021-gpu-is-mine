@@ -14,4 +14,7 @@ public class GpuService {
     public GpuResponse detail(Long labId, Long gpuId) {
         return new GpuResponse();
     }
+
+    public void delete(Long labId, Long gpuId) {
+    }
 }
