@@ -1,4 +1,4 @@
-package admin.gpu;
+package admin.gpu.dto;
 
 import java.util.List;
 

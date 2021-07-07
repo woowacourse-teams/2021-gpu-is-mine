@@ -1,4 +1,4 @@
-package admin.gpu;
+package admin.gpu.dto;
 
 public class GpuResponse {
     private final String serverName;

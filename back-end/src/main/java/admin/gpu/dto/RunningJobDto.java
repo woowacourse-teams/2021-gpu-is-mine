@@ -1,4 +1,4 @@
-package admin.gpu;
+package admin.gpu.dto;
 
 public class RunningJobDto {
     private final String name;

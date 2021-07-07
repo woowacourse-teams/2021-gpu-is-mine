@@ -1,5 +1,8 @@
 package admin.gpu;
 
+import admin.gpu.dto.GpuRequest;
+import admin.gpu.dto.GpuResponse;
+import admin.gpu.dto.GpuResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +36,7 @@ public class GpuController {
     }
 
     @PutMapping("/labs/{labId}/gpus/{gpuId}")
-    public ResponseEntity<Void> delete(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId, @PathVariable Long gpuId) {
+    public ResponseEntity<Void> modify(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId, @PathVariable Long gpuId) {
         gpuService.modify(gpuRequest, labId, gpuId);
         return ResponseEntity.noContent()
                 .build();

@@ -1,5 +1,6 @@
 package admin.gpu;
 
+import admin.gpu.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -7,7 +8,10 @@ import java.util.Collections;
 
 @Service
 public class GpuService {
-    public GpuService() {
+    private final GpuRepository gpuRepository;
+
+    public GpuService(GpuRepository gpuRepository) {
+        this.gpuRepository = gpuRepository;
     }
 
     public int register(GpuRequest gpuRequest) {
@@ -17,7 +21,7 @@ public class GpuService {
     public GpuResponse detail(Long labId, Long gpuId) {
         RunningJobDto runningJob = new RunningJobDto("집1", "5시간", 500L, 100L);
         WaitingJobDto waitingJob = new WaitingJobDto("기다리는 잡", "10시간");
-        WaitingJobDtos waitingJobDtos = new WaitingJobDtos(Arrays.asList(waitingJob));
+        WaitingJobDtos waitingJobDtos = new WaitingJobDtos(Collections.singletonList(waitingJob));
         JobDtos jobDtos = new JobDtos(runningJob, waitingJobDtos);
         return new GpuResponse("서버이름", "dead", 50.0, 50.0, 50.0,50.1, jobDtos);
     }
