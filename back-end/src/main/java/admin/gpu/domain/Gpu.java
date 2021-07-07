@@ -29,6 +29,6 @@ public class Gpu extends BaseEntity {
     }
 
     public List<Job> getWaitingJobs() {
-        return null;
+        return jobs.getWaitingJobs();
     }
 }

@@ -20,6 +20,7 @@ public class GpuRepositoryTest {
     void getJobs() {
         Gpu actual = gpus.findById(1L).get();
         List<Job> waitingJobs = actual.getWaitingJobs();
-        assertThat(waitingJobs).hasSize(3);
+
+        assertThat(waitingJobs).hasSize(2);
     }
 }

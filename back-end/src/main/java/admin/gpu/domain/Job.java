@@ -36,4 +36,8 @@ public class Job extends BaseEntity {
     public String getName() {
         return name;
     }
+
+    public boolean isWaiting() {
+        return waiting;
+    }
 }
