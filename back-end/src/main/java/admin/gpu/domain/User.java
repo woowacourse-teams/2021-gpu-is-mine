@@ -3,7 +3,7 @@ package admin.gpu.domain;
 import javax.persistence.*;
 
 @Entity
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -12,4 +12,6 @@ public class User {
     @Column(nullable = false)
     private UserType userType;
 
+    protected User() {
+    }
 }

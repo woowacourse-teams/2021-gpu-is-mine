@@ -3,7 +3,7 @@ package admin.gpu.domain;
 import javax.persistence.*;
 
 @Entity
-public class Job {
+public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

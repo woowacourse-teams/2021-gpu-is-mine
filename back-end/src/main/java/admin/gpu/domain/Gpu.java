@@ -3,7 +3,7 @@ package admin.gpu.domain;
 import javax.persistence.*;
 
 @Entity
-public class Gpu {
+public class Gpu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,4 +18,6 @@ public class Gpu {
     private Integer ramCapacity;
     private Integer diskCapacity;
 
+    protected Gpu() {
+    }
 }
