@@ -32,4 +32,8 @@ public class Job extends BaseEntity {
                 ", gpu=" + gpu +
                 '}';
     }
+
+    public String getName() {
+        return name;
+    }
 }

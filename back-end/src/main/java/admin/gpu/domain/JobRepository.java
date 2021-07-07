@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
     Optional<Job> findByGpuIdAndWaitingFalse(Long gpuId);
-    List<Job> findByGpuIdAndWaitingTrue(Long gpuId);
+    List<Job> findByGpuIdAndWaitingTrueOrderByIdAsc(Long gpuId);
     Integer countByGpuIdAndWaitingTrue(Long gpuId);
 }
