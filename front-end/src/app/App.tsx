@@ -1,4 +1,4 @@
-import GlobalStyle from "./styles/GlobalStyle";
+import GlobalStyle from "../styles/GlobalStyle";
 import { Wrapper } from "./App.styled";
 
 const App = () => (
