@@ -17,4 +17,7 @@ public class GpuService {
 
     public void delete(Long labId, Long gpuId) {
     }
+
+    public void modify(GpuRequest gpuRequest, Long labId, Long gpuId) {
+    }
 }

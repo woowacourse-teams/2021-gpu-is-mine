@@ -27,6 +27,12 @@ public class GpuController {
         return gpuService.detail(labId, gpuId);
     }
 
+    @PutMapping("/labs/{labId}/gpus/{gpuId}")
+    public ResponseEntity<Void> delete(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId, @PathVariable Long gpuId) {
+        gpuService.modify(gpuRequest, labId, gpuId);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/labs/{labId}/gpus/{gpuId}")
     public ResponseEntity<Void> delete(@PathVariable Long labId, @PathVariable Long gpuId) {
         gpuService.delete(labId, gpuId);
