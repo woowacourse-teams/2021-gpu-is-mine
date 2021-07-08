@@ -1,12 +1,13 @@
 package admin.gpu.dto;
 
-public class GpuRequest {
+public class GpuServerRequest {
+
     private String serverName;
     private Long memorySize;
     private Long diskSize;
     private GpuBoardRequest gpuBoardRequest;
 
-    public GpuRequest() {
+    public GpuServerRequest() {
     }
 
     public String getServerName() {

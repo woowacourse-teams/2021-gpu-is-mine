@@ -6,7 +6,7 @@ import admin.gpu.domain.GpuServer;
 import admin.gpu.domain.GpuServerRepository;
 import admin.gpu.domain.Lab;
 import admin.gpu.domain.LabRepository;
-import admin.gpu.dto.GpuRequest;
+import admin.gpu.dto.GpuServerRequest;
 import admin.gpu.dto.GpuServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,6 @@ public class GpuService {
     private GpuBoardRepository gpuBoardRepository;
 
 
-    public int register(GpuRequest gpuRequest) {
-        return 0;
-    }
-
     public GpuServerResponse findGpuServer(Long labId, Long gpuId) {
         GpuServer gpuServer = gpuServerRepository.findById(labId).get();
         GpuBoard gpuBoard = gpuBoardRepository.findById(gpuId).get();
@@ -38,17 +34,22 @@ public class GpuService {
         return new GpuServerResponses(gpuServerRepository.findAll());
     }
 
-    public void modify(GpuRequest gpuRequest, Long labId, Long gpuId) {
+    @Transactional
+    public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest, Long labId,
+        Long gpuServerId) {
+        GpuServer gpuServer = gpuServerRepository.findById(gpuServerId).get();
+        gpuServer.setName(gpuServerNameUpdateRequest.getName());
     }
 
     public void delete(Long labId, Long gpuId) {
     }
 
     @Transactional
-    public Long saveGpuServer(GpuRequest gpuRequest, Long labId) {
+    public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         Lab lab = labRepository.findById(labId).get();
-        GpuServer gpuServer = new GpuServer(gpuRequest.getServerName(), gpuRequest.getMemorySize(),
-            gpuRequest.getMemorySize(), lab);
+        GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
+            gpuServerRequest.getMemorySize(),
+            gpuServerRequest.getMemorySize(), lab);
         gpuServerRepository.save(gpuServer);
         return gpuServer.getId();
     }
