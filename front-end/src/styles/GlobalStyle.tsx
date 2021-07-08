@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
-import reset from "styled-reset";
 import fonts from "./fonts/fonts.styled";
+import reset from "./reset";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
