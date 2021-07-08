@@ -1,14 +1,16 @@
 package admin.gpu.application;
 
-import admin.gpu.domain.*;
+import admin.gpu.domain.GpuBoard;
+import admin.gpu.domain.GpuBoardRepository;
+import admin.gpu.domain.GpuServer;
+import admin.gpu.domain.GpuServerRepository;
+import admin.gpu.domain.Lab;
+import admin.gpu.domain.LabRepository;
 import admin.gpu.dto.GpuRequest;
-import admin.gpu.dto.GpuResponses;
 import admin.gpu.dto.GpuServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 
 @Service
 public class GpuService {
@@ -25,15 +27,15 @@ public class GpuService {
         return 0;
     }
 
-    //todo:
     public GpuServerResponse findGpuServer(Long labId, Long gpuId) {
         GpuServer gpuServer = gpuServerRepository.findById(labId).get();
         GpuBoard gpuBoard = gpuBoardRepository.findById(gpuId).get();
         return new GpuServerResponse(gpuServer, gpuBoard);
     }
 
-    public GpuResponses gpuList(Long labId) {
-        return new GpuResponses(Collections.emptyList());
+    //todo:
+    public GpuServerResponses findAllGpuServer(Long labId) {
+        return new GpuServerResponses(gpuServerRepository.findAll());
     }
 
     public void modify(GpuRequest gpuRequest, Long labId, Long gpuId) {
@@ -45,7 +47,8 @@ public class GpuService {
     @Transactional
     public Long saveGpuServer(GpuRequest gpuRequest, Long labId) {
         Lab lab = labRepository.findById(labId).get();
-        GpuServer gpuServer = new GpuServer(gpuRequest.getServerName(), gpuRequest.getMemorySize(), gpuRequest.getMemorySize(), lab);
+        GpuServer gpuServer = new GpuServer(gpuRequest.getServerName(), gpuRequest.getMemorySize(),
+            gpuRequest.getMemorySize(), lab);
         gpuServerRepository.save(gpuServer);
         return gpuServer.getId();
     }
