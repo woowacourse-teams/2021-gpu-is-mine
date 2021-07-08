@@ -1,18 +1,17 @@
 package admin.gpu;
 
-import admin.gpu.dto.*;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
+import admin.gpu.dto.GpuRequest;
+import admin.gpu.dto.GpuResponse;
+import admin.gpu.dto.GpuResponses;
+import admin.gpu.dto.JobDtos;
+import admin.gpu.dto.RunningJobDto;
+import admin.gpu.dto.WaitingJobDto;
+import admin.gpu.dto.WaitingJobDtos;
 import java.util.Collections;
+import org.springframework.stereotype.Service;
 
 @Service
 public class GpuService {
-    private final GpuRepository gpuRepository;
-
-    public GpuService(GpuRepository gpuRepository) {
-        this.gpuRepository = gpuRepository;
-    }
 
     public int register(GpuRequest gpuRequest) {
         return 0;
