@@ -6,6 +6,7 @@ import NotoSansKR_Medium from "./noto-sans-kr/NotoSansKR-Medium.woff2";
 import NotoSansKR_Bold from "./noto-sans-kr/NotoSansKR-Bold.woff2";
 import NotoSansKR_Black from "./noto-sans-kr/NotoSansKR-Black.woff2";
 
+// TODO: 폰트 사이즈 줄이면서 위 아래 여백 제대로 나오게 하기
 const notoSansKR = css`
   @font-face {
     font-family: "Noto Sans KR";
@@ -44,8 +45,15 @@ const notoSansKR = css`
   }
 `;
 
-const fonts = css`
-  ${notoSansKR}
-`;
 
+const fonts = css`
+   /* ${notoSansKR}  */
+
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap');
+`;
 export default fonts;
