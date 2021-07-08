@@ -30,4 +30,28 @@ public class GpuBoard extends BaseEntity {
     public List<Job> getWaitingJobs() {
         return jobs.getWaitingJobs();
     }
+
+    public List<Job> getJobs() {
+        return jobs.getJobs();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Boolean getIsWorking() {
+        return isWorking;
+    }
+
+    public Long getPerformance() {
+        return performance;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public GpuServer getGpuServer() {
+        return gpuServer;
+    }
 }

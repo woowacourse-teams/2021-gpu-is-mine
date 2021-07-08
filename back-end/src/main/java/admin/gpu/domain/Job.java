@@ -9,8 +9,9 @@ public class Job extends BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private Boolean isWorking = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "status")
+    private JobStatus status;
     @ManyToOne
     @JoinColumn(name = "lab_user_id", nullable = false)
     private LabUser labUser;
@@ -22,22 +23,15 @@ public class Job extends BaseEntity {
     }
 
 
-    @Override
-    public String toString() {
-        return "Job{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", isWorking=" + isWorking +
-                ", labUser=" + labUser +
-                ", gpuBoard=" + gpuBoard +
-                '}';
-    }
-
     public String getName() {
         return name;
     }
 
-    public boolean isWorking() {
-        return isWorking;
+    public JobStatus getStatus() {
+        return status;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -13,7 +13,11 @@ public class Jobs {
 
     public List<Job> getWaitingJobs() {
         return jobs.stream()
-                .filter(Job::isWorking)
+                .filter(job -> job.getStatus() == JobStatus.WAITING)
                 .collect(Collectors.toList());
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
     }
 }

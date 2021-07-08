@@ -3,13 +3,13 @@ package admin.gpu.dto;
 import java.util.List;
 
 public class GpuResponses {
-    List<GpuResponse> gpuResponses;
+    List<GpuServerResponse> gpuBoardRespons;
 
-    public GpuResponses(List<GpuResponse> gpuResponses) {
-        this.gpuResponses = gpuResponses;
+    public GpuResponses(List<GpuServerResponse> gpuBoardRespons) {
+        this.gpuBoardRespons = gpuBoardRespons;
     }
 
-    public List<GpuResponse> getGpuResponses() {
-        return gpuResponses;
+    public List<GpuServerResponse> getGpuResponses() {
+        return gpuBoardRespons;
     }
 }

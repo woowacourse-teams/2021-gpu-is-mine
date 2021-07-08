@@ -50,6 +50,26 @@ public class GpuServer extends BaseEntity {
         return gpuBoard.getWaitingJobs();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Boolean getIsOn() {
+        return isOn;
+    }
+
+    public Long getMemorySize() {
+        return memorySize;
+    }
+
+    public Long getDiskSize() {
+        return diskSize;
+    }
+
+    public GpuBoard getGpuBoard() {
+        return gpuBoard;
+    }
+
     public void setGpuBoard(GpuBoard gpuBoard) {
         this.gpuBoard = gpuBoard;
     }

@@ -2,8 +2,8 @@ package admin.gpu.ui;
 
 import admin.gpu.application.GpuService;
 import admin.gpu.dto.GpuRequest;
-import admin.gpu.dto.GpuResponse;
 import admin.gpu.dto.GpuResponses;
+import admin.gpu.dto.GpuServerResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,19 +19,21 @@ public class GpuController {
     }
 
     @PostMapping("/labs/{labId}/gpus")
-    public ResponseEntity<Void> registerGpuServer(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId) {
-        Long gpuServerId = gpuService.registerGpuServer(gpuRequest, labId);
+    public ResponseEntity<Void> saveGpuServer(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId) {
+        Long gpuServerId = gpuService.saveGpuServer(gpuRequest, labId);
 
         URI uri = URI.create("/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri)
                 .build();
     }
 
-    @GetMapping("/labs/{labId}/gpus/{gpuId}")
-    public GpuResponse detail(@PathVariable Long labId, @PathVariable Long gpuId) {
-        return gpuService.detail(labId, gpuId);
+
+    @GetMapping("/labs/{labId}/gpus/{gpuServerId}")
+    public GpuServerResponse findGpuServer(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        return gpuService.findGpuServer(labId, gpuServerId);
     }
 
+    //todo: 이하로
     @GetMapping("/labs/{labId}/gpus")
     public GpuResponses gpuList(@PathVariable Long labId) {
         return gpuService.gpuList(labId);
