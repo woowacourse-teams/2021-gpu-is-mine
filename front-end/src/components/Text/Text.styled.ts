@@ -60,7 +60,7 @@ const getFontWeightStyle = (fontWeight: FontWeight) => {
     black: css`
       font-weight: 900;
     `,
-  };
+  } as const;
 
   return style[fontWeight];
 };
