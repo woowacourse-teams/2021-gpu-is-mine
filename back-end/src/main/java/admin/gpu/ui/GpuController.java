@@ -1,5 +1,6 @@
-package admin.gpu;
+package admin.gpu.ui;
 
+import admin.gpu.application.GpuService;
 import admin.gpu.dto.GpuRequest;
 import admin.gpu.dto.GpuResponse;
 import admin.gpu.dto.GpuResponses;
