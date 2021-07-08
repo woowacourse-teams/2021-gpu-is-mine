@@ -1,18 +1,24 @@
 package admin.gpu.application;
 
+import admin.gpu.domain.GpuServer;
 import admin.gpu.domain.GpuServerRepository;
+import admin.gpu.domain.Lab;
+import admin.gpu.domain.LabRepository;
 import admin.gpu.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
 @Service
 public class GpuService {
-    private final GpuServerRepository gpuServerRepository;
 
-    public GpuService(GpuServerRepository gpuServerRepository) {
-        this.gpuServerRepository = gpuServerRepository;
-    }
+    @Autowired
+    private LabRepository labRepository;
+    @Autowired
+    private GpuServerRepository gpuServerRepository;
+
 
     public int register(GpuRequest gpuRequest) {
         return 0;
@@ -34,5 +40,13 @@ public class GpuService {
     }
 
     public void delete(Long labId, Long gpuId) {
+    }
+
+    @Transactional
+    public Long registerGpuServer(GpuRequest gpuRequest, Long labId) {
+        Lab lab = labRepository.findById(labId).get();
+        GpuServer gpuServer = new GpuServer(gpuRequest.getServerName(), gpuRequest.getMemorySize(), gpuRequest.getMemorySize(), lab);
+        gpuServerRepository.save(gpuServer);
+        return gpuServer.getId();
     }
 }

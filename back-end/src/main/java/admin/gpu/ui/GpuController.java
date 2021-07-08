@@ -19,9 +19,10 @@ public class GpuController {
     }
 
     @PostMapping("/labs/{labId}/gpus")
-    public ResponseEntity<Void> register(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId) {
-        int createdId = gpuService.register(gpuRequest);
-        URI uri = URI.create("/labs/" + labId + "/gpus/" + createdId);
+    public ResponseEntity<Void> registerGpuServer(@RequestBody GpuRequest gpuRequest, @PathVariable Long labId) {
+        Long gpuServerId = gpuService.registerGpuServer(gpuRequest, labId);
+
+        URI uri = URI.create("/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri)
                 .build();
     }

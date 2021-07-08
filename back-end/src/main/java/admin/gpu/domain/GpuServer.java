@@ -31,6 +31,13 @@ public class GpuServer extends BaseEntity {
         this.lab = lab;
     }
 
+    public GpuServer(String name, Long memorySize, Long diskSize, Lab lab) {
+        this.name = name;
+        this.memorySize = memorySize;
+        this.diskSize = diskSize;
+        this.lab = lab;
+    }
+
     public Long getId() {
         return id;
     }

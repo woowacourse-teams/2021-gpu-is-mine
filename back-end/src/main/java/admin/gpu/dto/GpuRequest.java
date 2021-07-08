@@ -2,10 +2,9 @@ package admin.gpu.dto;
 
 public class GpuRequest {
     private String serverName;
-    private Double memorySize;
-    private Double diskSize;
-    private Double gpuPerformance;
-    private String gpuName;
+    private Long memorySize;
+    private Long diskSize;
+    private GpuBoardRequest gpuBoardRequest;
 
     public GpuRequest() {
     }
@@ -14,19 +13,15 @@ public class GpuRequest {
         return serverName;
     }
 
-    public Double getMemorySize() {
+    public Long getMemorySize() {
         return memorySize;
     }
 
-    public Double getDiskSize() {
+    public Long getDiskSize() {
         return diskSize;
     }
 
-    public Double getGpuPerformance() {
-        return gpuPerformance;
-    }
-
-    public String getGpuName() {
-        return gpuName;
+    public GpuBoardRequest getGpuBoardRequest() {
+        return gpuBoardRequest;
     }
 }
