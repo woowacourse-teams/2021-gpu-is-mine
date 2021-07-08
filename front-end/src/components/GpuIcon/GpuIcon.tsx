@@ -1,7 +1,7 @@
-import { StyledGpu, StyledGpuProps } from "./GpuIcon.styled";
+import { StyledGpuIcon, StyledGpuIconProps } from "./GpuIcon.styled";
 
-type GpuIconProps = Partial<StyledGpuProps>;
+type GpuIconProps = Partial<StyledGpuIconProps>;
 
-const GpuIcon = ({ size = "sm" }: GpuIconProps) => <StyledGpu size={size} />;
+const GpuIcon = ({ size = "sm" }: GpuIconProps) => <StyledGpuIcon size={size} />;
 
 export default GpuIcon;
