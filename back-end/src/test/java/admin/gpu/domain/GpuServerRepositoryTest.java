@@ -13,18 +13,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class GpuRepositoryTest {
+public class GpuServerRepositoryTest {
     @Autowired
     EntityManager em;
     @Autowired
     private LabRepository labs;
     @Autowired
-    private GpuRepository gpus;
-
+    private GpuServerRepository gpuServers;
+    @Autowired
+    private GpuBoardRepository gpuBoards;
     @DisplayName("Gpu로부터 Jobs를 조회한다.")
     @Test
     void getJobs() {
-        Gpu actual = gpus.findById(1L).get();
+        GpuServer actual = gpuServers.findById(1L).get();
         List<Job> waitingJobs = actual.getWaitingJobs();
 
         assertThat(waitingJobs).hasSize(2);
@@ -35,20 +36,23 @@ public class GpuRepositoryTest {
     void save() {
         Lab lab = new Lab("better랩");
         labs.save(lab);
-        Gpu gpu = new Gpu("새로운GPU1", "nvidia", false, 500, 1024, 1000, lab);
+        GpuServer gpuServer = new GpuServer("새로운GPU서버1", false, 500L, 1024L, lab);
+        GpuBoard gpuBoard = new GpuBoard(true, 1000L, "aab", gpuServer);
+        gpuServer.setGpuBoard(gpuBoard);
+        gpuServers.save(gpuServer);
+        gpuBoards.save(gpuBoard);
 
-        gpus.save(gpu);
 
         assertThat(lab.getId()).isNotNull();
-        assertThat(gpu.getId()).isNotNull();
+        assertThat(gpuServer.getId()).isNotNull();
 
-        assertThat(gpu.getCreatedAt()).isNotNull();
+        assertThat(gpuServer.getCreatedAt()).isNotNull();
 
         em.clear();
 
-        Gpu persistGpu = gpus.findById(gpu.getId()).get();
-        assertThat(persistGpu.getLab()).isNotNull();
-        assertThat(persistGpu.getCreatedAt()).isNotNull();
+        GpuServer persistGpuServer = gpuServers.findById(gpuServer.getId()).get();
+        assertThat(persistGpuServer.getLab()).isNotNull();
+        assertThat(persistGpuServer.getCreatedAt()).isNotNull();
     }
 
     @DisplayName("Gpu를 삭제한다.")
@@ -56,15 +60,15 @@ public class GpuRepositoryTest {
     void delete() {
         Lab lab = new Lab("better랩");
         labs.save(lab);
-        Gpu gpu = new Gpu("새로운GPU1", "nvidia", false, 500, 1024, 1000, lab);
-        gpus.save(gpu);
+        GpuServer gpuServer = new GpuServer("새로운GPU서버1", false, 500L, 1024L, lab);
+        gpuServers.save(gpuServer);
 
-        Optional<Gpu> persistGpu = gpus.findById(gpu.getId());
+        Optional<GpuServer> persistGpu = gpuServers.findById(gpuServer.getId());
         assertThat(persistGpu.isPresent()).isTrue();
 
-        gpus.delete(gpu);
+        gpuServers.delete(gpuServer);
 
-        Optional<Gpu> actual = gpus.findById(gpu.getId());
+        Optional<GpuServer> actual = gpuServers.findById(gpuServer.getId());
         assertThat(actual.isPresent()).isFalse();
     }
 }

@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 @Embeddable
 public class Jobs {
-    @OneToMany(mappedBy = "gpu")
+    @OneToMany(mappedBy = "gpuBoard")
     List<Job> jobs = new ArrayList<>();
 
     public List<Job> getWaitingJobs() {
         return jobs.stream()
-                .filter(Job::isWaiting)
+                .filter(Job::isWorking)
                 .collect(Collectors.toList());
     }
 }

@@ -10,26 +10,26 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private Boolean waiting = true;
+    private Boolean isWorking = true;
     @ManyToOne
     @JoinColumn(name = "lab_user_id", nullable = false)
     private LabUser labUser;
-
     @ManyToOne
-    @JoinColumn(name = "gpu_id", nullable = false)
-    private Gpu gpu;
+    @JoinColumn(name = "gpu_board_id", nullable = false)
+    private GpuBoard gpuBoard;
 
     protected Job() {
     }
+
 
     @Override
     public String toString() {
         return "Job{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", waiting=" + waiting +
+                ", isWorking=" + isWorking +
                 ", labUser=" + labUser +
-                ", gpu=" + gpu +
+                ", gpuBoard=" + gpuBoard +
                 '}';
     }
 
@@ -37,7 +37,7 @@ public class Job extends BaseEntity {
         return name;
     }
 
-    public boolean isWaiting() {
-        return waiting;
+    public boolean isWorking() {
+        return isWorking;
     }
 }
