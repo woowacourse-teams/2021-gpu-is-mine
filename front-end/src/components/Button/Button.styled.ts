@@ -49,8 +49,7 @@ const getColorStyle = (color: Color) => {
 };
 
 export const StyledButton = styled.button`
-  ${(props: StyledButtonProps) => getColorStyle(props.color)
-  }
+  ${({ color }: StyledButtonProps) => getColorStyle(color)}
 
   width: 100%;
   padding: 0.25rem 0.5rem;

@@ -29,7 +29,7 @@ const getServerIconSize = (size: Size) => {
   } as const;
 
   // TODO: 정의되지않은 size 대응하기 => type 에러
-  return iconSize[size] || iconSize["md"];
+  return iconSize[size] || iconSize.md;
 };
 
 export const StyledServer = styled(Server)`
