@@ -10,6 +10,14 @@ public class GpuServerRequest {
     public GpuServerRequest() {
     }
 
+    public GpuServerRequest(String serverName, Long memorySize, Long diskSize,
+        GpuBoardRequest gpuBoardRequest) {
+        this.serverName = serverName;
+        this.memorySize = memorySize;
+        this.diskSize = diskSize;
+        this.gpuBoardRequest = gpuBoardRequest;
+    }
+
     public String getServerName() {
         return serverName;
     }

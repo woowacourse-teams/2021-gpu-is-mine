@@ -67,6 +67,7 @@ public class GpuServerService {
 
     @Transactional
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
+        labValidation(labId);
         Lab lab = labRepository.findById(labId).get();
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
             gpuServerRequest.getMemorySize(),
