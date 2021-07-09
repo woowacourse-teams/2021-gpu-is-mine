@@ -4,11 +4,15 @@
     <property name="LOG_PATH" value="logs"/> <!-- log file name -->
     <property name="LOG_FILE_NAME" value="log"/> <!-- err log file name -->
     <property name="ERR_LOG_FILE_NAME" value="err_log"/> <!-- pattern -->
-    <property name="LOG_PATTERN"
+
+    <property name="LOG_PATTERN_HIGHLIGHTED"
               value="%highlight(%-5level) %d{yy-MM-dd HH:mm:ss} [%logger{0}:%line] - %msg%n"/> <!-- Console Appender -->
+    <property name="LOG_PATTERN"
+              value="%-5level %d{yy-MM-dd HH:mm:ss} [%logger{0}:%line] - %msg%n"/> <!-- Console Appender -->
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${LOG_PATTERN}</pattern>
+            <pattern>${LOG_PATTERN_HIGHLIGHTED}</pattern>
         </encoder>
     </appender> <!-- File Appender -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- 파일경로 설정 -->
