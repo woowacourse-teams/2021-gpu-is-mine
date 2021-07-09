@@ -7,8 +7,8 @@ export interface StyledGpuIconProps {
   size: Size;
 }
 
-const getSizeStyle = (size: Size) =>
-  ({
+const getSizeStyle = (size: Size) => {
+  const style = {
     sm: css`
       width: 1rem;
       height: 1rem;
@@ -21,7 +21,10 @@ const getSizeStyle = (size: Size) =>
       width: 3rem;
       height: 3rem;
     `,
-  }[size]);
+  };
+
+  return style[size];
+};
 
 export const StyledGpuIcon = styled(Gpu)`
   ${({ size }: StyledGpuIconProps) => getSizeStyle(size)}
