@@ -1,11 +1,9 @@
-package admin.gpu.domain;
+package admin.gpu.domain.repository;
 
-import admin.gpu.application.GpuService;
+import admin.gpu.domain.GpuServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class DeleteHistoryRepositoryTest {
@@ -13,6 +11,7 @@ class DeleteHistoryRepositoryTest {
     private DeleteHistoryRepository deleteHistoryRepository;
     @Autowired
     private GpuServerRepository gpuServerRepository;
+
     @Test
     void delete() {
         GpuServer gpuServer = gpuServerRepository.findById(1L).get();

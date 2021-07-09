@@ -22,7 +22,6 @@ public class Job extends BaseEntity {
     protected Job() {
     }
 
-
     public String getName() {
         return name;
     }

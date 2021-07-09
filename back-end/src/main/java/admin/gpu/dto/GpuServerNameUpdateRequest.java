@@ -1,4 +1,4 @@
-package admin.gpu.application;
+package admin.gpu.dto;
 
 public class GpuServerNameUpdateRequest {
 

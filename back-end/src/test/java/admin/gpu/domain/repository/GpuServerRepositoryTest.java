@@ -1,6 +1,10 @@
-package admin.gpu.domain;
+package admin.gpu.domain.repository;
 
 
+import admin.gpu.domain.GpuBoard;
+import admin.gpu.domain.GpuServer;
+import admin.gpu.domain.Job;
+import admin.gpu.domain.Lab;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ public class GpuServerRepositoryTest {
     private GpuServerRepository gpuServers;
     @Autowired
     private GpuBoardRepository gpuBoards;
+
     @DisplayName("Gpu로부터 Jobs를 조회한다.")
     @Test
     void getJobs() {
