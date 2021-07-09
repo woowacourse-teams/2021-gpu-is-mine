@@ -23,6 +23,7 @@ public class GpuServer extends BaseEntity {
     private Long diskSize;
     @OneToOne(mappedBy = "gpuServer")
     private GpuBoard gpuBoard;
+    private Boolean deleted = false;
     @ManyToOne
     @JoinColumn(name = "lab_id")
     private Lab lab;
@@ -85,4 +86,7 @@ public class GpuServer extends BaseEntity {
         this.name = name;
     }
 
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

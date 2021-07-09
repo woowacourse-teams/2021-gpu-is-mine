@@ -1,11 +1,6 @@
 package admin.gpu.application;
 
-import admin.gpu.domain.GpuBoard;
-import admin.gpu.domain.GpuBoardRepository;
-import admin.gpu.domain.GpuServer;
-import admin.gpu.domain.GpuServerRepository;
-import admin.gpu.domain.Lab;
-import admin.gpu.domain.LabRepository;
+import admin.gpu.domain.*;
 import admin.gpu.dto.GpuServerRequest;
 import admin.gpu.dto.GpuServerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +16,8 @@ public class GpuService {
     private GpuServerRepository gpuServerRepository;
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
+    @Autowired
+    private DeleteHistoryRepository deleteHistoryRepository;
 
     public GpuServerResponse findGpuServer(Long labId, Long gpuId) {
         GpuServer gpuServer = gpuServerRepository.findById(labId).get();
@@ -42,6 +38,9 @@ public class GpuService {
     }
 
     public void delete(Long labId, Long gpuId) {
+        GpuServer gpuServer = gpuServerRepository.findById(gpuId).get();
+        gpuServer.setDeleted(true);
+        deleteHistoryRepository.save(new DeleteHistory(gpuServer));
     }
 
     @Transactional
