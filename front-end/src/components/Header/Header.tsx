@@ -9,11 +9,13 @@ interface HeaderProps extends HTMLAttributes<HTMLElement> {
 
 const Header = ({ labName, children, ...rest }: HeaderProps) => (
   <StyledHeader {...rest}>
-    <Logo />
+    <section className="title">
+      <Logo />
 
-    <Text className="lab-name" size="md" weight="medium">
-      {labName}
-    </Text>
+      <Text className="lab-name" size="md" weight="medium">
+        {labName}
+      </Text>
+    </section>
 
     {children}
   </StyledHeader>

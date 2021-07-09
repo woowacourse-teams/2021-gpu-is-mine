@@ -1,7 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Navigation from "../Navigation/Navigation";
 import Header from "./Header";
-import * as NavigationStories from "../Navigation/Navigation.stories";
 
 export default {
   title: "Components/Header",
@@ -16,16 +14,9 @@ Default.args = {
   labName: "우아한 Lab",
 };
 
-export const Admin = Template.bind({});
+export const Menu = Template.bind({});
 
-Admin.args = {
+Menu.args = {
   labName: "우아한 Lab",
-  children: <Navigation {...NavigationStories.Admin.args} />,
-};
-
-export const User = Template.bind({});
-
-User.args = {
-  labName: "우아한 Lab",
-  children: <Navigation {...NavigationStories.User.args} />,
+  children: "메뉴",
 };
