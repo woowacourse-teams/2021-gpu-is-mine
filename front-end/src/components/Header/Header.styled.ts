@@ -6,6 +6,8 @@ export const StyledHeader = styled.header`
   column-gap: 0.75rem;
 
   .lab-name {
+    display: flex;
+    align-items: center;
     margin-right: auto;
   }
 `;
