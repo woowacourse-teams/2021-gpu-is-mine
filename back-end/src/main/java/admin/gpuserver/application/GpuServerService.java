@@ -16,6 +16,8 @@ import admin.gpuserver.exception.GpuServerServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class GpuServerService {
 
@@ -43,7 +45,8 @@ public class GpuServerService {
     @Transactional(readOnly = true)
     public GpuServerResponses findAllGpuServer(Long labId) {
         labValidation(labId);
-        return new GpuServerResponses(gpuServerRepository.findAll());
+        List<GpuServer> gpuServers = gpuServerRepository.findAll();
+        return new GpuServerResponses(gpuServers);
     }
 
     @Transactional

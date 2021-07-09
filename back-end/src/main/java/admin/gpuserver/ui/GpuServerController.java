@@ -3,18 +3,14 @@ package admin.gpuserver.ui;
 import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import java.net.URI;
+
+import admin.gpuserver.exception.GpuServerServiceException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -44,8 +40,10 @@ public class GpuServerController {
     }
 
     @GetMapping("/labs/{labId}/gpus")
-    public GpuServerResponses findAllGpuServer(@PathVariable Long labId) {
-        return gpuServerService.findAllGpuServer(labId);
+    public ResponseEntity<GpuServerResponses> findAllGpuServer(@PathVariable Long labId) {
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllGpuServer(labId);
+        return ResponseEntity.ok()
+                .body(gpuServerResponses);
     }
 
 
@@ -54,13 +52,24 @@ public class GpuServerController {
             @RequestBody GpuServerNameUpdateRequest gpuServerNameUpdateRequest,
             @PathVariable Long labId, @PathVariable Long gpuId) {
         gpuServerService.updateGpuServer(gpuServerNameUpdateRequest, labId, gpuId);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @DeleteMapping("/labs/{labId}/gpus/{gpuId}")
     public ResponseEntity<Void> delete(@PathVariable Long labId, @PathVariable Long gpuId) {
         gpuServerService.delete(labId, gpuId);
+
         return ResponseEntity.noContent()
                 .build();
+    }
+
+    @ExceptionHandler(GpuServerServiceException.class)
+    public ResponseEntity<ExceptionResponse> handleException(GpuServerServiceException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+
+        return ResponseEntity.badRequest()
+                .body(exceptionResponse);
     }
 }

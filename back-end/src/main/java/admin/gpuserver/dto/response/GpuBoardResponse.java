@@ -18,4 +18,20 @@ public class GpuBoardResponse {
     public GpuBoardResponse(GpuBoard gpuBoard) {
         this(gpuBoard.getId(), gpuBoard.getModelName(), gpuBoard.getPerformance(), gpuBoard.getIsWorking());
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public Long getPerformance() {
+        return performance;
+    }
+
+    public Boolean getWorking() {
+        return isWorking;
+    }
 }

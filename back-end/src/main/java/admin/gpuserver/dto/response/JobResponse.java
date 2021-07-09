@@ -21,4 +21,16 @@ public class JobResponse {
                 .map(job -> new JobResponse(job.getId(), job.getName(), job.getStatus()))
                 .collect(Collectors.toList());
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public JobStatus getStatus() {
+        return status;
+    }
 }

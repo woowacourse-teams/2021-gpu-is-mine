@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
     //swagger 설정
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'

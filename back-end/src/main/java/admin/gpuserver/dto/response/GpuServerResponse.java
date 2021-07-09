@@ -34,7 +34,31 @@ public class GpuServerResponse {
                 JobResponse.listOf(gpuBoard.getJobs()));
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getServerName() {
         return serverName;
+    }
+
+    public Long getMemorySize() {
+        return memorySize;
+    }
+
+    public Long getDiskSize() {
+        return diskSize;
+    }
+
+    public Boolean getOn() {
+        return isOn;
+    }
+
+    public GpuBoardResponse getGpuBoard() {
+        return gpuBoard;
+    }
+
+    public List<JobResponse> getJobs() {
+        return jobs;
     }
 }
