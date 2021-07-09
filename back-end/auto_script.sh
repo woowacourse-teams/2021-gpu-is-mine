@@ -13,5 +13,5 @@ echo "> new app deploy"
 JAR_NAME=$(ls |grep 'back-end' | tail -n 1)
 echo "> JAR Name: $JAR_NAME"
 JAVA=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
-sudo nohup $JAVA -jar $JAR_NAME &
+nohup $JAVA -jar $JAR_NAME &
 sleep 3
