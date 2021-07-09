@@ -13,8 +13,8 @@ const flick = keyframes`
   100% { opacity: 1; }
 `;
 
-const getFlickerStatus = (status: FlickerStatus) => {
-  const flickerType = {
+const getStatusStyle = (status: FlickerStatus) => {
+  const style = {
     // TODO: flicker color 상수화
     ON: css`
       background-color: #90dd53;
@@ -26,11 +26,11 @@ const getFlickerStatus = (status: FlickerStatus) => {
     `,
   } as const;
 
-  return flickerType[status];
+  return style[status];
 };
 
-const getFlickerSize = (size: Size) => {
-  const flickerSize = {
+const getSizeStyle = (size: Size) => {
+  const style = {
     // TODO: flicker color 상수화
     sm: css`
       width: 1rem;
@@ -46,14 +46,13 @@ const getFlickerSize = (size: Size) => {
     `,
   } as const;
 
-  return flickerSize[size];
+  return style[size];
 };
 
 export const StyledFlicker = styled.div`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-
-  ${({ status }: StyledFlickerProps) => getFlickerStatus(status)}
-  ${({ size }: StyledFlickerProps) => getFlickerSize(size)}
+  ${({ status }: StyledFlickerProps) => getStatusStyle(status)}
+  ${({ size }: StyledFlickerProps) => getSizeStyle(size)}
 `;
