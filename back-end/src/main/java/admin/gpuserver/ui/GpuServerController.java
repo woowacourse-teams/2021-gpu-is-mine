@@ -1,10 +1,10 @@
 package admin.gpuserver.ui;
 
 import admin.gpuserver.application.GpuServerService;
-import admin.gpuserver.dto.GpuServerNameUpdateRequest;
-import admin.gpuserver.dto.GpuServerRequest;
-import admin.gpuserver.dto.GpuServerResponse;
-import admin.gpuserver.dto.GpuServerResponses;
+import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
+import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.response.GpuServerResponse;
+import admin.gpuserver.dto.response.GpuServerResponses;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

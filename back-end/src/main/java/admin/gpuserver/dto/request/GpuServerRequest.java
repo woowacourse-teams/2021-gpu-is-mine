@@ -1,4 +1,4 @@
-package admin.gpuserver.dto;
+package admin.gpuserver.dto.request;
 
 public class GpuServerRequest {
 

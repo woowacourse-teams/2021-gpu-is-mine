@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.dto.GpuBoardRequest;
-import admin.gpuserver.dto.GpuServerNameUpdateRequest;
-import admin.gpuserver.dto.GpuServerRequest;
-import admin.gpuserver.dto.GpuServerResponse;
-import admin.gpuserver.dto.GpuServerResponses;
+import admin.gpuserver.dto.request.GpuBoardRequest;
+import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
+import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.response.GpuServerResponse;
+import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package admin.gpuserver.dto;
+package admin.gpuserver.dto.response;
 
 import admin.gpuserver.domain.GpuServer;
 import java.util.List;
