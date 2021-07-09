@@ -3,6 +3,7 @@ package admin.gpuserver.ui;
 import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.response.EmptyJsonResponse;
 import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
@@ -23,13 +24,13 @@ public class GpuServerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveGpuServer(@RequestBody GpuServerRequest gpuServerRequest,
-        @PathVariable Long labId) {
+    public ResponseEntity<EmptyJsonResponse> saveGpuServer(@RequestBody GpuServerRequest gpuServerRequest,
+                                                           @PathVariable Long labId) {
         Long gpuServerId = gpuServerService.saveGpuServer(gpuServerRequest, labId);
 
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri)
-                .build();
+                .body(new EmptyJsonResponse());
     }
 
 
