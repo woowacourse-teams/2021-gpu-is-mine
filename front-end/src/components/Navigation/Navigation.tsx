@@ -9,7 +9,7 @@ interface NavigationProps extends HTMLAttributes<HTMLElement> {
 const Navigation = ({ menu, ...rest }: NavigationProps) => (
   <StyledNavigation {...rest}>
     {menu.map((name) => (
-      <Text>{name}</Text>
+      <Text className="menu-item">{name}</Text>
     ))}
   </StyledNavigation>
 );

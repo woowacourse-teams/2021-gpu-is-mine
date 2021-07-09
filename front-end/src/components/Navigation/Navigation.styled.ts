@@ -2,5 +2,10 @@ import styled from "styled-components";
 
 export const StyledNavigation = styled.nav`
   display: flex;
-  column-gap: 1rem;
+  justify-content: space-evenly;
+
+  .menu-item {
+    display: grid;
+    place-items: center;
+  }
 `;
