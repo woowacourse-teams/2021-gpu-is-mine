@@ -34,4 +34,8 @@ public class GpuServerResponse {
                 new GpuBoardResponse(gpuBoard),
                 JobResponse.listOf(gpuBoard.getJobs()));
     }
+
+    public String getServerName() {
+        return serverName;
+    }
 }

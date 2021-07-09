@@ -14,4 +14,8 @@ public class GpuServerResponses {
                 .map(gpuServer -> new GpuServerResponse(gpuServer, gpuServer.getGpuBoard()))
                 .collect(Collectors.toList());
     }
+
+    public List<GpuServerResponse> getGpuServerResponses() {
+        return gpus;
+    }
 }

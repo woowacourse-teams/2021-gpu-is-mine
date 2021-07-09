@@ -12,38 +12,51 @@ import admin.gpu.dto.GpuServerNameUpdateRequest;
 import admin.gpu.dto.GpuServerRequest;
 import admin.gpu.dto.GpuServerResponse;
 import admin.gpu.dto.GpuServerResponses;
+import admin.gpu.exception.GpuServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GpuService {
+public class GpuServerService {
     private LabRepository labRepository;
     private GpuServerRepository gpuServerRepository;
     private GpuBoardRepository gpuBoardRepository;
     private DeleteHistoryRepository deleteHistoryRepository;
 
-    public GpuService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-                      GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
+    public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
+                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.deleteHistoryRepository = deleteHistoryRepository;
     }
 
-    public GpuServerResponse findGpuServer(Long labId, Long gpuId) {
-        GpuServer gpuServer = gpuServerRepository.findById(labId).get();
-        GpuBoard gpuBoard = gpuBoardRepository.findById(gpuId).get();
+    @Transactional(readOnly = true)
+    public GpuServerResponse findGpuServer(Long labId, Long gpuServerId) {
+        labValidation(labId);
+        GpuServer gpuServer = gpuServerRepository.findById(gpuServerId)
+                .orElseThrow(() -> new GpuServiceException("GPU 서버가 존재하지 않습니다."));
+        GpuBoard gpuBoard = gpuServer.getGpuBoard();
         return new GpuServerResponse(gpuServer, gpuBoard);
     }
 
+    private void labValidation(Long labId) {
+        labRepository.findById(labId)
+                .orElseThrow(() -> new GpuServiceException("Lab이 존재하지 않습니다."));
+    }
+
+    @Transactional(readOnly = true)
     public GpuServerResponses findAllGpuServer(Long labId) {
+        labValidation(labId);
         return new GpuServerResponses(gpuServerRepository.findAll());
     }
 
     @Transactional
-    public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest, Long labId,
-                                Long gpuServerId) {
-        GpuServer gpuServer = gpuServerRepository.findById(gpuServerId).get();
+    public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest,
+                                Long labId, Long gpuServerId) {
+        labValidation(labId);
+        GpuServer gpuServer = gpuServerRepository.findById(gpuServerId)
+                .orElseThrow(() -> new GpuServiceException("GPU 서버가 존재하지 않습니다."));
         gpuServer.setName(gpuServerNameUpdateRequest.getName());
     }
 
