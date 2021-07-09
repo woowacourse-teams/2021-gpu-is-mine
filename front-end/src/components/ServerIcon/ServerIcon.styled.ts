@@ -3,7 +3,7 @@ import Server from "./server.svg";
 
 export type Size = "sm" | "md" | "lg" | "xl";
 
-export interface StyledServerProps {
+export interface StyledServerIconProps {
   size: Size;
 }
 
@@ -32,6 +32,6 @@ const getServerIconSize = (size: Size) => {
   return iconSize[size] || iconSize.md;
 };
 
-export const StyledServer = styled(Server)`
-  ${({ size }: StyledServerProps) => getServerIconSize(size)}
+export const StyledServerIcon = styled(Server)`
+  ${({ size }: StyledServerIconProps) => getServerIconSize(size)}
 `;

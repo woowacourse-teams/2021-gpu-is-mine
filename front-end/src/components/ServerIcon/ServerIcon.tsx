@@ -1,7 +1,7 @@
-import { StyledServer, StyledServerProps } from "./ServerIcon.styled";
+import { StyledServerIcon, StyledServerIconProps } from "./ServerIcon.styled";
 
-type GpuIconProps = Partial<StyledServerProps>;
+type ServerIconProps = Partial<StyledServerIconProps>;
 
-const GpuIcon = ({ size = "md" }: GpuIconProps) => <StyledServer size={size} />;
+const ServerIcon = ({ size = "md" }: ServerIconProps) => <StyledServerIcon size={size} />;
 
-export default GpuIcon;
+export default ServerIcon;
