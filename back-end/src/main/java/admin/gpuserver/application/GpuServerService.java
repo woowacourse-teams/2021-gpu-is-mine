@@ -90,7 +90,7 @@ public class GpuServerService {
     }
 
     private GpuServer findValidationGpuServer(Long gpuServerId) {
-        return gpuServerRepository.findById(gpuServerId)
+        return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }
