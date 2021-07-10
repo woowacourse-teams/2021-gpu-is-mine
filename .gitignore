@@ -4,3 +4,6 @@
 *.iml
 *.ipr
 out/
+
+### Log ###
+logs
