@@ -69,7 +69,6 @@ public class GpuServerService {
         deleteHistoryRepository.save(new DeleteHistory(gpuServer));
     }
 
-    //todo : refactor 연관관계 메소드로 추가
     @Transactional
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         labValidation(labId);
@@ -81,6 +80,7 @@ public class GpuServerService {
         GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(), gpuBoardRequest.getModelName(), gpuServer);
         gpuServerRepository.save(gpuServer);
         gpuBoardRepository.save(gpuBoard);
+
         return gpuServer.getId();
     }
 
