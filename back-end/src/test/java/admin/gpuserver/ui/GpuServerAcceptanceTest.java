@@ -68,6 +68,14 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> GpuServer_삭제(String gpuServerId) {
+        return RestAssured
+                .given().log().all()
+                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
+    }
+
     @DisplayName("GpuServer 개별조회")
     @Test
     void findGpuServer() {
@@ -110,6 +118,21 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         // when
         GpuServerNameUpdateRequest gpuServerNameUpdateRequest = new GpuServerNameUpdateRequest("서버이름변경");
         ExtractableResponse<Response> response = GpuServer_이름변경(gpuServerNameUpdateRequest, gpuServerId);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("GpuServer 삭제")
+    @Test
+    void deleteGpuServer() {
+        // given
+        GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
+        GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L, gpuBoardRequest);
+        String gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
+
+        // when
+        ExtractableResponse<Response> response = GpuServer_삭제(gpuServerId);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
