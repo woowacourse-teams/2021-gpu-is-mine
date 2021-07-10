@@ -11,7 +11,7 @@ public class GpuServerRequest {
     }
 
     public GpuServerRequest(String serverName, Long memorySize, Long diskSize,
-        GpuBoardRequest gpuBoardRequest) {
+                            GpuBoardRequest gpuBoardRequest) {
         this.serverName = serverName;
         this.memorySize = memorySize;
         this.diskSize = diskSize;

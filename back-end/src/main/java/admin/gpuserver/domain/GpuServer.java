@@ -1,14 +1,7 @@
 package admin.gpuserver.domain;
 
+import javax.persistence.*;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 public class GpuServer extends BaseEntity {
@@ -29,6 +22,7 @@ public class GpuServer extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "lab_id")
     private Lab lab;
+
     protected GpuServer() {
     }
 
@@ -63,6 +57,10 @@ public class GpuServer extends BaseEntity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Boolean getIsOn() {
         return isOn;
     }
@@ -83,15 +81,11 @@ public class GpuServer extends BaseEntity {
         this.gpuBoard = gpuBoard;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Boolean getDeleted() {
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
     }
 }

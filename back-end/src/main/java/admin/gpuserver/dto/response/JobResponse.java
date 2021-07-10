@@ -2,6 +2,7 @@ package admin.gpuserver.dto.response;
 
 import admin.gpuserver.domain.Job;
 import admin.gpuserver.domain.JobStatus;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -28,7 +28,7 @@ public class GpuServerService {
     private DeleteHistoryRepository deleteHistoryRepository;
 
     public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-        GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
+                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -52,7 +52,7 @@ public class GpuServerService {
 
     @Transactional
     public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest,
-        Long labId, Long gpuServerId) {
+                                Long labId, Long gpuServerId) {
         labValidation(labId);
         GpuServer gpuServer = findValidationGpuServer(gpuServerId);
         gpuServer.setName(gpuServerNameUpdateRequest.getName());
@@ -69,14 +69,14 @@ public class GpuServerService {
         deleteHistoryRepository.save(new DeleteHistory(gpuServer));
     }
 
-    //todo : refactor
+    //todo : refactor 연관관계 메소드로 추가
     @Transactional
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         labValidation(labId);
         Lab lab = labRepository.findById(labId).get();
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
-            gpuServerRequest.getMemorySize(),
-            gpuServerRequest.getMemorySize(), lab);
+                gpuServerRequest.getMemorySize(),
+                gpuServerRequest.getMemorySize(), lab);
         GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
         GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(), gpuBoardRequest.getModelName(), gpuServer);
         gpuServerRepository.save(gpuServer);
@@ -86,11 +86,11 @@ public class GpuServerService {
 
     private void labValidation(Long labId) {
         labRepository.findById(labId)
-            .orElseThrow(() -> new GpuServerServiceException("Lab이 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerServiceException("Lab이 존재하지 않습니다."));
     }
 
     private GpuServer findValidationGpuServer(Long gpuServerId) {
         return gpuServerRepository.findById(gpuServerId)
-            .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }

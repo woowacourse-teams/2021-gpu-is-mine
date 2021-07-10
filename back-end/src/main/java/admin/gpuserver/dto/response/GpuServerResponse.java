@@ -2,6 +2,7 @@ package admin.gpuserver.dto.response;
 
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
+
 import java.util.List;
 
 public class GpuServerResponse {

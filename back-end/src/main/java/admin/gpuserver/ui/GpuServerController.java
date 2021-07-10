@@ -7,12 +7,12 @@ import admin.gpuserver.dto.response.EmptyJsonResponse;
 import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
-import java.net.URI;
-
 import admin.gpuserver.exception.GpuServerServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/labs/{labId}/gpus")
@@ -26,7 +26,7 @@ public class GpuServerController {
 
     @PostMapping
     public ResponseEntity<EmptyJsonResponse> save(@RequestBody GpuServerRequest gpuServerRequest,
-                                                           @PathVariable Long labId) {
+                                                  @PathVariable Long labId) {
         Long gpuServerId = gpuServerService.saveGpuServer(gpuServerRequest, labId);
 
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
@@ -37,7 +37,7 @@ public class GpuServerController {
 
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId,
-                                           @PathVariable Long gpuServerId) {
+                                                      @PathVariable Long gpuServerId) {
         GpuServerResponse gpuServerResponse = gpuServerService.findById(labId, gpuServerId);
 
         return ResponseEntity.ok()
