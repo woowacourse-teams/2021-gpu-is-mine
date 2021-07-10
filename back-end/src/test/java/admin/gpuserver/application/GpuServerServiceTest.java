@@ -30,14 +30,14 @@ public class GpuServerServiceTest {
     @DisplayName("특정 GPU서버를 조회한다.")
     @Test
     void 특정_GPU_서버를_조회() {
-        GpuServerResponse gpuServer = gpuServerService.findGpuServer(1L, 1L);
+        GpuServerResponse gpuServer = gpuServerService.findById(1L, 1L);
         assertThat(gpuServer).isNotNull();
     }
 
     @DisplayName("존재하지 Lab_ID로 GPU 서버를 조회한다.")
     @Test
     void 존재하지_않는_Lab_ID로_GPU_서버를_조회() {
-        assertThatThrownBy(() -> gpuServerService.findGpuServer(2L, 1L))
+        assertThatThrownBy(() -> gpuServerService.findById(2L, 1L))
             .isInstanceOf(GpuServerServiceException.class)
             .hasMessage("Lab이 존재하지 않습니다.");
     }
@@ -45,7 +45,7 @@ public class GpuServerServiceTest {
     @DisplayName("존재하지 GPU_ID로 GPU 서버를 조회한다.")
     @Test
     void 존재하지_않는_GPU_ID로_GPU_서버를_조회() {
-        assertThatThrownBy(() -> gpuServerService.findGpuServer(1L, 3L))
+        assertThatThrownBy(() -> gpuServerService.findById(1L, 3L))
             .isInstanceOf(GpuServerServiceException.class)
             .hasMessage("GPU 서버가 존재하지 않습니다.");
     }
@@ -53,14 +53,14 @@ public class GpuServerServiceTest {
     @DisplayName("GPU 서버 전체를 조회 한다.")
     @Test
     void 전체_조회() {
-        GpuServerResponses gpuServers = gpuServerService.findAllGpuServer(1L);
+        GpuServerResponses gpuServers = gpuServerService.findAll(1L);
         assertThat(gpuServers.getGpuServerResponses()).hasSize(2);
     }
 
     @DisplayName("존재하지 Lab_ID로 GPU 서버 전체를 조회한다")
     @Test
     void 존재하지_않는_Lab_ID로_전체_조회() {
-        assertThatThrownBy(() -> gpuServerService.findAllGpuServer(2L))
+        assertThatThrownBy(() -> gpuServerService.findAll(2L))
             .isInstanceOf(GpuServerServiceException.class)
             .hasMessage("Lab이 존재하지 않습니다.");
     }
@@ -69,13 +69,13 @@ public class GpuServerServiceTest {
     @Test
     void 이름_수정() {
         // 이름 수정 전
-        GpuServerResponse gpuServer = gpuServerService.findGpuServer(1L, 1L);
+        GpuServerResponse gpuServer = gpuServerService.findById(1L, 1L);
         assertThat(gpuServer.getServerName()).isEqualTo("GPU서버1");
 
         // 이름 수정 후
         GpuServerNameUpdateRequest gpuServerName = new GpuServerNameUpdateRequest("newGPU서버1");
         gpuServerService.updateGpuServer(gpuServerName, 1L, 1L);
-        gpuServer = gpuServerService.findGpuServer(1L, 1L);
+        gpuServer = gpuServerService.findById(1L, 1L);
         assertThat(gpuServer.getServerName()).isEqualTo("newGPU서버1");
     }
 

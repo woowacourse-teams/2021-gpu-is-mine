@@ -35,7 +35,7 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponse findGpuServer(Long labId, Long gpuServerId) {
+    public GpuServerResponse findById(Long labId, Long gpuServerId) {
         labValidation(labId);
         GpuServer gpuServer = findValidationGpuServer(gpuServerId);
         GpuBoard gpuBoard = gpuServer.getGpuBoard();
@@ -43,7 +43,7 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponses findAllGpuServer(Long labId) {
+    public GpuServerResponses findAll(Long labId) {
         labValidation(labId);
         List<GpuServer> gpuServers = gpuServerRepository.findAll();
         return new GpuServerResponses(gpuServers);
