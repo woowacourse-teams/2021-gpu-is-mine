@@ -8,6 +8,7 @@ import admin.gpuserver.domain.repository.DeleteHistoryRepository;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.domain.repository.LabRepository;
+import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
@@ -45,7 +46,7 @@ public class GpuServerService {
     @Transactional(readOnly = true)
     public GpuServerResponses findAll(Long labId) {
         labValidation(labId);
-        List<GpuServer> gpuServers = gpuServerRepository.findAll();
+        List<GpuServer> gpuServers = gpuServerRepository.findAllByDeletedFalse();
         return new GpuServerResponses(gpuServers);
     }
 
@@ -68,6 +69,7 @@ public class GpuServerService {
         deleteHistoryRepository.save(new DeleteHistory(gpuServer));
     }
 
+    //todo : refactor
     @Transactional
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         labValidation(labId);
@@ -75,7 +77,10 @@ public class GpuServerService {
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
             gpuServerRequest.getMemorySize(),
             gpuServerRequest.getMemorySize(), lab);
+        GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
+        GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(), gpuBoardRequest.getModelName(), gpuServer);
         gpuServerRepository.save(gpuServer);
+        gpuBoardRepository.save(gpuBoard);
         return gpuServer.getId();
     }
 

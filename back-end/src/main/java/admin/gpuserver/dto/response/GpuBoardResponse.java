@@ -3,10 +3,13 @@ package admin.gpuserver.dto.response;
 import admin.gpuserver.domain.GpuBoard;
 
 public class GpuBoardResponse {
-    private final Long id;
-    private final String modelName;
-    private final Long performance;
-    private final Boolean isWorking;
+    private Long id;
+    private String modelName;
+    private Long performance;
+    private Boolean isWorking;
+
+    public GpuBoardResponse() {
+    }
 
     private GpuBoardResponse(Long id, String modelName, Long performance, Boolean isWorking) {
         this.id = id;
@@ -31,7 +34,7 @@ public class GpuBoardResponse {
         return performance;
     }
 
-    public Boolean getWorking() {
+    public Boolean getIsWorking() {
         return isWorking;
     }
 }

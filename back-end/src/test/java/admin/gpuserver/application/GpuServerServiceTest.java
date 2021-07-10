@@ -54,7 +54,7 @@ public class GpuServerServiceTest {
     @Test
     void 전체_조회() {
         GpuServerResponses gpuServers = gpuServerService.findAll(1L);
-        assertThat(gpuServers.getGpuServerResponses()).hasSize(2);
+        assertThat(gpuServers.getGpus()).hasSize(2);
     }
 
     @DisplayName("존재하지 Lab_ID로 GPU 서버 전체를 조회한다")

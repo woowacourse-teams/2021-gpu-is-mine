@@ -6,13 +6,16 @@ import java.util.List;
 
 public class GpuServerResponse {
 
-    private final Long id;
-    private final String serverName;
-    private final Long memorySize;
-    private final Long diskSize;
-    private final Boolean isOn;
-    private final GpuBoardResponse gpuBoard;
-    private final List<JobResponse> jobs;
+    private Long id;
+    private String serverName;
+    private Long memorySize;
+    private Long diskSize;
+    private Boolean isOn;
+    private GpuBoardResponse gpuBoard;
+    private List<JobResponse> jobs;
+
+    public GpuServerResponse() {
+    }
 
     public GpuServerResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn, GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
         this.id = id;
@@ -50,7 +53,7 @@ public class GpuServerResponse {
         return diskSize;
     }
 
-    public Boolean getOn() {
+    public Boolean getIsOn() {
         return isOn;
     }
 
