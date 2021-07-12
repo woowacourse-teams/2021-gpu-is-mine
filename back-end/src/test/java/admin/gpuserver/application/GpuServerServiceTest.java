@@ -1,5 +1,10 @@
 package admin.gpuserver.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
@@ -12,11 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -69,9 +69,12 @@ public class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
+        GpuServerResponses gpuServerResponses = gpuServerService.findAll(1L);
+        int beforeSize = gpuServerResponses.getGpus().size();
+
         gpuServerService.delete(1L, 1L);
         GpuServerResponses gpuServers = gpuServerService.findAll(1L);
-        assertThat(gpuServers.getGpus()).hasSize(1);
+        assertThat(gpuServers.getGpus()).hasSize(beforeSize - 1);
     }
 
     @DisplayName("존재하지 Lab_ID로 GPU 서버 전체를 조회한다")
