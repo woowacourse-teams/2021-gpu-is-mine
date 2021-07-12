@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { breakpoint } from "../../styles/breakpoint";
 
-export const StyledManagerHeader = styled.header`
+export const StyledManagerSubHeader = styled.header`
   background-color: var(--primary-700);
   color: var(--on-primary-700);
 
