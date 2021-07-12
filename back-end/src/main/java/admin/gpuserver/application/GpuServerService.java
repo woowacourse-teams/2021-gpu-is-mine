@@ -27,7 +27,7 @@ public class GpuServerService {
     private DeleteHistoryRepository deleteHistoryRepository;
 
     public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
+        GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -36,31 +36,31 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long labId, Long gpuServerId) {
-        labValidation(labId);
-        GpuServer gpuServer = findValidationGpuServer(gpuServerId);
+        validateLab(labId);
+        GpuServer gpuServer = findValidGpuServer(gpuServerId);
         GpuBoard gpuBoard = gpuServer.getGpuBoard();
         return new GpuServerResponse(gpuServer, gpuBoard);
     }
 
     @Transactional(readOnly = true)
     public GpuServerResponses findAll(Long labId) {
-        labValidation(labId);
+        validateLab(labId);
         List<GpuServer> gpuServers = gpuServerRepository.findAllByDeletedFalse();
         return new GpuServerResponses(gpuServers);
     }
 
     @Transactional
     public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest,
-                                Long labId, Long gpuServerId) {
-        labValidation(labId);
-        GpuServer gpuServer = findValidationGpuServer(gpuServerId);
+        Long labId, Long gpuServerId) {
+        validateLab(labId);
+        GpuServer gpuServer = findValidGpuServer(gpuServerId);
         gpuServer.setName(gpuServerNameUpdateRequest.getName());
     }
 
     @Transactional
     public void delete(Long labId, Long gpuServerId) {
-        labValidation(labId);
-        GpuServer gpuServer = findValidationGpuServer(gpuServerId);
+        validateLab(labId);
+        GpuServer gpuServer = findValidGpuServer(gpuServerId);
         if (gpuServer.getDeleted()) {
             throw new GpuServerServiceException("Gpu 가 이미 삭제된 상태입니다");
         }
@@ -70,26 +70,28 @@ public class GpuServerService {
 
     @Transactional
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
-        labValidation(labId);
+        validateLab(labId);
         Lab lab = labRepository.findById(labId).get();
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
             gpuServerRequest.getMemorySize(),
             gpuServerRequest.getDiskSize(), lab);
         GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
-        GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(), gpuBoardRequest.getModelName(), gpuServer);
+        GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(),
+            gpuBoardRequest.getModelName(), gpuServer);
         gpuServerRepository.save(gpuServer);
         gpuBoardRepository.save(gpuBoard);
 
         return gpuServer.getId();
     }
 
-    private void labValidation(Long labId) {
-        labRepository.findById(labId)
-                .orElseThrow(() -> new GpuServerServiceException("Lab이 존재하지 않습니다."));
+    private void validateLab(Long labId) {
+        if (!labRepository.existsById(labId)) {
+            throw new GpuServerServiceException("Lab이 존재하지 않습니다.");
+        }
     }
 
-    private GpuServer findValidationGpuServer(Long gpuServerId) {
+    private GpuServer findValidGpuServer(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+            .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }
