@@ -14,10 +14,9 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class GpuServerService {
@@ -74,8 +73,8 @@ public class GpuServerService {
         labValidation(labId);
         Lab lab = labRepository.findById(labId).get();
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
-                gpuServerRequest.getMemorySize(),
-                gpuServerRequest.getMemorySize(), lab);
+            gpuServerRequest.getMemorySize(),
+            gpuServerRequest.getDiskSize(), lab);
         GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
         GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(), gpuBoardRequest.getModelName(), gpuServer);
         gpuServerRepository.save(gpuServer);
