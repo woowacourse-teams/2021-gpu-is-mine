@@ -45,5 +45,11 @@ module.exports = {
         "import/prefer-default-export": "off",
       },
     },
+    {
+      files: "**/*.tsx",
+      rules: {
+        "react/require-default-props": "off",
+      },
+    },
   ],
 };
