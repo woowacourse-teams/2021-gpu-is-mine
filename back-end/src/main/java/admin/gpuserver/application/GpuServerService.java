@@ -36,6 +36,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long labId, Long gpuServerId) {
+        System.out.println("BBB"+labId);
+        System.out.println("BBB"+labRepository.existsById(labId));
         validateLab(labId);
         GpuServer gpuServer = findValidGpuServer(gpuServerId);
         GpuBoard gpuBoard = gpuServer.getGpuBoard();
@@ -72,12 +74,15 @@ public class GpuServerService {
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         validateLab(labId);
         Lab lab = labRepository.findById(labId).get();
+
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
             gpuServerRequest.getMemorySize(),
             gpuServerRequest.getDiskSize(), lab);
+
         GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
         GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(),
             gpuBoardRequest.getModelName(), gpuServer);
+
         gpuServerRepository.save(gpuServer);
         gpuBoardRepository.save(gpuBoard);
 
@@ -85,6 +90,8 @@ public class GpuServerService {
     }
 
     private void validateLab(Long labId) {
+        System.out.println(labId);
+        System.out.println(labRepository.existsById(labId));
         if (!labRepository.existsById(labId)) {
             throw new GpuServerServiceException("Lab이 존재하지 않습니다.");
         }

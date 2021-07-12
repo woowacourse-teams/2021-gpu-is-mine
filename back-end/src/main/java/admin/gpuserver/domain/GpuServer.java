@@ -49,10 +49,6 @@ public class GpuServer extends BaseEntity {
         return lab;
     }
 
-    public List<Job> getWaitingJobs() {
-        return gpuBoard.getWaitingJobs();
-    }
-
     public String getName() {
         return name;
     }

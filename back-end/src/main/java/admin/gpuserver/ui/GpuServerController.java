@@ -66,9 +66,9 @@ public class GpuServerController {
                 .body(new EmptyJsonResponse());
     }
 
-    @DeleteMapping("/{gpuId}")
-    public ResponseEntity<EmptyJsonResponse> delete(@PathVariable Long labId, @PathVariable Long gpuId) {
-        gpuServerService.delete(labId, gpuId);
+    @DeleteMapping("/{gpuServerId}")
+    public ResponseEntity<EmptyJsonResponse> delete(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        gpuServerService.delete(labId, gpuServerId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(new EmptyJsonResponse());
