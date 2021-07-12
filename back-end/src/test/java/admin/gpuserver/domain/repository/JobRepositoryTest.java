@@ -1,5 +1,7 @@
-package admin.gpu.domain;
+package admin.gpuserver.domain.repository;
 
+import admin.gpuserver.domain.Job;
+import admin.gpuserver.domain.JobStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ class JobRepositoryTest {
     @DisplayName("실행중인 job을 조회")
     @Test
     void findByGpuIdAndWaitingFalse() {
-        Optional<Job> runningJob = jobs.findByGpuIdAndWaitingFalse(1L);
+        Optional<Job> runningJob = jobs.findByGpuBoardIdAndStatus(1L, JobStatus.RUNNING);
 
         assertThat(runningJob.isPresent()).isTrue();
     }
@@ -26,7 +28,7 @@ class JobRepositoryTest {
     @DisplayName("대기중인 job을 조회")
     @Test
     void findByGpuIdAndWaitingTrue() {
-        List<Job> actual = jobs.findByGpuIdAndWaitingTrueOrderByIdAsc(1L);
+        List<Job> actual = jobs.findByGpuBoardIdAndStatusOrderByIdAsc(1L, JobStatus.WAITING);
 
         assertThat(actual).hasSize(2);
         assertThat(actual.get(1).getName()).isEqualTo("예약4");
@@ -35,7 +37,7 @@ class JobRepositoryTest {
     @DisplayName("대기중인 job의 갯수를 조회")
     @Test
     void countByGpuIdAndWaitingTrue() {
-        Integer actual = jobs.countByGpuIdAndWaitingTrue(1L);
+        Integer actual = jobs.countByGpuBoardIdAndStatus(1L, JobStatus.WAITING);
 
         assertThat(actual).isEqualTo(2);
     }

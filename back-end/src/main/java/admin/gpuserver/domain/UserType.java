@@ -1,4 +1,4 @@
-package admin.gpu.domain;
+package admin.gpuserver.domain;
 
 public enum UserType {
     MANAGER, MEMBER

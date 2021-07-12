@@ -1,4 +1,4 @@
-package admin.gpu.domain;
+package admin.gpuserver.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

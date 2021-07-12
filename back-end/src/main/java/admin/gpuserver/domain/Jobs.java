@@ -1,4 +1,4 @@
-package admin.gpu.domain;
+package admin.gpuserver.domain;
 
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
@@ -8,12 +8,16 @@ import java.util.stream.Collectors;
 
 @Embeddable
 public class Jobs {
-    @OneToMany(mappedBy = "gpu")
+    @OneToMany(mappedBy = "gpuBoard")
     List<Job> jobs = new ArrayList<>();
 
     public List<Job> getWaitingJobs() {
         return jobs.stream()
-                .filter(Job::isWaiting)
+                .filter(job -> job.getStatus() == JobStatus.WAITING)
                 .collect(Collectors.toList());
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
     }
 }

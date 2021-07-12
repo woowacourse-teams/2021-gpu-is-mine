@@ -1,4 +1,4 @@
-package admin.gpu.domain;
+package admin.gpuserver.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
