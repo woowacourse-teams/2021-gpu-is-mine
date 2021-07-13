@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
   :root {
     font-family: "Noto Sans KR";
     font-weight: 400;
+    color: var(--text-dark);
   }
 `;
 
