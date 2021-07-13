@@ -37,10 +37,13 @@ export const Container = styled.div`
     }
 
     ${breakpoint("tablet")`
-      display: inherit;
+      &,
+      &.nav--visible {
+        display: inherit;
 
-      grid-column: 1 / 2;
-      grid-row: 2 / 4;
+        grid-column: 1 / 2;
+        grid-row: 2 / 4;
+      }
     `}
   }
 
