@@ -27,4 +27,8 @@ public class LabUser extends BaseEntity {
         this.userType = userType;
         this.lab = lab;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

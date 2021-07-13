@@ -31,12 +31,24 @@ public class Job extends BaseEntity {
         this.labUser = labUser;
     }
 
+    public Job(String name, GpuBoard gpuBoard, LabUser labUser) {
+        this(name, JobStatus.WAITING, gpuBoard, labUser);
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public JobStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(JobStatus status) {
+        this.status = status;
     }
 
     public Long getId() {
@@ -47,23 +59,23 @@ public class Job extends BaseEntity {
         return gpuBoard;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setStatus(JobStatus status) {
-        this.status = status;
-    }
-
     public void setGpuBoard(GpuBoard gpuBoard) {
         this.gpuBoard = gpuBoard;
+    }
+
+    public LabUser getLabUser() {
+        return labUser;
     }
 
     public void setLabUser(LabUser labUser) {
         this.labUser = labUser;
     }
 
-    public LabUser getLabUser() {
-        return labUser;
+    public void cancel() {
+        this.status = JobStatus.CANCELED;
+    }
+
+    public void complete() {
+        this.status = JobStatus.COMPLETED;
     }
 }

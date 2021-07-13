@@ -48,4 +48,18 @@ public class GpuBoard extends BaseEntity {
     public GpuServer getGpuServer() {
         return gpuServer;
     }
+
+    public void addJob(Job newJob) {
+        // TODO :: JOB QUEUE
+    }
+
+    public void cancel(Job job) {
+        // TODO :: JOB QUEUE
+        job.cancel();
+    }
+
+    public void complete(Job job) {
+        // TODO :: JOB QUEUE
+        job.complete();
+    }
 }

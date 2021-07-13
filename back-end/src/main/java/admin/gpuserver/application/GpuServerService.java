@@ -8,7 +8,6 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +21,14 @@ public class GpuServerService {
     private GpuServerRepository gpuServerRepository;
     private GpuBoardRepository gpuBoardRepository;
     private DeleteHistoryRepository deleteHistoryRepository;
-
-    @Autowired
     private JobRepository jobRepository;
 
-    public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
+    public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository, GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository, JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.deleteHistoryRepository = deleteHistoryRepository;
+        this.jobRepository = jobRepository;
     }
 
     @Transactional(readOnly = true)

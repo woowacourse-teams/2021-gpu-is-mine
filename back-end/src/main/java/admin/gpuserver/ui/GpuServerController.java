@@ -34,7 +34,6 @@ public class GpuServerController {
                 .body(new EmptyJsonResponse());
     }
 
-
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long gpuServerId) {
         GpuServerResponse gpuServerResponse = gpuServerService.findById(gpuServerId);
@@ -46,7 +45,6 @@ public class GpuServerController {
         GpuServerResponses gpuServerResponses = gpuServerService.findAll(labId);
         return ResponseEntity.ok(gpuServerResponses);
     }
-
 
     @PutMapping("/{gpuServerId}")
     public ResponseEntity<EmptyJsonResponse> modify(
