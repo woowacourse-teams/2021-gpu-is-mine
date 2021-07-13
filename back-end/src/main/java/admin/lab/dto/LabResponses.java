@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LabResponses {
-    List<LabResponse> labResponses;
+    private final List<LabResponse> labResponses;
 
     public static LabResponses of(List<Lab> labs) {
         return new LabResponses(
@@ -16,7 +16,7 @@ public class LabResponses {
         );
     }
 
-    public LabResponses(List<LabResponse> labResponses) {
+    private LabResponses(List<LabResponse> labResponses) {
         this.labResponses = labResponses;
     }
 

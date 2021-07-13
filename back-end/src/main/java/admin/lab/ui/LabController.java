@@ -57,8 +57,8 @@ public class LabController {
     }
 
     @ExceptionHandler(LabException.class)
-    public ResponseEntity<ExceptionResponse> handleException(GpuServerServiceException e) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+    public ResponseEntity<ExceptionResponse> handleException(LabException exception) {
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception);
         return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }

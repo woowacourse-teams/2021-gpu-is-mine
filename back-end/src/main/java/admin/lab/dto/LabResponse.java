@@ -10,7 +10,7 @@ public class LabResponse {
         return new LabResponse(lab.getId(), lab.getName());
     }
 
-    public LabResponse(Long id, String name) {
+    private LabResponse(Long id, String name) {
         this.id = id;
         this.name = name;
     }
