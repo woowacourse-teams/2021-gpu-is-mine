@@ -1,5 +1,7 @@
 package admin.gpuserver.domain;
 
+import admin.member.domain.Member;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,8 +15,8 @@ public class Job extends BaseEntity {
     @Column(nullable = false, name = "status")
     private JobStatus status;
     @ManyToOne
-    @JoinColumn(name = "lab_user_id", nullable = false)
-    private LabUser labUser;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
     @ManyToOne
     @JoinColumn(name = "gpu_board_id", nullable = false)
     private GpuBoard gpuBoard;
