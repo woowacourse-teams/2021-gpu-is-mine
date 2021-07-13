@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class LabService {
     private final LabRepository labRepository;
 
@@ -27,11 +26,13 @@ public class LabService {
         return lab.getId();
     }
 
+    @Transactional(readOnly = true)
     public LabResponse findById(Long labId) {
         Lab lab = findLabById(labId);
         return LabResponse.of(lab);
     }
 
+    @Transactional(readOnly = true)
     public LabResponses findAll() {
         List<Lab> labs = labRepository.findAll();
         return LabResponses.of(labs);
