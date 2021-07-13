@@ -14,6 +14,12 @@ public class Job extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "status")
     private JobStatus status;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+    @ManyToOne
+    @JoinColumn(name = "gpu_board_id", nullable = false)
+    private GpuBoard gpuBoard;
 
     protected Job() {
     }
