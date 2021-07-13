@@ -60,11 +60,11 @@ export const Container = styled.div`
 
   .footer {
     grid-row: 5 / 6;
+    justify-self: center;
 
     ${breakpoint("tablet")`
       grid-column: 2 / 3;
       grid-row: 3 / 4;
-      justify-self: center;
     `}
   }
 `;
