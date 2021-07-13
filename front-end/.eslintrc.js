@@ -44,6 +44,12 @@ module.exports = {
       },
     },
     {
+      files: "./src/types/**/*.{ts,tsx}",
+      rules: {
+        "@typescript-eslint/ban-types": "off",
+      },
+    },
+    {
       files: "**/*.styled.ts",
       rules: {
         "import/prefer-default-export": "off",
