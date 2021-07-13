@@ -66,36 +66,26 @@ public class GpuServerServiceTest {
         gpuServer2 = gpuServerRepository.save(new GpuServer("GPU서버2", true, 800L, 1024L, lab));
 
         gpuBoard1 = gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", gpuServer1));
-        gpuServer1.setGpuBoard(gpuBoard1);
-
         gpuBoard2 = gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", gpuServer2));
-        gpuServer2.setGpuBoard(gpuBoard2);
 
         labUser = labUserRepository.save(new LabUser("관리자1", UserType.MANAGER, lab));
 
-        job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING));
-        job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING));
-        job3 = jobRepository.save(new Job("예약3", JobStatus.WAITING));
-        job4 = jobRepository.save(new Job("예약4", JobStatus.WAITING));
-
-        gpuBoard1.setJobs(List.of(job1, job2, job3, job4));
+        job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard1, labUser));
+        job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard1, labUser));
+        job3 = jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard1, labUser));
+        job4 = jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard1, labUser));
     }
 
     @DisplayName("특정 GPU서버를 조회한다.")
     @Test
     void 특정_GPU_서버를_조회() {
-        GpuServerResponse gpuServer = gpuServerService.findById(lab.getId(), gpuServer1.getId());
-        assertThat(gpuServer).isNotNull();
-    }
+        GpuServerResponse gpuServerResponse = gpuServerService.findById(gpuServer1.getId());
 
-    @DisplayName("존재하지 Lab_ID로 GPU 서버를 조회한다.")
-    @Test
-    void 존재하지_않는_Lab_ID로_GPU_서버를_조회() {
-        final Long nonexistentLabId = Long.MAX_VALUE;
-
-        assertThatThrownBy(() -> gpuServerService.findById(nonexistentLabId, gpuServer1.getId()))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("Lab이 존재하지 않습니다.");
+        assertThat(gpuServerResponse).isNotNull();
+        assertThat(gpuServerResponse.getGpuBoard()).isNotNull();
+        assertThat(gpuServerResponse.getGpuBoard().getId()).isNotNull();
+        assertThat(gpuServerResponse.getJobs()).isNotNull();
+        assertThat(gpuServerResponse.getJobs().size()).isEqualTo(4);
     }
 
     @DisplayName("존재하지 GPU_ID로 GPU 서버를 조회한다.")
@@ -103,16 +93,16 @@ public class GpuServerServiceTest {
     void 존재하지_않는_GPU_ID로_GPU_서버를_조회() {
         final Long nonexistentServerId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> gpuServerService.findById(lab.getId(), nonexistentServerId))
+        assertThatThrownBy(() -> gpuServerService.findById(nonexistentServerId))
                 .isInstanceOf(GpuServerServiceException.class)
                 .hasMessage("GPU 서버가 존재하지 않습니다.");
     }
 
-    @DisplayName("삭제된 GPU_ID로 GPU 서버를 조회한다.")
+    @DisplayName("삭제된 GPU_Server_ID로 GPU 서버를 조회한다.")
     @Test
-    void 삭제된_GPU_ID로_GPU_서버를_조회() {
-        gpuServerService.delete(lab.getId(), gpuServer1.getId());
-        assertThatThrownBy(() -> gpuServerService.findById(lab.getId(), gpuServer1.getId()))
+    void 삭제된_GPU_Server_ID로_GPU_서버를_조회() {
+        gpuServerService.delete(gpuServer1.getId());
+        assertThatThrownBy(() -> gpuServerService.findById(gpuServer1.getId()))
                 .isInstanceOf(GpuServerServiceException.class)
                 .hasMessage("GPU 서버가 존재하지 않습니다.");
     }
@@ -123,7 +113,7 @@ public class GpuServerServiceTest {
         GpuServerResponses gpuServerResponses = gpuServerService.findAll(lab.getId());
         int beforeSize = gpuServerResponses.getGpus().size();
 
-        gpuServerService.delete(lab.getId(), gpuServer1.getId());
+        gpuServerService.delete(gpuServer1.getId());
 
         GpuServerResponses gpuServers = gpuServerService.findAll(lab.getId());
         assertThat(gpuServers.getGpus()).hasSize(beforeSize - 1);
@@ -141,44 +131,32 @@ public class GpuServerServiceTest {
     @DisplayName("GPU 서버의 이름을 수정한다.")
     @Test
     void 이름_수정() {
-        GpuServerResponse gpuServer = gpuServerService.findById(lab.getId(), gpuServer1.getId());
-        assertThat(gpuServer.getServerName()).isEqualTo("GPU서버1");
+        assertThat(gpuServer1.getName()).isNotEqualTo("newGPU서버1");
 
         GpuServerNameUpdateRequest gpuServerName = new GpuServerNameUpdateRequest("newGPU서버1");
-        gpuServerService.updateGpuServer(gpuServerName, lab.getId(), gpuServer1.getId());
+        gpuServerService.updateGpuServer(gpuServerName, gpuServer1.getId());
 
-        gpuServer = gpuServerService.findById(lab.getId(), gpuServer1.getId());
+        GpuServerResponse gpuServer = gpuServerService.findById(gpuServer1.getId());
         assertThat(gpuServer.getServerName()).isEqualTo("newGPU서버1");
     }
 
-    @DisplayName("존재하지 Lab_ID로 GPU 서버의 이름을 수정한다.")
-    @Test
-    void 존재하지_않는_Lab_ID로_GPU_서버의_이름을_수정() {
-        final Long nonexistentLabId = Long.MAX_VALUE;
-
-        GpuServerNameUpdateRequest gpuServerName = new GpuServerNameUpdateRequest("newGPU서버1");
-        assertThatThrownBy(() -> gpuServerService.updateGpuServer(gpuServerName, nonexistentLabId, gpuServer1.getId()))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("Lab이 존재하지 않습니다.");
-    }
-
-    @DisplayName("존재하지 GPU_ID로 GPU 서버의 이름을 수정한다.")
+    @DisplayName("존재하지 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
     @Test
     void 존재하지_않는_GPU_ID로_GPU_서버의_이름을_수정() {
         final Long nonexistentServerId = Long.MAX_VALUE;
 
         GpuServerNameUpdateRequest gpuServerName = new GpuServerNameUpdateRequest("newGPU서버1");
-        assertThatThrownBy(() -> gpuServerService.updateGpuServer(gpuServerName, lab.getId(), nonexistentServerId))
+        assertThatThrownBy(() -> gpuServerService.updateGpuServer(gpuServerName, nonexistentServerId))
                 .isInstanceOf(GpuServerServiceException.class)
                 .hasMessage("GPU 서버가 존재하지 않습니다.");
     }
 
-    @DisplayName("삭제된 GPU_ID로 GPU 서버의 이름을 수정한다.")
+    @DisplayName("삭제된 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
     @Test
     void 삭제된_GPU_ID로_GPU_서버의_이름을_수정() {
-        gpuServerService.delete(lab.getId(), gpuServer1.getId());
+        gpuServerService.delete(gpuServer1.getId());
         GpuServerNameUpdateRequest gpuServerName = new GpuServerNameUpdateRequest("newGPU서버1");
-        assertThatThrownBy(() -> gpuServerService.updateGpuServer(gpuServerName, lab.getId(), gpuServer1.getId()))
+        assertThatThrownBy(() -> gpuServerService.updateGpuServer(gpuServerName, gpuServer1.getId()))
                 .isInstanceOf(GpuServerServiceException.class)
                 .hasMessage("GPU 서버가 존재하지 않습니다.");
     }
@@ -186,7 +164,7 @@ public class GpuServerServiceTest {
     @DisplayName("GPU 서버를 논리적으로 삭제하는 경우")
     @Test
     void deleteWithGpuId() {
-        gpuServerService.delete(lab.getId(), gpuServer1.getId());
+        gpuServerService.delete(gpuServer1.getId());
         GpuServer deletedGpuServer = gpuServerRepository.findById(gpuServer1.getId()).orElseThrow(IllegalArgumentException::new);
         assertTrue(deletedGpuServer.getDeleted());
     }
@@ -196,15 +174,15 @@ public class GpuServerServiceTest {
     void deleteWithoutGpuId() {
         final Long nonexistentServerId = Long.MAX_VALUE;
 
-        assertThrows(GpuServerServiceException.class, () -> gpuServerService.delete(lab.getId(), nonexistentServerId));
+        assertThrows(GpuServerServiceException.class, () -> gpuServerService.delete(nonexistentServerId));
     }
 
     @DisplayName("GPU 서버 삭제 과정에서 해당 GPU 가 이미 논리적으로 삭제되어 있는 경우")
     @Test
     void logicalDeletedGpuServerDelete() {
-        gpuServerService.delete(lab.getId(), gpuServer1.getId());
+        gpuServerService.delete(gpuServer1.getId());
 
-        assertThrows(GpuServerServiceException.class, () -> gpuServerService.delete(lab.getId(), gpuServer1.getId()));
+        assertThrows(GpuServerServiceException.class, () -> gpuServerService.delete(gpuServer1.getId()));
     }
 
     @DisplayName("저장된 서버를 확인한다")

@@ -1,21 +1,22 @@
 package admin.gpuserver.domain;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class GpuServer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private Boolean isOn = false;
+
     private Long memorySize;
     private Long diskSize;
-    @OneToOne(mappedBy = "gpuServer")
-    private GpuBoard gpuBoard;
+
     @Column(nullable = false)
     private Boolean deleted = false;
 
@@ -69,12 +70,8 @@ public class GpuServer extends BaseEntity {
         return diskSize;
     }
 
-    public GpuBoard getGpuBoard() {
-        return gpuBoard;
-    }
-
-    public void setGpuBoard(GpuBoard gpuBoard) {
-        this.gpuBoard = gpuBoard;
+    public Boolean getOn() {
+        return isOn;
     }
 
     public Boolean getDeleted() {

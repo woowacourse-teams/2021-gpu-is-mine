@@ -2,6 +2,7 @@ package admin.gpuserver.dto.response;
 
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.Job;
 
 import java.util.List;
 
@@ -28,14 +29,14 @@ public class GpuServerResponse {
         this.jobs = jobs;
     }
 
-    public GpuServerResponse(GpuServer gpuServer, GpuBoard gpuBoard) {
+    public GpuServerResponse(GpuServer gpuServer, GpuBoard gpuBoard, List<Job> jobs) {
         this(gpuServer.getId(),
                 gpuServer.getName(),
                 gpuServer.getMemorySize(),
                 gpuServer.getDiskSize(),
                 gpuServer.getIsOn(),
                 new GpuBoardResponse(gpuBoard),
-                JobResponse.listOf(gpuBoard.getJobs()));
+                JobResponse.listOf(jobs));
     }
 
     public Long getId() {
