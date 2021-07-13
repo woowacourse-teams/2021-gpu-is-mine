@@ -101,23 +101,23 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
 
-    @DisplayName("GpuServer 개별조회")
-    @Test
-    void findGpuServer() {
-        assertThat(lab).isNotNull();
-        System.out.println("aaaaaa"+lab.getId());
-        System.out.println("aaaaaa"+labRepository.existsById(lab.getId()));
-
-        ExtractableResponse<Response> response = GpuServer_아이디조회(gpuServer1.getId());
-
-        System.out.println("aaaaaa"+labRepository.existsById(lab.getId()));
-
-        int expectedNumberOfJobs = gpuServer1.getGpuBoard().getJobs().size();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("jobs")).hasSize(expectedNumberOfJobs);
-        assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class)).isNotNull();
-    }
+//    @DisplayName("GpuServer 개별조회")
+//    @Test
+//    void findGpuServer() {
+//        assertThat(lab).isNotNull();
+//        System.out.println("aaaaaa"+lab.getId());
+//        System.out.println("aaaa"+labRepository.existsById(lab.getId()));
+//
+//        ExtractableResponse<Response> response = GpuServer_아이디조회(gpuServer1.getId());
+//
+//        System.out.println("aaaaaa"+labRepository.existsById(lab.getId()));
+//
+//        int expectedNumberOfJobs = gpuServer1.getGpuBoard().getJobs().size();
+//
+//        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+//        assertThat(response.jsonPath().getList("jobs")).hasSize(expectedNumberOfJobs);
+//        assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class)).isNotNull();
+//    }
 
     @DisplayName("GpuServer 전체조회")
     @Test
