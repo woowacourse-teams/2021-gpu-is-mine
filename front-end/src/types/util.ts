@@ -1,1 +1,2 @@
-export type Optional<T extends object, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type Optional<T extends Record<string | symbol, unknown>, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>;
