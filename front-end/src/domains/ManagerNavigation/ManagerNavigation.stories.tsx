@@ -12,6 +12,4 @@ const Template: ComponentStory<typeof ManagerNavigation> = (args) => (
 
 export const Default = Template.bind({});
 
-Default.args = {
-  menu: ["GPU 서버 관리", "유저 관리"],
-};
+Default.args = {};
