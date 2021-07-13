@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class LabServiceTest {
     private static final LabRequest LAB_REQUEST = new LabRequest("labName");
+
     @Autowired
     private LabService labService;
 

@@ -1,6 +1,5 @@
 package admin.lab.ui;
 
-import admin.gpuserver.dto.response.EmptyJsonResponse;
 import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.exception.GpuServerServiceException;
 import admin.lab.application.LabService;
@@ -23,10 +22,11 @@ public class LabController {
     }
 
     @PostMapping
-    public ResponseEntity<EmptyJsonResponse> save(@RequestBody LabRequest labRequest) {
+    public ResponseEntity<Void> save(@RequestBody LabRequest labRequest) {
         Long createdId = labService.save(labRequest);
         URI uri = URI.create("/api/labs/" + createdId);
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri)
+                .build();
     }
 
 
