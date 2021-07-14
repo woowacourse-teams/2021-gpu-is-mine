@@ -29,7 +29,7 @@ public class MessagingRabbitmqApplication {
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("routingKey.#");
+        return BindingBuilder.bind(queue).to(exchange).with("routingKey.1");
     }
 
     @Bean
