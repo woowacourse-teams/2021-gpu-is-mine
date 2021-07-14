@@ -2,8 +2,8 @@ package admin.gpuserver.ui;
 
 import admin.AcceptanceTest;
 import admin.gpuserver.dto.request.GpuBoardRequest;
-import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuBoardResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.lab.dto.LabRequest;
@@ -41,7 +41,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         );
 
         dummyGpuServerIds = gpuServerRequests.stream().map(
-                request -> GpuServer_생성후아이디찾기(request)
+                GpuServerAcceptanceTest::GpuServer_생성후아이디찾기
         ).collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         Long gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
 
         // when
-        GpuServerNameUpdateRequest gpuServerNameUpdateRequest = new GpuServerNameUpdateRequest("서버이름변경");
+        GpuServerUpdateRequest gpuServerNameUpdateRequest = new GpuServerUpdateRequest("서버이름변경");
         ExtractableResponse<Response> response = GpuServer_이름변경(gpuServerNameUpdateRequest, gpuServerId);
 
         // then
@@ -156,7 +156,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 
-    public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerNameUpdateRequest gpuServerNameUpdateRequest, Long gpuServerId) {
+    public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest, Long gpuServerId) {
         return RestAssured
                 .given().log().all()
                 .body(gpuServerNameUpdateRequest)

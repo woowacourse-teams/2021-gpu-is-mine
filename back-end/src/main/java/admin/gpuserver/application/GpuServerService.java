@@ -8,6 +8,8 @@ import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
+import admin.lab.domain.Lab;
+import admin.lab.domain.repository.LabRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

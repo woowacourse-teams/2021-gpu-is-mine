@@ -1,6 +1,7 @@
 package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuServerServiceException;
+import admin.lab.domain.Lab;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

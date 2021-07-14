@@ -8,6 +8,8 @@ import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
+import admin.lab.domain.Lab;
+import admin.lab.domain.repository.LabRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
