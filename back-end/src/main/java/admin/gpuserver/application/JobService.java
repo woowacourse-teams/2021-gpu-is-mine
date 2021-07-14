@@ -48,7 +48,7 @@ public class JobService {
 
     @Transactional
     public void cancel(Long labUserId, Long jobId) {
-        Job job = jobRepository.findByIdAndUserId(jobId, labUserId)
+        Job job = jobRepository.findByIdAndLabUserId(jobId, labUserId)
                 .orElseThrow(() -> new IllegalArgumentException("job 이 없습니다."));
 
         GpuBoard gpuBoard = job.getGpuBoard();
