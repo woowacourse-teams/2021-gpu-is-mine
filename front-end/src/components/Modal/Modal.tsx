@@ -1,14 +1,14 @@
 import { ReactNode, MouseEvent } from "react";
 import Portal from "../Portal/Portal";
 import Dimmer from "../Dimmer/Dimmer";
-
+import { useModal } from "../ModalProvider/ModalProvider";
 interface ModalProps {
   children: ReactNode;
-  isOpen: boolean;
-  close: () => void;
 }
 
-const Modal = ({ children, isOpen, close }: ModalProps) => {
+const Modal = ({ children }: ModalProps) => {
+  const { isOpen, close } = useModal();
+
   const handleDimmerClick = (event: MouseEvent) => {
     if (event.currentTarget === event.target) {
       close();
