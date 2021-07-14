@@ -31,10 +31,6 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "jsx-a11y/label-has-associated-control": [
-      "error",
-      { controlComponents: ["Input"], assert: "either" },
-    ],
   },
   overrides: [
     {
