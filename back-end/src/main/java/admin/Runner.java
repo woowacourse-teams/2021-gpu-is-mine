@@ -1,4 +1,4 @@
-package queue;
+package admin;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;

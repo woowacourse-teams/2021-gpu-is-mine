@@ -1,4 +1,4 @@
-package queue;
+package admin;
 
 import org.springframework.stereotype.Component;
 
