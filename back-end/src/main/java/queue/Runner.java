@@ -2,9 +2,8 @@ package queue;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class Runner implements CommandLineRunner {
 
     private final RabbitTemplate rabbitTemplate;
