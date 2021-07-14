@@ -1,5 +1,7 @@
 package admin.gpuserver.domain;
 
+import admin.gpuserver.exception.GpuServerServiceException;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,10 +21,19 @@ public class GpuBoard extends BaseEntity {
     }
 
     public GpuBoard(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        validate(isWorking, performance, modelName, gpuServer);
         this.isWorking = isWorking;
         this.performance = performance;
         this.modelName = modelName;
         this.gpuServer = gpuServer;
+    }
+
+    private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        if (isWorking == null || performance == null || performance <= 0
+                || modelName == null || modelName.isEmpty()
+                || gpuServer == null) {
+            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        }
     }
 
     public Boolean getWorking() {

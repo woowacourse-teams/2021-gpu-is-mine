@@ -1,5 +1,7 @@
 package admin.gpuserver.domain;
 
+import admin.gpuserver.exception.GpuServerServiceException;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,13 @@ public class DeleteHistory extends BaseEntity {
     }
 
     public DeleteHistory(GpuServer gpuServer) {
+        validate(gpuServer);
         this.gpuServer = gpuServer;
+    }
+
+    private void validate(GpuServer gpuServer) {
+        if (gpuServer == null) {
+            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        }
     }
 }
