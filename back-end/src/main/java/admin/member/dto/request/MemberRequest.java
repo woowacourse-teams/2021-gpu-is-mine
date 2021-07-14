@@ -1,4 +1,4 @@
-package admin.member.dto;
+package admin.member.dto.request;
 
 import javax.validation.constraints.Email;
 

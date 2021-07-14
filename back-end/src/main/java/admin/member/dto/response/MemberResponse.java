@@ -1,4 +1,4 @@
-package admin.member.dto;
+package admin.member.dto.response;
 
 import admin.lab.dto.LabResponse;
 import admin.member.domain.Member;

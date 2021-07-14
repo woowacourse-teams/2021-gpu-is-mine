@@ -1,8 +1,9 @@
 package admin.member.ui;
 
 import admin.member.application.MemberService;
-import admin.member.dto.MemberRequest;
-import admin.member.dto.MemberResponse;
+import admin.member.dto.request.MemberInfoRequest;
+import admin.member.dto.request.MemberRequest;
+import admin.member.dto.response.MemberResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class MemberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateMember(@PathVariable Long id, @RequestBody MemberRequest request) {
-        memberService.updateMember(id, request);
+    public ResponseEntity<Void> updateMember(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
+        memberService.updateMemberInfo(id, request);
         return ResponseEntity.noContent().build();
     }
 
