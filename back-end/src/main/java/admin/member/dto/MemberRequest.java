@@ -13,6 +13,14 @@ public class MemberRequest {
     public MemberRequest() {
     }
 
+    public MemberRequest(String email, String password, String name, String memberType, Long labId) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.memberType = memberType;
+        this.labId = labId;
+    }
+
     public String getEmail() {
         return email;
     }

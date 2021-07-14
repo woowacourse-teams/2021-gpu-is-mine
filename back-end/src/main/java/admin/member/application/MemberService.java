@@ -26,8 +26,7 @@ public class MemberService {
 
     public Long createMember(MemberRequest request) {
         Lab lab = labRepository.findById(request.getLabId()).orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
-        MemberType memberType = MemberType.valueOf(request.getMemberType()
-                .toUpperCase(Locale.ROOT));
+        MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
 
         Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
         memberRepository.save(member);
