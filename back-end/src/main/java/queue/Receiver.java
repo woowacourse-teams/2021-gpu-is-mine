@@ -1,4 +1,4 @@
-package admin;
+package queue;
 
 public class Receiver {
     public void receiveMessage(String message) {
