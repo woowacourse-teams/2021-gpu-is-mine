@@ -28,7 +28,6 @@ public class LabController {
                 .build();
     }
 
-
     @GetMapping("/{labId}")
     public ResponseEntity<LabResponse> findById(@PathVariable Long labId) {
         LabResponse labResponse = labService.findById(labId);

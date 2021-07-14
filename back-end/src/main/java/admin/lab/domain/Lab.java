@@ -1,7 +1,6 @@
 package admin.lab.domain;
 
 import admin.gpuserver.domain.BaseEntity;
-
 import admin.gpuserver.exception.GpuServerServiceException;
 
 import javax.persistence.Entity;

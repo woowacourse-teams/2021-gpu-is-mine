@@ -1,7 +1,13 @@
 package admin.gpuserver.application;
 
-import admin.gpuserver.domain.*;
-import admin.gpuserver.domain.repository.*;
+import admin.gpuserver.domain.DeleteHistory;
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.Job;
+import admin.gpuserver.domain.repository.DeleteHistoryRepository;
+import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.gpuserver.domain.repository.JobRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
@@ -98,6 +104,6 @@ public class GpuServerService {
 
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-            .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }

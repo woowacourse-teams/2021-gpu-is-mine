@@ -1,7 +1,10 @@
 package admin.gpuserver.application;
 
 import admin.gpuserver.domain.*;
-import admin.gpuserver.domain.repository.*;
+import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.gpuserver.domain.repository.JobRepository;
+import admin.gpuserver.domain.repository.LabUserRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;

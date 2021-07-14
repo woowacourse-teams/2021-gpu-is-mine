@@ -28,6 +28,78 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     static Long dummyLabId;
     static List<Long> dummyGpuServerIds;
+    @LocalServerPort
+    int port;
+
+    public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
+        return RestAssured
+                .given().log().all()
+                .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> GpuServer_전체조회() {
+        return RestAssured
+                .given().log().all()
+                .when().get("/api/labs/" + dummyLabId + "/gpus/")
+                .then().log().all()
+                .extract();
+    }
+
+    public static int GpuServer_전체조회갯수() {
+        ExtractableResponse<Response> response = GpuServer_전체조회();
+        List<GpuServerResponse> gpus = response.jsonPath().getList("gpuServers", GpuServerResponse.class);
+        return gpus.size();
+    }
+
+    public static ExtractableResponse<Response> GpuServer_생성(GpuServerRequest gpuServerRequest) {
+        return RestAssured
+                .given().log().all()
+                .body(gpuServerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/labs/" + dummyLabId + "/gpus")
+                .then().log().all()
+                .extract();
+    }
+
+    public static Long GpuServer_생성후아이디찾기(GpuServerRequest gpuServerRequest) {
+        ExtractableResponse<Response> response = GpuServer_생성(gpuServerRequest);
+
+        String[] locationPaths = response.header("Location").split("/");
+        return Long.parseLong(locationPaths[locationPaths.length - 1]);
+    }
+
+    public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest, Long gpuServerId) {
+        return RestAssured
+                .given().log().all()
+                .body(gpuServerNameUpdateRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/api/labs/1/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> GpuServer_삭제(Long gpuServerId) {
+        return RestAssured
+                .given().log().all()
+                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static Long lab_생성(LabRequest labRequest) {
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .body(labRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/labs/")
+                .then().log().all()
+                .extract();
+
+        String[] locationPaths = response.header("Location").split("/");
+        return Long.parseLong(locationPaths[locationPaths.length - 1]);
+    }
 
     @BeforeEach
     public void setUp() {
@@ -45,9 +117,6 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ).collect(Collectors.toList());
     }
 
-    @LocalServerPort
-    int port;
-
     @DisplayName("GpuServer 개별조회")
     @Test
     void findGpuServer() {
@@ -63,7 +132,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("gpus", GpuServerResponse.class)).hasSize(dummyGpuServerIds.size());
+        assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class)).hasSize(dummyGpuServerIds.size());
     }
 
     @DisplayName("GpuServer 생성")
@@ -115,75 +184,5 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         int afterDeletedCount = GpuServer_전체조회갯수();
         assertThat(afterDeletedCount).isEqualTo(previousCount);
-    }
-
-    public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
-        return RestAssured
-                .given().log().all()
-                .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> GpuServer_전체조회() {
-        return RestAssured
-                .given().log().all()
-                .when().get("/api/labs/" + dummyLabId + "/gpus/")
-                .then().log().all()
-                .extract();
-    }
-
-    public static int GpuServer_전체조회갯수() {
-        ExtractableResponse<Response> response = GpuServer_전체조회();
-        List<GpuServerResponse> gpus = response.jsonPath().getList("gpus", GpuServerResponse.class);
-        return gpus.size();
-    }
-
-    public static ExtractableResponse<Response> GpuServer_생성(GpuServerRequest gpuServerRequest) {
-        return RestAssured
-                .given().log().all()
-                .body(gpuServerRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/labs/" + dummyLabId + "/gpus")
-                .then().log().all()
-                .extract();
-    }
-
-    public static Long GpuServer_생성후아이디찾기(GpuServerRequest gpuServerRequest) {
-        ExtractableResponse<Response> response = GpuServer_생성(gpuServerRequest);
-
-        String[] locationPaths = response.header("Location").split("/");
-        return Long.parseLong(locationPaths[locationPaths.length - 1]);
-    }
-
-    public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest, Long gpuServerId) {
-        return RestAssured
-                .given().log().all()
-                .body(gpuServerNameUpdateRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/api/labs/1/gpus/" + gpuServerId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> GpuServer_삭제(Long gpuServerId) {
-        return RestAssured
-                .given().log().all()
-                .when().delete("/api/labs/1/gpus/" + gpuServerId)
-                .then().log().all()
-                .extract();
-    }
-
-    public static Long lab_생성(LabRequest labRequest) {
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .body(labRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/labs/")
-                .then().log().all()
-                .extract();
-
-        String[] locationPaths = response.header("Location").split("/");
-        return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 }
