@@ -1,25 +1,13 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {  createContext, useContext } from "react";
+import useBoolean from "../../hooks/useBoolean/useBoolean";
+import { DialogContextProps, DialogProviderProps } from "../../types/dialog";
 
-interface ModalContextProps {
-  isOpen: boolean;
-  open: () => void;
-  close: () => void;
-}
-
-interface ModalProviderProps {
-  defaultIsOpen?: boolean;
-  children: ReactNode;
-}
-
-const ModalContext = createContext({} as ModalContextProps);
+const ModalContext = createContext({} as DialogContextProps);
 
 export const useModal = () => useContext(ModalContext);
 
-const ModalProvider = ({ defaultIsOpen = false, children }: ModalProviderProps) => {
-  const [isOpen, setIsOpen] = useState(defaultIsOpen);
-
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+const ModalProvider = ({ defaultIsOpen = false, children }: DialogProviderProps) => {
+  const [isOpen, open, close] = useBoolean(defaultIsOpen);
 
   return <ModalContext.Provider value={{ isOpen, open, close }}>{children}</ModalContext.Provider>;
 };
