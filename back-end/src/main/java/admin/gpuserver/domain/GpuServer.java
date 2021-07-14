@@ -3,7 +3,6 @@ package admin.gpuserver.domain;
 import admin.lab.domain.Lab;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class GpuServer extends BaseEntity {

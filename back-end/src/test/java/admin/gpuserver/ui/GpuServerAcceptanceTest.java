@@ -1,7 +1,5 @@
 package admin.gpuserver.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import admin.AcceptanceTest;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
@@ -12,17 +10,18 @@ import admin.lab.dto.LabRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("GpuServer 관련 API 테스트")
 public class GpuServerAcceptanceTest extends AcceptanceTest {
@@ -121,7 +120,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/labs/"+ dummyLabId +"/gpus/" + gpuServerId)
+                .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
@@ -129,7 +128,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> GpuServer_전체조회() {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/labs/"+ dummyLabId +"/gpus/")
+                .when().get("/api/labs/" + dummyLabId + "/gpus/")
                 .then().log().all()
                 .extract();
     }
@@ -145,7 +144,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .body(gpuServerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/labs/"+ dummyLabId +"/gpus")
+                .when().post("/api/labs/" + dummyLabId + "/gpus")
                 .then().log().all()
                 .extract();
     }
