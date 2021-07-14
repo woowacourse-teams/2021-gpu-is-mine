@@ -1,4 +1,6 @@
-package admin.gpuserver.domain;
+package admin.lab.domain;
+
+import admin.gpuserver.domain.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,5 +23,13 @@ public class Lab extends BaseEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
