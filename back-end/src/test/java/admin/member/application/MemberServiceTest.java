@@ -9,14 +9,14 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
+import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class MemberServiceTest {
@@ -69,7 +69,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("UPDATE - 멤버 개인정보 수정")
-    void updateExistingMember() {
+    void updateMemberInfo() {
         Long createdId = memberService.createMember(memberRequest);
 
         MemberInfoRequest updateRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
@@ -81,19 +81,49 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("UPDATE - 존재하지 멤버, 개인정보 수정시 에러 발생")
+    void updateNotExistingMemberInfo() {
+        Long notExistingMemberId = Long.MAX_VALUE;
+        MemberInfoRequest updateRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
+
+        Throwable throwable = catchThrowable(() -> memberService.updateMemberInfo(notExistingMemberId, updateRequest));
+        존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    @Test
     @DisplayName("UPDATE - MemberType 변경")
     void updateMemberType() {
         Long createdId = memberService.createMember(memberRequest);
         MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
 
-        memberService.changeMemberType(createdId, memberTypeRequest);
+        memberService.updateMemberType(createdId, memberTypeRequest);
 
         MemberResponse response = memberService.findMember(createdId);
         assertThat(response.getMemberType()).isEqualTo(MemberType.USER);
     }
 
     @Test
-    @DisplayName("UPDATE - Lab 옮김")
+    @DisplayName("UPDATE - 존재하지 멤버, 타입 수정시 에러 발생")
+    void updateNotExistingMemberMemberType() {
+        Long notExistingMemberId = Long.MAX_VALUE;
+        MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
+
+        Throwable throwable = catchThrowable(() -> memberService.updateMemberType(notExistingMemberId, memberTypeRequest));
+        존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    @Test
+    @DisplayName("UPDATE - 존재하지 않는 MemberType 변경 요청시 에러 발생")
+    void updateNotExistingMemberType() {
+        Long createdId = memberService.createMember(memberRequest);
+        MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
+
+        assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType)).isInstanceOf(MemberException.class)
+                .hasMessage("존재하지 않는 MemberType 입니다.");
+    }
+
+    @Test
+    @DisplayName("UPDATE - Lab 수정")
     void updateMemberExistingLab() {
         Long createdId = memberService.createMember(memberRequest);
         Long newLabId = labService.save(new LabRequest("newLab"));
@@ -102,8 +132,57 @@ class MemberServiceTest {
         memberService.changeLab(createdId, changeLabRequest);
 
         MemberResponse response = memberService.findMember(createdId);
-        assertThat(response.getLabResponse().getId()).isEqualTo(newLabId);
+        assertThat(response.getLabResponse()
+                .getId()).isEqualTo(newLabId);
     }
 
+    @Test
+    @DisplayName("UPDATE - 존재하지 멤버, Lab 수정시 에러 발생")
+    void updateNotExistingMemberLab() {
+        Long notExistingMemberId = Long.MAX_VALUE;
+        Long newLabId = labService.save(new LabRequest("newLab"));
+        ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
+
+        Throwable throwable = catchThrowable(() -> memberService.changeLab(notExistingMemberId, changeLabRequest));
+        존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    @Test
+    @DisplayName("UPDATE - 존재하지 않는 Lab으로 수정시 에러 발생")
+    void updateMemberNotExistingLab() {
+        Long createdId = memberService.createMember(memberRequest);
+        Long notExistingLabId = Long.MAX_VALUE;
+        ChangeLabRequest changeLabRequest = new ChangeLabRequest(notExistingLabId);
+
+        assertThatThrownBy(() -> memberService.changeLab(createdId, changeLabRequest)).isInstanceOf(MemberException.class)
+                .hasMessage("해당 lab은 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("존재하는 멤버 삭제 요청")
+    void deleteMember() {
+        Long createdId = memberService.createMember(memberRequest);
+        assertThat(memberService.findMember(createdId)).isNotNull();
+
+        memberService.deleteMember(createdId);
+
+        Throwable throwable = catchThrowable(() -> memberService.findMember(createdId));
+        존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 멤버 삭제 요청")
+    void deleteNotExistingMember() {
+        Long notExistingMemberId = Long.MAX_VALUE;
+
+        Throwable throwable = catchThrowable(() -> memberService.deleteMember(notExistingMemberId));
+        존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
+        return assertThat(throwable)
+                .isInstanceOf(MemberException.class)
+                .hasMessage("해당 id의 회원이 존재하지 않습니다.");
+    }
 }
 

@@ -8,9 +8,10 @@ import admin.member.domain.repository.MemberRepository;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.response.MemberResponse;
 import admin.member.dto.request.MemberTypeRequest;
+import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
+import admin.member.exception.MemberTypeException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,8 @@ public class MemberService {
 
     @Transactional
     public Long createMember(MemberRequest request) {
-        Lab lab = labRepository.findById(request.getLabId()).orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
+        Lab lab = labRepository.findById(request.getLabId())
+                .orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
 
         Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
@@ -51,16 +53,22 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeMemberType(Long id, MemberTypeRequest memberTypeRequest) {
+    public void updateMemberType(Long id, MemberTypeRequest memberTypeRequest) {
         Member member = findMemberById(id);
-        member.setMemberType(MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType()));
+        try {
+            MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
+            member.setMemberType(memberType);
+        } catch (MemberTypeException e) {
+            throw new MemberException(e.getMessage());
+        }
     }
 
     @Transactional
-    public void changeLab(Long id, ChangeLabRequest changeLabRequest){
+    public void changeLab(Long id, ChangeLabRequest changeLabRequest) {
         Member member = findMemberById(id);
 
-        Lab updateLab = labRepository.findById(changeLabRequest.getLabId()).orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
+        Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
+                .orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
         member.setLab(updateLab);
     }
 
