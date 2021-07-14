@@ -23,6 +23,7 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
     display: flex;
     align-items: center;
     position: relative;
+    cursor: pointer;
 
     svg {
       margin-right: 1rem;
