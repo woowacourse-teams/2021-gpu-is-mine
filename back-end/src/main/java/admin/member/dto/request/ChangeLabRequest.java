@@ -1,16 +1,16 @@
 package admin.member.dto.request;
 
 public class ChangeLabRequest {
-    Long changeLabId;
+    private Long labId;
 
     public ChangeLabRequest() {
     }
 
-    public ChangeLabRequest(Long changeLabId) {
-        this.changeLabId = changeLabId;
+    public ChangeLabRequest(Long labId) {
+        this.labId = labId;
     }
 
     public Long getLabId() {
-        return changeLabId;
+        return labId;
     }
 }

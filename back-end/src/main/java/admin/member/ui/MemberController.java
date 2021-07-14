@@ -1,8 +1,10 @@
 package admin.member.ui;
 
 import admin.member.application.MemberService;
+import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
+import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,9 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberRequest request) {
-        Long createdId =  memberService.createMember(request);
-        return ResponseEntity.created(URI.create("/api/members/" + createdId)).build();
+        Long createdId = memberService.createMember(request);
+        return ResponseEntity.created(URI.create("/api/members/" + createdId))
+                .build();
     }
 
     @GetMapping("{id}")
@@ -31,14 +34,30 @@ public class MemberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateMember(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
+    public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
         memberService.updateMemberInfo(id, request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PutMapping("{id}/memberType")
+    public ResponseEntity<Void> updateMemberType(@PathVariable Long id, @RequestBody MemberTypeRequest request) {
+        memberService.updateMemberType(id, request);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PutMapping("{id}/lab")
+    public ResponseEntity<Void> updateMemberLab(@PathVariable Long id, @RequestBody ChangeLabRequest request) {
+        memberService.changeLab(id, request);
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 }

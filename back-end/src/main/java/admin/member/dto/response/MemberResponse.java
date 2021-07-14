@@ -19,7 +19,7 @@ public class MemberResponse {
         this.labResponse = labResponse;
     }
 
-    public static MemberResponse of(Member member){
+    public static MemberResponse of(Member member) {
         LabResponse labResponse = LabResponse.of(member.getLab());
         return new MemberResponse(member.getId(), member.getEmail(), member.getName(), member.getMemberType(), labResponse);
     }

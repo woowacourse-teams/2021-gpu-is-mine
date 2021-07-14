@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final LabRepository labRepository;
 
@@ -71,7 +72,6 @@ public class MemberService {
                 .orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
         member.setLab(updateLab);
     }
-
 
     @Transactional
     public void deleteMember(Long id) {
