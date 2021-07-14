@@ -1,7 +1,5 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.Lab;
 import admin.gpuserver.exception.GpuServerServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +16,7 @@ public class GpuBoardTest {
     @BeforeEach
     void setUp() {
         Lab lab = new Lab("랩1");
-        gpuServer =  new GpuServer("GPU서버1", false, 1024L, 1024L, lab);
+        gpuServer = new GpuServer("GPU서버1", false, 1024L, 1024L, lab);
     }
 
     @DisplayName("생성 테스트 - 정상")
@@ -31,7 +29,7 @@ public class GpuBoardTest {
     @DisplayName("생성 테스트 - IsWorking이 null")
     @Test
     void 생성_IsWorking_null() {
-        assertThatThrownBy(() ->  new GpuBoard(null, 1000L, "모델1", gpuServer))
+        assertThatThrownBy(() -> new GpuBoard(null, 1000L, "모델1", gpuServer))
                 .isInstanceOf(GpuServerServiceException.class)
                 .hasMessage("객체를 생성할 수 없습니다.");
     }

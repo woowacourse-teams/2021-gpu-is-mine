@@ -4,7 +4,8 @@ import admin.gpuserver.exception.GpuServerServiceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class LabTest {
     @DisplayName("생성 테스트 - 정상")
