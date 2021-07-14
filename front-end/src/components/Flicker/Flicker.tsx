@@ -1,3 +1,4 @@
+import { HTMLAttributes } from "react";
 import { Optional } from "../../types/util";
 import { StyledFlicker, StyledFlickerProps } from "./Flicker.styled";
 

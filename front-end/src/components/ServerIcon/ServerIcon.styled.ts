@@ -7,7 +7,7 @@ export interface StyledServerIconProps {
   size: Size;
 }
 
-const getServerIconSize = (size: Size) => {
+export const getServerIconSize = (size: Size) => {
   const iconSize = {
     sm: css`
       width: 1.5rem;
@@ -21,17 +21,15 @@ const getServerIconSize = (size: Size) => {
       width: 3rem;
       height: 3rem;
     `,
-
     xl: css`
       width: 5rem;
       height: 5rem;
     `,
   } as const;
 
-  // TODO: 정의되지않은 size 대응하기 => type 에러
-  return iconSize[size] || iconSize.md;
+  return iconSize[size];
 };
 
-export const StyledServerIcon = styled(Server)`
-  ${({ size }: StyledServerIconProps) => getServerIconSize(size)}
+export const StyledServerIcon = styled(Server)<StyledServerIconProps>`
+  ${({ size }) => getServerIconSize(size)}
 `;
