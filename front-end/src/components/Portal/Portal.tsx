@@ -1,24 +1,22 @@
-import React, { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 interface PortalProps {
-  id?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const Portal = ({ children, id }: PortalProps) => {
-  const $elem = document.createElement("div");
-  $elem.id = id ?? "portal";
+const Portal = ({ children }: PortalProps) => {
+  const elem = document.createElement("div");
 
   useEffect(() => {
-    document.body.appendChild($elem);
+    document.body.appendChild(elem);
 
     return () => {
-      document.body.removeChild($elem);
+      document.body.removeChild(elem);
     };
-  }, [$elem]);
+  }, [elem]);
 
-  return ReactDOM.createPortal(children, $elem);
+  return ReactDOM.createPortal(children, elem);
 };
 
 export default Portal;
