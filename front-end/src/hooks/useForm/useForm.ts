@@ -8,7 +8,7 @@ type SubmitAction = (values: Values) => void;
 interface InputOptions {
   name: string;
   label: string;
-  validator?: (value: Value) => string;
+  validator?: ((value: Value) => string | null) | null;
 }
 
 const useForm = (submitAction: SubmitAction) => {
@@ -28,7 +28,7 @@ const useForm = (submitAction: SubmitAction) => {
     {
       name,
       label,
-      validator = (val) => (val === "" ? `${label}을 입력해주세요.` : ""),
+      validator = (value) => (value === "" ? `${label}을 입력해주세요.` : null),
     }: InputOptions
   ) => {
     const [validationMessage, setValidationMessage] = useState("");
@@ -40,7 +40,7 @@ const useForm = (submitAction: SubmitAction) => {
       const message = validator?.(event.target.value) ?? "";
 
       setValidationMessage(message);
-      setIsValid({ ...isValid, [name]: message === "" });
+      setIsValid({ ...isValid, [name]: !message });
     };
 
     useEffect(() => {
