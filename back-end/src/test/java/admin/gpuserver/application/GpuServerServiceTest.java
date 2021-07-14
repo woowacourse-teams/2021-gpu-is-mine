@@ -13,13 +13,14 @@ import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
-import com.sun.tools.javac.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -83,7 +84,7 @@ public class GpuServerServiceTest {
         job3 = jobRepository.save(new Job("예약3", JobStatus.WAITING));
         job4 = jobRepository.save(new Job("예약4", JobStatus.WAITING));
 
-        gpuBoard1.setJobs(List.of(job1, job2, job3, job4));
+        gpuBoard1.setJobs(Arrays.asList(job1, job2, job3, job4));
     }
 
     @DisplayName("특정 GPU서버를 조회한다.")
@@ -126,7 +127,8 @@ public class GpuServerServiceTest {
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
         GpuServerResponses gpuServerResponses = gpuServerService.findAll(lab.getId());
-        int beforeSize = gpuServerResponses.getGpus().size();
+        int beforeSize = gpuServerResponses.getGpus()
+                .size();
 
         gpuServerService.delete(lab.getId(), gpuServer1.getId());
 
@@ -192,7 +194,8 @@ public class GpuServerServiceTest {
     @Test
     void deleteWithGpuId() {
         gpuServerService.delete(lab.getId(), gpuServer1.getId());
-        GpuServer deletedGpuServer = gpuServerRepository.findById(gpuServer1.getId()).orElseThrow(IllegalArgumentException::new);
+        GpuServer deletedGpuServer = gpuServerRepository.findById(gpuServer1.getId())
+                .orElseThrow(IllegalArgumentException::new);
         assertTrue(deletedGpuServer.getDeleted());
     }
 
