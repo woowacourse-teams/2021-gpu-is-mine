@@ -1,6 +1,7 @@
 package admin.gpuserver.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,10 @@ public class GpuBoard extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "gpu_server_id")
     private GpuServer gpuServer;
-    @Embedded
-    private Jobs jobs;
+
+    @OneToMany
+    @JoinColumn(name = "job_id")
+    List<Job> jobs = new ArrayList<>();
 
     protected GpuBoard() {
     }
@@ -27,12 +30,16 @@ public class GpuBoard extends BaseEntity {
         this.gpuServer = gpuServer;
     }
 
-    public List<Job> getWaitingJobs() {
-        return jobs.getWaitingJobs();
+    public Boolean getWorking() {
+        return isWorking;
     }
 
     public List<Job> getJobs() {
-        return jobs.getJobs();
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 
     public Long getId() {

@@ -3,20 +3,21 @@ package admin.gpuserver.application;
 import admin.gpuserver.domain.DeleteHistory;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
-import admin.lab.domain.Lab;
 import admin.gpuserver.domain.repository.DeleteHistoryRepository;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.lab.domain.repository.LabRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
-import java.util.List;
+import admin.lab.domain.Lab;
+import admin.lab.domain.repository.LabRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class GpuServerService {
@@ -27,7 +28,7 @@ public class GpuServerService {
     private DeleteHistoryRepository deleteHistoryRepository;
 
     public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-        GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
+                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -36,6 +37,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long labId, Long gpuServerId) {
+        System.out.println("BBB" + labId);
+        System.out.println("BBB" + labRepository.existsById(labId));
         validateLab(labId);
         GpuServer gpuServer = findValidGpuServer(gpuServerId);
         GpuBoard gpuBoard = gpuServer.getGpuBoard();
@@ -51,7 +54,7 @@ public class GpuServerService {
 
     @Transactional
     public void updateGpuServer(GpuServerNameUpdateRequest gpuServerNameUpdateRequest,
-        Long labId, Long gpuServerId) {
+                                Long labId, Long gpuServerId) {
         validateLab(labId);
         GpuServer gpuServer = findValidGpuServer(gpuServerId);
         gpuServer.setName(gpuServerNameUpdateRequest.getName());
@@ -72,12 +75,15 @@ public class GpuServerService {
     public Long saveGpuServer(GpuServerRequest gpuServerRequest, Long labId) {
         validateLab(labId);
         Lab lab = labRepository.findById(labId).get();
+
         GpuServer gpuServer = new GpuServer(gpuServerRequest.getServerName(),
-            gpuServerRequest.getMemorySize(),
-            gpuServerRequest.getDiskSize(), lab);
+                gpuServerRequest.getMemorySize(),
+                gpuServerRequest.getDiskSize(), lab);
+
         GpuBoardRequest gpuBoardRequest = gpuServerRequest.getGpuBoardRequest();
         GpuBoard gpuBoard = new GpuBoard(false, gpuBoardRequest.getPerformance(),
-            gpuBoardRequest.getModelName(), gpuServer);
+                gpuBoardRequest.getModelName(), gpuServer);
+
         gpuServerRepository.save(gpuServer);
         gpuBoardRepository.save(gpuBoard);
 
@@ -85,6 +91,8 @@ public class GpuServerService {
     }
 
     private void validateLab(Long labId) {
+        System.out.println(labId);
+        System.out.println(labRepository.existsById(labId));
         if (!labRepository.existsById(labId)) {
             throw new GpuServerServiceException("Lab이 존재하지 않습니다.");
         }
@@ -92,6 +100,6 @@ public class GpuServerService {
 
     private GpuServer findValidGpuServer(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-            .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }

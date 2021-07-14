@@ -21,4 +21,10 @@ public class LabUser extends BaseEntity {
 
     protected LabUser() {
     }
+
+    public LabUser(String name, UserType userType, Lab lab) {
+        this.name = name;
+        this.userType = userType;
+        this.lab = lab;
+    }
 }

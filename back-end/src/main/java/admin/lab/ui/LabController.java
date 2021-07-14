@@ -1,7 +1,6 @@
 package admin.lab.ui;
 
 import admin.gpuserver.dto.response.ExceptionResponse;
-import admin.gpuserver.exception.GpuServerServiceException;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
