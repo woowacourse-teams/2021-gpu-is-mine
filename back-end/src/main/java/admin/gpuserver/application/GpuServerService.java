@@ -96,6 +96,6 @@ public class GpuServerService {
 
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+            .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
     }
 }

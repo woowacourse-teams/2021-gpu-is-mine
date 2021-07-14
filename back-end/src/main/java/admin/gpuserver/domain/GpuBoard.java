@@ -3,6 +3,7 @@ package admin.gpuserver.domain;
 import admin.gpuserver.exception.GpuServerServiceException;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class GpuBoard extends BaseEntity {
@@ -17,7 +18,7 @@ public class GpuBoard extends BaseEntity {
     @JoinColumn(name = "gpu_server_id")
     private GpuServer gpuServer;
 
-    public GpuBoard() {
+    protected GpuBoard() {
     }
 
     public GpuBoard(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {

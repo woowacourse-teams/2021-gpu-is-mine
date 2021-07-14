@@ -1,4 +1,6 @@
-package admin.gpuserver.domain;
+package admin.lab.domain;
+
+import admin.gpuserver.domain.BaseEntity;
 
 import admin.gpuserver.exception.GpuServerServiceException;
 
@@ -30,5 +32,13 @@ public class Lab extends BaseEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
