@@ -40,8 +40,7 @@ public class JobService {
 
     @Transactional(readOnly = true)
     public JobResponse findById(Long jobId) {
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new IllegalArgumentException("job 이 없습니다."));
+        Job job = findJobById(jobId);
 
         return JobResponse.of(job);
     }
@@ -55,14 +54,8 @@ public class JobService {
         gpuBoard.cancel(job);
     }
 
-    @Transactional
-    public void complete(Long jobId) {
-        Job completedJob = jobRepository.findById(jobId)
+    private Job findJobById(Long id) {
+        return jobRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("job 이 없습니다."));
-
-        GpuBoard gpuBoard = completedJob.getGpuBoard();
-        gpuBoard.complete(completedJob);
-
-        // TODO :: MAIL SERVICE
     }
 }

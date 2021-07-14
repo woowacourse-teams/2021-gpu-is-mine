@@ -16,10 +16,8 @@ public class GpuServerResponse {
     private GpuBoardResponse gpuBoard;
     private List<JobResponse> jobs;
 
-    public GpuServerResponse() {
-    }
-
-    public GpuServerResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn, GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
+    private GpuServerResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
+                              GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
         this.id = id;
         this.serverName = serverName;
         this.memorySize = memorySize;
@@ -29,14 +27,19 @@ public class GpuServerResponse {
         this.jobs = jobs;
     }
 
-    public GpuServerResponse(GpuServer gpuServer, GpuBoard gpuBoard, List<Job> jobs) {
-        this(gpuServer.getId(),
+    public GpuServerResponse() {
+    }
+
+    public static GpuServerResponse of(GpuServer gpuServer, GpuBoard gpuBoard, List<Job> jobs) {
+        return new GpuServerResponse(
+                gpuServer.getId(),
                 gpuServer.getName(),
                 gpuServer.getMemorySize(),
                 gpuServer.getDiskSize(),
                 gpuServer.getIsOn(),
-                new GpuBoardResponse(gpuBoard),
-                JobResponse.listOf(jobs));
+                GpuBoardResponse.of(gpuBoard),
+                JobResponse.listOf(jobs)
+        );
     }
 
     public Long getId() {

@@ -3,6 +3,7 @@ package admin.gpuserver.domain;
 import admin.gpuserver.exception.GpuServerServiceException;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class DeleteHistory extends BaseEntity {
@@ -23,7 +24,7 @@ public class DeleteHistory extends BaseEntity {
     }
 
     private void validate(GpuServer gpuServer) {
-        if (gpuServer == null) {
+        if (Objects.isNull(gpuServer)) {
             throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
         }
     }

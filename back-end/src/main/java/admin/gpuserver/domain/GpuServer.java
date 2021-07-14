@@ -38,17 +38,16 @@ public class GpuServer extends BaseEntity {
         this.lab = lab;
     }
 
-    private void validate(String name, Boolean isOn, Long memorySize, Long diskSize, Lab lab) {
-        if (name == null || name.isEmpty() || isOn == null
-                || memorySize == null || memorySize <= 0
-                || diskSize == null || diskSize <= 0
-                || lab == null) {
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
-        }
-    }
-
     public GpuServer(String name, Long memorySize, Long diskSize, Lab lab) {
         this(name, false, memorySize, diskSize, lab);
+    }
+
+    private void validate(String name, Boolean isOn, Long memorySize, Long diskSize, Lab lab) {
+        if (name == null || name.isEmpty() || isOn == null || memorySize == null
+                || memorySize <= 0 || diskSize == null || diskSize <= 0 || lab == null) {
+
+            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        }
     }
 
     public Long getId() {
@@ -61,10 +60,6 @@ public class GpuServer extends BaseEntity {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Boolean getIsOn() {
@@ -89,5 +84,9 @@ public class GpuServer extends BaseEntity {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void update(String name) {
+        this.name = name;
     }
 }

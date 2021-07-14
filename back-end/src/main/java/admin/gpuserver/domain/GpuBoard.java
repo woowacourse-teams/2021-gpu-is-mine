@@ -28,16 +28,16 @@ public class GpuBoard extends BaseEntity {
         this.gpuServer = gpuServer;
     }
 
-    private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
-        if (isWorking == null || performance == null || performance <= 0
-                || modelName == null || modelName.isEmpty()
-                || gpuServer == null) {
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
-        }
+    public GpuBoard(Long performance, String modelName, GpuServer gpuServer) {
+        this(false, performance, modelName, gpuServer);
     }
 
-    public Boolean getWorking() {
-        return isWorking;
+    private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        if (isWorking == null || performance == null || performance <= 0
+                || modelName == null || modelName.isEmpty() || gpuServer == null) {
+
+            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        }
     }
 
     public Long getId() {
@@ -60,7 +60,7 @@ public class GpuBoard extends BaseEntity {
         return gpuServer;
     }
 
-    public void addJob(Job newJob) {
+    public void addJob(Job job) {
         // TODO :: JOB QUEUE
     }
 

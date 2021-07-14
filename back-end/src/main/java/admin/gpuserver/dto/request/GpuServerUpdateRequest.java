@@ -1,13 +1,13 @@
 package admin.gpuserver.dto.request;
 
-public class GpuServerNameUpdateRequest {
+public class GpuServerUpdateRequest {
 
     private String name;
 
-    public GpuServerNameUpdateRequest() {
+    public GpuServerUpdateRequest() {
     }
 
-    public GpuServerNameUpdateRequest(String name) {
+    public GpuServerUpdateRequest(String name) {
         this.name = name;
     }
 

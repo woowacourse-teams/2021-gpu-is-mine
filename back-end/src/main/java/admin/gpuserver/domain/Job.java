@@ -34,15 +34,14 @@ public class Job extends BaseEntity {
         this.labUser = labUser;
     }
 
-    private void validate(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
-        if (name == null || name.isEmpty() || status == null
-                || gpuBoard == null || labUser == null) {
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
-        }
-    }
-
     public Job(String name, GpuBoard gpuBoard, LabUser labUser) {
         this(name, JobStatus.WAITING, gpuBoard, labUser);
+    }
+
+    private void validate(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
+        if (name == null || name.isEmpty() || status == null || gpuBoard == null || labUser == null) {
+            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        }
     }
 
     public String getName() {
