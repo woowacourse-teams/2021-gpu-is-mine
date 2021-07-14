@@ -57,3 +57,29 @@ OffServer.args = {
     },
   ],
 };
+
+export const Long = Template.bind({});
+
+Long.args = {
+  name: "GPU 서버 1ABCD동동동", //TODO: validation max: 15자
+  performance: 10_044_564_560,
+  isServerOn: true,
+  jobs: [
+    {
+      name: "위암 1,2기 구분 학습위암 1,2기", //TODO: validaiton max: 20자
+      status: "RUNNING",
+    },
+    {
+      name: "모델 학습 2",
+      status: "COMPLETED",
+    },
+    {
+      name: "모델 학습 3",
+      status: "WAITING",
+    },
+    {
+      name: "모델 학습 4",
+      status: "WAITING",
+    },
+  ],
+};

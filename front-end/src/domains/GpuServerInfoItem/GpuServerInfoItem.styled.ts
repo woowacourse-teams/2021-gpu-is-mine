@@ -3,67 +3,56 @@ import { up } from "styled-breakpoints";
 import { VerticalBox } from "../../components";
 
 export const StyledGpuServerInfoItem = styled(VerticalBox)`
-  min-width: 340px;
-  border: 2px solid var(--primary-200);
+  width: 100%;
+  border-bottom: 2px solid var(--primary-200);
   border-radius: 0.5rem;
-  row-gap: 1.5rem;
-  padding: 0.8rem 1rem;
+  row-gap: 1.25rem;
+  padding: 0.75rem 1rem;
   box-shadow: 0px 3px 5px 1px #e9eefa;
 
-  ${up("tablet")} {
-    max-width: 1200px;
-    flex-direction: row;
-    align-items: center;
+  ${up("laptop")} {
+    display: grid;
+    grid-template-columns: 20% 1fr auto;
+    column-gap: 0.75rem;
     padding: 1rem 1.5rem;
-    border: none;
-    border-bottom: 2px solid var(--primary-200);
   }
 
   .gpu-server-title-wrapper {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    position: relative;
-    cursor: pointer;
-
-    svg {
-      margin-right: 1rem;
-    }
-
-    div {
-      position: absolute;
-      right: 0;
-    }
 
     ${up("tablet")} {
-      min-width: 12rem;
-      margin-right: 1rem;
-
-      svg {
-        display: none;
-      }
-
-      p {
-        margin-left: 2.5rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      div {
-        position: absolute;
-        left: 0;
-      }
+      flex-direction: row-reverse;
+      margin-right: auto;
     }
   }
 
-  .gpu-server-details {
-    display: flex;
-    width: 100%;
-    row-gap: 1rem;
+  .gpu-server-icon {
+    margin-right: 1rem;
 
     ${up("tablet")} {
-      flex-direction: row;
-      column-gap: 7rem;
+      display: none;
+    }
+  }
+
+  .status-mark {
+    margin-left: auto;
+    flex-shrink: 0;
+
+    ${up("tablet")} {
+      margin-right: 1rem;
+    }
+  }
+
+  .gpu-server-details-wrapper {
+    width: 100%;
+    row-gap: 0.5rem;
+
+    ${up("tablet")} {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 0.5rem;
     }
   }
 
@@ -73,21 +62,23 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
     ${up("tablet")} {
       display: flex;
       flex-direction: row;
-
-      button {
-        width: 4.8rem;
-        height: 2rem;
-        font-size: 1rem;
-        font-weight: bold;
-        padding: 0.2rem 1rem;
-        box-shadow: 0px 4px 4px 0px #00000040;
-        border-radius: 2rem;
-
-        &:last-child {
-          margin-left: 0.8rem;
-        }
-      }
+      column-gap: 0.5rem;
+      justify-content: flex-end;
     }
+
+    ${up("laptop")} {
+      justify-content: flex-start;
+    }
+  }
+
+  .button {
+    width: 4.75rem;
+    height: 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.25rem 1rem;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border-radius: 2rem;
   }
 `;
 
