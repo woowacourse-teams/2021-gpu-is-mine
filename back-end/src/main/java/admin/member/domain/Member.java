@@ -1,7 +1,7 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
-import admin.gpuserver.domain.Lab;
+import admin.lab.domain.Lab;
 
 import javax.persistence.*;
 

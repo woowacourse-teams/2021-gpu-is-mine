@@ -1,7 +1,7 @@
 package admin.member.application;
 
-import admin.gpuserver.domain.Lab;
-import admin.gpuserver.domain.repository.LabRepository;
+import admin.lab.domain.Lab;
+import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;

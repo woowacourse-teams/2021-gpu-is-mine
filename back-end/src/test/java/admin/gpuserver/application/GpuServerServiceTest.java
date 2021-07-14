@@ -1,10 +1,12 @@
 package admin.gpuserver.application;
 
-import admin.gpuserver.domain.*;
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.Job;
+import admin.gpuserver.domain.JobStatus;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.domain.repository.JobRepository;
-import admin.gpuserver.domain.repository.LabUserRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerNameUpdateRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
@@ -13,6 +15,9 @@ import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import admin.member.domain.Member;
+import admin.member.domain.MemberType;
+import admin.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +49,7 @@ public class GpuServerServiceTest {
     private LabRepository labRepository;
 
     @Autowired
-    private LabUserRepository labUserRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
     private JobRepository jobRepository;
@@ -57,7 +62,7 @@ public class GpuServerServiceTest {
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
 
-    private LabUser labUser;
+    private Member member;
 
     private Job job1;
     private Job job2;
@@ -77,7 +82,7 @@ public class GpuServerServiceTest {
         gpuBoard2 = gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", gpuServer2));
         gpuServer2.setGpuBoard(gpuBoard2);
 
-        labUser = labUserRepository.save(new LabUser("관리자1", UserType.MANAGER, lab));
+        member = memberRepository.save(new Member( "email@email.com", "password", "name", MemberType.MANAGER, lab));
 
         job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING));
         job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING));
