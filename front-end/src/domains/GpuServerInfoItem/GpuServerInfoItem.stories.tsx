@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import GpuServerInfoItem from "./GpuServerInfoItem";
 
 export default {
-  title: "Domains/GpuServerInfoItem",
+  title: "Domains/GpuServer/InfoItem",
   component: GpuServerInfoItem,
 } as ComponentMeta<typeof GpuServerInfoItem>;
 
