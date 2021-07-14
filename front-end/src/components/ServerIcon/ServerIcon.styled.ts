@@ -7,7 +7,7 @@ export interface StyledServerIconProps {
   size: Size;
 }
 
-export const getServerIconSize = (size: Size) => {
+const getServerIconSize = (size: Size) => {
   const iconSize = {
     sm: css`
       width: 1.5rem;
