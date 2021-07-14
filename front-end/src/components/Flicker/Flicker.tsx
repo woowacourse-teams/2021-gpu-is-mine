@@ -1,10 +1,11 @@
+import { HTMLAttributes } from "react";
 import { Optional } from "../../types/util";
 import { StyledFlicker, StyledFlickerProps } from "./Flicker.styled";
 
-type FlickerProps = Optional<StyledFlickerProps, "size">;
+type FlickerProps = Optional<StyledFlickerProps, "size"> & HTMLAttributes<HTMLElement>;
 
-const Flicker = ({ status, size = "md" }: FlickerProps) => (
-  <StyledFlicker status={status} size={size} />
+const Flicker = ({ status, size = "md", ...rest }: FlickerProps) => (
+  <StyledFlicker status={status} size={size} {...rest} />
 );
 
 export default Flicker;
