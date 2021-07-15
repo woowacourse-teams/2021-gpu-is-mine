@@ -144,7 +144,7 @@ public class GpuServerServiceTest {
         assertThat(gpuServer.getServerName()).isEqualTo("newGPU서버1");
     }
 
-    @DisplayName("존재하지 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
+    @DisplayName("존재하지 않는 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
     @Test
     void 존재하지_않는_GPU_ID로_GPU_서버의_이름을_수정() {
         final Long nonexistentServerId = Long.MAX_VALUE;
