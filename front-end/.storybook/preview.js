@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import GlobalStyle from "../src/styles/GlobalStyle";
 import ThemeProvider from "../src/styles/ThemeProvider";
@@ -14,11 +15,11 @@ export const parameters = {
 };
 export const decorators = [
   (Story) => (
-    <>
-      <ThemeProvider>
-        <GlobalStyle />
+    <ThemeProvider>
+      <GlobalStyle />
+      <Router>
         <Story />
-      </ThemeProvider>
-    </>
+      </Router>
+    </ThemeProvider>
   ),
 ];
