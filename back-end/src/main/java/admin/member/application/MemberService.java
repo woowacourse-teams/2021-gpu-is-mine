@@ -11,7 +11,6 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
-import admin.member.exception.MemberTypeException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,12 +55,8 @@ public class MemberService {
     @Transactional
     public void updateMemberType(Long id, MemberTypeRequest memberTypeRequest) {
         Member member = findMemberById(id);
-        try {
-            MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
-            member.setMemberType(memberType);
-        } catch (MemberTypeException e) {
-            throw new MemberException(e.getMessage());
-        }
+        MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
+        member.setMemberType(memberType);
     }
 
     @Transactional

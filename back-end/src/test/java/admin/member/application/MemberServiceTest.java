@@ -9,6 +9,7 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
+import admin.member.exception.MemberTypeException;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,7 +123,7 @@ class MemberServiceTest {
         MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
 
         assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType))
-                .isInstanceOf(MemberException.class)
+                .isInstanceOf(MemberTypeException.class)
                 .hasMessage("존재하지 않는 MemberType 입니다.");
     }
 
@@ -189,4 +190,3 @@ class MemberServiceTest {
                 .hasMessage("해당 id의 회원이 존재하지 않습니다.");
     }
 }
-
