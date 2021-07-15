@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@RestController("/api/jobs")
+@RestController
+@RequestMapping("/api/jobs")
 public class JobController {
 
     private JobService jobService;
