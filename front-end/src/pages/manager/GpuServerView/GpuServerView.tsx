@@ -4,7 +4,7 @@ import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigat
 import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
 import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
 import GpuServerInfoItem from "../../../domains/GpuServerInfoItem/GpuServerInfoItem";
-import GpuServerViewResponse from "../../../fixtures/gpuServeViewrResponse";
+import GpuServerViewResponses from "../../../fixtures/gpuServeViewrResponses";
 import { Container } from "./GpuServerView.styled";
 
 const GpuServerView = () => {
@@ -27,7 +27,7 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {GpuServerViewResponse.gpus.map((res) => (
+          {GpuServerViewResponses.gpus.map((res) => (
             <GpuServerInfoItem key={res.id} {...res} />
           ))}
         </section>

@@ -7,7 +7,7 @@ const GpuServerInfoItem = ({
   isOn,
   gpuBoard: { performance },
   jobs,
-}: GpuServerViewResponse["gpus"][number]) => {
+}: GpuServerViewResponse) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 

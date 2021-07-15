@@ -28,6 +28,8 @@ export type GpuServerViewRequest = Pick<
   "memorySize" | "diskSize" | "gpuBoard" | "serverName"
 >;
 
-export type GpuServerViewResponse = {
-  gpus: Readonly<GpuServer[]>;
+export type GpuServerViewResponse = GpuServer;
+
+export type GpuServerViewResponses = {
+  gpus: Readonly<GpuServerViewResponse[]>;
 };

@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import GpuServerInfoItem from "./GpuServerInfoItem";
-import GpuServerViewResponse from "../../fixtures/gpuServeViewrResponse";
+import GpuServerViewResponse from "../../fixtures/gpuServeViewrResponses";
 
 export default {
   title: "Domains/GpuServer/InfoItem",
