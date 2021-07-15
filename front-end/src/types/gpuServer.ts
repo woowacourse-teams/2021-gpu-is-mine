@@ -31,5 +31,11 @@ export type GpuServerViewRequest = Pick<
 export type GpuServerViewResponse = GpuServer;
 
 export type GpuServerViewResponses = {
-  gpus: Readonly<GpuServerViewResponse[]>;
+  gpuServers: Readonly<GpuServerViewResponse[]>;
+};
+
+type GpuBoardRequest = Pick<GpuBoard, "modelName" | "performance">;
+
+export type GpuServerRegisterRequest = Pick<GpuServer, "memorySize" | "diskSize" | "serverName"> & {
+  gpuBoardRequest: GpuBoardRequest;
 };

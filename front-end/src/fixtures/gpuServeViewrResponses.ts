@@ -1,7 +1,7 @@
 import { GpuServerViewResponses } from "../types/gpuServer";
 
 const gpuServersResponses: GpuServerViewResponses = {
-  gpus: [
+  gpuServers: [
     {
       id: 1,
       serverName: "GPU 서버 1",
