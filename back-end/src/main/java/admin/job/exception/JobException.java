@@ -1,4 +1,4 @@
-package admin.gpuserver.exception;
+package admin.job.exception;
 
 public class JobException extends RuntimeException {
     public JobException(String message) {

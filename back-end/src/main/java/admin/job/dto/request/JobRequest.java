@@ -1,4 +1,4 @@
-package admin.gpuserver.dto.request;
+package admin.job.dto.request;
 
 public class JobRequest {
     private Long gpuServerId;

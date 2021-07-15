@@ -1,9 +1,11 @@
 package admin.gpuserver.application;
 
-import admin.gpuserver.domain.*;
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.LabUser;
+import admin.gpuserver.domain.UserType;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.domain.repository.JobRepository;
 import admin.gpuserver.domain.repository.LabUserRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
@@ -11,6 +13,9 @@ import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.exception.GpuServerServiceException;
+import admin.job.domain.Job;
+import admin.job.domain.JobStatus;
+import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import org.junit.jupiter.api.BeforeEach;

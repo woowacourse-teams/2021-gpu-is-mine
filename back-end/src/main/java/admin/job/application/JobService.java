@@ -1,13 +1,13 @@
-package admin.gpuserver.application;
+package admin.job.application;
 
 import admin.gpuserver.domain.GpuBoard;
-import admin.gpuserver.domain.Job;
+import admin.job.domain.Job;
 import admin.gpuserver.domain.LabUser;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
-import admin.gpuserver.domain.repository.JobRepository;
+import admin.job.domain.repository.JobRepository;
 import admin.gpuserver.domain.repository.LabUserRepository;
-import admin.gpuserver.dto.request.JobRequest;
-import admin.gpuserver.dto.response.JobResponse;
+import admin.job.dto.request.JobRequest;
+import admin.job.dto.response.JobResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

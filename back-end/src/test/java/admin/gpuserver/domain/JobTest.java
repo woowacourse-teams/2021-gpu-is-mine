@@ -1,6 +1,8 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.JobException;
+import admin.job.domain.Job;
+import admin.job.domain.JobStatus;
+import admin.job.exception.JobException;
 import admin.lab.domain.Lab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

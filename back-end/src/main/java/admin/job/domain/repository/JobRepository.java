@@ -1,6 +1,6 @@
-package admin.gpuserver.domain.repository;
+package admin.job.domain.repository;
 
-import admin.gpuserver.domain.Job;
+import admin.job.domain.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

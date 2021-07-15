@@ -1,8 +1,8 @@
-package admin.gpuserver.ui;
+package admin.job.ui;
 
-import admin.gpuserver.application.JobService;
-import admin.gpuserver.dto.request.JobRequest;
-import admin.gpuserver.dto.response.JobResponse;
+import admin.job.application.JobService;
+import admin.job.dto.request.JobRequest;
+import admin.job.dto.response.JobResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,9 @@
-package admin.gpuserver.domain;
+package admin.job.domain;
 
-import admin.gpuserver.exception.JobException;
+import admin.gpuserver.domain.BaseEntity;
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.LabUser;
+import admin.job.exception.JobException;
 
 import javax.persistence.*;
 import java.util.Objects;

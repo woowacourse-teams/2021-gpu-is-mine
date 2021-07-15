@@ -1,6 +1,7 @@
 package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
+import admin.job.domain.Job;
 
 import javax.persistence.*;
 import java.util.Objects;
