@@ -1,9 +1,9 @@
 import { ChangeEvent, FocusEvent, FormEvent, useEffect, useState } from "react";
 
 type Value = string | number;
-type Values = Record<string, Value>;
+export type Values = Record<string, Value>;
 type IsValid = Record<string, boolean>;
-type SubmitAction = (values: Values) => void;
+export type SubmitAction<T = void> = (values: Values) => T | Promise<T>;
 
 interface InputOptions {
   name: string;
@@ -20,6 +20,7 @@ const useForm = (submitAction: SubmitAction) => {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     submitAction(values);
   };
 

@@ -1,15 +1,55 @@
-import { FormHTMLAttributes } from "react";
-import useForm from "../../hooks/useForm/useForm";
+import { FormHTMLAttributes, useEffect } from "react";
+import useForm, { SubmitAction, Values } from "../../hooks/useForm/useForm";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
+import usePost from "../../hooks/usePost/usePost";
+import { GpuServerRegisterRequest } from "../../types/gpuServer";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { form, submit, useInput } = useForm((data) => {
-    console.dir(data);
-  });
+  const { data, error, makeRequest } = usePost<void, GpuServerRegisterRequest>(
+    "http://3.35.169.99:8080//api/labs/1/gpus"
+  );
+
+  const submitAction: SubmitAction = ({
+    memorySize,
+    diskSize,
+    serverName,
+    performance,
+    deviceName,
+  }: Values) => {
+    const requestBody = {
+      memorySize: Number(memorySize),
+      diskSize: Number(diskSize),
+      serverName: String(serverName),
+      gpuBoardRequest: {
+        performance: Number(performance),
+        modelName: String(deviceName),
+      },
+    };
+
+    makeRequest(requestBody)
+      .then(() => {
+        alert("성공적으로 제출하였습니다..");
+      })
+      .catch(() => {
+        alert("제출에 실패하였습니다..");
+      });
+  };
+
+  useEffect(() => {
+    if (data) {
+      console.log("data: ", data);
+    }
+
+    if (error) {
+      console.log("error: ", error);
+    }
+  }, [data, error]);
+
+  const { form, submit, useInput } = useForm(submitAction);
 
   const serverNameInputProps = useInput("", {
     name: "serverName",
@@ -28,7 +68,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
     label: "성능(TFLOPS)",
   });
   const deviceNameInputProps = useInput("", {
-    name: "deviceName",
+    name: "modelName",
     label: "GPU 장치명",
   });
 
