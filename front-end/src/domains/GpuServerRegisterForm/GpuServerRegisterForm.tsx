@@ -1,9 +1,9 @@
 import useForm from "../../hooks/useForm/useForm";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import { StyledForm } from "./GpuServerAddForm.styled";
+import { StyledForm } from "./GpuServerRegisterForm.styled";
 
-const GpuServerAddForm = () => {
+const GpuServerRegisterForm = () => {
   const { form, submit, useInput } = useForm((data) => {
     console.dir(data);
   });
@@ -43,4 +43,4 @@ const GpuServerAddForm = () => {
   );
 };
 
-export default GpuServerAddForm;
+export default GpuServerRegisterForm;
