@@ -1,38 +1,56 @@
-import React from "react";
+import { ReactNode, MouseEventHandler, MouseEvent } from "react";
 import Button from "../Button/Button";
+import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
-import Text from "../Text/Text";
-import { BackGroundWrapper, ConfirmWrapper } from "./Confirm.styled";
+import { useConfirm } from "../ConfirmProvider/ConfirmProvider";
+import { ConfirmWrapper } from "./Confirm.styled";
 
 interface ConfirmProps {
-  isOpen: boolean;
-  text: string;
-  onConfirm: React.MouseEventHandler<HTMLButtonElement>;
-  onCancel: React.MouseEventHandler<HTMLButtonElement>;
+  onConfirm: MouseEventHandler<HTMLButtonElement>;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
+  children: ReactNode;
 }
 
-const Confirm = ({ isOpen, text, onConfirm, onCancel }: ConfirmProps) => (
-  <Portal id="confirm">
-    {isOpen && (
-      <BackGroundWrapper>
-        <ConfirmWrapper>
-          <div className="text-wrapper">
-            <Text size="lg" weight="bold">
-              {text}
-            </Text>
-          </div>
-          <div className="button-wrapper">
-            <Button color="secondary-light" className="button-wrapper__cancel" onClick={onCancel}>
-              취소
-            </Button>
-            <Button color="secondary-light" className="button-wrapper__confirm" onClick={onConfirm}>
-              확인
-            </Button>
-          </div>
-        </ConfirmWrapper>
-      </BackGroundWrapper>
-    )}
-  </Portal>
-);
+const Confirm = ({ children, onConfirm, onCancel }: ConfirmProps) => {
+  const { isOpen, close } = useConfirm();
+
+  const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
+    onConfirm(event);
+    close();
+  };
+
+  const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
+    onCancel(event);
+    close();
+  };
+
+  return (
+    <Portal>
+      {isOpen && (
+        <Dimmer color="transparent">
+          <ConfirmWrapper>
+            <div className="content-wrapper">{children}</div>
+            <div className="button-wrapper">
+              <Button
+                color="secondary-light"
+                className="button button-wrapper__cancel"
+                onClick={handleCancel}
+              >
+                취소
+              </Button>
+              <Button
+                color="secondary-light"
+                className="button button-wrapper__confirm"
+                onClick={handleConfirm}
+              >
+                확인
+              </Button>
+            </div>
+          </ConfirmWrapper>
+        </Dimmer>
+      )}
+    </Portal>
+  );
+};
 
 export default Confirm;
