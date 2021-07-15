@@ -25,7 +25,7 @@ const GpuServerRegister = () => {
         <ManagerNavigation />
       </div>
       <main className="content">
-        <GpuServerRegisterForm />
+        <GpuServerRegisterForm className="register-form" />
       </main>
       <footer className="footer">
         <span>All Rights Reserved gpu-is-mine</span>

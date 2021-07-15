@@ -50,10 +50,28 @@ export const Container = styled.div`
     grid-row: 4 / 5;
     overflow-y: auto;
     padding: 1rem;
+    background-color: var(--primary-50);
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 
     ${up("tablet")} {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
+
+      align-items: center;
+    }
+  }
+
+  .register-form {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    ${up("tablet")} {
+      max-width: 40rem;
+      padding: 2rem;
     }
   }
 

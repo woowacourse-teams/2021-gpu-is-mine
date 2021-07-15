@@ -1,9 +1,12 @@
+import { FormHTMLAttributes } from "react";
 import useForm from "../../hooks/useForm/useForm";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
 
-const GpuServerRegisterForm = () => {
+type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
+
+const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   const { form, submit, useInput } = useForm((data) => {
     console.dir(data);
   });
@@ -30,7 +33,7 @@ const GpuServerRegisterForm = () => {
   });
 
   return (
-    <StyledForm {...form}>
+    <StyledForm {...props} {...form}>
       <Input size="sm" {...serverNameInputProps} />
       <Input size="sm" {...memorySizeInputProps} />
       <Input size="sm" {...diskSizeInputProps} />
