@@ -12,5 +12,9 @@ export const StyledForm = styled.form`
     margin-top: 0.75rem;
     height: 2.5rem;
     font-size: 1.125rem;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
   }
 `;

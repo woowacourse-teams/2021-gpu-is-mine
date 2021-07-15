@@ -3,16 +3,15 @@ import cx from "classnames";
 import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigation";
 import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
 import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
-import GpuServerInfoItem from "../../../domains/GpuServerInfoItem/GpuServerInfoItem";
-import GpuServerViewResponses from "../../../fixtures/gpuServeViewrResponses";
-import { Container } from "./GpuServerView.styled";
+import { Container } from "./GpuServerRegister.styled";
+import GpuServerRegisterForm from "../../../domains/GpuServerRegisterForm/GpuServerRegisterForm";
 
-const GpuServerView = () => {
+const GpuServerRegister = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
 
   const handleClick = () => setIsNavVisible(!isNavVisible);
 
-  const labName = "GPU내꼬야Lab";
+  const labName = "동동Lab";
 
   return (
     <Container>
@@ -26,11 +25,7 @@ const GpuServerView = () => {
         <ManagerNavigation />
       </div>
       <main className="content">
-        <section className="info-item-wrapper">
-          {GpuServerViewResponses.gpus.map((res) => (
-            <GpuServerInfoItem key={res.id} {...res} />
-          ))}
-        </section>
+        <GpuServerRegisterForm className="register-form" />
       </main>
       <footer className="footer">
         <span>All Rights Reserved gpu-is-mine</span>
@@ -39,4 +34,4 @@ const GpuServerView = () => {
   );
 };
 
-export default GpuServerView;
+export default GpuServerRegister;

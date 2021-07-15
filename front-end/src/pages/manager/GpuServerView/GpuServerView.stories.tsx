@@ -2,12 +2,12 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import GpuServerView from "./GpuServerView";
 
 export default {
-  title: "Pages/Manager/GpuServer",
+  title: "Pages/Manager/GpuServerView",
   component: GpuServerView,
 } as ComponentMeta<typeof GpuServerView>;
 
 const Template: ComponentStory<typeof GpuServerView> = () => <GpuServerView />;
 
-export const View = Template.bind({});
+export const Default = Template.bind({});
 
-View.args = {};
+Default.args = {};

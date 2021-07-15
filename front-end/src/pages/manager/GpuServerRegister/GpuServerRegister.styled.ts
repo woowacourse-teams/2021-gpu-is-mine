@@ -55,13 +55,20 @@ export const Container = styled.div`
     ${up("tablet")} {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
+      display: flex;
     }
   }
 
-  .info-item-wrapper {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.75rem;
+  .register-form {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    ${up("tablet")} {
+      max-width: 40rem;
+      padding: 2rem;
+      margin: auto;
+    }
   }
 
   .footer {
