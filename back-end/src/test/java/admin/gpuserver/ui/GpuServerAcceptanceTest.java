@@ -28,8 +28,6 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     static Long dummyLabId;
     static List<Long> dummyGpuServerIds;
-    @LocalServerPort
-    int port;
 
     public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
         return RestAssured
@@ -103,7 +101,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     @BeforeEach
     public void setUp() {
-        RestAssured.port = port;
+        super.setUp();
 
         dummyLabId = lab_생성(new LabRequest("testLab"));
 
