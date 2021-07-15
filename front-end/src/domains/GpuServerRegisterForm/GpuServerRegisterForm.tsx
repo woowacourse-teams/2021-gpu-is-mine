@@ -1,7 +1,6 @@
 import { FormHTMLAttributes } from "react";
-import useForm from "../../hooks/useForm/useForm";
-import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
+import { useForm } from "../../hooks";
+import { Input, Button } from "../../components";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;

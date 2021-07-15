@@ -1,6 +1,5 @@
 import { HTMLAttributes } from "react";
-import Logo from "../../components/Logo/Logo";
-import Text from "../../components/Text/Text";
+import { Logo, Text } from "../../components";
 import { StyledManagerHeader } from "./ManagerHeader.styled";
 
 interface HeaderProps extends HTMLAttributes<HTMLElement> {

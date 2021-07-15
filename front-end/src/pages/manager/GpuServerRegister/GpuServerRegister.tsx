@@ -1,10 +1,8 @@
 import { useState } from "react";
 import cx from "classnames";
-import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigation";
-import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
-import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
+import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
+import { GpuServerRegisterForm } from "../../../domains/GpuServer";
 import { Container } from "./GpuServerRegister.styled";
-import GpuServerRegisterForm from "../../../domains/GpuServerRegisterForm/GpuServerRegisterForm";
 
 const GpuServerRegister = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);

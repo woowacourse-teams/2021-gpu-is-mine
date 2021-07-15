@@ -1,9 +1,7 @@
 import { useState } from "react";
 import cx from "classnames";
-import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigation";
-import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
-import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
-import GpuServerInfoItem from "../../../domains/GpuServerInfoItem/GpuServerInfoItem";
+import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
+import { GpuServerInfoItem } from "../../../domains/GpuServer";
 import GpuServerViewResponses from "../../../fixtures/gpuServeViewrResponses";
 import { Container } from "./GpuServerView.styled";
 

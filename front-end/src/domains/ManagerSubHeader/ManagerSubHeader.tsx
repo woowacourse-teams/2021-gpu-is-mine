@@ -1,5 +1,5 @@
 import { HTMLAttributes, MouseEventHandler } from "react";
-import Text from "../../components/Text/Text";
+import { Text } from "../../components";
 import { StyledManagerSubHeader } from "./ManagerSubHeader.styled";
 
 interface SubHeaderProps extends HTMLAttributes<HTMLElement> {
