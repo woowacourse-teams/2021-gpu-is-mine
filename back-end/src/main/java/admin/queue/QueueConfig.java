@@ -1,4 +1,4 @@
-package queue;
+package admin.queue;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;

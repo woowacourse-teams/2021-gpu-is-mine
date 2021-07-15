@@ -1,4 +1,4 @@
-package queue;
+package admin.queue;
 
 import admin.gpuserver.domain.Job;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -65,6 +65,7 @@ public class QueueService {
     }
 
     private void createBind(Queue queue, TopicExchange topicExchange, Long labId) {
+
         amqpAdmin.declareBinding(
             BindingBuilder.bind(queue).to(topicExchange).with(PREFIX_ROUTING_KEY + labId));
     }
