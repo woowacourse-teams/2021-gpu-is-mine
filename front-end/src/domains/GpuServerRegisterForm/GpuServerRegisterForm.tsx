@@ -1,16 +1,17 @@
 import { FormHTMLAttributes, useEffect } from "react";
 import useForm, { SubmitAction, Values } from "../../hooks/useForm/useForm";
+import useFetch from "../../hooks/useFetch/useFetch";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
-import usePost from "../../hooks/usePost/usePost";
 import { GpuServerRegisterRequest } from "../../types/gpuServer";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { data, error, makeRequest } = usePost<void, GpuServerRegisterRequest>(
-    "http://3.35.169.99:8080//api/labs/1/gpus"
+  const { data, error, makeRequest } = useFetch<void, GpuServerRegisterRequest>(
+    "http://3.35.169.99:8080/api/labs/1/gpus",
+    { method: "post" }
   );
 
   const submitAction: SubmitAction = ({
