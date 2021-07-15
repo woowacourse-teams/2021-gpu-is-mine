@@ -11,7 +11,7 @@ public class MemberResponse {
     private MemberType memberType;
     private LabResponse labResponse;
 
-    public MemberResponse(Long id, String email, String name, MemberType memberType, LabResponse labResponse) {
+    private MemberResponse(Long id, String email, String name, MemberType memberType, LabResponse labResponse) {
         this.id = id;
         this.email = email;
         this.name = name;

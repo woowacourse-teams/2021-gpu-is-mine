@@ -23,41 +23,37 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberRequest request) {
         Long createdId = memberService.createMember(request);
-        return ResponseEntity.created(URI.create("/api/members/" + createdId))
-                .build();
+        URI uri = URI.create("/api/members/" + createdId);
+        return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
         MemberResponse memberResponse = memberService.findMember(id);
         return ResponseEntity.ok(memberResponse);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
         memberService.updateMemberInfo(id, request);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("{id}/memberType")
+    @PutMapping("/{id}/memberType")
     public ResponseEntity<Void> updateMemberType(@PathVariable Long id, @RequestBody MemberTypeRequest request) {
         memberService.updateMemberType(id, request);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("{id}/lab")
+    @PutMapping("/{id}/lab")
     public ResponseEntity<Void> updateMemberLab(@PathVariable Long id, @RequestBody ChangeLabRequest request) {
         memberService.changeLab(id, request);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }

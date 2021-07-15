@@ -28,11 +28,6 @@ public class Member extends BaseEntity {
     }
 
     public Member(String email, String password, String name, MemberType memberType, Lab lab) {
-        this(null, email, password, name, memberType, lab);
-    }
-
-    public Member(Long id, String email, String password, String name, MemberType memberType, Lab lab) {
-        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
