@@ -52,15 +52,10 @@ export const Container = styled.div`
     padding: 1rem;
     background-color: var(--primary-50);
 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-
     ${up("tablet")} {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
-
-      align-items: center;
+      display: flex;
     }
   }
 
@@ -72,6 +67,7 @@ export const Container = styled.div`
     ${up("tablet")} {
       max-width: 40rem;
       padding: 2rem;
+      margin: auto;
     }
   }
 
