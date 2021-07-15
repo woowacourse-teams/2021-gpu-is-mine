@@ -15,9 +15,10 @@ import admin.member.domain.repository.MemberRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Profile("!prod && !test")
+@Profile("dev")
 public class DataLoader implements CommandLineRunner {
     private final LabRepository labRepository;
     private final GpuServerRepository gpuServerRepository;
@@ -35,8 +36,9 @@ public class DataLoader implements CommandLineRunner {
         this.jobRepository = jobRepository;
     }
 
+    @Transactional
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Lab lab1 = new Lab("lab1");
         labRepository.save(lab1);
         GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
@@ -44,6 +46,7 @@ public class DataLoader implements CommandLineRunner {
         GpuBoard gpuBoard1 = new GpuBoard(false, 600L, "NVIDIA", gpuServer1);
         gpuBoardRepository.save(gpuBoard1);
         Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
+        memberRepository.save(member1);
         Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard1, member1);
         jobRepository.save(job1);
     }
