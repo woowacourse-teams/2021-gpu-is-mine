@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cx from "classnames";
 import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigation";
 import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
 import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
 import GpuServerInfoItem from "../../../domains/GpuServerInfoItem/GpuServerInfoItem";
-import GpuServerViewResponses from "../../../fixtures/gpuServeViewrResponses";
+import useGet from "../../../hooks/useGet/useGet";
 import { Container } from "./GpuServerView.styled";
+import { GpuServerViewResponses } from "../../../types/gpuServer";
 
 const GpuServerView = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
@@ -13,6 +14,15 @@ const GpuServerView = () => {
   const handleClick = () => setIsNavVisible(!isNavVisible);
 
   const labName = "GPU내꼬야Lab";
+
+  const { data, makeRequest } = useGet<GpuServerViewResponses>(
+    "http://3.35.169.99:8080//api/labs/1/gpus"
+  );
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
+  }, [makeRequest]);
 
   return (
     <Container>
@@ -27,7 +37,7 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {GpuServerViewResponses.gpus.map((res) => (
+          {data?.gpuServers.map((res) => (
             <GpuServerInfoItem key={res.id} {...res} />
           ))}
         </section>
