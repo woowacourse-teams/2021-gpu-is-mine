@@ -4,6 +4,7 @@ import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class GpuServerRepositoryTest {
         em.clear();
 
         GpuServer persistGpuServer = gpuServerRepository.findById(gpuServer.getId()).orElseThrow(IllegalArgumentException::new);
-        assertThat(persistGpuServer.getLab()).isNotNull();
+        Assertions.assertThat(persistGpuServer.getLab()).isNotNull();
         assertThat(persistGpuServer.getCreatedAt()).isNotNull();
     }
 

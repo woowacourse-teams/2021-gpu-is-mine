@@ -2,8 +2,8 @@ package admin.job.domain;
 
 import admin.gpuserver.domain.BaseEntity;
 import admin.gpuserver.domain.GpuBoard;
-import admin.gpuserver.domain.LabUser;
 import admin.job.exception.JobException;
+import admin.member.domain.Member;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -25,24 +25,24 @@ public class Job extends BaseEntity {
     private GpuBoard gpuBoard;
 
     @ManyToOne
-    private LabUser labUser;
+    private Member member;
 
     protected Job() {
     }
 
-    public Job(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
-        validate(name, status, gpuBoard, labUser);
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member) {
+        validate(name, status, gpuBoard, member);
         this.name = name;
         this.status = status;
         this.gpuBoard = gpuBoard;
-        this.labUser = labUser;
+        this.member = member;
     }
 
-    public Job(String name, GpuBoard gpuBoard, LabUser labUser) {
-        this(name, JobStatus.WAITING, gpuBoard, labUser);
+    public Job(String name, GpuBoard gpuBoard, Member member) {
+        this(name, JobStatus.WAITING, gpuBoard, member);
     }
 
-    private void validate(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
+    private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member) {
         if (Objects.isNull(name) || name.isEmpty()) {
             throw new JobException("적절한 Job 이름이 아닙니다.");
         }
@@ -55,8 +55,8 @@ public class Job extends BaseEntity {
             throw new JobException("Job의 gpuBoard는 Null일 수 없습니다.");
         }
 
-        if (Objects.isNull(labUser)) {
-            throw new JobException("Job의 LabUser는 Null일 수 없습니다.");
+        if (Objects.isNull(member)) {
+            throw new JobException("Job의 Member는 Null일 수 없습니다.");
         }
     }
 
@@ -76,8 +76,8 @@ public class Job extends BaseEntity {
         return gpuBoard;
     }
 
-    public LabUser getLabUser() {
-        return labUser;
+    public Member getMember() {
+        return member;
     }
 
     public void cancel() {

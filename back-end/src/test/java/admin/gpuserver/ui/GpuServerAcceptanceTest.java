@@ -10,6 +10,7 @@ import admin.lab.dto.LabRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,7 +121,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_아이디조회(1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class)).isNotNull();
+        Assertions.assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class)).isNotNull();
     }
 
     @DisplayName("GpuServer 전체조회")

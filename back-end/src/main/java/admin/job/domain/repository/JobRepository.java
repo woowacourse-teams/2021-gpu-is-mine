@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findAllByGpuBoardId(Long id);
 
-    Optional<Job> findByIdAndLabUserId(Long id, Long labUserId);
+    Optional<Job> findByIdAndMemberId(Long id, Long memberId);
 }

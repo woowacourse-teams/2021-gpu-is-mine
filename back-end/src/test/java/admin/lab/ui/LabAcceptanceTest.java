@@ -21,68 +21,6 @@ public class LabAcceptanceTest extends AcceptanceTest {
     private static final LabRequest LAB_REQUEST = new LabRequest("labName");
     private static final LabRequest LAB_REQUEST2 = new LabRequest("labName2");
 
-    @Test
-    @DisplayName("Lab 생성")
-    void save() {
-        ExtractableResponse<Response> response = LAB_생성_요청(LAB_REQUEST);
-
-        LAB_정상_생성됨(response);
-    }
-
-    @Test
-    @DisplayName("Lab 정상 조회")
-    void findById() {
-        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
-        Long id = extractCreatedId(createResponse);
-
-        ExtractableResponse<Response> response = LAB_조회_요청(id);
-
-        LAB_정상_조회됨(response, LAB_REQUEST.getName());
-    }
-
-    @Test
-    @DisplayName("Lab 목록 조회 요청")
-    void findAll() {
-        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
-        ExtractableResponse<Response> createResponse2 = LAB_생성_요청(LAB_REQUEST2);
-
-        ExtractableResponse<Response> response = LAB_목록_조회_요청();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<Long> expectedLabIds = Stream.of(createResponse, createResponse2)
-                .map(LabAcceptanceTest::extractCreatedId)
-                .collect(Collectors.toList());
-        List<Long> resultLabIds = response.jsonPath()
-                .getList("labResponses", LabResponse.class)
-                .stream()
-                .map(LabResponse::getId)
-                .collect(Collectors.toList());
-        assertThat(resultLabIds).containsAll(expectedLabIds);
-    }
-
-    @Test
-    @DisplayName("Lab 수정 요청")
-    void update() {
-        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
-        Long id = extractCreatedId(createResponse);
-        LabRequest updateLabRequest = new LabRequest("updateLabName");
-
-        ExtractableResponse<Response> response = LAB_수정_요청(id, updateLabRequest);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    @Test
-    @DisplayName("Lab 삭제 요청")
-    void delete() {
-        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
-        Long id = extractCreatedId(createResponse);
-
-        ExtractableResponse<Response> response = LAB_삭제_요청(id);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
     public static Long LAB_생성_요청_후_생성_ID_리턴(LabRequest labRequest) {
         return extractCreatedId(LAB_생성_요청(labRequest));
     }
@@ -151,5 +89,67 @@ public class LabAcceptanceTest extends AcceptanceTest {
     private static Long extractCreatedId(String uri) {
         String[] uriToken = uri.split("/");
         return Long.valueOf(uriToken[uriToken.length - 1]);
+    }
+
+    @Test
+    @DisplayName("Lab 생성")
+    void save() {
+        ExtractableResponse<Response> response = LAB_생성_요청(LAB_REQUEST);
+
+        LAB_정상_생성됨(response);
+    }
+
+    @Test
+    @DisplayName("Lab 정상 조회")
+    void findById() {
+        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
+        Long id = extractCreatedId(createResponse);
+
+        ExtractableResponse<Response> response = LAB_조회_요청(id);
+
+        LAB_정상_조회됨(response, LAB_REQUEST.getName());
+    }
+
+    @Test
+    @DisplayName("Lab 목록 조회 요청")
+    void findAll() {
+        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
+        ExtractableResponse<Response> createResponse2 = LAB_생성_요청(LAB_REQUEST2);
+
+        ExtractableResponse<Response> response = LAB_목록_조회_요청();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        List<Long> expectedLabIds = Stream.of(createResponse, createResponse2)
+                .map(LabAcceptanceTest::extractCreatedId)
+                .collect(Collectors.toList());
+        List<Long> resultLabIds = response.jsonPath()
+                .getList("labResponses", LabResponse.class)
+                .stream()
+                .map(LabResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(resultLabIds).containsAll(expectedLabIds);
+    }
+
+    @Test
+    @DisplayName("Lab 수정 요청")
+    void update() {
+        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
+        Long id = extractCreatedId(createResponse);
+        LabRequest updateLabRequest = new LabRequest("updateLabName");
+
+        ExtractableResponse<Response> response = LAB_수정_요청(id, updateLabRequest);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("Lab 삭제 요청")
+    void delete() {
+        ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
+        Long id = extractCreatedId(createResponse);
+
+        ExtractableResponse<Response> response = LAB_삭제_요청(id);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 }

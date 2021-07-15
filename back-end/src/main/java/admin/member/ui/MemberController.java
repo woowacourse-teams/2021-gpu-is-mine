@@ -61,7 +61,7 @@ public class MemberController {
 
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<ExceptionResponse> handleException(MemberException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception);
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

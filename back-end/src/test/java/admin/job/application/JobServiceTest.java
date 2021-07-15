@@ -2,15 +2,15 @@ package admin.job.application;
 
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.LabUser;
-import admin.gpuserver.domain.UserType;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.domain.repository.LabUserRepository;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import admin.member.domain.Member;
+import admin.member.domain.MemberType;
+import admin.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class JobServiceTest {
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
     @Autowired
-    private LabUserRepository labUserRepository;
+    private MemberRepository memberRepository;
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -37,7 +37,7 @@ class JobServiceTest {
     private GpuServer server;
     private GpuBoard board;
     private Lab lab;
-    private LabUser labUser;
+    private Member member;
 
     @BeforeEach
     void setUp() {
@@ -47,15 +47,15 @@ class JobServiceTest {
         gpuServerRepository.save(server);
         board = new GpuBoard(false, 600L, "nvdia", server);
         gpuBoardRepository.save(board);
-        labUser = new LabUser("name", UserType.MANAGER, lab);
-        labUserRepository.save(labUser);
+        member = new Member("email", "1234", "name", MemberType.MANAGER, lab);
+        memberRepository.save(member);
     }
 
     @Test
     @DisplayName("정상 등록")
     void insert() {
         JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
-        Long id = jobService.insert(labUser.getId(), jobRequest);
+        Long id = jobService.insert(member.getId(), jobRequest);
         assertThat(id).isNotNull();
     }
 
@@ -76,7 +76,7 @@ class JobServiceTest {
         Long notExistingServerId = Long.MAX_VALUE;
         JobRequest jobRequest = new JobRequest(notExistingServerId, "job", "metadata", "12");
 
-        assertThatThrownBy(() -> jobService.insert(labUser.getId(), jobRequest))
+        assertThatThrownBy(() -> jobService.insert(member.getId(), jobRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("board 가 없습니다.");
     }
@@ -85,7 +85,7 @@ class JobServiceTest {
     @DisplayName("정상 조회")
     void findById() {
         JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
-        Long jobId = jobService.insert(labUser.getId(), jobRequest);
+        Long jobId = jobService.insert(member.getId(), jobRequest);
 
         JobResponse jobResponse = jobService.findById(jobId);
         assertThat(jobResponse).isNotNull();

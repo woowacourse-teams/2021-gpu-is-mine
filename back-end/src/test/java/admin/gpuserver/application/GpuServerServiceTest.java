@@ -2,16 +2,8 @@ package admin.gpuserver.application;
 
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.Job;
-import admin.gpuserver.domain.JobStatus;
-import admin.gpuserver.domain.GpuBoard;
-import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.LabUser;
-import admin.gpuserver.domain.UserType;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.domain.repository.JobRepository;
-import admin.gpuserver.domain.repository.LabUserRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
@@ -26,6 +18,7 @@ import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,7 +94,7 @@ public class GpuServerServiceTest {
         assertThat(gpuServerResponse).isNotNull();
         assertThat(gpuServerResponse.getGpuBoard()).isNotNull();
         assertThat(gpuServerResponse.getGpuBoard().getId()).isNotNull();
-        assertThat(gpuServerResponse.getJobs()).isNotNull();
+        Assertions.assertThat(gpuServerResponse.getJobs()).isNotNull();
         assertThat(gpuServerResponse.getJobs().size()).isEqualTo(4);
     }
 

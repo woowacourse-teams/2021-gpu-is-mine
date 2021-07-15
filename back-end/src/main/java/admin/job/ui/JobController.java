@@ -24,16 +24,16 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addJob(Long labUserId, @RequestBody JobRequest jobRequest) {
-        Long jobId = jobService.insert(labUserId, jobRequest);
+    public ResponseEntity<Void> addJob(Long memberId, @RequestBody JobRequest jobRequest) {
+        Long jobId = jobService.insert(memberId, jobRequest);
 
         URI uri = URI.create("/api/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{jobId}")
-    public ResponseEntity<Void> cancelJob(Long labUserId, @PathVariable Long jobId) {
-        jobService.cancel(labUserId, jobId);
+    public ResponseEntity<Void> cancelJob(Long memberId, @PathVariable Long jobId) {
+        jobService.cancel(memberId, jobId);
         return ResponseEntity.noContent().build();
     }
 }
