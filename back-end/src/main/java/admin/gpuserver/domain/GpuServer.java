@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.GpuServerException;
 import admin.lab.domain.Lab;
 
 import javax.persistence.*;
@@ -46,19 +46,19 @@ public class GpuServer extends BaseEntity {
 
     private void validate(String name, Boolean isOn, Long memorySize, Long diskSize, Lab lab) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new GpuServerServiceException("적절한 GpuServer 이름이 아닙니다.");
+            throw new GpuServerException("적절한 GpuServer 이름이 아닙니다.");
         }
 
         if (Objects.isNull(isOn)) {
-            throw new GpuServerServiceException("GpuServer의 상태는 Null일 수 없습니다.");
+            throw new GpuServerException("GpuServer의 상태는 Null일 수 없습니다.");
         }
 
         if (memorySize == null || memorySize <= 0 || diskSize == null || diskSize <= 0) {
-            throw new GpuServerServiceException("유효하지 않은 GpuServer 정보입니다.");
+            throw new GpuServerException("유효하지 않은 GpuServer 정보입니다.");
         }
 
         if (Objects.isNull(lab)) {
-            throw new GpuServerServiceException("GpuServer의 Lab 정보는 Null일 수 없습니다.");
+            throw new GpuServerException("GpuServer의 Lab 정보는 Null일 수 없습니다.");
         }
     }
 

@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.JobException;
 import admin.lab.domain.Lab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,34 +32,39 @@ public class JobTest {
     @Test
     void 생성_이름_null() {
         assertThatThrownBy(() -> new Job(null, JobStatus.WAITING, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(JobException.class)
+                .hasMessage("적절한 Job 이름이 아닙니다.");
     }
 
     @DisplayName("생성 테스트 - 이름이 빈문자열")
     @Test
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Job("", JobStatus.WAITING, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(JobException.class)
+                .hasMessage("적절한 Job 이름이 아닙니다.");
     }
 
     @DisplayName("생성 테스트 - JobStatus가 null")
     @Test
     void 생성_JobStatus_null() {
         assertThatThrownBy(() -> new Job("잡1", null, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(JobException.class)
+                .hasMessage("Job 상태는 Null일 수 없습니다.");
     }
 
     @DisplayName("생성 테스트 - GpuBoard가 null")
     @Test
     void 생성_GpuBoard_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, null, labUser))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(JobException.class)
+                .hasMessage("Job의 gpuBoard는 Null일 수 없습니다.");
     }
 
     @DisplayName("생성 테스트 - LabUser가 null")
     @Test
     void 생성_LabUser_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, null))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(JobException.class)
+                .hasMessage("Job의 LabUser는 Null일 수 없습니다.");
     }
 }

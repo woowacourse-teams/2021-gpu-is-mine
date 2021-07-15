@@ -1,7 +1,7 @@
 package admin.lab.domain;
 
 import admin.gpuserver.domain.BaseEntity;
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.lab.exception.LabException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +26,7 @@ public class Lab extends BaseEntity {
 
     private void validate(String name) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new GpuServerServiceException("적절한 Lab 이름이 아닙니다.");
+            throw new LabException("적절한 Lab 이름이 아닙니다.");
         }
     }
 

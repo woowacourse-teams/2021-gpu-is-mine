@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.JobException;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -41,19 +41,19 @@ public class Job extends BaseEntity {
 
     private void validate(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new GpuServerServiceException("적절한 Job 이름이 아닙니다.");
+            throw new JobException("적절한 Job 이름이 아닙니다.");
         }
 
         if (Objects.isNull(status)) {
-            throw new GpuServerServiceException("Job 상태는 Null일 수 없습니다.");
+            throw new JobException("Job 상태는 Null일 수 없습니다.");
         }
 
         if (Objects.isNull(gpuBoard)) {
-            throw new GpuServerServiceException("Job의 gpuBoard는 Null일 수 없습니다.");
+            throw new JobException("Job의 gpuBoard는 Null일 수 없습니다.");
         }
 
         if (Objects.isNull(labUser)) {
-            throw new GpuServerServiceException("Job의 LabUsre는 Null일 수 없습니다.");
+            throw new JobException("Job의 LabUser는 Null일 수 없습니다.");
         }
     }
 
