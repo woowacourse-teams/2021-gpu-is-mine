@@ -120,7 +120,8 @@ class MemberServiceTest {
         Long createdId = memberService.createMember(memberRequest);
         MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
 
-        assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType)).isInstanceOf(MemberException.class)
+        assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType))
+                .isInstanceOf(MemberException.class)
                 .hasMessage("존재하지 않는 MemberType 입니다.");
     }
 

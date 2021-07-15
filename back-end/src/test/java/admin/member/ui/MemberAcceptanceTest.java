@@ -60,8 +60,11 @@ class MemberAcceptanceTest extends AcceptanceTest {
         MemberInfoRequest memberInfoRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
 
         ExtractableResponse<Response> response = MEMBER_정보_수정_요청(id, memberInfoRequest);
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(searchResponse.getEmail()).isEqualTo(memberInfoRequest.getEmail());
+        assertThat(searchResponse.getName()).isEqualTo(memberInfoRequest.getName());
     }
 
     @Test
@@ -69,11 +72,14 @@ class MemberAcceptanceTest extends AcceptanceTest {
     void updateMemberType() {
         ExtractableResponse<Response> createResponse = MEMBER_생성_요청(memberRequest);
         Long id = extractCreatedId(createResponse);
-        MemberTypeRequest memberInfoRequest = new MemberTypeRequest("USER");
+        MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
 
-        ExtractableResponse<Response> response = MEMBER_타입_수정_요청(id, memberInfoRequest);
+        ExtractableResponse<Response> response = MEMBER_타입_수정_요청(id, memberTypeRequest);
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
+        assertThat(searchResponse.getMemberType()).isEqualTo(memberType);
     }
 
     @Test
@@ -85,8 +91,10 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
 
         ExtractableResponse<Response> response = MEMBER_LAB_수정_요청(id, changeLabRequest);
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(searchResponse.getLabResponse().getId()).isEqualTo(newLabId);
     }
 
     @Test
@@ -96,8 +104,10 @@ class MemberAcceptanceTest extends AcceptanceTest {
         Long id = extractCreatedId(createResponse);
 
         ExtractableResponse<Response> response = MEMBER_삭제_요청(id);
+        ExtractableResponse<Response> searchResponse = MEMBER_조회_요청(id);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(searchResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
 
@@ -139,7 +149,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
                 .body(memberTypeRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/members/" + id +"/memberType")
+                .put("/api/members/" + id + "/memberType")
                 .then()
                 .extract();
     }
@@ -150,7 +160,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
                 .body(changeLabRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/members/" + id +"/lab")
+                .put("/api/members/" + id + "/lab")
                 .then()
                 .extract();
     }
@@ -170,9 +180,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(memberResponse.getEmail()).isEqualTo(memberRequest.getEmail());
         assertThat(memberResponse.getName()).isEqualTo(memberRequest.getName());
-        assertThat(memberResponse.getMemberType()).isEqualTo(MemberType.ignoreCaseValueOf(memberRequest.getMemberType()));
-        assertThat(memberResponse.getLabResponse()
-                .getId()).isEqualTo(memberRequest.getLabId());
+        MemberType memberType = MemberType.ignoreCaseValueOf(memberRequest.getMemberType());
+        assertThat(memberResponse.getMemberType()).isEqualTo(memberType);
+        assertThat(memberResponse.getLabResponse().getId()).isEqualTo(memberRequest.getLabId());
     }
 
     private static Long extractCreatedId(ExtractableResponse<Response> createResponse) {

@@ -82,7 +82,7 @@ public class GpuServerServiceTest {
         gpuBoard2 = gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", gpuServer2));
         gpuServer2.setGpuBoard(gpuBoard2);
 
-        member = memberRepository.save(new Member( "email@email.com", "password", "name", MemberType.MANAGER, lab));
+        member = memberRepository.save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
 
         job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING));
         job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING));
@@ -237,6 +237,7 @@ public class GpuServerServiceTest {
         GpuServerRequest gpuServerRequest = new GpuServerRequest("server", 1L, 1L, boardRequest);
         Long nonexistentLabId = Long.MAX_VALUE;
 
-        assertThrows(GpuServerServiceException.class, () -> gpuServerService.saveGpuServer(gpuServerRequest, nonexistentLabId));
+        assertThrows(GpuServerServiceException.class, () -> gpuServerService
+                .saveGpuServer(gpuServerRequest, nonexistentLabId));
     }
 }

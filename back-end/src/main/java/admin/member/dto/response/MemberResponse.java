@@ -21,7 +21,8 @@ public class MemberResponse {
 
     public static MemberResponse of(Member member) {
         LabResponse labResponse = LabResponse.of(member.getLab());
-        return new MemberResponse(member.getId(), member.getEmail(), member.getName(), member.getMemberType(), labResponse);
+        return new MemberResponse(member.getId(), member.getEmail(), member.getName(), member
+                .getMemberType(), labResponse);
     }
 
     public Long getId() {
