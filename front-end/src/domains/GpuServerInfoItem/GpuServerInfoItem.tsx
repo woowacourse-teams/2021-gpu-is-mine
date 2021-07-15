@@ -1,21 +1,13 @@
 import { Flicker, Text, VerticalBox, ServerIcon, Button } from "../../components";
+import { GpuServerViewResponse } from "../../types/gpuServer";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 
-type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
-interface JobInfo {
-  name: string;
-  status: JobStatus;
-}
-interface GpuServerInfoItemProps {
-  name: string;
-  isServerOn: boolean;
-  // 현재사용되지 않지만, Response에 포함되는 항목임
-  // isBoardWorking: boolean;
-  performance: number;
-  jobs: JobInfo[];
-}
-
-const GpuServerInfoItem = ({ name, isServerOn, performance, jobs }: GpuServerInfoItemProps) => {
+const GpuServerInfoItem = ({
+  serverName,
+  isOn,
+  gpuBoard: { performance },
+  jobs,
+}: GpuServerViewResponse["gpus"][number]) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
@@ -24,9 +16,9 @@ const GpuServerInfoItem = ({ name, isServerOn, performance, jobs }: GpuServerInf
       <div className="gpu-server-title-wrapper">
         <ServerIcon className="gpu-server-icon" />
         <Text className="gpu-server-title" size="md" weight="bold">
-          {name}
+          {serverName}
         </Text>
-        {isServerOn ? (
+        {isOn ? (
           <Flicker className="status-mark" status="ON" size="sm" />
         ) : (
           <ServerOffMark className="status-mark" />
