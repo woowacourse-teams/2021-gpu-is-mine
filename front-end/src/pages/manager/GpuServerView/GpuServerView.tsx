@@ -27,8 +27,8 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {GpuServerViewResponse.gpus.map((props) => (
-            <GpuServerInfoItem {...props} />
+          {GpuServerViewResponse.gpus.map((res) => (
+            <GpuServerInfoItem key={res.id} {...res} />
           ))}
         </section>
       </main>
