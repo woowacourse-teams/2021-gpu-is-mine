@@ -1,8 +1,10 @@
 package admin.gpuserver.domain;
 
+import admin.gpuserver.exception.GpuBoardException;
+import admin.job.domain.Job;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class GpuBoard extends BaseEntity {
@@ -12,34 +14,42 @@ public class GpuBoard extends BaseEntity {
     private Boolean isWorking;
     private Long performance;
     private String modelName;
+
     @OneToOne
     @JoinColumn(name = "gpu_server_id")
     private GpuServer gpuServer;
-
-    @OneToMany
-    @JoinColumn(name = "job_id")
-    List<Job> jobs = new ArrayList<>();
 
     protected GpuBoard() {
     }
 
     public GpuBoard(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        validate(isWorking, performance, modelName, gpuServer);
         this.isWorking = isWorking;
         this.performance = performance;
         this.modelName = modelName;
         this.gpuServer = gpuServer;
     }
 
-    public Boolean getWorking() {
-        return isWorking;
+    public GpuBoard(Long performance, String modelName, GpuServer gpuServer) {
+        this(false, performance, modelName, gpuServer);
     }
 
-    public List<Job> getJobs() {
-        return jobs;
-    }
+    private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        if (Objects.isNull(performance) || performance <= 0) {
+            throw new GpuBoardException("잘못된 GpuBoard 정보 입력입니다.");
+        }
 
-    public void setJobs(List<Job> jobs) {
-        this.jobs = jobs;
+        if (isWorking == null) {
+            throw new GpuBoardException("GpuBoard 상태는 Null일 수 없습니다.");
+        }
+
+        if (modelName == null || modelName.isEmpty()) {
+            throw new GpuBoardException("적절하지 않은 GpuBoard 이름 정보입니다.");
+        }
+
+        if (gpuServer == null) {
+            throw new GpuBoardException("GpuBoard의 GpuServer 정보는 Null일 수 없습니다.");
+        }
     }
 
     public Long getId() {
@@ -60,5 +70,19 @@ public class GpuBoard extends BaseEntity {
 
     public GpuServer getGpuServer() {
         return gpuServer;
+    }
+
+    public void addJob(Job job) {
+        // TODO :: JOB QUEUE
+    }
+
+    public void cancel(Job job) {
+        // TODO :: JOB QUEUE
+        job.cancel();
+    }
+
+    public void complete(Job job) {
+        // TODO :: JOB QUEUE
+        job.complete();
     }
 }

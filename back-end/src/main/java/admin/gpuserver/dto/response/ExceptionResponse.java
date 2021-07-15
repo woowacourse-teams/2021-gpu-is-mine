@@ -3,12 +3,12 @@ package admin.gpuserver.dto.response;
 public class ExceptionResponse {
     private final String message;
 
-    public static ExceptionResponse of(Exception exception) {
-        return new ExceptionResponse(exception.getMessage());
+    private ExceptionResponse(String message) {
+        this.message = message;
     }
 
-    public ExceptionResponse(String message) {
-        this.message = message;
+    public static ExceptionResponse of(String message) {
+        return new ExceptionResponse(message);
     }
 
     public String getMessage() {

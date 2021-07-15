@@ -27,7 +27,6 @@ public class LabController {
         return ResponseEntity.created(uri).build();
     }
 
-
     @GetMapping("/{labId}")
     public ResponseEntity<LabResponse> findById(@PathVariable Long labId) {
         LabResponse labResponse = labService.findById(labId);
@@ -54,7 +53,7 @@ public class LabController {
 
     @ExceptionHandler(LabException.class)
     public ResponseEntity<ExceptionResponse> handleException(LabException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception);
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

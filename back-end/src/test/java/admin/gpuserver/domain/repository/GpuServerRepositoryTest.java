@@ -1,10 +1,10 @@
 package admin.gpuserver.domain.repository;
 
-
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class GpuServerRepositoryTest {
     EntityManager em;
 
     @Autowired
-    private LabRepository labs;
+    private LabRepository labRepository;
 
     @Autowired
-    private GpuServerRepository gpuServers;
+    private GpuServerRepository gpuServerRepository;
 
     @Autowired
     private GpuBoardRepository gpuBoards;
@@ -34,13 +34,12 @@ public class GpuServerRepositoryTest {
     @Test
     void save() {
         Lab lab = new Lab("better랩");
-        labs.save(lab);
+        labRepository.save(lab);
 
         GpuServer gpuServer = new GpuServer("새로운GPU서버1", false, 500L, 1024L, lab);
         GpuBoard gpuBoard = new GpuBoard(true, 1000L, "aab", gpuServer);
-        gpuServer.setGpuBoard(gpuBoard);
 
-        gpuServers.save(gpuServer);
+        gpuServerRepository.save(gpuServer);
         gpuBoards.save(gpuBoard);
 
         assertThat(lab.getId()).isNotNull();
@@ -49,8 +48,8 @@ public class GpuServerRepositoryTest {
 
         em.clear();
 
-        GpuServer persistGpuServer = gpuServers.findById(gpuServer.getId()).orElseThrow(IllegalArgumentException::new);
-        assertThat(persistGpuServer.getLab()).isNotNull();
+        GpuServer persistGpuServer = gpuServerRepository.findById(gpuServer.getId()).orElseThrow(IllegalArgumentException::new);
+        Assertions.assertThat(persistGpuServer.getLab()).isNotNull();
         assertThat(persistGpuServer.getCreatedAt()).isNotNull();
     }
 
@@ -58,17 +57,17 @@ public class GpuServerRepositoryTest {
     @Test
     void delete() {
         Lab lab = new Lab("better랩");
-        labs.save(lab);
+        labRepository.save(lab);
 
         GpuServer gpuServer = new GpuServer("새로운GPU서버1", false, 500L, 1024L, lab);
-        gpuServers.save(gpuServer);
+        gpuServerRepository.save(gpuServer);
 
-        Optional<GpuServer> persistGpu = gpuServers.findById(gpuServer.getId());
+        Optional<GpuServer> persistGpu = gpuServerRepository.findById(gpuServer.getId());
         assertThat(persistGpu.isPresent()).isTrue();
 
-        gpuServers.delete(gpuServer);
+        gpuServerRepository.delete(gpuServer);
 
-        Optional<GpuServer> actual = gpuServers.findById(gpuServer.getId());
+        Optional<GpuServer> actual = gpuServerRepository.findById(gpuServer.getId());
         assertThat(actual.isPresent()).isFalse();
     }
 }

@@ -1,11 +1,13 @@
 package admin.lab.domain;
 
 import admin.gpuserver.domain.BaseEntity;
+import admin.lab.exception.LabException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Lab extends BaseEntity {
@@ -18,7 +20,14 @@ public class Lab extends BaseEntity {
     }
 
     public Lab(String name) {
+        validate(name);
         this.name = name;
+    }
+
+    private void validate(String name) {
+        if (Objects.isNull(name) || name.isEmpty()) {
+            throw new LabException("적절한 Lab 이름이 아닙니다.");
+        }
     }
 
     public Long getId() {

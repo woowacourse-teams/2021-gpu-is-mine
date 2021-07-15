@@ -10,6 +10,7 @@ import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class MemberServiceTest {
         assertThat(response.getId()).isEqualTo(createdId);
         assertThat(response.getEmail()).isEqualTo(memberRequest.getEmail());
         assertThat(response.getName()).isEqualTo(memberRequest.getName());
-        assertThat(response.getMemberType()).isEqualTo(MemberType.ignoreCaseValueOf(memberRequest.getMemberType()));
+        Assertions.assertThat(response.getMemberType()).isEqualTo(MemberType.ignoreCaseValueOf(memberRequest.getMemberType()));
         assertThat(response.getLabResponse()
                 .getId()).isEqualTo(memberRequest.getLabId());
     }
@@ -101,7 +102,7 @@ class MemberServiceTest {
         memberService.updateMemberType(createdId, memberTypeRequest);
 
         MemberResponse response = memberService.findMember(createdId);
-        assertThat(response.getMemberType()).isEqualTo(MemberType.USER);
+        Assertions.assertThat(response.getMemberType()).isEqualTo(MemberType.USER);
     }
 
     @Test
@@ -165,7 +166,7 @@ class MemberServiceTest {
     @DisplayName("존재하는 멤버 삭제 요청")
     void deleteMember() {
         Long createdId = memberService.createMember(memberRequest);
-        assertThat(memberService.findMember(createdId)).isNotNull();
+        Assertions.assertThat(memberService.findMember(createdId)).isNotNull();
 
         memberService.deleteMember(createdId);
 
