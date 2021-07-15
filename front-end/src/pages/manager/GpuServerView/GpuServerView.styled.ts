@@ -50,6 +50,7 @@ export const Container = styled.div`
     grid-row: 4 / 5;
     overflow-y: auto;
     padding: 1rem;
+    background-color: var(--primary-50);
 
     ${up("tablet")} {
       grid-column: 2 / 3;
@@ -60,7 +61,7 @@ export const Container = styled.div`
   .info-item-wrapper {
     display: flex;
     flex-direction: column;
-    row-gap: 1rem;
+    row-gap: 0.75rem;
   }
 
   .footer {

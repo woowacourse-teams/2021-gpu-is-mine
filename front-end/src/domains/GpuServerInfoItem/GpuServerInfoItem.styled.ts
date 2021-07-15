@@ -9,6 +9,7 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
   row-gap: 1.25rem;
   padding: 0.75rem 1rem;
   box-shadow: 0px 3px 5px 1px #e9eefa;
+  background-color: white;
 
   ${up("laptop")} {
     display: grid;
