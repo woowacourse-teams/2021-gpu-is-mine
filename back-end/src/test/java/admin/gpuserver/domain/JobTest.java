@@ -32,39 +32,34 @@ public class JobTest {
     @Test
     void 생성_이름_null() {
         assertThatThrownBy(() -> new Job(null, JobStatus.WAITING, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - 이름이 빈문자열")
     @Test
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Job("", JobStatus.WAITING, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - JobStatus가 null")
     @Test
     void 생성_JobStatus_null() {
         assertThatThrownBy(() -> new Job("잡1", null, gpuBoard, labUser))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - GpuBoard가 null")
     @Test
     void 생성_GpuBoard_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, null, labUser))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - LabUser가 null")
     @Test
     void 생성_LabUser_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, null))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 }

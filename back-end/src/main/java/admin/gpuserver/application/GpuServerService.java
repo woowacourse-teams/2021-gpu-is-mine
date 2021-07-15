@@ -53,7 +53,7 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponses findAll(Long labId) {
-        checkLab(labId);
+        validateLab(labId);
 
         List<GpuServer> gpuServers = gpuServerRepository.findByLabIdAndDeletedFalse(labId);
         List<GpuServerResponse> gpuServerResponses = gpuServers.stream()
@@ -91,7 +91,7 @@ public class GpuServerService {
         return gpuServer.getId();
     }
 
-    private void checkLab(Long labId) {
+    private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
             throw new GpuServerServiceException("Lab이 존재하지 않습니다.");
         }

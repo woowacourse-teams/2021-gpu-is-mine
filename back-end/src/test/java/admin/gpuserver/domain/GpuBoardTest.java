@@ -31,16 +31,14 @@ public class GpuBoardTest {
     @Test
     void 생성_IsWorking_null() {
         assertThatThrownBy(() -> new GpuBoard(null, 1000L, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - Performance가 null")
     @Test
     void 생성_Performance_null() {
         assertThatThrownBy(() -> new GpuBoard(false, null, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - Performance가 0이하")
@@ -48,31 +46,27 @@ public class GpuBoardTest {
     @ValueSource(longs = {-1024, -1, 0})
     void 생성_Performance_0이하(Long input) {
         assertThatThrownBy(() -> new GpuBoard(false, input, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - 모델이름이 null")
     @Test
     void 생성_모델이름_null() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, null, gpuServer))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - 모델이름이 빈문자열")
     @Test
     void 생성_모델이름_빈문자열() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, "", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 
     @DisplayName("생성 테스트 - GpuServer가 null")
     @Test
     void 생성_GpuServer_null() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, "모델1", null))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(GpuServerServiceException.class);
     }
 }

@@ -92,7 +92,7 @@ public class GpuServerServiceTest {
         assertThat(gpuServerResponse.getJobs().size()).isEqualTo(4);
     }
 
-    @DisplayName("존재하지 GPU_ID로 GPU 서버를 조회한다.")
+    @DisplayName("존재하지 않는 GPU_ID로 GPU 서버를 조회한다.")
     @Test
     void 존재하지_않는_GPU_ID로_GPU_서버를_조회() {
         final Long nonexistentServerId = Long.MAX_VALUE;

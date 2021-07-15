@@ -4,6 +4,7 @@ import admin.gpuserver.exception.GpuServerServiceException;
 import admin.lab.domain.Lab;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class GpuServer extends BaseEntity {
@@ -44,10 +45,20 @@ public class GpuServer extends BaseEntity {
     }
 
     private void validate(String name, Boolean isOn, Long memorySize, Long diskSize, Lab lab) {
-        if (name == null || name.isEmpty() || isOn == null || memorySize == null
-                || memorySize <= 0 || diskSize == null || diskSize <= 0 || lab == null) {
+        if (Objects.isNull(name) || name.isEmpty()) {
+            throw new GpuServerServiceException("적절한 GpuServer 이름이 아닙니다.");
+        }
 
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        if (Objects.isNull(isOn)) {
+            throw new GpuServerServiceException("GpuServer의 상태는 Null일 수 없습니다.");
+        }
+
+        if (memorySize == null || memorySize <= 0 || diskSize == null || diskSize <= 0) {
+            throw new GpuServerServiceException("유효하지 않은 GpuServer 정보입니다.");
+        }
+
+        if (Objects.isNull(lab)) {
+            throw new GpuServerServiceException("GpuServer의 Lab 정보는 Null일 수 없습니다.");
         }
     }
 

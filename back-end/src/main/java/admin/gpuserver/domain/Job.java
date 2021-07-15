@@ -3,6 +3,7 @@ package admin.gpuserver.domain;
 import admin.gpuserver.exception.GpuServerServiceException;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Job extends BaseEntity {
@@ -39,8 +40,20 @@ public class Job extends BaseEntity {
     }
 
     private void validate(String name, JobStatus status, GpuBoard gpuBoard, LabUser labUser) {
-        if (name == null || name.isEmpty() || status == null || gpuBoard == null || labUser == null) {
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        if (Objects.isNull(name) || name.isEmpty()) {
+            throw new GpuServerServiceException("적절한 Job 이름이 아닙니다.");
+        }
+
+        if (Objects.isNull(status)) {
+            throw new GpuServerServiceException("Job 상태는 Null일 수 없습니다.");
+        }
+
+        if (Objects.isNull(gpuBoard)) {
+            throw new GpuServerServiceException("Job의 gpuBoard는 Null일 수 없습니다.");
+        }
+
+        if (Objects.isNull(labUser)) {
+            throw new GpuServerServiceException("Job의 LabUsre는 Null일 수 없습니다.");
         }
     }
 
@@ -48,16 +61,8 @@ public class Job extends BaseEntity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public JobStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(JobStatus status) {
-        this.status = status;
     }
 
     public Long getId() {
@@ -68,16 +73,8 @@ public class Job extends BaseEntity {
         return gpuBoard;
     }
 
-    public void setGpuBoard(GpuBoard gpuBoard) {
-        this.gpuBoard = gpuBoard;
-    }
-
     public LabUser getLabUser() {
         return labUser;
-    }
-
-    public void setLabUser(LabUser labUser) {
-        this.labUser = labUser;
     }
 
     public void cancel() {

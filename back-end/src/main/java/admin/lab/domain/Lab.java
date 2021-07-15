@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Lab extends BaseEntity {
@@ -24,8 +25,8 @@ public class Lab extends BaseEntity {
     }
 
     private void validate(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new GpuServerServiceException("객체를 생성할 수 없습니다.");
+        if (Objects.isNull(name) || name.isEmpty()) {
+            throw new GpuServerServiceException("적절한 Lab 이름이 아닙니다.");
         }
     }
 
