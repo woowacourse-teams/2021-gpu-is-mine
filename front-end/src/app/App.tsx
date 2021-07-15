@@ -10,7 +10,7 @@ const App = () => (
     <GlobalStyle />
     <Router>
       <Switch>
-        <Route exact path={[PATH.MANAGER.GPU_SERVER.VIEW, "/"]}>
+        <Route exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
           <GpuServerView />
         </Route>
         <Route exact path={PATH.MANAGER.GPU_SERVER.REGISTER}>
