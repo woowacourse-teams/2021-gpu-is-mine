@@ -1,5 +1,9 @@
-package admin.gpuserver.domain;
+package admin.job.domain;
 
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.LabUser;
+import admin.gpuserver.domain.UserType;
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
 import admin.job.exception.JobException;
