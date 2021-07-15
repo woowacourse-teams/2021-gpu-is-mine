@@ -57,6 +57,12 @@ export const Container = styled.div`
     }
   }
 
+  .info-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+
   .footer {
     grid-row: 5 / 6;
     justify-self: center;
