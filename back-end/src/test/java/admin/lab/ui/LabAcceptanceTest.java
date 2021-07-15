@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class LabAcceptanceTest extends AcceptanceTest {
+public class LabAcceptanceTest extends AcceptanceTest {
     private static final LabRequest LAB_REQUEST = new LabRequest("labName");
     private static final LabRequest LAB_REQUEST2 = new LabRequest("labName2");
 
@@ -51,7 +51,7 @@ class LabAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         List<Long> expectedLabIds = Stream.of(createResponse, createResponse2)
-                .map(this::extractCreatedId)
+                .map(LabAcceptanceTest::extractCreatedId)
                 .collect(Collectors.toList());
         List<Long> resultLabIds = response.jsonPath()
                 .getList("labResponses", LabResponse.class)
@@ -65,8 +65,8 @@ class LabAcceptanceTest extends AcceptanceTest {
     @DisplayName("Lab 수정 요청")
     void update() {
         ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
-        LabRequest updateLabRequest = new LabRequest("updateLabName");
         Long id = extractCreatedId(createResponse);
+        LabRequest updateLabRequest = new LabRequest("updateLabName");
 
         ExtractableResponse<Response> response = LAB_수정_요청(id, updateLabRequest);
 
@@ -82,6 +82,10 @@ class LabAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = LAB_삭제_요청(id);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    public static Long LAB_생성_요청_후_생성_ID_리턴(LabRequest labRequest) {
+        return extractCreatedId(LAB_생성_요청(labRequest));
     }
 
     public static ExtractableResponse<Response> LAB_생성_요청(LabRequest labRequest) {
@@ -140,12 +144,12 @@ class LabAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private Long extractCreatedId(ExtractableResponse<Response> createResponse) {
+    private static Long extractCreatedId(ExtractableResponse<Response> createResponse) {
         String uri = createResponse.header("Location");
         return extractCreatedId(uri);
     }
 
-    private Long extractCreatedId(String uri) {
+    private static Long extractCreatedId(String uri) {
         String[] uriToken = uri.split("/");
         return Long.valueOf(uriToken[uriToken.length - 1]);
     }
