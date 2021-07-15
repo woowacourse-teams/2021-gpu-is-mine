@@ -60,9 +60,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
         MemberInfoRequest memberInfoRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
 
         ExtractableResponse<Response> response = MEMBER_정보_수정_요청(id, memberInfoRequest);
-        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
         assertThat(searchResponse.getEmail()).isEqualTo(memberInfoRequest.getEmail());
         assertThat(searchResponse.getName()).isEqualTo(memberInfoRequest.getName());
     }
@@ -75,9 +75,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
         MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
 
         ExtractableResponse<Response> response = MEMBER_타입_수정_요청(id, memberTypeRequest);
-        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
         MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
         assertThat(searchResponse.getMemberType()).isEqualTo(memberType);
     }
@@ -91,9 +91,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
         ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
 
         ExtractableResponse<Response> response = MEMBER_LAB_수정_요청(id, changeLabRequest);
-        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
         assertThat(searchResponse.getLabResponse().getId()).isEqualTo(newLabId);
     }
 
@@ -104,9 +104,9 @@ class MemberAcceptanceTest extends AcceptanceTest {
         Long id = extractCreatedId(createResponse);
 
         ExtractableResponse<Response> response = MEMBER_삭제_요청(id);
-        ExtractableResponse<Response> searchResponse = MEMBER_조회_요청(id);
-
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        ExtractableResponse<Response> searchResponse = MEMBER_조회_요청(id);
         assertThat(searchResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
