@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.DeleteHistoryException;
 import admin.lab.domain.Lab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ public class DeleteHistoryTest {
     @Test
     void 생성_GpuServer_null() {
         assertThatThrownBy(() -> new DeleteHistory(null))
-                .isInstanceOf(GpuServerServiceException.class)
-                .hasMessage("객체를 생성할 수 없습니다.");
+                .isInstanceOf(DeleteHistoryException.class)
+                .hasMessage("DeleteHistory의 GpuServer 정보는 Null일 수 없습니다.");
     }
 }

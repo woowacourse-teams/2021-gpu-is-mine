@@ -1,7 +1,6 @@
-package admin.gpuserver.domain;
+package admin.lab.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
-import admin.lab.domain.Lab;
+import admin.lab.exception.LabException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,13 +19,15 @@ public class LabTest {
     @Test
     void 생성_이름_null() {
         assertThatThrownBy(() -> new Lab(null))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(LabException.class)
+                .hasMessage("적절한 Lab 이름이 아닙니다.");
     }
 
     @DisplayName("생성 테스트 - 이름이 빈문자열")
     @Test
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Lab(""))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(LabException.class)
+                .hasMessage("적절한 Lab 이름이 아닙니다.");
     }
 }

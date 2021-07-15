@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.LabUserException;
 import admin.lab.domain.Lab;
 
 import javax.persistence.*;
@@ -35,15 +35,15 @@ public class LabUser extends BaseEntity {
 
     private void validate(String name, UserType userType, Lab lab) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new GpuServerServiceException("적절하지 않은 LabUser 이름입니다.");
+            throw new LabUserException("적절하지 않은 LabUser 이름입니다.");
         }
 
         if (Objects.isNull(userType)) {
-            throw new GpuServerServiceException("LabUser의 타입은 Null일 수 없습니다.");
+            throw new LabUserException("LabUser의 타입은 Null일 수 없습니다.");
         }
 
         if (Objects.isNull(lab)) {
-            throw new GpuServerServiceException("LabUser가 속한 Lab은 Null일 수 없습니다.");
+            throw new LabUserException("LabUser가 속한 Lab은 Null일 수 없습니다.");
         }
     }
 

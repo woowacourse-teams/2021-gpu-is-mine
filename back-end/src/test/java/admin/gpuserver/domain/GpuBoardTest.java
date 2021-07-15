@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.GpuBoardException;
 import admin.lab.domain.Lab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,14 +31,16 @@ public class GpuBoardTest {
     @Test
     void 생성_IsWorking_null() {
         assertThatThrownBy(() -> new GpuBoard(null, 1000L, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("GpuBoard 상태는 Null일 수 없습니다.");
     }
 
     @DisplayName("생성 테스트 - Performance가 null")
     @Test
     void 생성_Performance_null() {
         assertThatThrownBy(() -> new GpuBoard(false, null, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("잘못된 GpuBoard 정보 입력입니다.");
     }
 
     @DisplayName("생성 테스트 - Performance가 0이하")
@@ -46,27 +48,31 @@ public class GpuBoardTest {
     @ValueSource(longs = {-1024, -1, 0})
     void 생성_Performance_0이하(Long input) {
         assertThatThrownBy(() -> new GpuBoard(false, input, "모델1", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("잘못된 GpuBoard 정보 입력입니다.");
     }
 
     @DisplayName("생성 테스트 - 모델이름이 null")
     @Test
     void 생성_모델이름_null() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, null, gpuServer))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("적절하지 않은 GpuBoard 이름 정보입니다.");
     }
 
     @DisplayName("생성 테스트 - 모델이름이 빈문자열")
     @Test
     void 생성_모델이름_빈문자열() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, "", gpuServer))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("적절하지 않은 GpuBoard 이름 정보입니다.");
     }
 
     @DisplayName("생성 테스트 - GpuServer가 null")
     @Test
     void 생성_GpuServer_null() {
         assertThatThrownBy(() -> new GpuBoard(false, 1000L, "모델1", null))
-                .isInstanceOf(GpuServerServiceException.class);
+                .isInstanceOf(GpuBoardException.class)
+                .hasMessage("GpuBoard의 GpuServer 정보는 Null일 수 없습니다.");
     }
 }

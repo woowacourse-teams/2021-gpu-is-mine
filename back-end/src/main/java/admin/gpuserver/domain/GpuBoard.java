@@ -1,6 +1,6 @@
 package admin.gpuserver.domain;
 
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.GpuBoardException;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -35,19 +35,19 @@ public class GpuBoard extends BaseEntity {
 
     private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
         if (Objects.isNull(performance) || performance <= 0) {
-            throw new GpuServerServiceException("잘못된 GpuBoard 정보 입력입니다.");
+            throw new GpuBoardException("잘못된 GpuBoard 정보 입력입니다.");
         }
 
         if (isWorking == null) {
-            throw new GpuServerServiceException("GpuBoard 상태는 Null일 수 없습니다.");
+            throw new GpuBoardException("GpuBoard 상태는 Null일 수 없습니다.");
         }
 
         if (modelName == null || modelName.isEmpty()) {
-            throw new GpuServerServiceException("적절하지 않은 GpuBoard 이름 정보입니다.");
+            throw new GpuBoardException("적절하지 않은 GpuBoard 이름 정보입니다.");
         }
 
         if (gpuServer == null) {
-            throw new GpuServerServiceException("GpuBoard의 GpuServer 정보는 Null일 수 없습니다.");
+            throw new GpuBoardException("GpuBoard의 GpuServer 정보는 Null일 수 없습니다.");
         }
     }
 
