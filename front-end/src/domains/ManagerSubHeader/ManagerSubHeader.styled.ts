@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { breakpoint } from "../../styles/breakpoint";
+import { up } from "styled-breakpoints";
 
 export const StyledManagerSubHeader = styled.header`
   background-color: var(--primary-700);
@@ -14,16 +14,16 @@ export const StyledManagerSubHeader = styled.header`
   .lab-name {
     display: none;
 
-    ${breakpoint("tablet")`
-        display: inherit;
-      `}
+    ${up("tablet")} {
+      display: inherit;
+    }
   }
 
   .down-arrow {
     display: inherit;
 
-    ${breakpoint("tablet")`
-        display: none;
-      `}
+    ${up("tablet")} {
+      display: none;
+    }
   }
 `;

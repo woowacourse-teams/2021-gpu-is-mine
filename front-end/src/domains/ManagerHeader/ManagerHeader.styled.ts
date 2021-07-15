@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { breakpoint } from "../../styles/breakpoint";
+import { up } from "styled-breakpoints";
 
 export const StyledManagerHeader = styled.header`
   width: 100%;
@@ -12,15 +12,15 @@ export const StyledManagerHeader = styled.header`
   color: var(--on-primary-900);
   padding: 0.5rem 1rem 0.5rem 0.5rem;
 
-  ${breakpoint("tablet")`
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
-      padding: 0.5rem 2.5rem 0.5rem 1.5rem;
-    `}
+  ${up("tablet")} {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    padding: 0.5rem 2.5rem 0.5rem 1.5rem;
+  }
 
   .lab-name {
-    ${breakpoint("tablet")`
-        display: none;
-    `}
+    ${up("tablet")} {
+      display: none;
+    }
   }
 `;
