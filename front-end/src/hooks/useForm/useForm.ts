@@ -15,13 +15,27 @@ const useForm = (submitAction: SubmitAction) => {
   const [values, setValues] = useState<Values>({});
   const [isValid, setIsValid] = useState<IsValid>({});
 
-  const disabled = !Object.values(isValid).every(Boolean);
+  const isFormValid =
+    Object.keys(isValid).length === Object.keys(values).length &&
+    Object.values(isValid).every(Boolean);
+
+  const reset = () => {
+    const entries = Object.keys(values).map((key) => [key, ""]);
+
+    setValues(Object.fromEntries(entries));
+  };
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    submitAction(values);
+    const ret = submitAction(values);
+
+    if (ret instanceof Promise) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      ret.then(reset);
+    } else {
+      reset();
+    }
   };
 
   const useInput = (
@@ -62,7 +76,7 @@ const useForm = (submitAction: SubmitAction) => {
     isValid,
     useInput,
     form: { onSubmit },
-    submit: { disabled },
+    submit: { disabled: !isFormValid },
   };
 };
 
