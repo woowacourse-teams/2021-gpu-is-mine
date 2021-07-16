@@ -9,7 +9,7 @@ import { GpuServerRegisterRequest } from "../../types/gpuServer";
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { data, error, makeRequest } = useFetch<void, GpuServerRegisterRequest>(
+  const { status, data, error, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
     "http://3.35.169.99:8080/api/labs/1/gpus",
     { method: "post" }
   );
@@ -37,7 +37,8 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
       })
       .catch(() => {
         alert("제출에 실패하였습니다..");
-      });
+      })
+      .finally(done);
   };
 
   useEffect(() => {
@@ -80,7 +81,12 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
       <Input size="sm" {...diskSizeInputProps} />
       <Input size="sm" {...performanceInputProps} />
       <Input size="sm" {...deviceNameInputProps} />
-      <Button className="submit" color="secondary" {...submit}>
+      <Button
+        className="submit"
+        color="secondary"
+        {...submit}
+        disabled={submit.disabled || status === "loading"}
+      >
         제출
       </Button>
     </StyledForm>

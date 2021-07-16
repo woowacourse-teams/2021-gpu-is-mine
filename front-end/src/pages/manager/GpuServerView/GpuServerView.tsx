@@ -16,7 +16,7 @@ const GpuServerView = () => {
   const labName = "GPU내꼬야Lab";
 
   const { data, status, makeRequest, done } = useFetch<GpuServerViewResponses>(
-    "http://3.35.169.99:8080//api/labs/1/gpus",
+    "http://3.35.169.99:8080/api/labs/1/gpus",
     { method: "get" }
   );
 
@@ -46,9 +46,7 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {data?.gpuServers.map((res) => (
-            <GpuServerInfoItem key={res.id} {...res} />
-          ))}
+          {data && data.gpuServers.map((res) => <GpuServerInfoItem key={res.id} {...res} />)}
         </section>
       </main>
       <footer className="footer">

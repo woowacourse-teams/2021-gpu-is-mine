@@ -2,15 +2,7 @@ import { useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { APICallState, UseFetchOptionParameter, UseFetchReturnType } from "../../types/api";
 
-const getClient = ({ method }: UseFetchOptionParameter) => {
-  switch (method) {
-    case "post":
-      return axios.post.bind(axios);
-    case "get":
-    default:
-      return axios.get.bind(axios);
-  }
-};
+const getClient = (method: UseFetchOptionParameter["method"]) => axios[method].bind(axios);
 
 const useFetch = <T, U = void>(
   url: string,
@@ -22,12 +14,13 @@ const useFetch = <T, U = void>(
     status: "idle",
   });
 
+  const { method = "get" } = option ?? {};
+
   const makeRequest = useCallback(
     async (body: U) => {
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
-
-        const client = getClient(option ?? { method: "get" });
+        const client = getClient(method);
 
         const { data } = await client<T>(url, body);
 
@@ -42,7 +35,7 @@ const useFetch = <T, U = void>(
         return Promise.reject(error);
       }
     },
-    [option, url]
+    [method, url]
   );
 
   const done = useCallback(() => setState((prev) => ({ ...prev, status: "idle" })), []);

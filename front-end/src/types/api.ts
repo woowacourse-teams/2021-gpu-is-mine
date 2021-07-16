@@ -7,7 +7,7 @@ export interface APIResponse<T> {
   error: AxiosError | null;
 }
 
-export interface APIFucntions<T, U = void> {
+export interface APIFunctions<T, U = void> {
   makeRequest: (body: U) => Promise<T | AxiosError<any>>;
   done: () => void;
 }
@@ -20,4 +20,4 @@ export interface UseFetchOptionParameter {
   method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
 }
 
-export type UseFetchReturnType<T, U> = APICallState<T> & APIFucntions<T, U>;
+export type UseFetchReturnType<T, U> = APICallState<T> & APIFunctions<T, U>;
