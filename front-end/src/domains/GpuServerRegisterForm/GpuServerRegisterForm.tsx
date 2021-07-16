@@ -1,10 +1,12 @@
 import { FormHTMLAttributes, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import useForm, { SubmitAction, Values } from "../../hooks/useForm/useForm";
 import useFetch from "../../hooks/useFetch/useFetch";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
 import { GpuServerRegisterRequest } from "../../types/gpuServer";
+import PATH from "../../constants/path";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -13,6 +15,8 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
     "http://3.35.169.99:8080/api/labs/1/gpus",
     { method: "post" }
   );
+
+  const history = useHistory();
 
   const submitAction: SubmitAction = ({
     memorySize,
@@ -33,10 +37,11 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
 
     makeRequest(requestBody)
       .then(() => {
-        alert("성공적으로 제출하였습니다..");
+        alert("성공적으로 제출하였습니다.");
+        history.push(PATH.MANAGER.GPU_SERVER.VIEW);
       })
       .catch(() => {
-        alert("제출에 실패하였습니다..");
+        alert("제출에 실패하였습니다.");
       })
       .finally(done);
   };
