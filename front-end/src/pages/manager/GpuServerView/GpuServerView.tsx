@@ -28,7 +28,6 @@ const GpuServerView = () => {
     console.log(status);
 
     if (status === "succeed") {
-      alert("성공하였습니다");
       done();
     }
   }, [status, done]);
