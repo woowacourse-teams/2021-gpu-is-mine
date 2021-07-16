@@ -18,10 +18,9 @@ const GpuServerInfoItem = ({
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
-  const { status, makeRequest, done } = useFetch<void>(
-    `http://3.35.169.99:8080/api/labs/1/gpus/${id}`,
-    { method: "delete" }
-  );
+  const { makeRequest, done } = useFetch<void>(`http://3.35.169.99:8080/api/labs/1/gpus/${id}`, {
+    method: "delete",
+  });
 
   const handleDelete = () => {
     makeRequest()
@@ -35,7 +34,6 @@ const GpuServerInfoItem = ({
 
   return (
     <StyledGpuServerInfoItem>
-      <Text>{status}</Text>
       <div className="gpu-server-title-wrapper">
         <ServerIcon className="gpu-server-icon" />
         <Text className="gpu-server-title" size="md" weight="bold">
