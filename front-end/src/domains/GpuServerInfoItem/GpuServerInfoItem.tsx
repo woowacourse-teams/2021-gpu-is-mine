@@ -18,9 +18,12 @@ const GpuServerInfoItem = ({
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
-  const { makeRequest, done } = useFetch<void>(`http://3.35.169.99:8080/api/labs/1/gpus/${id}`, {
-    method: "delete",
-  });
+  const { status, makeRequest, done } = useFetch<void>(
+    `http://3.35.169.99:8080/api/labs/1/gpus/${id}`,
+    {
+      method: "delete",
+    }
+  );
 
   const handleDelete = () => {
     makeRequest()
@@ -75,7 +78,12 @@ const GpuServerInfoItem = ({
         <Button className="button" color="primary-dark">
           수정
         </Button>
-        <Button className="button" color="primary" onClick={handleDelete}>
+        <Button
+          className="button"
+          color="primary"
+          disabled={status === "loading"}
+          onClick={handleDelete}
+        >
           삭제
         </Button>
       </div>
