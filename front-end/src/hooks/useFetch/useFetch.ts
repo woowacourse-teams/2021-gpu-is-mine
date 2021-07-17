@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { APICallState, UseFetchOptionParameter, UseFetchReturnType } from "../../types/api";
+import { APICallState, UseFetchOptionParameter, UseFetchReturnType } from "../../types";
 
 const getClient = (method: UseFetchOptionParameter["method"]) => axios[method].bind(axios);
 
