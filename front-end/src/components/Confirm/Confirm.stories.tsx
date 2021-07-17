@@ -1,18 +1,10 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import ConfirmProvider from "../ConfirmProvider/ConfirmProvider";
 import Confirm from "./Confirm";
 import Text from "../Text/Text";
 
 export default {
   title: "Components/Confirm",
   component: Confirm,
-  decorators: [
-    (Story) => (
-      <ConfirmProvider defaultIsOpen>
-        <Story />
-      </ConfirmProvider>
-    ),
-  ],
 } as ComponentMeta<typeof Confirm>;
 
 const Template: ComponentStory<typeof Confirm> = (args) => <Confirm {...args} />;

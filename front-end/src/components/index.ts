@@ -1,8 +1,6 @@
 export { default as Alert } from "./Alert/Alert";
-export { default as AlertProvider } from "./AlertProvider/AlertProvider";
 export { default as Button } from "./Button/Button";
 export { default as Confirm } from "./Confirm/Confirm";
-export { default as ConfirmProvider } from "./ConfirmProvider/ConfirmProvider";
 export { default as Dimmer } from "./Dimmer/Dimmer";
 export { default as Flicker } from "./Flicker/Flicker";
 export { default as GpuIcon } from "./GpuIcon/GpuIcon";

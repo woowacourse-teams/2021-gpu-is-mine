@@ -1,18 +1,17 @@
 import { ReactNode, MouseEventHandler, MouseEvent } from "react";
-import { useAlert } from "../AlertProvider/AlertProvider";
 import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { AlertWrapper } from "./Alert.styled";
 
 interface AlertProps {
+  isOpen: boolean;
+  close: () => void;
   onConfirm: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
-const Alert = ({ children, onConfirm }: AlertProps) => {
-  const { isOpen, close } = useAlert();
-
+const Alert = ({ isOpen, close, children, onConfirm }: AlertProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm(event);
     close();

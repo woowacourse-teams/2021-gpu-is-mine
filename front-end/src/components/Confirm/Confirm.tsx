@@ -1,19 +1,18 @@
 import { ReactNode, MouseEventHandler, MouseEvent } from "react";
-import { useConfirm } from "../ConfirmProvider/ConfirmProvider";
 import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { ConfirmWrapper } from "./Confirm.styled";
 
 interface ConfirmProps {
+  isOpen: boolean;
+  close: () => void;
   onConfirm: MouseEventHandler<HTMLButtonElement>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
-const Confirm = ({ children, onConfirm, onCancel }: ConfirmProps) => {
-  const { isOpen, close } = useConfirm();
-
+const Confirm = ({ isOpen, close, children, onConfirm, onCancel }: ConfirmProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm(event);
     close();
