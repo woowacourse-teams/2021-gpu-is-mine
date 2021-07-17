@@ -1,6 +1,5 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import ConfirmProvider from "../ConfirmProvider/ConfirmProvider";
-
 import Confirm from "./Confirm";
 import Text from "../Text/Text";
 

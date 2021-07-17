@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import useBoolean from "../../hooks/useBoolean/useBoolean";
-import { DialogContextProps, DialogProviderProps } from "../../types/dialog";
+import { useBoolean } from "../../hooks";
+import { DialogContextProps, DialogProviderProps } from "../../types";
 
 const AlertContext = createContext<DialogContextProps | null>(null);
 

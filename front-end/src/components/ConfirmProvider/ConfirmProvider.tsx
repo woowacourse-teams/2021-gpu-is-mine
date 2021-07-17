@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import useBoolean from "../../hooks/useBoolean/useBoolean";
+import { useBoolean } from "../../hooks";
 import { DialogContextProps, DialogProviderProps } from "../../types/dialog";
 
 const ConfirmContext = createContext<DialogContextProps | null>(null);

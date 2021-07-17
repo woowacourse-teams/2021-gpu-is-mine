@@ -1,9 +1,9 @@
 import { ReactNode, MouseEventHandler, MouseEvent } from "react";
+import { useAlert } from "../AlertProvider/AlertProvider";
 import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { AlertWrapper } from "./Alert.styled";
-import { useAlert } from "../AlertProvider/AlertProvider";
 
 interface AlertProps {
   onConfirm: MouseEventHandler<HTMLButtonElement>;
