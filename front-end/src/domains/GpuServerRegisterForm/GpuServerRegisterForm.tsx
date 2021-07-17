@@ -1,11 +1,10 @@
 import { FormHTMLAttributes, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Input, Button } from "../../components";
-import useForm, { SubmitAction, Values } from "../../hooks/useForm/useForm";
-import useFetch from "../../hooks/useFetch/useFetch";
+import { useFetch, useForm, SubmitAction, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
-import { GpuServerRegisterRequest } from "../../types/gpuServer";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants";
+import { GpuServerRegisterRequest } from "../../types";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 

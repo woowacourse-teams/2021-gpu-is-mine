@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import GpuServerInfoItem from "./GpuServerInfoItem";
-import GpuServerViewResponse from "../../fixtures/gpuServeViewrResponses";
+import { gpuServersResponses } from "../../fixtures";
 
 export default {
   title: "Domains/GpuServer/InfoItem",
@@ -14,17 +14,17 @@ const Template: ComponentStory<typeof GpuServerInfoItem> = (args) => (
 export const OnServer = Template.bind({});
 
 OnServer.args = {
-  ...GpuServerViewResponse.gpuServers[0],
+  ...gpuServersResponses.gpuServers[0],
 };
 
 export const OffServer = Template.bind({});
 
 OffServer.args = {
-  ...GpuServerViewResponse.gpuServers[1],
+  ...gpuServersResponses.gpuServers[1],
 };
 
 export const Long = Template.bind({});
 
 Long.args = {
-  ...GpuServerViewResponse.gpuServers[2],
+  ...gpuServersResponses.gpuServers[2],
 };

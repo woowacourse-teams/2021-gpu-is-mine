@@ -1,7 +1,7 @@
 import { Flicker, Text, VerticalBox, ServerIcon, Button } from "../../components";
-import useFetch from "../../hooks/useFetch/useFetch";
-import { GpuServerViewResponse } from "../../types/gpuServer";
+import { useFetch } from "../../hooks";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
+import { GpuServerViewResponse } from "../../types";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
   onDelete: () => void;
