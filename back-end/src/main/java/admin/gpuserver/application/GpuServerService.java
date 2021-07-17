@@ -11,7 +11,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
@@ -45,7 +45,7 @@ public class GpuServerService {
     public GpuServerResponse findById(Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
-                .orElseThrow(() -> new GpuServerServiceException("없는 보드입니다."));
+                .orElseThrow(() -> new GpuServerException("존재하지 않는 보드입니다."));
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
@@ -93,17 +93,17 @@ public class GpuServerService {
 
     private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
-            throw new GpuServerServiceException("Lab이 존재하지 않습니다.");
+            throw new GpuServerException("Lab이 존재하지 않습니다.");
         }
     }
 
     private Lab findLabById(Long labId) {
         return labRepository.findById(labId)
-                .orElseThrow(() -> new GpuServerServiceException("Lab이 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerException("Lab이 존재하지 않습니다."));
     }
 
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-                .orElseThrow(() -> new GpuServerServiceException("GPU 서버가 존재하지 않습니다."));
+                .orElseThrow(() -> new GpuServerException("GPU 서버가 존재하지 않습니다."));
     }
 }
