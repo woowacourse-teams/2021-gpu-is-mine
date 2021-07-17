@@ -1,5 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import fonts from "./fonts/fonts.styled";
+import fonts from "./fonts/fonts";
 import reset from "./reset";
 import colors from "./colors";
 
