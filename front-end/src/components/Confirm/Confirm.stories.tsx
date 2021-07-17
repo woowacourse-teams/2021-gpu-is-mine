@@ -9,7 +9,7 @@ export default {
   component: Confirm,
   decorators: [
     (Story) => (
-      <ConfirmProvider defaultIsOpen={true}>
+      <ConfirmProvider defaultIsOpen>
         <Story />
       </ConfirmProvider>
     ),

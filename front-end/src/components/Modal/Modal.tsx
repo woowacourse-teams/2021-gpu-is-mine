@@ -2,6 +2,7 @@ import { ReactNode, MouseEvent } from "react";
 import Portal from "../Portal/Portal";
 import Dimmer from "../Dimmer/Dimmer";
 import { useModal } from "../ModalProvider/ModalProvider";
+
 interface ModalProps {
   children: ReactNode;
 }

@@ -9,7 +9,7 @@ export default {
   component: Alert,
   decorators: [
     (Story) => (
-      <AlertProvider defaultIsOpen={true}>
+      <AlertProvider defaultIsOpen>
         <Story />
       </AlertProvider>
     ),
