@@ -1,15 +1,39 @@
 import { Flicker, Text, VerticalBox, ServerIcon, Button } from "../../components";
+import useFetch from "../../hooks/useFetch/useFetch";
 import { GpuServerViewResponse } from "../../types/gpuServer";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 
+interface GpuServerInfoItemProps extends GpuServerViewResponse {
+  onDelete: () => void;
+}
+
 const GpuServerInfoItem = ({
+  id,
   serverName,
   isOn,
   gpuBoard: { performance },
   jobs,
-}: GpuServerViewResponse) => {
+  onDelete,
+}: GpuServerInfoItemProps) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
+
+  const { status, makeRequest, done } = useFetch<void>(
+    `http://3.35.169.99:8080/api/labs/1/gpus/${id}`,
+    {
+      method: "delete",
+    }
+  );
+
+  const handleDelete = () => {
+    makeRequest()
+      .then(() => {
+        alert("삭제에 성공하였습니다.");
+        done();
+        onDelete();
+      })
+      .catch(() => alert("삭제에 실패하였습니다. 다시 시도해주세요. "));
+  };
 
   return (
     <StyledGpuServerInfoItem>
@@ -54,7 +78,12 @@ const GpuServerInfoItem = ({
         <Button className="button" color="primary-dark">
           수정
         </Button>
-        <Button className="button" color="primary">
+        <Button
+          className="button"
+          color="primary"
+          disabled={status === "loading"}
+          onClick={handleDelete}
+        >
           삭제
         </Button>
       </div>

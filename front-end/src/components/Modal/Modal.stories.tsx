@@ -7,7 +7,7 @@ export default {
   component: Modal,
   decorators: [
     (Story) => (
-      <ModalProvider defaultIsOpen={true}>
+      <ModalProvider defaultIsOpen>
         <Story />
       </ModalProvider>
     ),
