@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ConfirmWrapper = styled.div`
   display: grid;
   grid-template-rows: auto 3rem;
-  box-shadow: 0 4px 4px 0 #0005;
+  box-shadow: 0 0 4px 2px rgb(253 243 226 / 30%);
 
   min-width: 18rem;
   max-width: 30rem;
@@ -31,8 +31,12 @@ export const ConfirmWrapper = styled.div`
     color: var(--on-secondary-50);
     font-size: 1.25rem;
     font-weight: bold;
-    box-shadow: 0 0 8px #ccc;
+
+    border-color: rgb(250 224 184 / 90%);
+    border-top-width: 2px;
+    border-style: solid;
     background-color: var(--secondary-50);
+    border-radius: 0;
   }
 
   .button:hover {
@@ -41,6 +45,7 @@ export const ConfirmWrapper = styled.div`
 
   .button-wrapper__cancel {
     border-bottom-left-radius: 1rem;
+    border-right-width: 2px;
   }
 
   .button-wrapper__confirm {
