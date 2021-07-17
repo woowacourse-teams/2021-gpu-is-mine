@@ -44,10 +44,9 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {data &&
-            data.gpuServers.map((res) => (
-              <GpuServerInfoItem onDelete={makeRequest} key={res.id} {...res} />
-            ))}
+          {data?.gpuServers.map((res) => (
+            <GpuServerInfoItem refresh={makeRequest} key={res.id} {...res} />
+          ))}
         </section>
       </main>
       <footer className="footer">

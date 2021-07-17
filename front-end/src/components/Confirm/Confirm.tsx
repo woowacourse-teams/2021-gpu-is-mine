@@ -8,7 +8,7 @@ interface ConfirmProps {
   isOpen: boolean;
   close: () => void;
   onConfirm: MouseEventHandler<HTMLButtonElement>;
-  onCancel: MouseEventHandler<HTMLButtonElement>;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
@@ -19,7 +19,7 @@ const Confirm = ({ isOpen, close, children, onConfirm, onCancel }: ConfirmProps)
   };
 
   const handleCancel = (event: MouseEvent<HTMLButtonElement>) => {
-    onCancel(event);
+    onCancel?.(event);
     close();
   };
 

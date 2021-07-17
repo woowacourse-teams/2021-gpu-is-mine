@@ -1,11 +1,13 @@
-import { Flicker, Text, VerticalBox, ServerIcon, Button } from "../../components";
-import { useFetch } from "../../hooks";
+import { useState } from "react";
+import { AxiosError } from "axios";
+import { Flicker, Text, VerticalBox, ServerIcon, Button, Confirm, Alert } from "../../components";
+import { useBoolean, useFetch } from "../../hooks";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import { API_ENDPOINT } from "../../constants";
 import { GpuServerViewResponse } from "../../types";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
-  onDelete: () => void;
+  refresh: () => Promise<unknown | AxiosError<unknown>>;
 }
 
 const GpuServerInfoItem = ({
@@ -14,7 +16,7 @@ const GpuServerInfoItem = ({
   isOn,
   gpuBoard: { performance },
   jobs,
-  onDelete,
+  refresh,
 }: GpuServerInfoItemProps) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
@@ -23,18 +25,38 @@ const GpuServerInfoItem = ({
     method: "delete",
   });
 
-  const handleDelete = () => {
-    makeRequest()
-      .then(() => {
-        alert("삭제에 성공하였습니다.");
-        done();
-        onDelete();
-      })
-      .catch(() => alert("삭제에 실패하였습니다. 다시 시도해주세요. "));
+  const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const isAlertOpen = ["succeed", "failed"].includes(status);
+
+  const deleteServer = async () => {
+    try {
+      await makeRequest();
+
+      setAlertMessage("삭제 성공");
+    } catch {
+      setAlertMessage("삭제에 실패하였습니다.");
+    }
+  };
+
+  const handleAlertConfirm = async () => {
+    if (status === "succeed") {
+      await refresh();
+    }
+
+    done();
   };
 
   return (
     <StyledGpuServerInfoItem>
+      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={deleteServer}>
+        정말 삭제하시겠습니까?
+      </Confirm>
+
+      <Alert isOpen={isAlertOpen} onConfirm={handleAlertConfirm}>
+        {alertMessage}
+      </Alert>
+
       <div className="gpu-server-title-wrapper">
         <ServerIcon className="gpu-server-icon" />
         <Text className="gpu-server-title" size="md" weight="bold">
@@ -80,7 +102,7 @@ const GpuServerInfoItem = ({
           className="button"
           color="primary"
           disabled={status === "loading"}
-          onClick={handleDelete}
+          onClick={openConfirm}
         >
           삭제
         </Button>

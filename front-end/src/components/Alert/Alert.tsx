@@ -6,15 +6,15 @@ import { AlertWrapper } from "./Alert.styled";
 
 interface AlertProps {
   isOpen: boolean;
-  close: () => void;
-  onConfirm: MouseEventHandler<HTMLButtonElement>;
+  close?: () => void;
+  onConfirm?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
 const Alert = ({ isOpen, close, children, onConfirm }: AlertProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
-    onConfirm(event);
-    close();
+    onConfirm?.(event);
+    close?.();
   };
 
   return (
