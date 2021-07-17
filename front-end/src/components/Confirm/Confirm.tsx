@@ -1,8 +1,8 @@
 import { ReactNode, MouseEventHandler, MouseEvent } from "react";
+import { useConfirm } from "../ConfirmProvider/ConfirmProvider";
 import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
-import { useConfirm } from "../ConfirmProvider/ConfirmProvider";
 import { ConfirmWrapper } from "./Confirm.styled";
 
 interface ConfirmProps {

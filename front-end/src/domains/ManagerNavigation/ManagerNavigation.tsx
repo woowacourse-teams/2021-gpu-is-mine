@@ -1,8 +1,8 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import Text from "../../components/Text/Text";
+import { Text } from "../../components";
 import { StyledManagerNavigation } from "./ManagerNavigation.styled";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 

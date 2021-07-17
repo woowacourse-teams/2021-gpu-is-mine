@@ -1,4 +1,4 @@
-import { GpuServerViewResponses } from "../types/gpuServer";
+import { GpuServerViewResponses } from "../types";
 
 const gpuServersResponses: GpuServerViewResponses = {
   gpuServers: [

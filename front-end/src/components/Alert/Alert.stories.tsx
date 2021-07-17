@@ -1,5 +1,4 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-
 import Alert from "./Alert";
 import Text from "../Text/Text";
 import AlertProvider from "../AlertProvider/AlertProvider";

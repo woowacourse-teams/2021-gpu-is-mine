@@ -1,5 +1,5 @@
 import { HTMLAttributes } from "react";
-import { Optional } from "../../types/util";
+import { Optional } from "../../types";
 import { StyledFlicker, StyledFlickerProps } from "./Flicker.styled";
 
 type FlickerProps = Optional<StyledFlickerProps, "size"> & HTMLAttributes<HTMLElement>;
