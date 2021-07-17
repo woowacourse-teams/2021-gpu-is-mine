@@ -97,7 +97,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
           className="submit"
           color="secondary"
           {...submit}
-          disabled={submit.disabled || status === "loading"}
+          disabled={submit.disabled || status !== "idle"}
         >
           제출
         </Button>
