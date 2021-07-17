@@ -1,8 +1,8 @@
 const PATH = {
   MANAGER: {
     GPU_SERVER: {
-      VIEW: "/view",
-      REGISTER: "/register",
+      VIEW: "/manager/gpu-server/view",
+      REGISTER: "/manager/gpu-server/register",
     },
   },
 } as const;
