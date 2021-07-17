@@ -14,17 +14,17 @@ const Template: ComponentStory<typeof GpuServerInfoItem> = (args) => (
 export const OnServer = Template.bind({});
 
 OnServer.args = {
-  ...GpuServerViewResponse.gpus[0],
+  ...GpuServerViewResponse.gpuServers[0],
 };
 
 export const OffServer = Template.bind({});
 
 OffServer.args = {
-  ...GpuServerViewResponse.gpus[1],
+  ...GpuServerViewResponse.gpuServers[1],
 };
 
 export const Long = Template.bind({});
 
 Long.args = {
-  ...GpuServerViewResponse.gpus[2],
+  ...GpuServerViewResponse.gpuServers[2],
 };

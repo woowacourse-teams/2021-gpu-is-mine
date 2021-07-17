@@ -43,6 +43,7 @@ module.exports = {
       files: "./src/types/**/*.{ts,tsx}",
       rules: {
         "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
       },
     },
     {

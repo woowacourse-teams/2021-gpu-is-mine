@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cx from "classnames";
-import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
-import { GpuServerInfoItem } from "../../../domains/GpuServer";
-import GpuServerViewResponses from "../../../fixtures/gpuServeViewrResponses";
+import useFetch from "../../../hooks/useFetch/useFetch";
+import ManagerNavigation from "../../../domains/ManagerNavigation/ManagerNavigation";
+import ManagerHeader from "../../../domains/ManagerHeader/ManagerHeader";
+import ManagerSubHeader from "../../../domains/ManagerSubHeader/ManagerSubHeader";
+import GpuServerInfoItem from "../../../domains/GpuServerInfoItem/GpuServerInfoItem";
 import { Container } from "./GpuServerView.styled";
+import { GpuServerViewResponses } from "../../../types/gpuServer";
 
 const GpuServerView = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
@@ -11,6 +14,23 @@ const GpuServerView = () => {
   const handleClick = () => setIsNavVisible(!isNavVisible);
 
   const labName = "GPU내꼬야Lab";
+
+  const { data, status, makeRequest, done } = useFetch<GpuServerViewResponses>(
+    "http://3.35.169.99:8080/api/labs/1/gpus",
+    { method: "get" }
+  );
+
+  useEffect(() => {
+    makeRequest().then(console.log).catch(console.dir);
+  }, [makeRequest]);
+
+  useEffect(() => {
+    console.log(status);
+
+    if (status === "succeed") {
+      done();
+    }
+  }, [status, done]);
 
   return (
     <Container>
@@ -25,9 +45,10 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {GpuServerViewResponses.gpus.map((res) => (
-            <GpuServerInfoItem key={res.id} {...res} />
-          ))}
+          {data &&
+            data.gpuServers.map((res) => (
+              <GpuServerInfoItem onDelete={makeRequest} key={res.id} {...res} />
+            ))}
         </section>
       </main>
       <footer className="footer">
