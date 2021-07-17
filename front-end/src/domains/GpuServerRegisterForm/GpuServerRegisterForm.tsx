@@ -1,22 +1,22 @@
-import { FormHTMLAttributes, useEffect } from "react";
+import { FormHTMLAttributes } from "react";
 import { useHistory } from "react-router-dom";
-import { Input, Button } from "../../components";
-import { useFetch, useForm, SubmitAction, Values } from "../../hooks";
+import { Input, Button, Text, Alert } from "../../components";
+import { useFetch, useForm, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
 import { PATH, API_ENDPOINT } from "../../constants";
-import { GpuServerRegisterRequest } from "../../types";
+import { APICallStatus, GpuServerRegisterRequest } from "../../types";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { status, data, error, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
+  const { status, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
     API_ENDPOINT.LABS(1).GPUS,
     { method: "post" }
   );
 
   const history = useHistory();
 
-  const submitAction: SubmitAction = ({
+  const submitAction = async ({
     memorySize,
     diskSize,
     serverName,
@@ -33,26 +33,29 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
       },
     };
 
-    makeRequest(requestBody)
-      .then(() => {
-        alert("성공적으로 제출하였습니다.");
-        history.push(PATH.MANAGER.GPU_SERVER.VIEW);
-      })
-      .catch(() => {
-        alert("제출에 실패하였습니다.");
-      })
-      .finally(done);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    return (await makeRequest(requestBody)).unwrap();
   };
 
-  useEffect(() => {
-    if (data) {
-      console.log("data: ", data);
+  const isAlertOpen = ["succeed", "failed"].includes(status);
+  const getAlertMessage = (postStatus: APICallStatus) => {
+    switch (postStatus) {
+      case "succeed":
+        return "서버 등록에 성공하였습니다.";
+      case "failed":
+        return "서버 등록에 실패하였습니다.";
+      default:
+        return "";
+    }
+  };
+
+  const handleConfirm = () => {
+    if (status === "succeed") {
+      history.push(PATH.MANAGER.GPU_SERVER.VIEW);
     }
 
-    if (error) {
-      console.log("error: ", error);
-    }
-  }, [data, error]);
+    done();
+  };
 
   const { form, submit, useInput } = useForm(submitAction);
 
@@ -78,21 +81,28 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   });
 
   return (
-    <StyledForm {...props} {...form}>
-      <Input size="sm" {...serverNameInputProps} />
-      <Input size="sm" {...memorySizeInputProps} />
-      <Input size="sm" {...diskSizeInputProps} />
-      <Input size="sm" {...performanceInputProps} />
-      <Input size="sm" {...deviceNameInputProps} />
-      <Button
-        className="submit"
-        color="secondary"
-        {...submit}
-        disabled={submit.disabled || status === "loading"}
-      >
-        제출
-      </Button>
-    </StyledForm>
+    <>
+      <Alert isOpen={isAlertOpen} onConfirm={handleConfirm}>
+        <Text size="md" weight="bold">
+          {getAlertMessage(status)}
+        </Text>
+      </Alert>
+      <StyledForm {...props} {...form}>
+        <Input size="sm" {...serverNameInputProps} />
+        <Input size="sm" {...memorySizeInputProps} />
+        <Input size="sm" {...diskSizeInputProps} />
+        <Input size="sm" {...performanceInputProps} />
+        <Input size="sm" {...deviceNameInputProps} />
+        <Button
+          className="submit"
+          color="secondary"
+          {...submit}
+          disabled={submit.disabled || status === "loading"}
+        >
+          제출
+        </Button>
+      </StyledForm>
+    </>
   );
 };
 

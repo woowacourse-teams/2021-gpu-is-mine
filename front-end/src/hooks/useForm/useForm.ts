@@ -3,7 +3,7 @@ import { ChangeEvent, FocusEvent, FormEvent, useEffect, useState } from "react";
 type Value = string | number;
 export type Values = Record<string, Value>;
 type IsValid = Record<string, boolean>;
-export type SubmitAction<T = void> = (values: Values) => T | Promise<T>;
+export type SubmitAction<T, U extends Error = Error> = (values: Values) => T | Promise<T | U>;
 
 interface InputOptions {
   name: string;
@@ -11,7 +11,7 @@ interface InputOptions {
   validator?: ((value: Value) => string | null) | null;
 }
 
-const useForm = (submitAction: SubmitAction) => {
+const useForm = <T>(submitAction: SubmitAction<T>) => {
   const [values, setValues] = useState<Values>({});
   const [isValid, setIsValid] = useState<IsValid>({});
 
@@ -31,8 +31,7 @@ const useForm = (submitAction: SubmitAction) => {
     const ret = submitAction(values);
 
     if (ret instanceof Promise) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      ret.then(reset);
+      ret.then(reset).catch(() => {});
     } else {
       reset();
     }
