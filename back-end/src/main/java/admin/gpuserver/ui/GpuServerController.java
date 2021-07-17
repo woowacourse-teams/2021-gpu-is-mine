@@ -6,7 +6,7 @@ import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
-import admin.gpuserver.exception.GpuServerServiceException;
+import admin.gpuserver.exception.GpuServerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +58,8 @@ public class GpuServerController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(GpuServerServiceException.class)
-    public ResponseEntity<ExceptionResponse> handleException(GpuServerServiceException e) {
+    @ExceptionHandler(GpuServerException.class)
+    public ResponseEntity<ExceptionResponse> handleException(GpuServerException e) {
         ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getMessage());
 
         return ResponseEntity.badRequest().body(exceptionResponse);
