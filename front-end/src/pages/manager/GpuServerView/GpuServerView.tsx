@@ -4,6 +4,7 @@ import { useFetch } from "../../../hooks";
 import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
 import { GpuServerInfoItem } from "../../../domains/GpuServer";
 import { Container } from "./GpuServerView.styled";
+import { API_ENDPOINT } from "../../../constants";
 import { GpuServerViewResponses } from "../../../types";
 
 const GpuServerView = () => {
@@ -14,7 +15,7 @@ const GpuServerView = () => {
   const labName = "GPU내꼬야Lab";
 
   const { data, status, makeRequest, done } = useFetch<GpuServerViewResponses>(
-    "http://3.35.169.99:8080/api/labs/1/gpus",
+    API_ENDPOINT.LABS(1).GPUS,
     { method: "get" }
   );
 

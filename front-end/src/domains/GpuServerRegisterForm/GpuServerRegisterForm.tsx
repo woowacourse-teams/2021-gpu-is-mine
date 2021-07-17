@@ -3,14 +3,14 @@ import { useHistory } from "react-router-dom";
 import { Input, Button } from "../../components";
 import { useFetch, useForm, SubmitAction, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
-import { PATH } from "../../constants";
+import { PATH, API_ENDPOINT } from "../../constants";
 import { GpuServerRegisterRequest } from "../../types";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   const { status, data, error, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
-    "http://3.35.169.99:8080/api/labs/1/gpus",
+    API_ENDPOINT.LABS(1).GPUS,
     { method: "post" }
   );
 

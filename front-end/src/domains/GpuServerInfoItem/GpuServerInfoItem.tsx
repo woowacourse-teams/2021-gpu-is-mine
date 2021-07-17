@@ -1,6 +1,7 @@
 import { Flicker, Text, VerticalBox, ServerIcon, Button } from "../../components";
 import { useFetch } from "../../hooks";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
+import { API_ENDPOINT } from "../../constants";
 import { GpuServerViewResponse } from "../../types";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
@@ -18,12 +19,9 @@ const GpuServerInfoItem = ({
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
-  const { status, makeRequest, done } = useFetch<void>(
-    `http://3.35.169.99:8080/api/labs/1/gpus/${id}`,
-    {
-      method: "delete",
-    }
-  );
+  const { status, makeRequest, done } = useFetch<void>(`${API_ENDPOINT.LABS(1).GPUS}/${id}`, {
+    method: "delete",
+  });
 
   const handleDelete = () => {
     makeRequest()
