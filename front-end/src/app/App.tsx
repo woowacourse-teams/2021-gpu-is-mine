@@ -1,9 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import ThemeProvider from "../styles/ThemeProvider";
-import GlobalStyle from "../styles/GlobalStyle";
-import GpuServerView from "../pages/manager/GpuServerView/GpuServerView";
-import GpuServerRegister from "../pages/manager/GpuServerRegister/GpuServerRegister";
-import PATH from "../constants/path";
+import { GlobalStyle, ThemeProvider } from "../styles";
+import { GpuServerView, GpuServerRegister } from "../pages/manager";
+import { PATH } from "../constants";
 
 const App = () => (
   <ThemeProvider>
