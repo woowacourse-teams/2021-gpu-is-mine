@@ -5,6 +5,7 @@ export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  box-shadow: 2px 2px 10px 2px rgb(200 200 200 / 50%);
 
   .submit {
     width: 15%;
