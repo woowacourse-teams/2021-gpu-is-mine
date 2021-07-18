@@ -2,6 +2,7 @@ package admin.member.application;
 
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
+import admin.lab.exception.LabException;
 import admin.member.domain.MemberType;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
@@ -9,7 +10,6 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
-import admin.member.exception.MemberTypeException;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,8 @@ class MemberServiceTest {
         assertThat(response.getId()).isEqualTo(createdId);
         assertThat(response.getEmail()).isEqualTo(memberRequest.getEmail());
         assertThat(response.getName()).isEqualTo(memberRequest.getName());
-        Assertions.assertThat(response.getMemberType()).isEqualTo(MemberType.ignoreCaseValueOf(memberRequest.getMemberType()));
+        Assertions.assertThat(response.getMemberType())
+                .isEqualTo(MemberType.ignoreCaseValueOf(memberRequest.getMemberType()));
         assertThat(response.getLabResponse()
                 .getId()).isEqualTo(memberRequest.getLabId());
     }
@@ -67,8 +68,8 @@ class MemberServiceTest {
     void findNotExistingMember() {
         Long notExistingId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> memberService.findMember(notExistingId)).isInstanceOf(MemberException.class)
-                .hasMessage("해당 id의 회원이 존재하지 않습니다.");
+        assertThatThrownBy(() -> memberService.findMember(notExistingId))
+                .isInstanceOf(MemberException.MEMBER_NOT_FOUND.getException().getClass());
     }
 
     @Test
@@ -112,7 +113,8 @@ class MemberServiceTest {
         Long notExistingMemberId = Long.MAX_VALUE;
         MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
 
-        Throwable throwable = catchThrowable(() -> memberService.updateMemberType(notExistingMemberId, memberTypeRequest));
+        Throwable throwable = catchThrowable(() -> memberService
+                .updateMemberType(notExistingMemberId, memberTypeRequest));
         존재하지_않는_회원_요청_에러_발생(throwable);
     }
 
@@ -123,8 +125,7 @@ class MemberServiceTest {
         MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
 
         assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType))
-                .isInstanceOf(MemberTypeException.class)
-                .hasMessage("존재하지 않는 MemberType 입니다.");
+                .isInstanceOf(MemberException.INVALID_MEMBER_TYPE.getException().getClass());
     }
 
     @Test
@@ -159,8 +160,8 @@ class MemberServiceTest {
         Long notExistingLabId = Long.MAX_VALUE;
         ChangeLabRequest changeLabRequest = new ChangeLabRequest(notExistingLabId);
 
-        assertThatThrownBy(() -> memberService.changeLab(createdId, changeLabRequest)).isInstanceOf(MemberException.class)
-                .hasMessage("해당 lab은 존재하지 않습니다.");
+        assertThatThrownBy(() -> memberService.changeLab(createdId, changeLabRequest))
+                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
     }
 
     @Test
@@ -186,7 +187,6 @@ class MemberServiceTest {
 
     private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
         return assertThat(throwable)
-                .isInstanceOf(MemberException.class)
-                .hasMessage("해당 id의 회원이 존재하지 않습니다.");
+                .isInstanceOf(MemberException.MEMBER_NOT_FOUND.getException().getClass());
     }
 }

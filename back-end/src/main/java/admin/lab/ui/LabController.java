@@ -1,11 +1,9 @@
 package admin.lab.ui;
 
-import admin.exception.dto.ExceptionResponse;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
 import admin.lab.dto.LabResponses;
-import admin.lab.exception.LabException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

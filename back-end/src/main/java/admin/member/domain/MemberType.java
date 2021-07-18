@@ -1,6 +1,6 @@
 package admin.member.domain;
 
-import admin.member.exception.MemberTypeException;
+import admin.member.exception.MemberException;
 
 import java.util.Locale;
 
@@ -11,7 +11,7 @@ public enum MemberType {
         try {
             return MemberType.valueOf(input.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            throw new MemberTypeException("존재하지 않는 MemberType 입니다.");
+            throw MemberException.INVALID_MEMBER_TYPE.getException();
         }
     }
 }

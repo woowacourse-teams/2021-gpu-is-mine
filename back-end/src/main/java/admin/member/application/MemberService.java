@@ -2,6 +2,7 @@ package admin.member.application;
 
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import admin.lab.exception.LabException;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
@@ -28,7 +29,7 @@ public class MemberService {
     @Transactional
     public Long createMember(MemberRequest request) {
         Lab lab = labRepository.findById(request.getLabId())
-                .orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
 
         Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
@@ -64,7 +65,7 @@ public class MemberService {
         Member member = findMemberById(id);
 
         Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
-                .orElseThrow(() -> new MemberException("해당 lab은 존재하지 않습니다."));
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         member.setLab(updateLab);
     }
 
@@ -76,6 +77,6 @@ public class MemberService {
 
     private Member findMemberById(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new MemberException("해당 id의 회원이 존재하지 않습니다."));
+                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 }
