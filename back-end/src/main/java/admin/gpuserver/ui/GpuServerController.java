@@ -1,12 +1,10 @@
 package admin.gpuserver.ui;
 
-import admin.exception.dto.ExceptionResponse;
 import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
-import admin.gpuserver.exception.GpuServerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

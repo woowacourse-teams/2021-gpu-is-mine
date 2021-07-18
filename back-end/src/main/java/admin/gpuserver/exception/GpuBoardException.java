@@ -3,7 +3,7 @@ package admin.gpuserver.exception;
 import admin.exception.http.BadRequestException;
 import admin.exception.http.CustomException;
 
-public enum GpuBoardException{
+public enum GpuBoardException {
     INVALID_PERFORMANCE(new BadRequestException("잘못된 GpuBoard 정보 입력입니다.")),
     INVALID_STATUS(new BadRequestException("GpuBoard 상태는 Null일 수 없습니다.")),
     INVALID_MODEL(new BadRequestException("적절하지 않은 GpuBoard 모델 정보입니다.")),

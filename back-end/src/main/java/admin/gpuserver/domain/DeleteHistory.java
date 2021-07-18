@@ -25,7 +25,7 @@ public class DeleteHistory extends BaseEntity {
 
     private void validate(GpuServer gpuServer) {
         if (Objects.isNull(gpuServer)) {
-            throw new DeleteHistoryException("DeleteHistory의 GpuServer 정보는 Null일 수 없습니다.");
+            throw DeleteHistoryException.INVALID_GPU_SERVER_ID.getException();
         }
     }
 }
