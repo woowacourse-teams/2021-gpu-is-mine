@@ -20,12 +20,11 @@ const GpuServerView = () => {
   );
 
   useEffect(() => {
-    makeRequest().then(console.log).catch(console.dir);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
   }, [makeRequest]);
 
   useEffect(() => {
-    console.log(status);
-
     if (status === "succeed") {
       done();
     }
