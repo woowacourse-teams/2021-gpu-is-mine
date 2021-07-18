@@ -38,7 +38,7 @@ export const StyledDimmer = styled.div<StyledDimmerProps>`
   ${({ color }) => getColorStyle(color)}
 
   .inner {
-    position: relative;
+    isolation: isolate;
   }
 `;
 

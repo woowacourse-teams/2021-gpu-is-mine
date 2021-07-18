@@ -81,6 +81,10 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
     box-shadow: 0px 4px 4px 0px #00000040;
     border-radius: 2rem;
   }
+
+  .button:hover {
+    filter: brightness(1.5);
+  }
 `;
 
 export const ServerOffMark = styled.div`

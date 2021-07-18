@@ -1,18 +1,10 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import Alert from "./Alert";
 import Text from "../Text/Text";
-import AlertProvider from "../AlertProvider/AlertProvider";
 
 export default {
   title: "Components/Alert",
   component: Alert,
-  decorators: [
-    (Story) => (
-      <AlertProvider defaultIsOpen>
-        <Story />
-      </AlertProvider>
-    ),
-  ],
 } as ComponentMeta<typeof Alert>;
 
 const Template: ComponentStory<typeof Alert> = (args) => <Alert {...args} />;

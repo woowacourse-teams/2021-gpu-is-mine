@@ -51,6 +51,7 @@ export const Container = styled.div`
     overflow-y: auto;
     padding: 1rem;
     background-color: var(--primary-50);
+    position: relative;
 
     ${up("tablet")} {
       grid-column: 2 / 3;
@@ -60,13 +61,24 @@ export const Container = styled.div`
 
   .info-item-wrapper {
     display: flex;
+    align-items: center;
     flex-direction: column;
     row-gap: 0.75rem;
+
+    ${up("tablet")} {
+      grid-column: 2 / 3;
+      grid-row: 3 / 4;
+    }
   }
 
   .footer {
     grid-row: 5 / 6;
-    justify-self: center;
+    background-color: var(--primary-50);
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     ${up("tablet")} {
       grid-column: 2 / 3;

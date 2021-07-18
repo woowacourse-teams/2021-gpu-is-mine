@@ -1,6 +1,11 @@
 import { useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { APICallState, UseFetchOptionParameter, UseFetchReturnType } from "../../types";
+import {
+  APICallState,
+  MakeRequestReturnType,
+  UseFetchOptionParameter,
+  UseFetchReturnType,
+} from "../../types";
 
 const getClient = (method: UseFetchOptionParameter["method"]) => axios[method].bind(axios);
 
@@ -18,6 +23,18 @@ const useFetch = <T, U = void>(
 
   const makeRequest = useCallback(
     async (body: U) => {
+      const ret: MakeRequestReturnType<T> = {
+        data: null,
+        error: null,
+        unwrap() {
+          if (this.error) {
+            return Promise.reject(this.error);
+          }
+
+          return Promise.resolve(this.data as T);
+        },
+      };
+
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
         const client = getClient(method);
@@ -26,13 +43,13 @@ const useFetch = <T, U = void>(
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
-        return data;
+        return { ...ret, data };
       } catch (err) {
         const error = err as AxiosError;
 
         setState((prev) => ({ ...prev, status: "failed", error, data: null }));
 
-        return Promise.reject(error);
+        return { ...ret, error };
       }
     },
     [method, url]

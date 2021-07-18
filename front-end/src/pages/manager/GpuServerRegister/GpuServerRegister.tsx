@@ -9,7 +9,7 @@ const GpuServerRegister = () => {
 
   const handleClick = () => setIsNavVisible(!isNavVisible);
 
-  const labName = "동동Lab";
+  const labName = "GPU내꼬야Lab";
 
   return (
     <Container>
