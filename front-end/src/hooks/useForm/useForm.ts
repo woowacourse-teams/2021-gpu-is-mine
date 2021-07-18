@@ -5,10 +5,10 @@ export type Values = Record<string, Value>;
 type IsValid = Record<string, boolean>;
 export type SubmitAction<T, U extends Error = Error> = (values: Values) => T | Promise<T | U>;
 
-interface InputOptions {
+export interface InputOptions {
   name: string;
   label: string;
-  validator?: ((value: Value) => string | null) | null;
+  validator?: ((value: string) => string | null) | null;
 }
 
 const useForm = <T>(submitAction: SubmitAction<T>) => {
