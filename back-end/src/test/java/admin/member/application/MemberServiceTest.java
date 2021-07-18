@@ -69,7 +69,7 @@ class MemberServiceTest {
         Long notExistingId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> memberService.findMember(notExistingId))
-                .isInstanceOf(MemberException.MEMBER_NOT_FOUND.getException().getClass());
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
     @Test
@@ -125,7 +125,7 @@ class MemberServiceTest {
         MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
 
         assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType))
-                .isInstanceOf(MemberException.INVALID_MEMBER_TYPE.getException().getClass());
+                .isEqualTo(MemberException.INVALID_MEMBER_TYPE.getException());
     }
 
     @Test
@@ -161,7 +161,7 @@ class MemberServiceTest {
         ChangeLabRequest changeLabRequest = new ChangeLabRequest(notExistingLabId);
 
         assertThatThrownBy(() -> memberService.changeLab(createdId, changeLabRequest))
-                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
+                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
     @Test
@@ -187,6 +187,6 @@ class MemberServiceTest {
 
     private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
         return assertThat(throwable)
-                .isInstanceOf(MemberException.MEMBER_NOT_FOUND.getException().getClass());
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 }

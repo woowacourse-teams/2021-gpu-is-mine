@@ -46,7 +46,7 @@ class LabServiceTest {
         Long notExistingId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> labService.findById(notExistingId))
-                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
+                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
     @Test
@@ -89,7 +89,7 @@ class LabServiceTest {
         LabRequest labRequestToUpdate = new LabRequest("updateLabName");
 
         assertThatThrownBy(() -> labService.update(notExistingId, labRequestToUpdate))
-                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
+                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
     @Test
@@ -101,7 +101,7 @@ class LabServiceTest {
         labService.delete(createdId);
 
         assertThatThrownBy(() -> labService.findById(createdId))
-                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
+                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
     @Test
@@ -110,6 +110,6 @@ class LabServiceTest {
         Long notExistingId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> labService.delete(notExistingId))
-                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
+                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 }

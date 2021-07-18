@@ -19,13 +19,13 @@ public class LabTest {
     @Test
     void 생성_이름_null() {
         assertThatThrownBy(() -> new Lab(null))
-                .isInstanceOf(LabException.INVALID_LAB_NAME.getException().getClass());
+                .isEqualTo(LabException.INVALID_LAB_NAME.getException());
     }
 
     @DisplayName("생성 테스트 - 이름이 빈문자열")
     @Test
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Lab(""))
-                .isInstanceOf(LabException.INVALID_LAB_NAME.getException().getClass());
+                .isEqualTo(LabException.INVALID_LAB_NAME.getException());
     }
 }
