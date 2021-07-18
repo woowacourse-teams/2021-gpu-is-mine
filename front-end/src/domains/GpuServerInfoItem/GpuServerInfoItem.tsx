@@ -1,5 +1,15 @@
 import { AxiosError } from "axios";
-import { Flicker, Text, VerticalBox, ServerIcon, Button, Confirm, Alert } from "../../components";
+import {
+  Flicker,
+  Text,
+  VerticalBox,
+  ServerIcon,
+  Button,
+  Confirm,
+  Alert,
+  Loading,
+  Dimmer,
+} from "../../components";
 import { useBoolean, useFetch } from "../../hooks";
 import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import { API_ENDPOINT } from "../../constants";
@@ -40,12 +50,12 @@ const GpuServerInfoItem = ({
   };
 
   return (
-    <StyledGpuServerInfoItem>
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
-        <Text size="md" weight="regular">
-          {serverName}을(를) 정말 삭제하시겠습니까?
-        </Text>
-      </Confirm>
+    <>
+      {status === "loading" && (
+        <Dimmer>
+          <Loading size="lg" />
+        </Dimmer>
+      )}
 
       {(status === "succeed" || status === "failed") && (
         <Alert onConfirm={handleAlertConfirm}>
@@ -55,57 +65,65 @@ const GpuServerInfoItem = ({
         </Alert>
       )}
 
-      <div className="gpu-server-title-wrapper">
-        <ServerIcon className="gpu-server-icon" />
-        <Text className="gpu-server-title" size="md" weight="bold">
-          {serverName}
+      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
+        <Text size="md" weight="regular">
+          {serverName}을(를) 정말 삭제하시겠습니까?
         </Text>
-        {isOn ? (
-          <Flicker className="status-mark" status="ON" size="sm" />
-        ) : (
-          <ServerOffMark className="status-mark" />
-        )}
-      </div>
-      <VerticalBox className="gpu-server-details-wrapper">
-        <div className="detail">
-          <Text size="sm" weight="bold">
-            GPU 연산량
+      </Confirm>
+
+      <StyledGpuServerInfoItem>
+        <div className="gpu-server-title-wrapper">
+          <ServerIcon className="gpu-server-icon" />
+          <Text className="gpu-server-title" size="md" weight="bold">
+            {serverName}
           </Text>
-          <Text size="sm" weight="medium">
-            {performance} TFLOPS
-          </Text>
+          {isOn ? (
+            <Flicker className="status-mark" status="ON" size="sm" />
+          ) : (
+            <ServerOffMark className="status-mark" />
+          )}
         </div>
-        <div className="detail">
-          <Text size="sm" weight="bold">
-            현재 실행중인 Job
-          </Text>
-          <Text size="sm" weight="medium">
-            {currentJobName}
-          </Text>
+        <VerticalBox className="gpu-server-details-wrapper">
+          <div className="detail">
+            <Text size="sm" weight="bold">
+              GPU 연산량
+            </Text>
+            <Text size="sm" weight="medium">
+              {performance} TFLOPS
+            </Text>
+          </div>
+          <div className="detail">
+            <Text size="sm" weight="bold">
+              현재 실행중인 Job
+            </Text>
+            <Text size="sm" weight="medium">
+              {currentJobName}
+            </Text>
+          </div>
+          <div className="detail">
+            <Text size="sm" weight="bold">
+              대기 중인 Job 개수
+            </Text>
+            <Text size="sm" weight="medium">
+              {waitingJobCount}개
+            </Text>
+          </div>
+        </VerticalBox>
+        <div className="button-wrapper">
+          <Button className="button" color="primary-dark">
+            수정
+          </Button>
+          <Button
+            className="button"
+            color="primary"
+            disabled={status === "loading"}
+            onClick={openConfirm}
+          >
+            삭제
+          </Button>
         </div>
-        <div className="detail">
-          <Text size="sm" weight="bold">
-            대기 중인 Job 개수
-          </Text>
-          <Text size="sm" weight="medium">
-            {waitingJobCount}개
-          </Text>
-        </div>
-      </VerticalBox>
-      <div className="button-wrapper">
-        <Button className="button" color="primary-dark">
-          수정
-        </Button>
-        <Button
-          className="button"
-          color="primary"
-          disabled={status === "loading"}
-          onClick={openConfirm}
-        >
-          삭제
-        </Button>
-      </div>
-    </StyledGpuServerInfoItem>
+      </StyledGpuServerInfoItem>
+    </>
   );
 };
 
