@@ -60,8 +60,14 @@ export const Container = styled.div`
 
   .info-item-wrapper {
     display: flex;
+    align-items: center;
     flex-direction: column;
     row-gap: 0.75rem;
+
+    ${up("tablet")} {
+      grid-column: 2 / 3;
+      grid-row: 3 / 4;
+    }
   }
 
   .footer {

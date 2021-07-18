@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import cx from "classnames";
-import { useFetch } from "../../../hooks";
+import { useToggle, useFetch, useBreakpoints } from "../../../hooks";
+import { Text } from "../../../components";
 import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
 import { GpuServerInfoItem } from "../../../domains/GpuServer";
 import { Container } from "./GpuServerView.styled";
@@ -8,9 +9,8 @@ import { API_ENDPOINT } from "../../../constants";
 import { GpuServerViewResponses } from "../../../types";
 
 const GpuServerView = () => {
-  const [isNavVisible, setIsNavVisible] = useState(false);
-
-  const handleClick = () => setIsNavVisible(!isNavVisible);
+  const [isNavVisible, handleClick] = useToggle(false);
+  const { isTablet, isLaptop } = useBreakpoints();
 
   const labName = "GPU내꼬야Lab";
 
@@ -43,9 +43,15 @@ const GpuServerView = () => {
       </div>
       <main className="content">
         <section className="info-item-wrapper">
-          {data?.gpuServers.map((res) => (
-            <GpuServerInfoItem refresh={makeRequest} key={res.id} {...res} />
-          ))}
+          {data?.gpuServers.length === 0 ? (
+            <Text size={isTablet || isLaptop ? "lg" : "md"} weight="bold">
+              🚫 등록된 GPU 서버가 존재하지 않습니다.
+            </Text>
+          ) : (
+            data?.gpuServers.map((res) => (
+              <GpuServerInfoItem refresh={makeRequest} key={res.id} {...res} />
+            ))
+          )}
         </section>
       </main>
       <footer className="footer">
