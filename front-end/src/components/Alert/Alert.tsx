@@ -1,17 +1,18 @@
-import { ReactNode, MouseEventHandler, MouseEvent } from "react";
+import { ReactNode, MouseEventHandler, MouseEvent, ComponentProps } from "react";
 import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { AlertWrapper } from "./Alert.styled";
 
 interface AlertProps {
+  dimmedColor?: ComponentProps<typeof Dimmer>["color"];
   isOpen: boolean;
   close?: () => void;
   onConfirm?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
-const Alert = ({ isOpen, close, children, onConfirm }: AlertProps) => {
+const Alert = ({ dimmedColor, isOpen, close, children, onConfirm }: AlertProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm?.(event);
     close?.();
@@ -20,7 +21,7 @@ const Alert = ({ isOpen, close, children, onConfirm }: AlertProps) => {
   return (
     <Portal>
       {isOpen && (
-        <Dimmer color="transparent">
+        <Dimmer color={dimmedColor}>
           <AlertWrapper>
             <div className="content-wrapper">{children}</div>
             <div className="button-wrapper">
