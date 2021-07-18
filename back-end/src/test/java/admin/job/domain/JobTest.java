@@ -36,39 +36,34 @@ public class JobTest {
     @Test
     void 생성_이름_null() {
         assertThatThrownBy(() -> new Job(null, JobStatus.WAITING, gpuBoard, member))
-                .isInstanceOf(JobException.class)
-                .hasMessage("적절한 Job 이름이 아닙니다.");
+                .isEqualTo(JobException.INVALID_JOB_NAME.getException());
     }
 
     @DisplayName("생성 테스트 - 이름이 빈문자열")
     @Test
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Job("", JobStatus.WAITING, gpuBoard, member))
-                .isInstanceOf(JobException.class)
-                .hasMessage("적절한 Job 이름이 아닙니다.");
+                .isEqualTo(JobException.INVALID_JOB_NAME.getException());
     }
 
     @DisplayName("생성 테스트 - JobStatus가 null")
     @Test
     void 생성_JobStatus_null() {
         assertThatThrownBy(() -> new Job("잡1", null, gpuBoard, member))
-                .isInstanceOf(JobException.class)
-                .hasMessage("Job 상태는 Null일 수 없습니다.");
+                .isEqualTo(JobException.INVALID_STATUS.getException());
     }
 
     @DisplayName("생성 테스트 - GpuBoard가 null")
     @Test
     void 생성_GpuBoard_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, null, member))
-                .isInstanceOf(JobException.class)
-                .hasMessage("Job의 gpuBoard는 Null일 수 없습니다.");
+                .isEqualTo(JobException.INVALID_GPU_BOARD.getException());
     }
 
     @DisplayName("생성 테스트 - Member가 null")
     @Test
     void 생성_Member_null() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, null))
-                .isInstanceOf(JobException.class)
-                .hasMessage("Job의 Member는 Null일 수 없습니다.");
+                .isEqualTo(JobException.INVALID_MEMBER.getException());
     }
 }

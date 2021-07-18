@@ -4,13 +4,16 @@ import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.gpuserver.exception.GpuBoardException;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
+import admin.job.exception.JobException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
+import admin.member.exception.MemberException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,8 +69,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
 
         assertThatThrownBy(() -> jobService.insert(notExistingMemberId, jobRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("user 가 없습니다.");
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
     @Test
@@ -77,8 +79,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(notExistingServerId, "job", "metadata", "12");
 
         assertThatThrownBy(() -> jobService.insert(member.getId(), jobRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("board 가 없습니다.");
+                .isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
     }
 
     @Test
@@ -97,7 +98,6 @@ class JobServiceTest {
         Long notExistingJobId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> jobService.findById(notExistingJobId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("job 이 없습니다.");
+                .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 }

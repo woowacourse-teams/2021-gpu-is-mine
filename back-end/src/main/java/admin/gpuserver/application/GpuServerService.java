@@ -11,6 +11,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
@@ -46,7 +47,7 @@ public class GpuServerService {
     public GpuServerResponse findById(Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
-                .orElseThrow(GpuServerException.GPU_BOARD_NOT_FOUND::getException);
+                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
