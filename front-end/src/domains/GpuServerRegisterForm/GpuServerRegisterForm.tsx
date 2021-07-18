@@ -1,7 +1,7 @@
 import { FormHTMLAttributes } from "react";
 import { useHistory } from "react-router-dom";
 import { isLength, isNumber } from "../../utils";
-import { Input, Button, Text, Alert } from "../../components";
+import { Input, Button, Text, Alert, Loading, Dimmer } from "../../components";
 import { useFetch, useForm, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
 import { PATH, API_ENDPOINT } from "../../constants";
@@ -129,6 +129,11 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
         </Text>
       </Alert>
       <StyledForm {...props} {...form}>
+        {status !== "idle" && (
+          <Dimmer>
+            <Loading isOpen={status === "loading"} />
+          </Dimmer>
+        )}
         <Input size="sm" {...serverNameInputProps} />
         <Input size="sm" {...memorySizeInputProps} />
         <Input size="sm" {...diskSizeInputProps} />
