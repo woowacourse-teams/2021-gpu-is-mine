@@ -51,6 +51,7 @@ export const Container = styled.div`
     overflow-y: auto;
     padding: 1rem;
     background-color: var(--primary-50);
+    position: relative;
 
     ${up("tablet")} {
       grid-column: 2 / 3;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import cx from "classnames";
 import { useToggle, useFetch, useBreakpoints } from "../../../hooks";
-import { Text } from "../../../components";
+import { Text, Loading } from "../../../components";
 import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../domains/Manager";
 import { GpuServerInfoItem } from "../../../domains/GpuServer";
 import { Container } from "./GpuServerView.styled";
@@ -42,6 +42,7 @@ const GpuServerView = () => {
         <ManagerNavigation />
       </div>
       <main className="content">
+        <Loading size="lg" isOpen={status === "loading"} />
         <section className="info-item-wrapper">
           {data?.gpuServers.length === 0 ? (
             <Text size={isTablet || isLaptop ? "lg" : "md"} weight="bold">

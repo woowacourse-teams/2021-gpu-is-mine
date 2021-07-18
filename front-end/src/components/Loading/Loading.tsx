@@ -1,12 +1,13 @@
+import { HTMLAttributes } from "react";
 import { StyledLoading, StyledLoadingProps } from "./Loading.styled";
 
-type LoadingProps = Partial<StyledLoadingProps> & {
+interface LoadingProps extends Partial<StyledLoadingProps>, HTMLAttributes<HTMLElement> {
   isOpen?: boolean;
-};
+}
 
-const Loading = ({ size = "md", isOpen = true }: LoadingProps) =>
+const Loading = ({ size = "md", isOpen = true, ...rest }: LoadingProps) =>
   isOpen ? (
-    <StyledLoading size={size}>
+    <StyledLoading {...rest} size={size}>
       <div className="spinner" />
     </StyledLoading>
   ) : null;
