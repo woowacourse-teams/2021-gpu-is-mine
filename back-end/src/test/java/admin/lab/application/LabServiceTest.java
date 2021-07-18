@@ -46,8 +46,7 @@ class LabServiceTest {
         Long notExistingId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> labService.findById(notExistingId))
-                .isInstanceOf(LabException.class)
-                .hasMessage("해당 id의 Lab이 존재하지 않습니다.");
+                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
     }
 
     @Test
@@ -62,14 +61,12 @@ class LabServiceTest {
     @DisplayName("생성 후 전체 조회")
     void createAndFindAll() {
         LabResponses beforeLabResponses = labService.findAll();
-        int beforeSize = beforeLabResponses.getLabResponses()
-                .size();
+        int beforeSize = beforeLabResponses.getLabResponses().size();
 
         labService.save(LAB_REQUEST);
 
         LabResponses afterLabResponses = labService.findAll();
-        int afterSize = afterLabResponses.getLabResponses()
-                .size();
+        int afterSize = afterLabResponses.getLabResponses().size();
         assertThat(afterSize).isEqualTo(beforeSize + 1);
     }
 
@@ -92,8 +89,7 @@ class LabServiceTest {
         LabRequest labRequestToUpdate = new LabRequest("updateLabName");
 
         assertThatThrownBy(() -> labService.update(notExistingId, labRequestToUpdate))
-                .isInstanceOf(LabException.class)
-                .hasMessage("해당 id의 Lab이 존재하지 않습니다.");
+                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
     }
 
     @Test
@@ -105,8 +101,7 @@ class LabServiceTest {
         labService.delete(createdId);
 
         assertThatThrownBy(() -> labService.findById(createdId))
-                .isInstanceOf(LabException.class)
-                .hasMessage("해당 id의 Lab이 존재하지 않습니다.");
+                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
     }
 
     @Test
@@ -115,7 +110,6 @@ class LabServiceTest {
         Long notExistingId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> labService.delete(notExistingId))
-                .isInstanceOf(LabException.class)
-                .hasMessage("해당 id의 Lab이 존재하지 않습니다.");
+                .isInstanceOf(LabException.LAB_NOT_FOUND.getException().getClass());
     }
 }

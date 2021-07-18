@@ -52,6 +52,6 @@ public class LabService {
 
     private Lab findLabById(Long labId) {
         return labRepository.findById(labId)
-                .orElseThrow(() -> new LabException("해당 id의 Lab이 존재하지 않습니다."));
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 }

@@ -1,6 +1,6 @@
 package admin.lab.ui;
 
-import admin.gpuserver.dto.response.ExceptionResponse;
+import admin.exception.dto.ExceptionResponse;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
@@ -49,11 +49,5 @@ public class LabController {
     public ResponseEntity<Void> delete(@PathVariable Long labId) {
         labService.delete(labId);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(LabException.class)
-    public ResponseEntity<ExceptionResponse> handleException(LabException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

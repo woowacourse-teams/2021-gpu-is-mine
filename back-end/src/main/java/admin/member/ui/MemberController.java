@@ -1,6 +1,6 @@
 package admin.member.ui;
 
-import admin.gpuserver.dto.response.ExceptionResponse;
+import admin.exception.dto.ExceptionResponse;
 import admin.member.application.MemberService;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
