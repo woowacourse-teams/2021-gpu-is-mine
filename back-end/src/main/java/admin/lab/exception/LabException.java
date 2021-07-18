@@ -1,8 +1,8 @@
 package admin.lab.exception;
 
-import admin.exception.BadRequestException;
-import admin.exception.CustomException;
-import admin.exception.NotFoundException;
+import admin.exception.http.BadRequestException;
+import admin.exception.http.CustomException;
+import admin.exception.http.NotFoundException;
 
 public enum LabException {
     LAB_NOT_FOUND(new NotFoundException("해당 id의 Lab이 존재하지 않습니다.")),

@@ -1,8 +1,8 @@
 package admin.member.exception;
 
-import admin.exception.BadRequestException;
-import admin.exception.CustomException;
-import admin.exception.NotFoundException;
+import admin.exception.http.BadRequestException;
+import admin.exception.http.CustomException;
+import admin.exception.http.NotFoundException;
 
 public enum MemberException {
     MEMBER_NOT_FOUND(new NotFoundException("해당 id의 회원이 존재하지 않습니다.")),

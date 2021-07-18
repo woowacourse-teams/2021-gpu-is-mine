@@ -1,6 +1,8 @@
 package admin.exception;
 
 import admin.exception.dto.ExceptionResponse;
+import admin.exception.http.BadRequestException;
+import admin.exception.http.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

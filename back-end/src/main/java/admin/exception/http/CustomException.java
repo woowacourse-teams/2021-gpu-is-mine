@@ -1,4 +1,4 @@
-package admin.exception;
+package admin.exception.http;
 
 public class CustomException extends RuntimeException {
 
