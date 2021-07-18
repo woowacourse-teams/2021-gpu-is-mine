@@ -57,11 +57,4 @@ public class GpuServerController {
 
         return ResponseEntity.noContent().build();
     }
-
-    @ExceptionHandler(GpuServerException.class)
-    public ResponseEntity<ExceptionResponse> handleException(GpuServerException e) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getMessage());
-
-        return ResponseEntity.badRequest().body(exceptionResponse);
-    }
 }

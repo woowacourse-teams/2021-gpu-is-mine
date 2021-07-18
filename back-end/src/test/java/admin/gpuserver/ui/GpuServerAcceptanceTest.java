@@ -130,7 +130,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class)).hasSize(dummyGpuServerIds.size());
+        assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
+                .hasSize(dummyGpuServerIds.size());
     }
 
     @DisplayName("GpuServer 생성")

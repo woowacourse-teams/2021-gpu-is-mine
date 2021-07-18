@@ -48,7 +48,8 @@ public class GpuServerRepositoryTest {
 
         em.clear();
 
-        GpuServer persistGpuServer = gpuServerRepository.findById(gpuServer.getId()).orElseThrow(IllegalArgumentException::new);
+        GpuServer persistGpuServer = gpuServerRepository.findById(gpuServer.getId())
+                .orElseThrow(IllegalArgumentException::new);
         Assertions.assertThat(persistGpuServer.getLab()).isNotNull();
         assertThat(persistGpuServer.getCreatedAt()).isNotNull();
     }
