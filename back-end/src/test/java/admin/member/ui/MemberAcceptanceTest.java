@@ -184,7 +184,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
         ExtractableResponse<Response> searchResponse = MEMBER_조회_요청(id);
-        assertThat(searchResponse.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(searchResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     private void MEMBER_정상_생성됨(ExtractableResponse<Response> response) {

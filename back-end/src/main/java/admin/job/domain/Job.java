@@ -44,19 +44,19 @@ public class Job extends BaseEntity {
 
     private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new JobException("적절한 Job 이름이 아닙니다.");
+            throw JobException.INVALID_JOB_NAME.getException();
         }
 
         if (Objects.isNull(status)) {
-            throw new JobException("Job 상태는 Null일 수 없습니다.");
+            throw JobException.INVALID_STATUS.getException();
         }
 
         if (Objects.isNull(gpuBoard)) {
-            throw new JobException("Job의 gpuBoard는 Null일 수 없습니다.");
+            throw JobException.INVALID_GPU_BOARD.getException();
         }
 
         if (Objects.isNull(member)) {
-            throw new JobException("Job의 Member는 Null일 수 없습니다.");
+            throw JobException.INVALID_MEMBER.getException();
         }
     }
 

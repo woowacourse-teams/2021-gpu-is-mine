@@ -1,14 +1,11 @@
 package admin.member.ui;
 
-import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.member.application.MemberService;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
-import admin.member.exception.MemberException;
-import admin.member.exception.MemberTypeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,11 +55,5 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler({MemberException.class, MemberTypeException.class})
-    public ResponseEntity<ExceptionResponse> handleException(RuntimeException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

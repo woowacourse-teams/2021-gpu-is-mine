@@ -36,19 +36,19 @@ public class GpuBoard extends BaseEntity {
 
     private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
         if (Objects.isNull(performance) || performance <= 0) {
-            throw new GpuBoardException("잘못된 GpuBoard 정보 입력입니다.");
+            throw GpuBoardException.INVALID_PERFORMANCE.getException();
         }
 
         if (isWorking == null) {
-            throw new GpuBoardException("GpuBoard 상태는 Null일 수 없습니다.");
+            throw GpuBoardException.INVALID_STATUS.getException();
         }
 
         if (modelName == null || modelName.isEmpty()) {
-            throw new GpuBoardException("적절하지 않은 GpuBoard 이름 정보입니다.");
+            throw GpuBoardException.INVALID_MODEL.getException();
         }
 
         if (gpuServer == null) {
-            throw new GpuBoardException("GpuBoard의 GpuServer 정보는 Null일 수 없습니다.");
+            throw GpuBoardException.INVALID_GPU_SERVER_ID.getException();
         }
     }
 

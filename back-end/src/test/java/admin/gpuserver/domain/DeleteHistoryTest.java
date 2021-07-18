@@ -29,7 +29,6 @@ public class DeleteHistoryTest {
     @Test
     void 생성_GpuServer_null() {
         assertThatThrownBy(() -> new DeleteHistory(null))
-                .isInstanceOf(DeleteHistoryException.class)
-                .hasMessage("DeleteHistory의 GpuServer 정보는 Null일 수 없습니다.");
+                .isEqualTo(DeleteHistoryException.INVALID_GPU_SERVER_ID.getException());
     }
 }

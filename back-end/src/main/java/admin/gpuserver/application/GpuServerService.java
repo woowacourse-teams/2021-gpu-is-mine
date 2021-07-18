@@ -11,11 +11,13 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import admin.lab.exception.LabException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +47,7 @@ public class GpuServerService {
     public GpuServerResponse findById(Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
-                .orElseThrow(() -> new GpuServerException("존재하지 않는 보드입니다."));
+                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
@@ -93,17 +95,17 @@ public class GpuServerService {
 
     private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
-            throw new GpuServerException("Lab이 존재하지 않습니다.");
+            throw LabException.LAB_NOT_FOUND.getException();
         }
     }
 
     private Lab findLabById(Long labId) {
         return labRepository.findById(labId)
-                .orElseThrow(() -> new GpuServerException("Lab이 존재하지 않습니다."));
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-                .orElseThrow(() -> new GpuServerException("GPU 서버가 존재하지 않습니다."));
+                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 }

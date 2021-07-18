@@ -1,11 +1,9 @@
 package admin.lab.ui;
 
-import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
 import admin.lab.dto.LabResponses;
-import admin.lab.exception.LabException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,11 +47,5 @@ public class LabController {
     public ResponseEntity<Void> delete(@PathVariable Long labId) {
         labService.delete(labId);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(LabException.class)
-    public ResponseEntity<ExceptionResponse> handleException(LabException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

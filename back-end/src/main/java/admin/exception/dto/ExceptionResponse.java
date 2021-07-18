@@ -1,4 +1,4 @@
-package admin.gpuserver.dto.response;
+package admin.exception.dto;
 
 public class ExceptionResponse {
     private final String message;

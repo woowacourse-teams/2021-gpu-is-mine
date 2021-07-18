@@ -3,10 +3,8 @@ package admin.gpuserver.ui;
 import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
-import admin.gpuserver.dto.response.ExceptionResponse;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
-import admin.gpuserver.exception.GpuServerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,12 +54,5 @@ public class GpuServerController {
         gpuServerService.delete(gpuServerId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(GpuServerException.class)
-    public ResponseEntity<ExceptionResponse> handleException(GpuServerException e) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getMessage());
-
-        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }

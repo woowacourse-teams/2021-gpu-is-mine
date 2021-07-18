@@ -1,6 +1,6 @@
 package admin.member.domain;
 
-import admin.member.exception.MemberTypeException;
+import admin.member.exception.MemberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,6 +27,7 @@ class MemberTypeTest {
     @Test
     @DisplayName("존재하지 않는 타입 검색시 에러 발생")
     void notExistingTypeTest() {
-        assertThatThrownBy(() -> MemberType.ignoreCaseValueOf("notMemberType")).isInstanceOf(MemberTypeException.class);
+        assertThatThrownBy(() -> MemberType.ignoreCaseValueOf("notMemberType"))
+                .isEqualTo(MemberException.INVALID_MEMBER_TYPE.getException());
     }
 }

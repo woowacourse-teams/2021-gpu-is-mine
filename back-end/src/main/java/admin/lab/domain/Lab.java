@@ -26,7 +26,7 @@ public class Lab extends BaseEntity {
 
     private void validate(String name) {
         if (Objects.isNull(name) || name.isEmpty()) {
-            throw new LabException("적절한 Lab 이름이 아닙니다.");
+            throw LabException.INVALID_LAB_NAME.getException();
         }
     }
 
