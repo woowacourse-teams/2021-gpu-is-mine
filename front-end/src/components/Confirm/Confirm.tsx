@@ -31,33 +31,31 @@ const Confirm = ({
     close();
   };
 
-  return (
+  return isOpen ? (
     <Portal>
-      {isOpen && (
-        <Dimmer color={dimmedColor}>
-          <ConfirmWrapper>
-            <div className="content-wrapper">{children}</div>
-            <div className="button-wrapper">
-              <Button
-                color="secondary-light"
-                className="button button-wrapper__cancel"
-                onClick={handleCancel}
-              >
-                취소
-              </Button>
-              <Button
-                color="secondary-light"
-                className="button button-wrapper__confirm"
-                onClick={handleConfirm}
-              >
-                확인
-              </Button>
-            </div>
-          </ConfirmWrapper>
-        </Dimmer>
-      )}
+      <Dimmer color={dimmedColor}>
+        <ConfirmWrapper>
+          <div className="content-wrapper">{children}</div>
+          <div className="button-wrapper">
+            <Button
+              color="secondary-light"
+              className="button button-wrapper__cancel"
+              onClick={handleCancel}
+            >
+              취소
+            </Button>
+            <Button
+              color="secondary-light"
+              className="button button-wrapper__confirm"
+              onClick={handleConfirm}
+            >
+              확인
+            </Button>
+          </div>
+        </ConfirmWrapper>
+      </Dimmer>
     </Portal>
-  );
+  ) : null;
 };
 
 export default Confirm;

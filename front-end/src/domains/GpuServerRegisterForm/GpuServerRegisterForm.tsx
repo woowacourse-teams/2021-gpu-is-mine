@@ -128,6 +128,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
           {alertMessages[status] ?? ""}
         </Text>
       </Alert>
+
       <StyledForm {...props} {...form}>
         {status !== "idle" && (
           <Dimmer>

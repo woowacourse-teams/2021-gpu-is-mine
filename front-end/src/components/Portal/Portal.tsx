@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 interface PortalProps {
@@ -6,7 +6,7 @@ interface PortalProps {
 }
 
 const Portal = ({ children }: PortalProps) => {
-  const elem = document.createElement("div");
+  const [elem] = useState(document.createElement("div"));
 
   useEffect(() => {
     document.body.appendChild(elem);

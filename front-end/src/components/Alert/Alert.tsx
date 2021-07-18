@@ -18,22 +18,20 @@ const Alert = ({ dimmedColor, isOpen = true, close, children, onConfirm }: Alert
     close?.();
   };
 
-  return (
+  return isOpen ? (
     <Portal>
-      {isOpen && (
-        <Dimmer color={dimmedColor}>
-          <AlertWrapper>
-            <div className="content-wrapper">{children}</div>
-            <div className="button-wrapper">
-              <Button className="button" color="secondary-light" onClick={handleConfirm}>
-                확인
-              </Button>
-            </div>
-          </AlertWrapper>
-        </Dimmer>
-      )}
+      <Dimmer color={dimmedColor}>
+        <AlertWrapper>
+          <div className="content-wrapper">{children}</div>
+          <div className="button-wrapper">
+            <Button className="button" color="secondary-light" onClick={handleConfirm}>
+              확인
+            </Button>
+          </div>
+        </AlertWrapper>
+      </Dimmer>
     </Portal>
-  );
+  ) : null;
 };
 
 export default Alert;
