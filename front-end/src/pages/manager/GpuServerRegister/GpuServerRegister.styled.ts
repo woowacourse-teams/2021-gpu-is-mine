@@ -73,8 +73,11 @@ export const Container = styled.div`
 
   .footer {
     grid-row: 5 / 6;
-    justify-self: center;
     background-color: var(--primary-50);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     ${up("tablet")} {
       grid-column: 2 / 3;
