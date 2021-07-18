@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AxiosError } from "axios";
 import { Flicker, Text, VerticalBox, ServerIcon, Button, Confirm, Alert } from "../../components";
 import { useBoolean, useFetch } from "../../hooks";
@@ -26,17 +25,10 @@ const GpuServerInfoItem = ({
   });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const isAlertOpen = ["succeed", "failed"].includes(status);
 
-  const deleteServer = async () => {
-    try {
-      await makeRequest();
-
-      setAlertMessage("삭제 성공");
-    } catch {
-      setAlertMessage("삭제에 실패하였습니다.");
-    }
+  const alertMessages: { [key in "succeed" | "failed"]: string } = {
+    succeed: `${serverName}을(를) 삭제하였습니다.`,
+    failed: `${serverName} 삭제에 실패하였습니다.`,
   };
 
   const handleAlertConfirm = async () => {
@@ -49,13 +41,19 @@ const GpuServerInfoItem = ({
 
   return (
     <StyledGpuServerInfoItem>
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={deleteServer}>
-        정말 삭제하시겠습니까?
+      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
+        <Text size="md" weight="regular">
+          {serverName}을(를) 정말 삭제하시겠습니까?
+        </Text>
       </Confirm>
 
-      <Alert isOpen={isAlertOpen} onConfirm={handleAlertConfirm}>
-        {alertMessage}
-      </Alert>
+      {(status === "succeed" || status === "failed") && (
+        <Alert onConfirm={handleAlertConfirm}>
+          <Text size="md" weight="regular">
+            {alertMessages[status] ?? ""}
+          </Text>
+        </Alert>
+      )}
 
       <div className="gpu-server-title-wrapper">
         <ServerIcon className="gpu-server-icon" />

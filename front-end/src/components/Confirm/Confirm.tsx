@@ -6,14 +6,21 @@ import { ConfirmWrapper } from "./Confirm.styled";
 
 interface ConfirmProps {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
-  isOpen: boolean;
+  isOpen?: boolean;
   close: () => void;
   onConfirm: MouseEventHandler<HTMLButtonElement>;
   onCancel?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
-const Confirm = ({ dimmedColor, isOpen, close, children, onConfirm, onCancel }: ConfirmProps) => {
+const Confirm = ({
+  dimmedColor,
+  isOpen = true,
+  close,
+  children,
+  onConfirm,
+  onCancel,
+}: ConfirmProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm(event);
     close();

@@ -6,13 +6,13 @@ import { AlertWrapper } from "./Alert.styled";
 
 interface AlertProps {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
-  isOpen: boolean;
+  isOpen?: boolean;
   close?: () => void;
   onConfirm?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
 }
 
-const Alert = ({ dimmedColor, isOpen, close, children, onConfirm }: AlertProps) => {
+const Alert = ({ dimmedColor, isOpen = true, close, children, onConfirm }: AlertProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm?.(event);
     close?.();
