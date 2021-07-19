@@ -1,0 +1,33 @@
+name: Front-End CI
+
+on:
+  push:
+    branches: [feature/*]
+  pull_request:
+    branches: [feature/*]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./front-end
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.2.0
+        with:
+          node-version: >=14.0.0
+
+      - name: yarn actions (yaml)
+        uses: sergioramos/yarn-actions@v6
+
+      - name: install packages
+        run: yarn install
+
+      - name: Build with webpack
+        run: yarn build
+        working-directory: ${{ env.working-directory }}
+
