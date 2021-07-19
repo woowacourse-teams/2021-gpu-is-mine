@@ -12,7 +12,10 @@ jobs:
     env:
       working-directory: ./front-end
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
