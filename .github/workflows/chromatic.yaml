@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Storybook-CI-CD:
     runs-on: ubuntu-latest
     env:
       working-directory: ./front-end
@@ -37,5 +37,4 @@ jobs:
           workingDir: ${{ env.working-directory }}
         id: chromatic
 
-      - name: print Storybook URL
-        run: echo "Storybook URL ${{ steps.chromatic.storybookUrl }}"
+      - run: echo "Storybook URL ${{ steps.chromatic.outputs.storybookUrl }}"
