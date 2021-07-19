@@ -1,4 +1,4 @@
-const BASE_URL = "https://3.35.169.99/api";
+const BASE_URL = "https://gpuismine.kro.kr/api";
 
 const API_ENDPOINT = {
   LABS(labId: number) {
