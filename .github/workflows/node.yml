@@ -25,10 +25,7 @@ jobs:
         uses: sergioramos/yarn-actions@v6
 
       - name: log
-      - run: ls -al
-      - run: pwd
-      - run: which yarn
-      - run: node --version
+        run: ls -al &&  pwd && which yarn &&  node --version
 
       - name: install packages
         run: yarn install
