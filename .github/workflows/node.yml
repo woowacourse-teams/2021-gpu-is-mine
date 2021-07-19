@@ -24,6 +24,12 @@ jobs:
       - name: yarn actions (yaml)
         uses: sergioramos/yarn-actions@v6
 
+      -name: log
+        run: ls -al
+        run: pwd
+        run: which yarn
+        run: node --version
+
       - name: install packages
         run: yarn install
 
