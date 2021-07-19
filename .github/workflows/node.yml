@@ -23,12 +23,11 @@ jobs:
 
       - name: yarn actions (yaml)
         uses: sergioramos/yarn-actions@v6
+        run: yarn install
+        working-directory: ${{ env.working-directory }}
 
       - name: log
         run: ls -al &&  pwd && which yarn &&  node --version
-
-      - name: install packages
-        run: yarn install
 
       - name: Build with webpack
         run: yarn build
