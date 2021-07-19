@@ -35,3 +35,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: ${{ env.working-directory }}
+        id: chromatic
+
+      - name: print Storybook URL
+        run: echo "Storybook URL ${{ steps.chromatic.storybookUrl }}"
