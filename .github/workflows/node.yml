@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
         with:
-          node-version: >=14.0.0
+          node-version: lts/*
 
       - name: yarn actions (yaml)
         uses: sergioramos/yarn-actions@v6
@@ -30,4 +30,3 @@ jobs:
       - name: Build with webpack
         run: yarn build
         working-directory: ${{ env.working-directory }}
-
