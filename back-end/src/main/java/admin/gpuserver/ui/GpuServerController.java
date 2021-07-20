@@ -8,6 +8,7 @@ import admin.gpuserver.dto.response.GpuServerResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 @RestController
@@ -21,7 +22,10 @@ public class GpuServerController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody GpuServerRequest gpuServerRequest, @PathVariable Long labId) {
+    public ResponseEntity<Void> save(@RequestBody GpuServerRequest gpuServerRequest, @PathVariable Long labId
+    , HttpServletRequest request) {
+
+        System.out.println(request.getHeader("somethingserverwant"));
         Long gpuServerId = gpuServerService.saveGpuServer(gpuServerRequest, labId);
 
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
