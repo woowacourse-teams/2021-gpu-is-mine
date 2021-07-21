@@ -1,7 +1,10 @@
 package admin.gpuserver.domain;
 
+import admin.gpuserver.exception.GpuBoardException;
+import admin.job.domain.Job;
+
 import javax.persistence.*;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class GpuBoard extends BaseEntity {
@@ -11,28 +14,42 @@ public class GpuBoard extends BaseEntity {
     private Boolean isWorking;
     private Long performance;
     private String modelName;
+
     @OneToOne
     @JoinColumn(name = "gpu_server_id")
     private GpuServer gpuServer;
-    @Embedded
-    private Jobs jobs;
 
     protected GpuBoard() {
     }
 
     public GpuBoard(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        validate(isWorking, performance, modelName, gpuServer);
         this.isWorking = isWorking;
         this.performance = performance;
         this.modelName = modelName;
         this.gpuServer = gpuServer;
     }
 
-    public List<Job> getWaitingJobs() {
-        return jobs.getWaitingJobs();
+    public GpuBoard(Long performance, String modelName, GpuServer gpuServer) {
+        this(false, performance, modelName, gpuServer);
     }
 
-    public List<Job> getJobs() {
-        return jobs.getJobs();
+    private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
+        if (Objects.isNull(performance) || performance <= 0) {
+            throw GpuBoardException.INVALID_PERFORMANCE.getException();
+        }
+
+        if (isWorking == null) {
+            throw GpuBoardException.INVALID_STATUS.getException();
+        }
+
+        if (modelName == null || modelName.isEmpty()) {
+            throw GpuBoardException.INVALID_MODEL.getException();
+        }
+
+        if (gpuServer == null) {
+            throw GpuBoardException.INVALID_GPU_SERVER_ID.getException();
+        }
     }
 
     public Long getId() {
@@ -53,5 +70,19 @@ public class GpuBoard extends BaseEntity {
 
     public GpuServer getGpuServer() {
         return gpuServer;
+    }
+
+    public void addJob(Job job) {
+        // TODO :: JOB QUEUE
+    }
+
+    public void cancel(Job job) {
+        // TODO :: JOB QUEUE
+        job.cancel();
+    }
+
+    public void complete(Job job) {
+        // TODO :: JOB QUEUE
+        job.complete();
     }
 }

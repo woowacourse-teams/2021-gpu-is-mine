@@ -1,6 +1,9 @@
 package admin.gpuserver.domain;
 
+import admin.gpuserver.exception.DeleteHistoryException;
+
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class DeleteHistory extends BaseEntity {
@@ -16,6 +19,13 @@ public class DeleteHistory extends BaseEntity {
     }
 
     public DeleteHistory(GpuServer gpuServer) {
+        validate(gpuServer);
         this.gpuServer = gpuServer;
+    }
+
+    private void validate(GpuServer gpuServer) {
+        if (Objects.isNull(gpuServer)) {
+            throw DeleteHistoryException.INVALID_GPU_SERVER_ID.getException();
+        }
     }
 }

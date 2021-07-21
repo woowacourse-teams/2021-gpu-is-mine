@@ -1,24 +1,23 @@
 package admin.gpuserver.dto.response;
 
-import admin.gpuserver.domain.GpuServer;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GpuServerResponses {
 
-    private List<GpuServerResponse> gpus;
+    private List<GpuServerResponse> gpuServers;
+
+    private GpuServerResponses(List<GpuServerResponse> gpuServers) {
+        this.gpuServers = gpuServers;
+    }
 
     public GpuServerResponses() {
     }
 
-    public GpuServerResponses(List<GpuServer> gpus) {
-        this.gpus = gpus.stream()
-                .map(gpuServer -> new GpuServerResponse(gpuServer, gpuServer.getGpuBoard()))
-                .collect(Collectors.toList());
+    public static GpuServerResponses of(List<GpuServerResponse> gpus) {
+        return new GpuServerResponses(gpus);
     }
 
-    public List<GpuServerResponse> getGpus() {
-        return gpus;
+    public List<GpuServerResponse> getGpuServers() {
+        return gpuServers;
     }
 }

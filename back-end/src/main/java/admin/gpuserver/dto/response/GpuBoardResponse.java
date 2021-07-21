@@ -8,9 +8,6 @@ public class GpuBoardResponse {
     private Long performance;
     private Boolean isWorking;
 
-    public GpuBoardResponse() {
-    }
-
     private GpuBoardResponse(Long id, String modelName, Long performance, Boolean isWorking) {
         this.id = id;
         this.modelName = modelName;
@@ -18,8 +15,15 @@ public class GpuBoardResponse {
         this.isWorking = isWorking;
     }
 
-    public GpuBoardResponse(GpuBoard gpuBoard) {
+    private GpuBoardResponse(GpuBoard gpuBoard) {
         this(gpuBoard.getId(), gpuBoard.getModelName(), gpuBoard.getPerformance(), gpuBoard.getIsWorking());
+    }
+
+    public GpuBoardResponse() {
+    }
+
+    public static GpuBoardResponse of(GpuBoard gpuBoard) {
+        return new GpuBoardResponse(gpuBoard);
     }
 
     public Long getId() {
