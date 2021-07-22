@@ -90,21 +90,19 @@ public class MemberService {
         GpuServer gpuServer = gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
 
-        Member memberById = findMemberById(memberId);
-        memberById.checkPermissionOnServer(gpuServer);
+        Member member = findMemberById(memberId);
+        member.checkPermissionOnServer(gpuServer);
     }
 
     @Transactional(readOnly = true)
     public void checkPermissionOnJob(Long memberId, Long jobId) {
-        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
-        Member jobOwner = job.getMember();
-
         Member member = findMemberById(memberId);
-        member.checkSameLab(jobOwner);
+
+        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
+        member.checkSameLab(job.getMember());
     }
 
     private Member findMemberById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+        return memberRepository.findById(id).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 }

@@ -39,7 +39,7 @@ public class JobController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @GetMapping
     public ResponseEntity<JobResponses> findJobsByServer(Long memberId, Long gpuServerId) {
         JobResponses jobResponses = jobService.findByServer(gpuServerId);
 

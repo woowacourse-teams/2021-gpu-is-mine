@@ -11,6 +11,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
@@ -45,9 +46,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long gpuServerId) {
-        GpuServer gpuServer = findGpuServerById(gpuServerId);
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
-                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServerId);
+        GpuServer gpuServer = gpuBoard.getGpuServer();
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
@@ -93,6 +93,14 @@ public class GpuServerService {
         return gpuServer.getId();
     }
 
+    @Transactional(readOnly = true)
+    public GpuServerStatusResponse findStatusById(Long gpuServerId) {
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServerId);
+        GpuServer gpuServer = gpuBoard.getGpuServer();
+
+        return new GpuServerStatusResponse(gpuServer.getIsOn(), gpuBoard.getIsWorking());
+    }
+
     private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
             throw LabException.LAB_NOT_FOUND.getException();
@@ -107,5 +115,10 @@ public class GpuServerService {
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+    }
+
+    private GpuBoard findGpuBoardByServerId(Long gpuServerId) {
+        return gpuBoardRepository.findByGpuServerId(gpuServerId)
+                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }
 }
