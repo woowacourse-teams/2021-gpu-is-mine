@@ -7,6 +7,7 @@ import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
+import admin.job.dto.response.JobResponses;
 import admin.job.exception.JobException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
@@ -20,6 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,8 +42,10 @@ class JobServiceTest {
     private LabRepository labRepository;
     @Autowired
     private GpuServerRepository gpuServerRepository;
-    private GpuServer server;
-    private GpuBoard board;
+    private GpuServer server1;
+    private GpuServer server2;
+    private GpuBoard board1;
+    private GpuBoard board2;
     private Lab lab;
     private Member member;
 
@@ -46,10 +53,19 @@ class JobServiceTest {
     void setUp() {
         lab = new Lab("lab");
         labRepository.save(lab);
-        server = new GpuServer("server", true, 1024L, 1024L, lab);
-        gpuServerRepository.save(server);
-        board = new GpuBoard(false, 600L, "nvdia", server);
-        gpuBoardRepository.save(board);
+
+        server1 = new GpuServer("server", true, 1024L, 1024L, lab);
+        gpuServerRepository.save(server1);
+
+        server2 = new GpuServer("server2", true, 1024L, 1024L, lab);
+        gpuServerRepository.save(server2);
+
+        board1 = new GpuBoard(false, 600L, "nvdia", server1);
+        gpuBoardRepository.save(board1);
+
+        board2 = new GpuBoard(false, 600L, "nvdia", server2);
+        gpuBoardRepository.save(board2);
+
         member = new Member("email", "1234", "name", MemberType.MANAGER, lab);
         memberRepository.save(member);
     }
@@ -57,7 +73,7 @@ class JobServiceTest {
     @Test
     @DisplayName("정상 등록")
     void insert() {
-        JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
+        JobRequest jobRequest = new JobRequest(server1.getId(), "job", "metadata", "12");
         Long id = jobService.insert(member.getId(), jobRequest);
         assertThat(id).isNotNull();
     }
@@ -66,7 +82,7 @@ class JobServiceTest {
     @DisplayName("존재하지 않는 멤버 job등록시 에러 발생")
     void insertNotExistingMember() {
         Long notExistingMemberId = Long.MAX_VALUE;
-        JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
+        JobRequest jobRequest = new JobRequest(server1.getId(), "job", "metadata", "12");
 
         assertThatThrownBy(() -> jobService.insert(notExistingMemberId, jobRequest))
                 .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
@@ -85,7 +101,7 @@ class JobServiceTest {
     @Test
     @DisplayName("정상 조회")
     void findById() {
-        JobRequest jobRequest = new JobRequest(server.getId(), "job", "metadata", "12");
+        JobRequest jobRequest = new JobRequest(server1.getId(), "job", "metadata", "12");
         Long jobId = jobService.insert(member.getId(), jobRequest);
 
         JobResponse jobResponse = jobService.findById(jobId);
@@ -99,5 +115,26 @@ class JobServiceTest {
 
         assertThatThrownBy(() -> jobService.findById(notExistingJobId))
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
+    }
+
+    @Test
+    @DisplayName("멤버를 기준으로 Job을 조회한다.")
+    void findByMemberId() {
+        JobRequest jobRequest1 = new JobRequest(server1.getId(), "job1", "metadata", "12");
+        JobRequest jobRequest2 = new JobRequest(server1.getId(), "job2", "metadata", "12");
+        JobRequest jobRequest3 = new JobRequest(server2.getId(), "job3", "metadata", "12");
+
+        Long jobId1 = jobService.insert(member.getId(), jobRequest1);
+        Long jobId2 = jobService.insert(member.getId(), jobRequest2);
+        Long jobId3 = jobService.insert(member.getId(), jobRequest3);
+
+        JobResponses byMember = jobService.findByMember(member.getId());
+        List<Long> ids = byMember.getJobResponses()
+                .stream()
+                .map(JobResponse::getId)
+                .collect(Collectors.toList());;
+
+        assertThat(ids).usingRecursiveComparison().isEqualTo(Arrays.asList(jobId1,jobId2,jobId3));
+        assertThat(ids).hasSize(3);
     }
 }

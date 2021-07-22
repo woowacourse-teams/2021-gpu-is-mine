@@ -1,5 +1,7 @@
 package admin.member.ui;
 
+import admin.job.application.JobService;
+import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
@@ -15,9 +17,11 @@ import java.net.URI;
 @RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
+    private final JobService jobService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, JobService jobService) {
         this.memberService = memberService;
+        this.jobService = jobService;
     }
 
     @PostMapping
@@ -55,5 +59,10 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me/jobs")
+    public ResponseEntity<JobResponses> myJobs(Long memberId) {
+        return ResponseEntity.ok(jobService.findByMember(memberId));
     }
 }

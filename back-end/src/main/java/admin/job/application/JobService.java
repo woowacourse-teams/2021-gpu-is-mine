@@ -7,12 +7,15 @@ import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
+import admin.job.dto.response.JobResponses;
 import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class JobService {
@@ -46,6 +49,13 @@ public class JobService {
         Job job = findJobById(jobId);
 
         return JobResponse.of(job);
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findByMember(Long memberId) {
+        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
+
+        return JobResponses.of(jobs);
     }
 
     @Transactional
