@@ -22,6 +22,7 @@
     - [newline-eof]
     - line-max-length: 120
     - removed conventions which is related with import, javadocs, method name
+    - indent: 4
  -->
 
 <module name = "Checker">
