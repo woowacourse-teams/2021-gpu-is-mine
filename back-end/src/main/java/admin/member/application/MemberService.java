@@ -1,5 +1,8 @@
 package admin.member.application;
 
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.gpuserver.exception.GpuServerException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
@@ -20,10 +23,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LabRepository labRepository;
+    private final GpuServerRepository gpuServerRepository;
 
-    public MemberService(MemberRepository memberRepository, LabRepository labRepository) {
+    public MemberService(MemberRepository memberRepository, LabRepository labRepository, GpuServerRepository gpuServerRepository) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
+        this.gpuServerRepository = gpuServerRepository;
     }
 
     @Transactional
@@ -78,5 +83,16 @@ public class MemberService {
     private Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+    }
+
+    public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
+        GpuServer gpuServer = gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
+                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+
+        Member memberById = findMemberById(memberId);
+
+        if (!memberById.hasPermission(gpuServer)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
     }
 }

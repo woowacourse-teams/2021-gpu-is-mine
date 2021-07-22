@@ -1,6 +1,7 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
+import admin.gpuserver.domain.GpuServer;
 import admin.lab.domain.Lab;
 
 import javax.persistence.*;
@@ -77,5 +78,9 @@ public class Member extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean hasPermission(GpuServer gpuServer) {
+        return this.lab.equals(gpuServer.getLab());
     }
 }
