@@ -10,5 +10,4 @@ class JobAcceptanceTest extends AcceptanceTest {
         super.setUp();
     }
 
-
 }
