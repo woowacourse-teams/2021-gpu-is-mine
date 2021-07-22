@@ -25,8 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean requestLoggingFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new TeeFilter());
-        return filterRegistrationBean;
+    public FilterRegistrationBean<TeeFilter> requestLoggingFilter() {
+        return new FilterRegistrationBean<>(new TeeFilter());
     }
 }
