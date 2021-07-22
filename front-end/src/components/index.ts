@@ -10,7 +10,7 @@ export { default as Logo } from "./Logo/Logo";
 export { default as Modal } from "./Modal/Modal";
 export { default as ModalProvider } from "./ModalProvider/ModalProvider";
 export { default as Portal } from "./Portal/Portal";
-export { default as RadioInput } from "./RadioInput/RadioInput";
+export { default as Radio } from "./Radio/Radio";
 export { default as ServerIcon } from "./ServerIcon/ServerIcon";
 export { default as Text } from "./Text/Text";
 export { default as VerticalBox } from "./VerticalBox/VerticalBox";
