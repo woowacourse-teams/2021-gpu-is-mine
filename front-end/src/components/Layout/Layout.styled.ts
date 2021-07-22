@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { only, up } from "styled-breakpoints";
+import { up } from "styled-breakpoints";
 
 export const StyledLayout = styled.div`
   height: 100%;
@@ -18,10 +18,6 @@ export const StyledLayout = styled.div`
   .sub-header {
     grid-row: 2 / 3;
 
-    > * {
-      height: 100%;
-    }
-
     ${up("tablet")} {
       grid-row: 1 / 2;
       grid-column: 2 / 4;
@@ -30,13 +26,6 @@ export const StyledLayout = styled.div`
 
   .nav {
     display: none;
-
-    ${only("mobile")} {
-      &.nav--visible {
-        display: inherit;
-        grid-row: 3 / 4;
-      }
-    }
 
     ${up("tablet")} {
       display: inherit;
