@@ -6,6 +6,7 @@ import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
+import admin.job.domain.JobStatus;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
 import java.util.List;
@@ -30,7 +31,7 @@ public class WorkerJobService {
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(serverId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
         Long gpuBoardId = gpuBoard.getId();
-        List<Job> jobs = jobRepository.findAllByBoardIdByOrderById(gpuBoardId);
+        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusByOrderById(gpuBoardId, JobStatus.WAITING);
 
         if (jobs.size() > 1) {
             return JobResponse.of(jobs.get(0));
