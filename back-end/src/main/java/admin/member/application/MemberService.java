@@ -3,6 +3,9 @@ package admin.member.application;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuServerException;
+import admin.job.domain.Job;
+import admin.job.domain.repository.JobRepository;
+import admin.job.exception.JobException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
@@ -24,11 +27,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LabRepository labRepository;
     private final GpuServerRepository gpuServerRepository;
+    private final JobRepository jobRepository;
 
-    public MemberService(MemberRepository memberRepository, LabRepository labRepository, GpuServerRepository gpuServerRepository) {
+    public MemberService(MemberRepository memberRepository, LabRepository labRepository, GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
+        this.jobRepository = jobRepository;
     }
 
     @Transactional
@@ -80,19 +85,26 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    private Member findMemberById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
-    }
-
+    @Transactional(readOnly = true)
     public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
         GpuServer gpuServer = gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
 
         Member memberById = findMemberById(memberId);
+        memberById.checkPermissionOnServer(gpuServer);
+    }
 
-        if (!memberById.hasPermission(gpuServer)) {
-            throw MemberException.UNAUTHORIZED_MEMBER.getException();
-        }
+    @Transactional(readOnly = true)
+    public void checkPermissionOnJob(Long memberId, Long jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
+        Member jobOwner = job.getMember();
+
+        Member member = findMemberById(memberId);
+        member.checkSameLab(jobOwner);
+    }
+
+    private Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 }

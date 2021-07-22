@@ -1,7 +1,6 @@
 package admin.job.domain.repository;
 
 import admin.job.domain.Job;
-import admin.job.dto.response.JobResponses;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -118,15 +118,11 @@ class JobServiceTest {
     }
 
     @Test
-    @DisplayName("멤버를 기준으로 Job을 조회한다.")
-    void findByMemberId() {
-        JobRequest jobRequest1 = new JobRequest(server1.getId(), "job1", "metadata", "12");
-        JobRequest jobRequest2 = new JobRequest(server1.getId(), "job2", "metadata", "12");
-        JobRequest jobRequest3 = new JobRequest(server2.getId(), "job3", "metadata", "12");
-
-        Long jobId1 = jobService.insert(member.getId(), jobRequest1);
-        Long jobId2 = jobService.insert(member.getId(), jobRequest2);
-        Long jobId3 = jobService.insert(member.getId(), jobRequest3);
+    @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
+    void findAllByMemberId() {
+        Long jobId1 = jobService.insert(member.getId(), new JobRequest(server1.getId(), "job1", "metadata", "12"));
+        Long jobId2 = jobService.insert(member.getId(), new JobRequest(server1.getId(), "job2", "metadata", "12"));
+        Long jobId3 = jobService.insert(member.getId(), new JobRequest(server2.getId(), "job3", "metadata", "12"));
 
         JobResponses byMember = jobService.findByMember(member.getId());
         List<Long> ids = byMember.getJobResponses()
@@ -136,5 +132,22 @@ class JobServiceTest {
 
         assertThat(ids).usingRecursiveComparison().isEqualTo(Arrays.asList(jobId1,jobId2,jobId3));
         assertThat(ids).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
+    void findAllByServer() {
+        Long jobId1 = jobService.insert(member.getId(), new JobRequest(server1.getId(), "job1", "metadata", "12"));
+        Long jobId2 = jobService.insert(member.getId(), new JobRequest(server1.getId(), "job2", "metadata", "12"));
+        Long jobId3 = jobService.insert(member.getId(), new JobRequest(server2.getId(), "job3", "metadata", "12"));
+
+        JobResponses byServer = jobService.findByServer(server1.getId());
+        List<Long> ids = byServer.getJobResponses()
+                .stream()
+                .map(JobResponse::getId)
+                .collect(Collectors.toList());;
+
+        assertThat(ids).usingRecursiveComparison().isEqualTo(Arrays.asList(jobId1,jobId2));
+        assertThat(ids).hasSize(2);
     }
 }

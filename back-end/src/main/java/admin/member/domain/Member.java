@@ -3,6 +3,7 @@ package admin.member.domain;
 import admin.gpuserver.domain.BaseEntity;
 import admin.gpuserver.domain.GpuServer;
 import admin.lab.domain.Lab;
+import admin.member.exception.MemberException;
 
 import javax.persistence.*;
 
@@ -38,6 +39,18 @@ public class Member extends BaseEntity {
     }
 
     protected Member() {
+    }
+
+    public void checkPermissionOnServer(GpuServer gpuServer) {
+        if (!this.lab.equals(gpuServer.getLab())) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    public void checkSameLab(Member other) {
+        if (this.lab.equals(other.getLab())) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
     }
 
     public Long getId() {
@@ -78,9 +91,5 @@ public class Member extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean hasPermission(GpuServer gpuServer) {
-        return this.lab.equals(gpuServer.getLab());
     }
 }

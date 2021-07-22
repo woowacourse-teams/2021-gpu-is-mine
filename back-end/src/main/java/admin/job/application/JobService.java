@@ -67,18 +67,16 @@ public class JobService {
         gpuBoard.cancel(job);
     }
 
-    private Job findJobById(Long id) {
-        return jobRepository.findById(id)
-                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
-    }
-
     @Transactional(readOnly = true)
     public JobResponses findByServer(Long gpuServerId) {
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
 
-        List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
+        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+    }
 
-        return JobResponses.of(jobs);
+    private Job findJobById(Long id) {
+        return jobRepository.findById(id)
+                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
     }
 }

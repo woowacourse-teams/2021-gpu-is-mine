@@ -4,7 +4,6 @@ import admin.job.application.JobService;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
-import admin.member.application.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +14,13 @@ import java.net.URI;
 public class JobController {
 
     private JobService jobService;
-    private MemberService memberService;
 
-    public JobController(JobService jobService, MemberService memberService) {
+    public JobController(JobService jobService) {
         this.jobService = jobService;
-        this.memberService = memberService;
     }
 
     @GetMapping("/{jobId}")
-    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId) {
+    public ResponseEntity<JobResponse> findById(Long memberId, @PathVariable Long jobId) {
         JobResponse jobResponse = jobService.findById(jobId);
         return ResponseEntity.ok(jobResponse);
     }
@@ -44,7 +41,6 @@ public class JobController {
 
     @PutMapping
     public ResponseEntity<JobResponses> findJobsByServer(Long memberId, Long gpuServerId) {
-        memberService.checkPermissionOnServer(memberId, gpuServerId);
         JobResponses jobResponses = jobService.findByServer(gpuServerId);
 
         return ResponseEntity.ok(jobResponses);
