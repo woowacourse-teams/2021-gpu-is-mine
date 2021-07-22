@@ -30,35 +30,35 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
         return RestAssured
-            .given().log().all()
-            .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
     }
 
     public static ExtractableResponse<Response> GpuServer_전체조회() {
         return RestAssured
-            .given().log().all()
-            .when().get("/api/labs/" + dummyLabId + "/gpus/")
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .when().get("/api/labs/" + dummyLabId + "/gpus/")
+                .then().log().all()
+                .extract();
     }
 
     public static int GpuServer_전체조회갯수() {
         ExtractableResponse<Response> response = GpuServer_전체조회();
         List<GpuServerResponse> gpus = response.jsonPath()
-            .getList("gpuServers", GpuServerResponse.class);
+                .getList("gpuServers", GpuServerResponse.class);
         return gpus.size();
     }
 
     public static ExtractableResponse<Response> GpuServer_생성(GpuServerRequest gpuServerRequest) {
         return RestAssured
-            .given().log().all()
-            .body(gpuServerRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/labs/" + dummyLabId + "/gpus")
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .body(gpuServerRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/labs/" + dummyLabId + "/gpus")
+                .then().log().all()
+                .extract();
     }
 
     public static Long GpuServer_생성후아이디찾기(GpuServerRequest gpuServerRequest) {
@@ -69,32 +69,32 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest,
-        Long gpuServerId) {
+            Long gpuServerId) {
         return RestAssured
-            .given().log().all()
-            .body(gpuServerNameUpdateRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().put("/api/labs/1/gpus/" + gpuServerId)
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .body(gpuServerNameUpdateRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/api/labs/1/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
     }
 
     public static ExtractableResponse<Response> GpuServer_삭제(Long gpuServerId) {
         return RestAssured
-            .given().log().all()
-            .when().delete("/api/labs/1/gpus/" + gpuServerId)
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .then().log().all()
+                .extract();
     }
 
     public static Long lab_생성(LabRequest labRequest) {
         ExtractableResponse<Response> response = RestAssured
-            .given().log().all()
-            .body(labRequest)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/api/labs/")
-            .then().log().all()
-            .extract();
+                .given().log().all()
+                .body(labRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/api/labs/")
+                .then().log().all()
+                .extract();
 
         String[] locationPaths = response.header("Location").split("/");
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
@@ -107,12 +107,12 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         dummyLabId = lab_생성(new LabRequest("testLab"));
 
         List<GpuServerRequest> gpuServerRequests = Arrays.asList(
-            new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L)),
-            new GpuServerRequest("추가서버2", 1024L, 1024L, new GpuBoardRequest("추가보드2", 800L))
+                new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L)),
+                new GpuServerRequest("추가서버2", 1024L, 1024L, new GpuBoardRequest("추가보드2", 800L))
         );
 
         dummyGpuServerIds = gpuServerRequests.stream().map(
-            GpuServerAcceptanceTest::GpuServer_생성후아이디찾기
+                GpuServerAcceptanceTest::GpuServer_생성후아이디찾기
         ).collect(Collectors.toList());
     }
 
@@ -123,7 +123,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         Assertions.assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class))
-            .isNotNull();
+                .isNotNull();
     }
 
     @DisplayName("GpuServer 전체조회")
@@ -133,7 +133,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
-            .hasSize(dummyGpuServerIds.size());
+                .hasSize(dummyGpuServerIds.size());
     }
 
     @DisplayName("GpuServer 생성")
@@ -157,13 +157,13 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         // given
         GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
         GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L,
-            gpuBoardRequest);
+                gpuBoardRequest);
         Long gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
 
         // when
         GpuServerUpdateRequest gpuServerNameUpdateRequest = new GpuServerUpdateRequest("서버이름변경");
         ExtractableResponse<Response> response = GpuServer_이름변경(gpuServerNameUpdateRequest,
-            gpuServerId);
+                gpuServerId);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
@@ -175,7 +175,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         // given
         int previousCount = GpuServer_전체조회갯수();
         GpuServerRequest gpuServerRequest =
-            new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
+                new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
         Long gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
 
         int addedCount = GpuServer_전체조회갯수();
