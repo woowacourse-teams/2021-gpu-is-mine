@@ -10,13 +10,14 @@ module.exports = () => {
   return {
     entry: "./src/index.tsx",
     output: {
-      filename: "main.js",
+      filename: "[name].bundle.js",
       path: path.resolve(__dirname, "build"),
       clean: true,
     },
     devServer: {
       port: 3000,
       hot: true,
+      historyApiFallback: true,
     },
     devtool: isDevelopment ? "eval-source-map" : "source-map",
     module: {
@@ -56,6 +57,10 @@ module.exports = () => {
     plugins: [
       new HtmlWebpackPlugin({ template: "public/index.html" }),
       new ForkTsCheckerWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        base: "/",
+        template: "public/index.html",
+      }),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
@@ -63,8 +68,16 @@ module.exports = () => {
       extensions: [".tsx", ".ts", ".js", "jsx"],
     },
     performance: {
+      maxEntrypointSize: 500000,
+      maxAssetSize: 300000,
       hints: isDevelopment ? "warning" : "error",
     },
     target: "web",
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+        maxSize: 70000,
+      },
+    },
   };
 };
