@@ -3,10 +3,12 @@ package admin.worker;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
+import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
 import java.util.List;
@@ -16,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WorkerJobService {
 
-    private final WorkerJobRepository jobRepository;
-    private final WorkerGpuServerRepository serverRepository;
+    private final JobRepository jobRepository;
+    private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
 
-    public WorkerJobService(WorkerJobRepository jobRepository, WorkerGpuServerRepository serverRepository,
-            GpuBoardRepository gpuBoardRepository) {
+    public WorkerJobService(JobRepository jobRepository,
+            GpuServerRepository serverRepository, GpuBoardRepository gpuBoardRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;

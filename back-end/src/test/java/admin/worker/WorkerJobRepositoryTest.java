@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
+import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
@@ -22,10 +24,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class WorkerJobRepositoryTest {
 
     @Autowired
-    private WorkerJobRepository jobRepository;
+    private JobRepository jobRepository;
 
     @Autowired
-    private WorkerGpuServerRepository gpuServerRepository;
+    private GpuServerRepository gpuServerRepository;
 
     @Autowired
     private LabRepository labRepository;
