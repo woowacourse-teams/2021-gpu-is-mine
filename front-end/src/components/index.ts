@@ -5,6 +5,7 @@ export { default as Dimmer } from "./Dimmer/Dimmer";
 export { default as Flicker } from "./Flicker/Flicker";
 export { default as GpuIcon } from "./GpuIcon/GpuIcon";
 export { default as Input } from "./Input/Input";
+export { default as Layout } from "./Layout/Layout";
 export { default as Loading } from "./Loading/Loading";
 export { default as Logo } from "./Logo/Logo";
 export { default as Modal } from "./Modal/Modal";
