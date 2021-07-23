@@ -42,19 +42,22 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateMemberInfoOfMine(@AuthenticationPrincipal Member member, @RequestBody MemberInfoRequest request) {
+    public ResponseEntity<Void> updateMemberInfoOfMine(@AuthenticationPrincipal Member member,
+            @RequestBody MemberInfoRequest request) {
         memberService.updateMemberInfo(member.getId(), request);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/memberType")
-    public ResponseEntity<Void> updateMemberTypeOfMine(@AuthenticationPrincipal Member member, @RequestBody MemberTypeRequest request) {
+    public ResponseEntity<Void> updateMemberTypeOfMine(@AuthenticationPrincipal Member member,
+            @RequestBody MemberTypeRequest request) {
         memberService.updateMemberType(member.getId(), request);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/me/lab")
-    public ResponseEntity<Void> updateMemberLabOfMine(@AuthenticationPrincipal Member member, @RequestBody ChangeLabRequest request) {
+    public ResponseEntity<Void> updateMemberLabOfMine(@AuthenticationPrincipal Member member,
+            @RequestBody ChangeLabRequest request) {
         memberService.changeLab(member.getId(), request);
         return ResponseEntity.noContent().build();
     }
