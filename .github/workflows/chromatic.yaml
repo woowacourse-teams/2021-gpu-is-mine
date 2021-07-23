@@ -37,7 +37,5 @@ jobs:
           workingDir: ${{ env.working-directory }}
         id: chromatic
 
-      - run: echo "Storybook URL ${{ steps.chromatic.outputs.storybookUrl }}"
-      - run: echo "URL ${{ steps.chromatic.outputs.url }}"
-      - run: echo "buildUrl ${{ steps.chromatic.outputs.buildUrl }}"
-      - run: echo "code ${{ steps.chromatic.outputs.code }}"
+      - run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'  
+      
