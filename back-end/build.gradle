@@ -22,10 +22,6 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
-    //swagger 설정
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 
     //swagger 설정
