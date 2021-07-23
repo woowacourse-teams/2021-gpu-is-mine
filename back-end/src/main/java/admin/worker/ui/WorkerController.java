@@ -35,7 +35,6 @@ public class WorkerController {
         return ResponseEntity.ok().build();
     }
 
-
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
             @RequestBody WorkerRequest workerRequest) {
