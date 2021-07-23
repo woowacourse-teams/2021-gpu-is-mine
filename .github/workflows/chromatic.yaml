@@ -41,5 +41,5 @@ jobs:
         id: chromatic
 
       - name: Get Deployed StorybookUrl
-      - run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'  
+        run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'  
       
