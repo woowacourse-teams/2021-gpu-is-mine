@@ -22,8 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class MemberAcceptanceTest extends AcceptanceTest {
-    private MemberRequest memberRequest;
 
+    private MemberRequest memberRequest;
 
     @Override
     @BeforeEach
