@@ -2,7 +2,6 @@ package admin.job.dto.response;
 
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

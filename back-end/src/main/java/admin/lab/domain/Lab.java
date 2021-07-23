@@ -2,12 +2,11 @@ package admin.lab.domain;
 
 import admin.gpuserver.domain.BaseEntity;
 import admin.lab.exception.LabException;
-
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
 
 @Entity
 public class Lab extends BaseEntity {

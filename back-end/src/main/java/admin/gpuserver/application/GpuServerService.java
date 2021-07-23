@@ -19,11 +19,10 @@ import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GpuServerService {
@@ -35,8 +34,8 @@ public class GpuServerService {
     private JobRepository jobRepository;
 
     public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-                            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository,
-                            JobRepository jobRepository) {
+            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository,
+            JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -46,8 +45,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long gpuServerId) {
-        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServerId);
-        GpuServer gpuServer = gpuBoard.getGpuServer();
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
@@ -95,8 +94,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerStatusResponse findStatusById(Long gpuServerId) {
-        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServerId);
-        GpuServer gpuServer = gpuBoard.getGpuServer();
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
 
         return new GpuServerStatusResponse(gpuServer.getIsOn(), gpuBoard.getIsWorking());
     }
