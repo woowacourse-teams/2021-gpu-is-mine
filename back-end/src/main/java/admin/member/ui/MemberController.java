@@ -1,6 +1,8 @@
 package admin.member.ui;
 
+import admin.auth.domain.AuthenticationPrincipal;
 import admin.member.application.MemberService;
+import admin.member.domain.Member;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
@@ -31,6 +33,36 @@ public class MemberController {
         Long createdId = memberService.createMember(request);
         URI uri = URI.create("/api/members/" + createdId);
         return ResponseEntity.created(uri).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponse> findMemberOfMine(@AuthenticationPrincipal Member member) {
+        MemberResponse memberResponse = memberService.findMember(member.getId());
+        return ResponseEntity.ok(memberResponse);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateMemberInfoOfMine(@AuthenticationPrincipal Member member, @RequestBody MemberInfoRequest request) {
+        memberService.updateMemberInfo(member.getId(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/memberType")
+    public ResponseEntity<Void> updateMemberTypeOfMine(@AuthenticationPrincipal Member member, @RequestBody MemberTypeRequest request) {
+        memberService.updateMemberType(member.getId(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/me/lab")
+    public ResponseEntity<Void> updateMemberLabOfMine(@AuthenticationPrincipal Member member, @RequestBody ChangeLabRequest request) {
+        memberService.changeLab(member.getId(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMemberOfMine(@AuthenticationPrincipal Member member) {
+        memberService.deleteMember(member.getId());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

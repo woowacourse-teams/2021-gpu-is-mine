@@ -3,13 +3,12 @@ package admin.auth.ui;
 import admin.auth.application.AuthService;
 import admin.auth.dto.TokenRequest;
 import admin.auth.dto.TokenResponse;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @Validated
 @RestController
@@ -21,7 +20,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/login/token")
+    @PostMapping("/api/login/token")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody TokenRequest request) {
         TokenResponse token = authService.login(request);
 

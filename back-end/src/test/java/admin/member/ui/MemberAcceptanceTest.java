@@ -21,86 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-class MemberAcceptanceTest extends AcceptanceTest {
+public class MemberAcceptanceTest extends AcceptanceTest {
     private MemberRequest memberRequest;
 
-    public static ExtractableResponse<Response> MEMBER_생성_요청(MemberRequest memberRequest) {
-        return RestAssured.given()
-                .body(memberRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/members/")
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_조회_요청(Long id) {
-        return RestAssured.given()
-                .when()
-                .get("/api/members/" + id)
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_정보_수정_요청(Long id, MemberInfoRequest memberInfo) {
-        return RestAssured.given()
-                .body(memberInfo)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/api/members/" + id)
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_타입_수정_요청(Long id, MemberTypeRequest memberTypeRequest) {
-        return RestAssured.given()
-                .body(memberTypeRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/api/members/" + id + "/memberType")
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_LAB_수정_요청(Long id, ChangeLabRequest changeLabRequest) {
-        return RestAssured.given()
-                .body(changeLabRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/api/members/" + id + "/lab")
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_삭제_요청(Long id) {
-        return RestAssured.given()
-                .when()
-                .delete("/api/members/" + id)
-                .then()
-                .extract();
-    }
-
-    public static void MEMBER_정상_조회됨(ExtractableResponse<Response> response, MemberRequest memberRequest) {
-        MemberResponse memberResponse = response.body()
-                .as(MemberResponse.class);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(memberResponse.getEmail()).isEqualTo(memberRequest.getEmail());
-        assertThat(memberResponse.getName()).isEqualTo(memberRequest.getName());
-        MemberType memberType = MemberType.ignoreCaseValueOf(memberRequest.getMemberType());
-        Assertions.assertThat(memberResponse.getMemberType()).isEqualTo(memberType);
-        assertThat(memberResponse.getLabResponse().getId()).isEqualTo(memberRequest.getLabId());
-    }
-
-    private static Long extractCreatedId(ExtractableResponse<Response> createResponse) {
-        String uri = createResponse.header("Location");
-        return extractCreatedId(uri);
-    }
-
-    private static Long extractCreatedId(String uri) {
-        String[] uriToken = uri.split("/");
-        return Long.valueOf(uriToken[uriToken.length - 1]);
-    }
 
     @Override
     @BeforeEach
@@ -187,8 +110,86 @@ class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(searchResponse.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
+    public static ExtractableResponse<Response> MEMBER_생성_요청(MemberRequest memberRequest) {
+        return RestAssured.given()
+                .body(memberRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/members/")
+                .then()
+                .extract();
+    }
+
     private void MEMBER_정상_생성됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
+    }
+
+    public static ExtractableResponse<Response> MEMBER_조회_요청(Long id) {
+        return RestAssured.given()
+                .when()
+                .get("/api/members/" + id)
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> MEMBER_정보_수정_요청(Long id, MemberInfoRequest memberInfo) {
+        return RestAssured.given()
+                .body(memberInfo)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/members/" + id)
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> MEMBER_타입_수정_요청(Long id, MemberTypeRequest memberTypeRequest) {
+        return RestAssured.given()
+                .body(memberTypeRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/members/" + id + "/memberType")
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> MEMBER_LAB_수정_요청(Long id, ChangeLabRequest changeLabRequest) {
+        return RestAssured.given()
+                .body(changeLabRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/members/" + id + "/lab")
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> MEMBER_삭제_요청(Long id) {
+        return RestAssured.given()
+                .when()
+                .delete("/api/members/" + id)
+                .then()
+                .extract();
+    }
+
+    public static void MEMBER_정상_조회됨(ExtractableResponse<Response> response, MemberRequest memberRequest) {
+        MemberResponse memberResponse = response.body()
+                .as(MemberResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(memberResponse.getEmail()).isEqualTo(memberRequest.getEmail());
+        assertThat(memberResponse.getName()).isEqualTo(memberRequest.getName());
+        MemberType memberType = MemberType.ignoreCaseValueOf(memberRequest.getMemberType());
+        Assertions.assertThat(memberResponse.getMemberType()).isEqualTo(memberType);
+        assertThat(memberResponse.getLabResponse().getId()).isEqualTo(memberRequest.getLabId());
+    }
+
+    private static Long extractCreatedId(ExtractableResponse<Response> createResponse) {
+        String uri = createResponse.header("Location");
+        return extractCreatedId(uri);
+    }
+
+    private static Long extractCreatedId(String uri) {
+        String[] uriToken = uri.split("/");
+        return Long.valueOf(uriToken[uriToken.length - 1]);
     }
 }
