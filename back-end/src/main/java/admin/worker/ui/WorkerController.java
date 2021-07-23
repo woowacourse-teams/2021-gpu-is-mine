@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/workers/")
 public class WorkerController {
 
-    private final WorkerService jobService;
+    private final WorkerService workerService;
 
-    public WorkerController(WorkerService jobService) {
-        this.jobService = jobService;
+    public WorkerController(WorkerService workerService) {
+        this.workerService = workerService;
     }
 
     @GetMapping("gpus/{serverId}/job")
     public ResponseEntity<JobResponse> takeJob(@PathVariable Long serverId) {
-        JobResponse jobResponse = jobService.popJobByServerId(serverId);
+        JobResponse jobResponse = workerService.popJobByServerId(serverId);
         return ResponseEntity.ok(jobResponse);
     }
 
     @PutMapping("jobs/{jobId}/status")
     public ResponseEntity<Void> updateJobStatusToRunning(@PathVariable Long jobId,
             @RequestBody WorkerJobRequest workerJobRequest) {
-        jobService.changeJobStatus(jobId, workerJobRequest);
+        workerService.changeJobStatus(jobId, workerJobRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -39,7 +39,7 @@ public class WorkerController {
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
             @RequestBody WorkerRequest workerRequest) {
-        jobService.updateWorkerStatus(serverId, workerRequest);
+        workerService.updateWorkerStatus(serverId, workerRequest);
         return ResponseEntity.ok().build();
     }
 
