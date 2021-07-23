@@ -1,7 +1,6 @@
 package admin.member.domain;
 
 import admin.member.exception.MemberException;
-
 import java.util.Locale;
 
 public enum MemberType {

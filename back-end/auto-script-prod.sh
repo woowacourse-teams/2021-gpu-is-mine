@@ -12,6 +12,6 @@ fi
 echo "> new app deploy"
 JAR_NAME=$(ls |grep 'back-end' | tail -n 1)
 echo "> JAR Name: $JAR_NAME"
-JAVA=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
-nohup $JAVA -jar -Dspring.profiles.active=prod $JAR_NAME &
+
+nohup java -jar -Dspring.profiles.active=prod $JAR_NAME &
 sleep 3
