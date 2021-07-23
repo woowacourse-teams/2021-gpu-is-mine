@@ -1,13 +1,13 @@
 package admin.gpuserver.domain;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import admin.gpuserver.exception.DeleteHistoryException;
 import admin.lab.domain.Lab;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class DeleteHistoryTest {
     private GpuServer gpuServer;

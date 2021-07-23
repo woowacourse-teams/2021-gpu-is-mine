@@ -21,7 +21,9 @@ public class JobService {
     private GpuBoardRepository gpuBoardRepository;
     private MemberRepository memberRepository;
 
-    public JobService(JobRepository jobRepository, GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
+    public JobService(JobRepository jobRepository,
+            GpuBoardRepository gpuBoardRepository,
+            MemberRepository memberRepository) {
         this.jobRepository = jobRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
