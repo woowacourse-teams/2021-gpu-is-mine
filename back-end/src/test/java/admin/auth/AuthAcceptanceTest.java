@@ -24,6 +24,42 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     private static final String PASSWORD = "password";
     private MemberRequest memberRequest;
 
+    public static ExtractableResponse<Response> 회원_등록되어_있음(MemberRequest memberRequest) {
+        return MEMBER_생성_요청(memberRequest);
+    }
+
+    public static TokenResponse 로그인되어_있음(String email, String password) {
+        ExtractableResponse<Response> response = 로그인_요청(email, password);
+        return response.as(TokenResponse.class);
+    }
+
+    public static ExtractableResponse<Response> 로그인_요청(String email, String password) {
+        TokenRequest tokenRequest = new TokenRequest(email, password);
+
+        return RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(tokenRequest)
+                .when()
+                .post("/api/login/token")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 내_회원_정보_조회_요청(TokenResponse tokenResponse) {
+        return RestAssured
+                .given()
+                .auth()
+                .oauth2(tokenResponse.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/members/me")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
     @Override
     @BeforeEach
     public void setUp() {
@@ -111,41 +147,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .get("/api/members/me")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    public static ExtractableResponse<Response> 회원_등록되어_있음(MemberRequest memberRequest) {
-        return MEMBER_생성_요청(memberRequest);
-    }
-
-    public static TokenResponse 로그인되어_있음(String email, String password) {
-        ExtractableResponse<Response> response = 로그인_요청(email, password);
-        return response.as(TokenResponse.class);
-    }
-
-    public static ExtractableResponse<Response> 로그인_요청(String email, String password) {
-        TokenRequest tokenRequest = new TokenRequest(email, password);
-
-        return RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
-                .when()
-                .post("/api/login/token")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> 내_회원_정보_조회_요청(TokenResponse tokenResponse) {
-        return RestAssured
-                .given()
-                .auth()
-                .oauth2(tokenResponse.getAccessToken())
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/members/me")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
     }
 }
