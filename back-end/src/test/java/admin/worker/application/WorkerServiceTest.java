@@ -100,7 +100,7 @@ class WorkerServiceTest {
 
     @DisplayName("서버가 n 분마다 상태를 알려주면 상태와 마지막 응답시간이 수정된다.")
     @Test
-    void updateWorkerStatus() {
+    void updateWorkerStatus() throws InterruptedException {
         // given
         assertThat(gpuServer1.getOn()).isTrue();
 
@@ -113,6 +113,7 @@ class WorkerServiceTest {
         assertThat(gpuServer1.getLastResponse()).isEqualTo(now1);
 
         // when
+        Thread.sleep(10);
         LocalDateTime now2 = LocalDateTime.now();
         workerService.updateWorkerStatus(gpuServer1.getId(), new WorkerRequest(true, now2));
 
