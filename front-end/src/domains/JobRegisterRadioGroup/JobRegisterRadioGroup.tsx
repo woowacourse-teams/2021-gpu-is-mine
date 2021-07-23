@@ -27,11 +27,18 @@ const JobRegisterRadioGroup = ({
   );
 
   useEffect(() => {
-    makeRequest().then(console.log);
-  }, [makeRequest]);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
+  }, [makeRequest, done]);
+
+  useEffect(() => {
+    if (status === "succeed") {
+      done();
+    }
+  }, [done, status]);
 
   // TODO: event type 지정
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   const handleChange = (event: any) => {
     onChange(event);
     onBlur(event);
@@ -61,7 +68,7 @@ const JobRegisterRadioGroup = ({
             onChange={handleChange}
           >
             <div>
-              {/*TODO: 라디오 CONTENTS 컴포넌트화*/}
+              {/* TODO: 라디오 CONTENTS 컴포넌트화 */}
               <Text>{serverName}</Text>
               <Text>{isOn}</Text>
               <Text>{performance}TFLOPS</Text>

@@ -1,4 +1,4 @@
-import { FormHTMLAttributes, useEffect } from "react";
+import { FormHTMLAttributes } from "react";
 import { useFetch, useForm, Values } from "../../hooks";
 import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
@@ -21,12 +21,9 @@ const jobNameValidator = (value: string) => {
 };
 
 const JobRegisterForm = (props: JobRegisterFormProps) => {
-  const { status, error, makeRequest, done } = useFetch<void, JobRegisterRequest>(
-    API_ENDPOINT.LABS(1).JOBS,
-    {
-      method: "post",
-    }
-  );
+  const { status, makeRequest } = useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(1).JOBS, {
+    method: "post",
+  });
 
   const submitAction = async ({ jobName, expectedTime, gpuServerId }: Values) => {
     const requestBody = {
@@ -39,7 +36,7 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     return (await makeRequest(requestBody)).unwrap();
   };
 
-  const { values, isValid, form, submit, useInput } = useForm(submitAction);
+  const { form, submit, useInput } = useForm(submitAction);
 
   const jobNameInputProps = useInput("", {
     name: "jobName",
