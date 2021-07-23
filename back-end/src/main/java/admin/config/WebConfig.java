@@ -20,16 +20,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("^((http|https)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?")
+                .allowedOriginPatterns(origins)
                 .allowedMethods("*")
                 .allowedHeaders(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
-                .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION);
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION)
+                .allowCredentials(true);
     }
 
     @Bean
-    public FilterRegistrationBean requestLoggingFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new TeeFilter());
-        return filterRegistrationBean;
+    public FilterRegistrationBean<TeeFilter> requestLoggingFilter() {
+        return new FilterRegistrationBean<>(new TeeFilter());
     }
 }
