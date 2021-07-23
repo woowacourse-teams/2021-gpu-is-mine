@@ -74,6 +74,7 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
   return {
     values,
     isValid,
+    reset,
     useInput,
     form: { onSubmit },
     submit: { disabled: !isFormValid },
