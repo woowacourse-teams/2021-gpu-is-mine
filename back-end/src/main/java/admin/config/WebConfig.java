@@ -20,8 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(origins)
                 .allowedMethods("*")
-                .allowedHeaders(HttpHeaders.CONTENT_TYPE)
-                .exposedHeaders(HttpHeaders.LOCATION);
+                .allowedHeaders(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
+                .allowCredentials(true)
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION);
     }
 
     @Bean
