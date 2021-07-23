@@ -1,8 +1,9 @@
 package admin.worker.ui;
 
 import admin.job.dto.response.JobResponse;
-import admin.worker.dto.WorkerRequest;
 import admin.worker.application.WorkerService;
+import admin.worker.dto.WorkerJobRequest;
+import admin.worker.dto.WorkerRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,11 +28,13 @@ public class WorkerController {
         return ResponseEntity.ok(jobResponse);
     }
 
-    @PutMapping("jobs/{jobId}/status/running")
-    public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId) {
-        jobService.changeJobStatus(jobId);
+    @PutMapping("jobs/{jobId}/status")
+    public ResponseEntity<Void> updateJobStatusToRunning(@PathVariable Long jobId,
+            @RequestBody WorkerJobRequest workerJobRequest) {
+        jobService.changeJobStatus(jobId, workerJobRequest);
         return ResponseEntity.ok().build();
     }
+
 
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,

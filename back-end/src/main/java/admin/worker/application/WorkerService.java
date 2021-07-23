@@ -11,6 +11,7 @@ import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
+import admin.worker.dto.WorkerJobRequest;
 import admin.worker.dto.WorkerRequest;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,9 @@ public class WorkerService {
     }
 
     @Transactional
-    public void changeJobStatus(Long jobId) {
+    public void changeJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
         Job job = findJobById(jobId);
-        job.changeStatus(JobStatus.RUNNING);
+        job.changeStatus(workerJobRequest.getJobStatus());
     }
 
     @Transactional

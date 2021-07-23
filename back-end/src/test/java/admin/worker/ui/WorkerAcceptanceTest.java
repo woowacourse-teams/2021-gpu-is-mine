@@ -1,10 +1,9 @@
 package admin.worker.ui;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import admin.AcceptanceTest;
 import org.junit.jupiter.api.Test;
 
-class WorkerControllerTest {
+class WorkerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void takeJob() {

@@ -34,7 +34,7 @@ public class GpuServer extends BaseEntity {
     @JoinColumn(name = "lab_id")
     private Lab lab;
 
-    @Column(name ="last_response")
+    @Column(name = "last_response")
     private LocalDateTime lastResponse;
 
     protected GpuServer() {
@@ -117,5 +117,9 @@ public class GpuServer extends BaseEntity {
 
     public void updateLastResponse(LocalDateTime lastResponse) {
         this.lastResponse = lastResponse;
+    }
+
+    public LocalDateTime getLastResponse() {
+        return lastResponse;
     }
 }
