@@ -3,6 +3,9 @@ name: Storybook CI
 on:
   pull_request:
     branches: [develop]
+    paths: 
+      - 'front-end/**'
+
 
   workflow_dispatch:
 
