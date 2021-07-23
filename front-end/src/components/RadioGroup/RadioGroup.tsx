@@ -1,45 +1,19 @@
-import { ChangeEventHandler, ReactNode } from "react";
-import Radio from "../Radio/Radio";
+import { ReactNode } from "react";
 import Text from "../Text/Text";
 import { StyledRadioGroup } from "./RadioGroup.styled";
 
-interface Option {
-  value: string | number;
-  contents: ReactNode;
-}
-
 interface RadioGroupProps {
-  name: string;
   label: string;
   labelSize?: "sm" | "md" | "lg";
-  value: string | number;
-  options: Option[];
-  onChange: ChangeEventHandler;
+  className?: string;
+  children: ReactNode;
 }
 
-const RadioGroup = ({
-  name,
-  label,
-  labelSize = "md",
-  value: selectedValue,
-  options,
-  onChange,
-}: RadioGroupProps) => (
-  <StyledRadioGroup>
-    <Text size={labelSize} className="label">
-      {label}
-    </Text>
-    {options.map(({ value, contents }) => (
-      <Radio
-        key={value}
-        name={name}
-        value={value}
-        checked={value === selectedValue}
-        onChange={onChange}
-      >
-        {contents}
-      </Radio>
-    ))}
+const RadioGroup = ({ label, labelSize = "md", children, ...rest }: RadioGroupProps) => (
+  <StyledRadioGroup {...rest}>
+    <Text size={labelSize}>{label}</Text>
+
+    {children}
   </StyledRadioGroup>
 );
 
