@@ -21,7 +21,7 @@ export const Default = Template.bind({});
 
 Default.args = {
   label: "LABEL",
-  selectedValue: defaultOptions[0].value,
+  value: defaultOptions[0].value,
   options: defaultOptions,
 };
 
@@ -36,6 +36,6 @@ export const GpuServerRadioGroup = Template.bind({});
 
 GpuServerRadioGroup.args = {
   label: "서버선택",
-  selectedValue: gpuServersResponses.gpuServers[0].id,
+  value: gpuServersResponses.gpuServers[0].id,
   options: gpuServerOptions,
 };
