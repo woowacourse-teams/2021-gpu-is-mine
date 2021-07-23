@@ -21,9 +21,12 @@ const jobNameValidator = (value: string) => {
 };
 
 const JobRegisterForm = (props: JobRegisterFormProps) => {
-  const { status, makeRequest } = useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(1).JOBS, {
-    method: "post",
-  });
+  const { status, makeRequest, done } = useFetch<void, JobRegisterRequest>(
+    API_ENDPOINT.LABS(1).JOBS,
+    {
+      method: "post",
+    }
+  );
 
   const submitAction = async ({ jobName, expectedTime, gpuServerId }: Values) => {
     const requestBody = {
@@ -36,7 +39,7 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     return (await makeRequest(requestBody)).unwrap();
   };
 
-  const { form, submit, useInput } = useForm(submitAction);
+  const { form, submit, reset, useInput } = useForm(submitAction);
 
   const jobNameInputProps = useInput("", {
     name: "jobName",
@@ -67,7 +70,12 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     failed: "Job 등록에 실패하였습니다.",
   };
 
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    if (status === "succeed") {
+      reset();
+    }
+    done();
+  };
 
   return (
     <>
