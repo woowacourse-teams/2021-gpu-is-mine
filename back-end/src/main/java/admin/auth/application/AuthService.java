@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class AuthService {
 
     private MemberRepository memberRepository;
@@ -21,6 +20,7 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse login(TokenRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
@@ -33,6 +33,7 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByToken(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
             throw AuthorizationException.INVALID_TOKEN.getException();

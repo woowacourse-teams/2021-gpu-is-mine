@@ -1,6 +1,5 @@
 package admin.auth.exception;
 
-import admin.exception.http.BadRequestException;
 import admin.exception.http.CustomException;
 import admin.exception.http.UnauthorizedException;
 
