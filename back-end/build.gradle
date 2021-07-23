@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'checkstyle'
 }
 
 group = 'com.example'
@@ -21,10 +22,6 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
 
-    //swagger 설정
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 
     //swagger 설정
@@ -36,4 +33,10 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail
+    configFile = file("${rootDir}/config/gpu-im-checkstyle.xml")
+    toolVersion = "8.39"
 }

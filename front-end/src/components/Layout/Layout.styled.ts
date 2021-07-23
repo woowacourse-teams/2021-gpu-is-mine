@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { only, up } from "styled-breakpoints";
+import { up } from "styled-breakpoints";
 
-export const Container = styled.div`
+export const StyledLayout = styled.div`
   height: 100%;
 
   display: grid;
@@ -18,10 +18,6 @@ export const Container = styled.div`
   .sub-header {
     grid-row: 2 / 3;
 
-    > * {
-      height: 100%;
-    }
-
     ${up("tablet")} {
       grid-row: 1 / 2;
       grid-column: 2 / 4;
@@ -30,13 +26,6 @@ export const Container = styled.div`
 
   .nav {
     display: none;
-
-    ${only("mobile")} {
-      &.nav--visible {
-        display: inherit;
-        grid-row: 3 / 4;
-      }
-    }
 
     ${up("tablet")} {
       display: inherit;
@@ -51,30 +40,17 @@ export const Container = styled.div`
     overflow-y: auto;
     padding: 1rem;
     background-color: var(--primary-50);
-    position: relative;
 
     ${up("tablet")} {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
-    }
-  }
-
-  .info-item-wrapper {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    row-gap: 0.75rem;
-
-    ${up("tablet")} {
-      grid-column: 2 / 3;
-      grid-row: 3 / 4;
+      display: flex;
     }
   }
 
   .footer {
     grid-row: 5 / 6;
     background-color: var(--primary-50);
-
     width: 100%;
     display: flex;
     justify-content: center;
