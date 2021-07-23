@@ -1,6 +1,8 @@
-package admin.worker;
+package admin.worker.ui;
 
 import admin.job.dto.response.JobResponse;
+import admin.worker.dto.WorkerRequest;
+import admin.worker.application.WorkerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/workers/")
-public class WorkerRestController {
+public class WorkerController {
 
-    private final WorkerJobService jobService;
+    private final WorkerService jobService;
 
-    public WorkerRestController(WorkerJobService jobService) {
+    public WorkerController(WorkerService jobService) {
         this.jobService = jobService;
     }
 
