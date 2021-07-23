@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { up } from "styled-breakpoints";
 
 export const StyledForm = styled.form`
   width: 100%;
@@ -6,6 +7,16 @@ export const StyledForm = styled.form`
   flex-direction: column;
   row-gap: 0.5rem;
   box-shadow: 2px 2px 10px 2px rgb(200 200 200 / 50%);
+
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+
+  ${up("tablet")} {
+    max-width: 40rem;
+    padding: 2rem;
+    margin: auto;
+  }
 
   .submit {
     width: 15%;

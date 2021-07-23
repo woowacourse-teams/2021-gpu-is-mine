@@ -6,7 +6,7 @@ interface ValidatorOption {
 export const isNumber = (
   value: string,
   { min = Number.MIN_VALUE, max = Number.MAX_VALUE }: ValidatorOption
-) => !Number.isNaN(Number(value)) && min <= Number(value) && Number(value) <= max;
+) => !Number.isNaN(Number(value)) && value !== "" && min <= Number(value) && Number(value) <= max;
 
 export const isLength = (
   value: string,

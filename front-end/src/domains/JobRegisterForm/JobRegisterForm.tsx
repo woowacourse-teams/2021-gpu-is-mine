@@ -1,11 +1,11 @@
-import { FormHTMLAttributes, useEffect } from "react";
+import { FormHTMLAttributes } from "react";
 import { useFetch, useForm, Values } from "../../hooks";
 import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { StyledForm } from "./JobRegisterForm.styled";
 import { API_ENDPOINT } from "../../constants";
 import { APICallStatus, JobRegisterRequest } from "../../types";
-import { isLength } from "../../utils";
+import { isLength, isNumber } from "../../utils";
 
 type JobRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -20,8 +20,30 @@ const jobNameValidator = (value: string) => {
   return null;
 };
 
+const expectedTimeValidator = (value: string) => {
+  const min = 0;
+  const max = 10_000;
+
+  if (!isNumber(value, { min, max })) {
+    return `${min} 시간 이상 ${max} 시간 이하만 가능합니다.`;
+  }
+
+  return null;
+};
+
+const minPerformanceValidator = (value: string) => {
+  const min = 0;
+  const max = 100_000;
+
+  if (!isNumber(value, { min, max })) {
+    return `${min} TFLOPS 이상 ${max} TFLOPS 이하만 가능합니다.`;
+  }
+
+  return null;
+};
+
 const JobRegisterForm = (props: JobRegisterFormProps) => {
-  const { status, error, makeRequest, done } = useFetch<void, JobRegisterRequest>(
+  const { status, makeRequest, done } = useFetch<void, JobRegisterRequest>(
     API_ENDPOINT.LABS(1).JOBS,
     {
       method: "post",
@@ -39,7 +61,7 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     return (await makeRequest(requestBody)).unwrap();
   };
 
-  const { values, isValid, form, submit, useInput } = useForm(submitAction);
+  const { form, submit, reset, useInput } = useForm(submitAction);
 
   const jobNameInputProps = useInput("", {
     name: "jobName",
@@ -49,10 +71,12 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
   const expectedTimeInputProps = useInput("", {
     name: "expectedTime",
     label: "Job 예상 실행 시간(hour)",
+    validator: expectedTimeValidator,
   });
   const minPerformanceInputProps = useInput("", {
     name: "minPerformance",
     label: "최소 필요 연산량(TFLOPS)",
+    validator: minPerformanceValidator,
   });
   const metaDataInputProps = useInput("", {
     name: "metaData",
@@ -70,7 +94,12 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     failed: "Job 등록에 실패하였습니다.",
   };
 
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    if (status === "succeed") {
+      reset();
+    }
+    done();
+  };
 
   return (
     <>
