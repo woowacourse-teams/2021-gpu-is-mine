@@ -5,7 +5,7 @@ import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGrou
 import { StyledForm } from "./JobRegisterForm.styled";
 import { API_ENDPOINT } from "../../constants";
 import { APICallStatus, JobRegisterRequest } from "../../types";
-import { isLength } from "../../utils";
+import { isLength, isNumber } from "../../utils";
 
 type JobRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -15,6 +15,28 @@ const jobNameValidator = (value: string) => {
 
   if (!isLength(value, { min, max })) {
     return `${min}글자 이상 ${max}글자 이하만 가능합니다.`;
+  }
+
+  return null;
+};
+
+const expectedTimeValidator = (value: string) => {
+  const min = 0;
+  const max = 10_000;
+
+  if (!isNumber(value, { min, max })) {
+    return `${min} 시간 이상 ${max} 시간 이하만 가능합니다.`;
+  }
+
+  return null;
+};
+
+const minPerformanceValidator = (value: string) => {
+  const min = 0;
+  const max = 100_000;
+
+  if (!isNumber(value, { min, max })) {
+    return `${min} TFLOPS 이상 ${max} TFLOPS 이하만 가능합니다.`;
   }
 
   return null;
@@ -49,10 +71,12 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
   const expectedTimeInputProps = useInput("", {
     name: "expectedTime",
     label: "Job 예상 실행 시간(hour)",
+    validator: expectedTimeValidator,
   });
   const minPerformanceInputProps = useInput("", {
     name: "minPerformance",
     label: "최소 필요 연산량(TFLOPS)",
+    validator: minPerformanceValidator,
   });
   const metaDataInputProps = useInput("", {
     name: "metaData",
