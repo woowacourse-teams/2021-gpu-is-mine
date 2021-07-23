@@ -1,5 +1,6 @@
 package admin.job.application;
 
+import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static admin.gpuserver.fixture.gpuServerFixtures.gpuServerRequestWithDummyValue;
 import static admin.job.fixture.JobFixtures.jobRequestWithDummyValue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,14 +39,22 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class JobServiceTest {
     @Autowired
     private JobService jobService;
+
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private GpuServerService gpuServerService;
+
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
+
     @Autowired
     private MemberRepository memberRepository;
+
     @Autowired
     private LabRepository labRepository;
+
     @Autowired
     private GpuServerRepository gpuServerRepository;
 
@@ -64,8 +74,7 @@ class JobServiceTest {
         board = new GpuBoard(false, 600L, "nvdia", server);
         gpuBoardRepository.save(board);
 
-        member = new Member("email1", "1234", "name1", MemberType.MANAGER, lab);
-        memberRepository.save(member);
+        member = saveMember(MemberType.USER, lab);
     }
 
     @Test
@@ -127,8 +136,7 @@ class JobServiceTest {
         Job job = new Job("job", JobStatus.WAITING, board, member);
         jobRepository.save(job);
 
-        Member other = new Member("email@email.com", "password", "name", MemberType.MANAGER, lab);
-        memberRepository.save(other);
+        Member other = saveMember(MemberType.USER, lab);
 
         assertThat(other).isNotEqualTo(job.getMember());
         assertThatThrownBy(() -> jobService.cancel(other.getId(), job.getId()))
@@ -158,70 +166,78 @@ class JobServiceTest {
     @Test
     @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
     void findAllByMemberId() {
-        GpuServer otherServer = new GpuServer("otherServer", true, 1024L, 1024L, lab);
-        gpuServerRepository.save(otherServer);
+        Long baseServerId = insertServerInLab(lab);
+        Long otherServerId = insertServerInLab(lab);
+        Member baseMember = saveMember(MemberType.USER, lab);
+        Member otherMember = saveMember(MemberType.USER, lab);
 
-        GpuBoard otherBoard = new GpuBoard(false, 600L, "nvdia", otherServer);
-        gpuBoardRepository.save(otherBoard);
+        Long id1 = insertJobWithDummyData(baseMember.getId(), baseServerId);
+        Long id2 = insertJobWithDummyData(baseMember.getId(), otherServerId);
+        Long id3 = insertJobWithDummyData(otherMember.getId(), baseServerId);
+        Long id4 = insertJobWithDummyData(otherMember.getId(), otherServerId);
 
-        Long id1 = insertJobWithDummyData(member.getId(), server.getId());
-        Long id2 = insertJobWithDummyData(member.getId(), server.getId());
-        Long id3 = insertJobWithDummyData(member.getId(), otherServer.getId());
-
-        List<Long> searchedIds = jobService.findByMember(member.getId()).getJobResponses().stream()
+        List<Long> searchedIds = jobService.findByMember(baseMember.getId()).getJobResponses().stream()
                 .map(JobResponse::getId)
                 .collect(Collectors.toList());
 
-        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2, id3));
+        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2));
     }
 
     @Test
     @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
     void findAllByServer() {
-        GpuServer otherServer = new GpuServer("otherServer", true, 1024L, 1024L, lab);
-        gpuServerRepository.save(otherServer);
+        Long baseServerId = insertServerInLab(lab);
+        Long otherServerId = insertServerInLab(lab);
+        Member baseMember = saveMember(MemberType.USER, lab);
+        Member otherMember = saveMember(MemberType.USER, lab);
 
-        GpuBoard otherBoard = new GpuBoard(false, 600L, "nvdia", otherServer);
-        gpuBoardRepository.save(otherBoard);
+        Long id1 = insertJobWithDummyData(baseMember.getId(), baseServerId);
+        Long id2 = insertJobWithDummyData(baseMember.getId(), otherServerId);
+        Long id3 = insertJobWithDummyData(otherMember.getId(), baseServerId);
+        Long id4 = insertJobWithDummyData(otherMember.getId(), otherServerId);
 
-        Long id1 = insertJobWithDummyData(member.getId(), server.getId());
-        Long id2 = insertJobWithDummyData(member.getId(), server.getId());
-        Long id3 = insertJobWithDummyData(member.getId(), otherServer.getId());
-
-        List<Long> searchedIds = jobService.findByServer(server.getId()).getJobResponses().stream()
+        List<Long> searchedIds = jobService.findByServer(baseServerId).getJobResponses().stream()
                 .map(JobResponse::getId)
                 .collect(Collectors.toList());
 
-        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2));
+        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id3));
     }
 
     @Test
     @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
     void findAllByLab() {
+        Lab baseLab = new Lab("baseLab");
+        labRepository.save(baseLab);
+
         Lab otherLab = new Lab("otherLab");
         labRepository.save(otherLab);
 
-        GpuServer otherServer = new GpuServer("otherServer", true, 1024L, 1024L, otherLab);
-        gpuServerRepository.save(otherServer);
+        Long serverInOtherLabId = insertServerInLab(otherLab);
+        Long serverInBaseLabId1 = insertServerInLab(baseLab);
+        Long serverInBaseLabId2 = insertServerInLab(baseLab);
 
-        GpuBoard otherBoard = new GpuBoard(false, 600L, "nvdia", otherServer);
-        gpuBoardRepository.save(otherBoard);
+        Long id1 = insertJobWithDummyData(member.getId(), serverInBaseLabId1);
+        Long id2 = insertJobWithDummyData(member.getId(), serverInBaseLabId2);
+        Long id3 = insertJobWithDummyData(member.getId(), serverInOtherLabId);
 
-        GpuServer myServer = new GpuServer("myServer", true, 1024L, 1024L, otherLab);
-        gpuServerRepository.save(myServer);
-
-        Long id1 = insertJobWithDummyData(member.getId(), server.getId());
-        Long id2 = insertJobWithDummyData(member.getId(), myServer.getId());
-        Long id3 = insertJobWithDummyData(member.getId(), otherServer.getId());
-
-        List<Long> searchedIds = jobService.findByServer(server.getId()).getJobResponses().stream()
+        List<Long> searchedIds = jobService.findByLab(baseLab.getId()).getJobResponses().stream()
                 .map(JobResponse::getId)
                 .collect(Collectors.toList());
 
         assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2));
     }
 
-    private Long insertJobWithDummyData(Long memberId, Long serverId){
+    private Long insertServerInLab(Lab otherLab) {
+        return gpuServerService.saveGpuServer(gpuServerRequestWithDummyValue(), otherLab.getId());
+    }
+
+    private Long insertJobWithDummyData(Long memberId, Long serverId) {
         return jobService.insert(memberId, jobRequestWithDummyValue(serverId));
+    }
+
+    private Member saveMember(MemberType type, Lab lab) {
+        Member member = new Member("email", "password", "name", type, lab);
+        memberRepository.save(member);
+        return member;
     }
 }

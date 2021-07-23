@@ -1,7 +1,9 @@
 package admin.job.application;
 
 import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
@@ -15,19 +17,21 @@ import admin.member.exception.MemberException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
 
     private JobRepository jobRepository;
+    private GpuServerRepository gpuServerRepository;
     private GpuBoardRepository gpuBoardRepository;
     private MemberRepository memberRepository;
 
-    public JobService(JobRepository jobRepository,
-                      GpuBoardRepository gpuBoardRepository,
-                      MemberRepository memberRepository) {
+    public JobService(JobRepository jobRepository, GpuServerRepository gpuServerRepository, GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
         this.jobRepository = jobRepository;
+        this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
     }
@@ -72,6 +76,18 @@ public class JobService {
     public JobResponses findByServer(Long gpuServerId) {
         GpuBoard gpuBoard = findAliveBoardByServerId(gpuServerId);
         return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findByLab(Long labId) {
+        List<Job> jobs = new ArrayList<>();
+
+        for(GpuServer gpuServer : gpuServerRepository.findByLabId(labId)){
+            GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
+            jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+        }
+
+        return JobResponses.of(jobs);
     }
 
     private GpuBoard findAliveBoardByServerId(Long gpuServerId) {
