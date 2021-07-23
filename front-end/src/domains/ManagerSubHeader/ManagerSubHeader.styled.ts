@@ -11,6 +11,10 @@ export const StyledManagerSubHeader = styled.header`
 
   padding: 0.5rem 1rem;
 
+  ${up("tablet")} {
+    height: 100%;
+  }
+
   .title {
     display: flex;
     column-gap: 0.75rem;
