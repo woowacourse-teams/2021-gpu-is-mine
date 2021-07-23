@@ -62,6 +62,7 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
     }, [initialValue, name]);
 
     return {
+      name,
       value: values[name] ?? initialValue,
       label,
       onChange,

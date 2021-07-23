@@ -13,7 +13,7 @@ interface GpuBoard {
   isWorking: boolean;
 }
 
-interface GpuServer {
+export interface GpuServer {
   id: number;
   serverName: string;
   isOn: boolean;
