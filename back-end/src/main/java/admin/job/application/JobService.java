@@ -25,8 +25,8 @@ public class JobService {
     private MemberRepository memberRepository;
 
     public JobService(JobRepository jobRepository,
-            GpuBoardRepository gpuBoardRepository,
-            MemberRepository memberRepository) {
+                      GpuBoardRepository gpuBoardRepository,
+                      MemberRepository memberRepository) {
         this.jobRepository = jobRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
@@ -34,16 +34,24 @@ public class JobService {
 
     @Transactional
     public Long insert(Long memberId, JobRequest jobRequest) {
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(jobRequest.getGpuServerId())
-                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+        GpuBoard gpuBoard = findAliveBoardByServerId(jobRequest.getGpuServerId());
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+        Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId));
+        jobRepository.save(job);
 
-        Job newJob = jobRepository.save(new Job(jobRequest.getName(), gpuBoard, member));
-        gpuBoard.addJob(newJob);
+        return job.getId();
+    }
 
-        return newJob.getId();
+    @Transactional
+    public void cancel(Long memberId, Long jobId) {
+        Job job = findJobById(jobId);
+        checkOwner(job, memberId);
+        job.cancel();
+    }
+
+    private void checkOwner(Job job, Long memberId) {
+        Member member = findMemberById(memberId);
+        member.checkMyJob(job);
     }
 
     @Transactional(readOnly = true)
@@ -60,25 +68,26 @@ public class JobService {
         return JobResponses.of(jobs);
     }
 
-    @Transactional
-    public void cancel(Long memberId, Long jobId) {
-        Job job = jobRepository.findByIdAndMemberId(jobId, memberId)
-                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
-
-        GpuBoard gpuBoard = job.getGpuBoard();
-        gpuBoard.cancel(job);
-    }
-
     @Transactional(readOnly = true)
     public JobResponses findByServer(Long gpuServerId) {
+        GpuBoard gpuBoard = findAliveBoardByServerId(gpuServerId);
+        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+    }
+
+    private GpuBoard findAliveBoardByServerId(Long gpuServerId) {
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
-
-        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+        gpuBoard.checkServerAlive();
+        return gpuBoard;
     }
 
     private Job findJobById(Long id) {
         return jobRepository.findById(id)
                 .orElseThrow(JobException.JOB_NOT_FOUND::getException);
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 }

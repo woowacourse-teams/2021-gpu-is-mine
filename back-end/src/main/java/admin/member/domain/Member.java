@@ -2,10 +2,12 @@ package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
 import admin.gpuserver.domain.GpuServer;
+import admin.job.domain.Job;
 import admin.lab.domain.Lab;
 import admin.member.exception.MemberException;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Member extends BaseEntity {
@@ -47,10 +49,33 @@ public class Member extends BaseEntity {
         }
     }
 
+    public boolean isSameLab(Member other){
+        return this.lab.equals(other.lab);
+    }
+
     public void checkSameLab(Member other) {
-        if (this.lab.equals(other.getLab())) {
+        if (isSameLab(other)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
+    }
+
+    public void checkMyJob(Job job) {
+        if(!this.equals(job.getMember())){
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {
