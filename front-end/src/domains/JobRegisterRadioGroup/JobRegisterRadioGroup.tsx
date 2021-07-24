@@ -22,7 +22,7 @@ const JobRegisterRadioGroup = ({
   onBlur,
   ...rest
 }: JobRegisterRadioGroupProps) => {
-  const { data, status, makeRequest, done } = useFetch<GpuServerViewResponses>(
+  const { data, status, makeRequest } = useFetch<GpuServerViewResponses>(
     API_ENDPOINT.LABS(1).GPUS,
     { method: "get" }
   );
@@ -31,12 +31,6 @@ const JobRegisterRadioGroup = ({
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
-
-  useEffect(() => {
-    if (status === "succeed") {
-      done();
-    }
-  }, [done, status]);
 
   // TODO: event type 지정
   // eslint-disable-next-line
@@ -59,7 +53,7 @@ const JobRegisterRadioGroup = ({
         </Text>
       )}
 
-      {data &&
+      {(status === "succeed" || true) &&
         data?.gpuServers.map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
           <Radio
             key={id}
