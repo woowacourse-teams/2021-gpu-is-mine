@@ -1,8 +1,5 @@
 package admin.member.ui;
 
-import static admin.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import admin.AcceptanceTest;
 import admin.lab.dto.LabRequest;
 import admin.member.domain.MemberType;
@@ -20,6 +17,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import static admin.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberAcceptanceTest extends AcceptanceTest {
     private MemberRequest memberRequest;

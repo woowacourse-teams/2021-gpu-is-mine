@@ -4,6 +4,7 @@ import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.job.domain.Job;
 import admin.job.dto.response.JobResponse;
+
 import java.util.List;
 
 public class GpuServerResponse {
@@ -17,7 +18,7 @@ public class GpuServerResponse {
     private List<JobResponse> jobs;
 
     private GpuServerResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
-            GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
+                              GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
         this.id = id;
         this.serverName = serverName;
         this.memorySize = memorySize;

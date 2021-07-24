@@ -9,9 +9,10 @@ import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class WorkerJobService {
@@ -21,7 +22,7 @@ public class WorkerJobService {
     private final GpuBoardRepository gpuBoardRepository;
 
     public WorkerJobService(WorkerJobRepository jobRepository, WorkerGpuServerRepository serverRepository,
-            GpuBoardRepository gpuBoardRepository) {
+                            GpuBoardRepository gpuBoardRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;

@@ -8,7 +8,7 @@ public class JobFixtures {
     private static final String META_DATA = "meta_dat";
     private static final String EXPECTED_TIME = "12";
 
-    public static JobRequest jobCreationRequest(Long serverId){
+    public static JobRequest jobCreationRequest(Long serverId) {
         return new JobRequest(serverId, NAME, META_DATA, EXPECTED_TIME);
     }
 }

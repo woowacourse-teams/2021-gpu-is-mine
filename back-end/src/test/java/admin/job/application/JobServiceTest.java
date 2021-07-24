@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static admin.job.fixture.JobFixtures.jobCreationRequest;
@@ -141,7 +140,7 @@ class JobServiceTest {
 
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
-    class findAll {
+    class FindAll {
         Lab labA = new Lab("labA");
         Lab labB = new Lab("labB");
 

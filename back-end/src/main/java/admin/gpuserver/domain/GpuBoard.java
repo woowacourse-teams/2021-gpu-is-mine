@@ -2,13 +2,8 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
 
+import javax.persistence.*;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 @Entity
 public class GpuBoard extends BaseEntity {
@@ -80,8 +75,8 @@ public class GpuBoard extends BaseEntity {
         return gpuServer.getDeleted();
     }
 
-    public void checkServerAlive(){
-        if(isServerDeleted()){
+    public void checkServerAlive() {
+        if (isServerDeleted()) {
             throw GpuBoardException.GPU_BOARD_NOT_FOUND.getException();
         }
     }

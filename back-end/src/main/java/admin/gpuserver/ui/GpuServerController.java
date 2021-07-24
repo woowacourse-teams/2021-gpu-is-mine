@@ -58,7 +58,7 @@ public class GpuServerController {
     }
 
     @GetMapping("/{gpuServerId}/status")
-    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId){
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId) {
         return ResponseEntity.ok(gpuServerService.findStatusById(gpuServerId));
     }
 }

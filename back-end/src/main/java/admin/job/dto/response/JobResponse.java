@@ -2,6 +2,7 @@ package admin.job.dto.response;
 
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,8 @@ public class JobResponse {
     private final Long gpuServerId;
     private final String gpuServerName;
 
-    public JobResponse(Long id, String name, JobStatus status, Long memberId, String memberName, Long gpuServerId, String gpuServerName) {
+    public JobResponse(Long id, String name, JobStatus status, Long memberId,
+                       String memberName, Long gpuServerId, String gpuServerName) {
         this.id = id;
         this.name = name;
         this.status = status;
