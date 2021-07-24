@@ -3,9 +3,6 @@ name: Storybook CI
 on:
   pull_request:
     branches: [develop]
-    paths: 
-      - 'front-end/**'
-
 
   workflow_dispatch:
 
@@ -20,13 +17,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: check if front-end directory has changed
+        run: git diff-index origin/develop | grep front-end || return 0
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
         with:
           node-version: lts/*
-
-      - name: yarn actions (yaml)
-        uses: sergioramos/yarn-actions@v6
+          cache: "yarn"
 
       - name: Install dependencies
         run: yarn install
@@ -41,5 +39,4 @@ jobs:
         id: chromatic
 
       - name: Get Deployed StorybookUrl
-        run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'  
-      
+        run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'
