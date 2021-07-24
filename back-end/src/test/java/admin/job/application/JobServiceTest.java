@@ -67,7 +67,7 @@ class JobServiceTest {
         board = new GpuBoard(false, 600L, "nvdia", server);
         gpuBoardRepository.save(board);
 
-        member = saveMember(MemberType.USER, lab);
+        member = saveMember(lab);
     }
 
     @Test
@@ -114,32 +114,17 @@ class JobServiceTest {
     @Test
     @DisplayName("Job 예약을 취소한다.")
     void cancelJob() {
-        Job job = new Job("job", JobStatus.WAITING, board, member);
+        Job job = new Job("job", board, member);
         jobRepository.save(job);
 
-        Member jobOwner = job.getMember();
-        jobService.cancel(jobOwner.getId(), job.getId());
-
+        jobService.cancel(job.getId());
         assertThat(job.getStatus()).isEqualTo(JobStatus.CANCELED);
-    }
-
-    @Test
-    @DisplayName("주인이 아니라면 Job 예약을 취소할 수 없다.")
-    void cancelJobByNotOwner() {
-        Job job = new Job("job", JobStatus.WAITING, board, member);
-        jobRepository.save(job);
-
-        Member other = saveMember(MemberType.USER, lab);
-
-        assertThat(other).isNotEqualTo(job.getMember());
-        assertThatThrownBy(() -> jobService.cancel(other.getId(), job.getId()))
-                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
     @Test
     @DisplayName("id로 job을 조회한다.")
     void findById() {
-        Job job = new Job("job", JobStatus.WAITING, board, member);
+        Job job = new Job("job", board, member);
         jobRepository.save(job);
 
         JobResponse jobResponse = jobService.findById(job.getId());
@@ -161,8 +146,8 @@ class JobServiceTest {
     void findAllByMemberId() {
         Long baseServerId = insertServerInLab(lab);
         Long otherServerId = insertServerInLab(lab);
-        Member baseMember = saveMember(MemberType.USER, lab);
-        Member otherMember = saveMember(MemberType.USER, lab);
+        Member baseMember = saveMember(lab);
+        Member otherMember = saveMember(lab);
 
         Long id1 = insertJobWithDummyData(baseMember.getId(), baseServerId);
         Long id2 = insertJobWithDummyData(baseMember.getId(), otherServerId);
@@ -181,8 +166,8 @@ class JobServiceTest {
     void findAllByServer() {
         Long baseServerId = insertServerInLab(lab);
         Long otherServerId = insertServerInLab(lab);
-        Member baseMember = saveMember(MemberType.USER, lab);
-        Member otherMember = saveMember(MemberType.USER, lab);
+        Member baseMember = saveMember(lab);
+        Member otherMember = saveMember(lab);
 
         Long id1 = insertJobWithDummyData(baseMember.getId(), baseServerId);
         Long id2 = insertJobWithDummyData(baseMember.getId(), otherServerId);
@@ -228,8 +213,8 @@ class JobServiceTest {
         return jobService.insert(memberId, jobRequestWithDummyValue(serverId));
     }
 
-    private Member saveMember(MemberType type, Lab lab) {
-        Member member = new Member("email", "password", "name", type, lab);
+    private Member saveMember(Lab lab) {
+        Member member = new Member("email", "password", "name", MemberType.USER, lab);
         memberRepository.save(member);
         return member;
     }

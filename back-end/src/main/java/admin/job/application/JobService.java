@@ -46,15 +46,9 @@ public class JobService {
     }
 
     @Transactional
-    public void cancel(Long memberId, Long jobId) {
+    public void cancel(Long jobId) {
         Job job = findJobById(jobId);
-        checkOwner(job, memberId);
         job.cancel();
-    }
-
-    private void checkOwner(Job job, Long memberId) {
-        Member member = findMemberById(memberId);
-        member.checkMyJob(job);
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +75,7 @@ public class JobService {
     public JobResponses findByLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
 
-        for(GpuServer gpuServer : gpuServerRepository.findByLabId(labId)){
+        for (GpuServer gpuServer : gpuServerRepository.findByLabId(labId)) {
             GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }

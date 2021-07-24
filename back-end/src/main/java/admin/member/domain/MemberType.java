@@ -1,6 +1,7 @@
 package admin.member.domain;
 
 import admin.member.exception.MemberException;
+
 import java.util.Locale;
 
 public enum MemberType {
@@ -12,5 +13,9 @@ public enum MemberType {
         } catch (IllegalArgumentException e) {
             throw MemberException.INVALID_MEMBER_TYPE.getException();
         }
+    }
+
+    public boolean isManager() {
+        return this.equals(MANAGER);
     }
 }

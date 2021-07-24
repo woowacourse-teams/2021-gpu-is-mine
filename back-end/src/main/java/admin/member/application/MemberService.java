@@ -38,8 +38,7 @@ public class MemberService {
 
     @Transactional
     public Long createMember(MemberRequest request) {
-        Lab lab = labRepository.findById(request.getLabId())
-                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
+        Lab lab = findLabById(request.getLabId());
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
 
         Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
@@ -74,8 +73,7 @@ public class MemberService {
     public void changeLab(Long id, ChangeLabRequest changeLabRequest) {
         Member member = findMemberById(id);
 
-        Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
-                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
+        Lab updateLab = findLabById(changeLabRequest.getLabId());
         member.setLab(updateLab);
     }
 
@@ -86,23 +84,54 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
-        GpuServer gpuServer = gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
-                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
-
+    public void checkPermissionOnLab(Long memberId, Long labId) {
         Member member = findMemberById(memberId);
+        Lab lab = findLabById(labId);
+
+        member.checkPermissionOnLab(lab);
+    }
+
+    @Transactional(readOnly = true)
+    public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
+        Member member = findMemberById(memberId);
+        GpuServer gpuServer = findAliveServerById(gpuServerId);
+
         member.checkPermissionOnServer(gpuServer);
     }
 
     @Transactional(readOnly = true)
-    public void checkPermissionOnJob(Long memberId, Long jobId) {
+    public void checkReadableJob(Long memberId, Long jobId) {
         Member member = findMemberById(memberId);
+        Job job = findJobById(jobId);
 
-        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
-        member.checkSameLab(job.getMember());
+        member.checkReadable(job);
+    }
+
+    @Transactional(readOnly = true)
+    public void checkEditableJob(Long memberId, Long jobId) {
+        Member member = findMemberById(memberId);
+        Job job = findJobById(jobId);
+
+        member.checkEditable(job);
+    }
+
+    private Job findJobById(Long jobId) {
+        return jobRepository
+                .findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
     }
 
     private Member findMemberById(Long id) {
-        return memberRepository.findById(id).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+        return memberRepository
+                .findById(id).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+    }
+
+    private GpuServer findAliveServerById(Long gpuServerId) {
+        return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
+                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+    }
+
+    private Lab findLabById(Long labId) {
+        return labRepository.findById(labId)
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 }

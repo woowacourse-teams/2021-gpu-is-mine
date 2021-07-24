@@ -43,26 +43,38 @@ public class Member extends BaseEntity {
     protected Member() {
     }
 
-    public void checkPermissionOnServer(GpuServer gpuServer) {
-        if (!this.lab.equals(gpuServer.getLab())) {
+    public void checkPermissionOnLab(Lab lab) {
+        if (!this.lab.equals(lab)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
     }
 
-    public boolean isSameLab(Member other){
+    public void checkPermissionOnServer(GpuServer gpuServer) {
+        checkPermissionOnLab(gpuServer.getLab());
+    }
+
+    public void checkReadable(Job job) {
+        boolean hasPermission = memberType.isManager() || isSameLab(job.getMember());
+
+        if (!hasPermission) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    private boolean isSameLab(Member other) {
         return this.lab.equals(other.lab);
     }
 
-    public void checkSameLab(Member other) {
-        if (isSameLab(other)) {
+    public void checkEditable(Job job) {
+        boolean hasPermission = memberType.isManager() || isMyJob(job);
+
+        if (!hasPermission) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
     }
 
-    public void checkMyJob(Job job) {
-        if(!this.equals(job.getMember())){
-            throw MemberException.UNAUTHORIZED_MEMBER.getException();
-        }
+    private boolean isMyJob(Job job) {
+        return this.equals(job.getMember());
     }
 
     @Override
