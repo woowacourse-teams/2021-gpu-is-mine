@@ -1,9 +1,7 @@
 package admin.member.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
-
+import admin.gpuserver.application.GpuServerService;
+import admin.job.application.JobService;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
 import admin.lab.exception.LabException;
@@ -23,6 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import static admin.gpuserver.fixture.gpuServerFixtures.gpuServerCreationRequest;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
+import static org.assertj.core.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
@@ -31,6 +35,10 @@ class MemberServiceTest {
     private MemberService memberService;
     @Autowired
     private LabService labService;
+    @Autowired
+    private GpuServerService gpuServerService;
+    @Autowired
+    private JobService jobService;
 
     private Long labId;
     private MemberRequest memberRequest;
@@ -185,6 +193,95 @@ class MemberServiceTest {
 
         Throwable throwable = catchThrowable(() -> memberService.deleteMember(notExistingMemberId));
         존재하지_않는_회원_요청_에러_발생(throwable);
+    }
+
+    @Test
+    @DisplayName("멤버의 본인 Lab에 접근 권한을 갖는다.")
+    void checkPermissionOnLab() {
+        Long baseLab = labService.save(new LabRequest("baseLab"));
+        Long otherLab = labService.save(new LabRequest("otherLab"));
+
+        Long member = memberService.createMember(userCreationRequest(baseLab));
+
+        memberService.checkPermissionOnLab(member, baseLab);
+
+        assertThatThrownBy(() -> {
+            memberService.checkPermissionOnLab(member, otherLab);
+        }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @Test
+    @DisplayName("멤버는 본인 Lab에 속한 server에만 접근 권한을 갖는다.")
+    void checkPermissionOnServer() {
+        Long baseLabId = labService.save(new LabRequest("baseLab"));
+        Long otherLabId = labService.save(new LabRequest("otherLab"));
+
+        Long serverOnBaseLabId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), baseLabId);
+        Long serverOnOtherLabId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), otherLabId);
+
+        Long memberId = memberService.createMember(userCreationRequest(baseLabId));
+
+        memberService.checkPermissionOnServer(memberId, serverOnBaseLabId);
+
+        assertThatThrownBy(() -> {
+            memberService.checkPermissionOnServer(memberId, serverOnOtherLabId);
+        }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @Test
+    @DisplayName("멤버의 본인 Lab에 속한 Job에만 열람 권한을 갖는다.")
+    void checkReadableJob() {
+        Long baseLabId = labService.save(new LabRequest("baseLab"));
+        Long otherLabId = labService.save(new LabRequest("otherLab"));
+
+        Long serverInBaseLabId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), baseLabId);
+        Long serverInOtherLabId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), otherLabId);
+
+        Long memberId1 = memberService.createMember(userCreationRequest(baseLabId));
+        Long memberId2 = memberService.createMember(userCreationRequest(otherLabId));
+
+        Long jobInBaseLab = jobService.insert(memberId1, jobCreationRequest(serverInBaseLabId));
+        Long jobInOtherLab = jobService.insert(memberId2, jobCreationRequest(serverInOtherLabId));
+
+        memberService.checkReadableJob(memberId1, jobInBaseLab);
+
+        assertThatThrownBy(() -> {
+            memberService.checkReadableJob(memberId1, jobInOtherLab);
+        }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @Test
+    @DisplayName("일반 사용자(User)는 본인이 작성한 글에만 수정 권한을 갖는다.")
+    void checkEditableJobByUser() {
+        Long labId = labService.save(new LabRequest("lab"));
+
+        Long serverId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labId);
+
+        Long baseUserId = memberService.createMember(userCreationRequest(labId));
+        Long otherUserId = memberService.createMember(userCreationRequest(labId));
+
+        Long myJob = jobService.insert(baseUserId, jobCreationRequest(serverId));
+        Long otherJob = jobService.insert(otherUserId, jobCreationRequest(serverId));
+
+        memberService.checkEditableJob(baseUserId, myJob);
+
+        assertThatThrownBy(() -> {
+            memberService.checkEditableJob(baseUserId, otherJob);
+        }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @Test
+    @DisplayName("관리 사용자(Manager)는 랩의 모든 글에 수정 권한을 갖는다.")
+    void checkEditableJobByManager() {
+        Long labId = labService.save(new LabRequest("lab"));
+
+        Long managerId = memberService.createMember(managerCreationRequest(labId));
+        Long otherUserId = memberService.createMember(userCreationRequest(labId));
+
+        Long serverId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labId);
+        Long otherJob = jobService.insert(otherUserId, jobCreationRequest(serverId));
+
+        memberService.checkEditableJob(managerId, otherJob);
     }
 
     private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {

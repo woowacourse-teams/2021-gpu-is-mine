@@ -54,18 +54,16 @@ public class Member extends BaseEntity {
     }
 
     public void checkReadable(Job job) {
-        boolean hasPermission = memberType.isManager() || isSameLab(job.getMember());
+        boolean hasPermission = isSameLab(job.getMember());
 
         if (!hasPermission) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
     }
 
-    private boolean isSameLab(Member other) {
-        return this.lab.equals(other.lab);
-    }
-
     public void checkEditable(Job job) {
+        checkReadable(job);
+
         boolean hasPermission = memberType.isManager() || isMyJob(job);
 
         if (!hasPermission) {
@@ -75,6 +73,10 @@ public class Member extends BaseEntity {
 
     private boolean isMyJob(Job job) {
         return this.equals(job.getMember());
+    }
+
+    private boolean isSameLab(Member other) {
+        return this.lab.equals(other.lab);
     }
 
     @Override
