@@ -39,25 +39,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class JobServiceTest {
     @Autowired
     private JobService jobService;
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private GpuServerService gpuServerService;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     private GpuServer server;
     private GpuBoard board;
     private Lab lab;
