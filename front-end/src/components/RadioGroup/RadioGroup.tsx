@@ -9,7 +9,7 @@ interface RadioGroupProps {
   children: ReactNode;
 }
 
-const RadioGroup = ({ label, labelSize = "md", children, ...rest }: RadioGroupProps) => (
+const RadioGroup = ({ label, labelSize = "sm", children, ...rest }: RadioGroupProps) => (
   <StyledRadioGroup {...rest}>
     <Text size={labelSize}>{label}</Text>
 
