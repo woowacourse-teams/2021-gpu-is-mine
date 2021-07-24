@@ -8,8 +8,21 @@ on:
     branches: [ develop ]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      back-end: ${{ steps.filter.outputs.back-end }}
+    steps:
+      - name: check if back-end directory has changed
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            back-end:
+              - 'back-end/**'
   build:
-
+    needs: changes
+    if: ${{ needs.changes.outputs.back-end == 'true' }}
     runs-on: ubuntu-latest
     env:
       working-directory: ./back-end
