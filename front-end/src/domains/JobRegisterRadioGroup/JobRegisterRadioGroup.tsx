@@ -31,12 +31,6 @@ const JobRegisterRadioGroup = ({
     makeRequest();
   }, [makeRequest, done]);
 
-  useEffect(() => {
-    if (status === "succeed") {
-      done();
-    }
-  }, [done, status]);
-
   // TODO: event type 지정
   // eslint-disable-next-line
   const handleChange = (event: any) => {
