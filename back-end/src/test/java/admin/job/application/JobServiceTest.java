@@ -19,12 +19,14 @@ import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,16 +50,14 @@ class JobServiceTest {
     @Autowired
     private GpuServerRepository gpuServerRepository;
     private Long serverId;
-    private Lab lab;
     private Long memberId;
 
     @BeforeEach
     void setUp() {
-        lab = new Lab("lab");
+        Lab lab = new Lab("lab");
         labRepository.save(lab);
 
         serverId = saveGpuServerInLab(lab);
-
         memberId = saveMember(lab);
     }
 
@@ -139,68 +139,74 @@ class JobServiceTest {
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
-    @Test
-    @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
-    void findAllByMemberId() {
-        Long baseServerId = saveGpuServerInLab(lab);
-        Long otherServerId = saveGpuServerInLab(lab);
-        Long baseMemberId = saveMember(lab);
-        Long otherMemberId = saveMember(lab);
+    @Nested
+    @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
+    class findAll {
+        Lab labA = new Lab("labA");
+        Lab labB = new Lab("labB");
 
-        Long id1 = jobService.insert(baseMemberId, jobCreationRequest(baseServerId));
-        Long id2 = jobService.insert(baseMemberId, jobCreationRequest(otherServerId));
-        Long id3 = jobService.insert(otherMemberId, jobCreationRequest(baseServerId));
-        Long id4 = jobService.insert(otherMemberId, jobCreationRequest(otherServerId));
+        Long memberA;
+        Long memberB;
 
-        List<Long> searchedIds = jobService.findByMember(baseMemberId).getJobResponses().stream()
-                .map(JobResponse::getId)
-                .collect(Collectors.toList());
+        Long serverA;
+        Long serverB;
 
-        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2));
-    }
+        @BeforeEach
+        void setUp() {
+            labRepository.save(labA);
+            labRepository.save(labB);
 
-    @Test
-    @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
-    void findAllByServer() {
-        Long baseServerId = saveGpuServerInLab(lab);
-        Long otherServerId = saveGpuServerInLab(lab);
-        Long baseMemberId = saveMember(lab);
-        Long otherMemberId = saveMember(lab);
+            memberA = saveMember(labA);
+            memberB = saveMember(labB);
 
-        Long id1 = jobService.insert(baseMemberId, jobCreationRequest(baseServerId));
-        Long id2 = jobService.insert(baseMemberId, jobCreationRequest(otherServerId));
-        Long id3 = jobService.insert(otherMemberId, jobCreationRequest(baseServerId));
-        Long id4 = jobService.insert(otherMemberId, jobCreationRequest(otherServerId));
+            serverA = saveGpuServerInLab(labA);
+            serverB = saveGpuServerInLab(labB);
+        }
 
-        List<Long> searchedIds = jobService.findByServer(baseServerId).getJobResponses().stream()
-                .map(JobResponse::getId)
-                .collect(Collectors.toList());
+        @Test
+        @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
+        void findAllByMemberId() {
+            serverB = saveGpuServerInLab(labA);
 
-        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id3));
-    }
+            Long jobA = jobService.insert(memberA, jobCreationRequest(serverA));
+            Long jobB = jobService.insert(memberA, jobCreationRequest(serverA));
+            Long jobC = jobService.insert(memberA, jobCreationRequest(serverB));
 
-    @Test
-    @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
-    void findAllByLab() {
-        Lab baseLab = new Lab("baseLab");
-        labRepository.save(baseLab);
+            assertThat(
+                    jobService.findByMember(memberA).getJobResponses().stream()
+                            .map(JobResponse::getId)
+                            .collect(Collectors.toList())
+            ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobA, jobB, jobC));
+        }
 
-        Lab otherLab = new Lab("otherLab");
-        labRepository.save(otherLab);
+        @Test
+        @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
+        void findAllByServer() {
+            memberB = saveMember(labA);
 
-        Long serverInBaseLabId1 = saveGpuServerInLab(baseLab);
-        Long serverInBaseLabId2 = saveGpuServerInLab(baseLab);
-        Long serverInOtherLabId = saveGpuServerInLab(otherLab);
+            Long jobA = jobService.insert(memberA, jobCreationRequest(serverA));
+            Long jobB = jobService.insert(memberA, jobCreationRequest(serverA));
+            Long jobC = jobService.insert(memberB, jobCreationRequest(serverA));
 
-        Long id1 = jobService.insert(memberId, jobCreationRequest(serverInBaseLabId1));
-        Long id2 = jobService.insert(memberId, jobCreationRequest(serverInBaseLabId2));
-        Long id3 = jobService.insert(memberId, jobCreationRequest(serverInOtherLabId));
+            assertThat(
+                    jobService.findByServer(serverA).getJobResponses().stream()
+                            .map(JobResponse::getId)
+                            .collect(Collectors.toList())
+            ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobA, jobB, jobC));
+        }
 
-        List<Long> searchedIds = jobService.findByLab(baseLab.getId()).getJobResponses().stream()
-                .map(JobResponse::getId)
-                .collect(Collectors.toList());
+        @Test
+        @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
+        void findAllByLab() {
+            Long jobA = jobService.insert(memberA, jobCreationRequest(serverA));
+            Long jobB = jobService.insert(memberB, jobCreationRequest(serverB));
 
-        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(Arrays.asList(id1, id2));
+            assertThat(
+                    jobService.findByLab(labA.getId()).getJobResponses().stream()
+                            .map(JobResponse::getId)
+                            .collect(Collectors.toList())
+            ).usingRecursiveComparison().isEqualTo(Collections.singletonList(jobA));
+        }
     }
 
     private Long saveGpuServerInLab(Lab lab) {

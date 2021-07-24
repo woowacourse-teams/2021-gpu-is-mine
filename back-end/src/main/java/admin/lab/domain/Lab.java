@@ -18,9 +18,14 @@ public class Lab extends BaseEntity {
     protected Lab() {
     }
 
-    public Lab(String name) {
+    public Lab(Long id, String name) {
         validate(name);
+        this.id = id;
         this.name = name;
+    }
+
+    public Lab(String name) {
+        this(null, name);
     }
 
     private void validate(String name) {

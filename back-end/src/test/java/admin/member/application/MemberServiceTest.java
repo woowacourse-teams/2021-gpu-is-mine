@@ -47,9 +47,9 @@ class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
-        labId = labService.save(new LabRequest("Lab"));
-        memberRequest = new MemberRequest("email@email.com", "password", "name", "MANAGER", labId);
+        labId = labService.save(new LabRequest("lab"));
         gpuServerId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labId);
+        memberRequest = new MemberRequest("email@email.com", "password", "name", "MANAGER", labId);
     }
 
     @Test
@@ -202,44 +202,44 @@ class MemberServiceTest {
     @DisplayName("사용자는 본인 Lab에만 Job 열람 권한을 갖는다.")
     class checkPermissionOnLab {
 
-        private Long baseLabId;
-        private Long otherLabId;
+        private Long labA;
+        private Long labB;
 
-        private Long baseLabServerId;
-        private Long otherLabServerId;
+        private Long serverA;
+        private Long serverB;
 
-        private Long baseLabUserId;
-        private Long otherLabUserId;
+        private Long userA;
+        private Long userB;
 
         @BeforeEach
         void setUp() {
-            baseLabId = labService.save(new LabRequest("baseLab"));
-            otherLabId = labService.save(new LabRequest("otherLab"));
+            labA = labService.save(new LabRequest("labA"));
+            labB = labService.save(new LabRequest("labB"));
 
-            baseLabServerId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), baseLabId);
-            otherLabServerId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), otherLabId);
+            serverA = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labA);
+            serverB = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labB);
 
-            baseLabUserId = memberService.createMember(userCreationRequest(baseLabId));
-            otherLabUserId = memberService.createMember(userCreationRequest(otherLabId));
+            userA = memberService.createMember(userCreationRequest(labA));
+            userB = memberService.createMember(userCreationRequest(labB));
         }
 
         @Test
         @DisplayName("멤버의 본인 Lab에만 Job 열람 권한을 갖는다.")
         void checkPermissionOnLab() {
-            memberService.checkPermissionOnLab(baseLabUserId, baseLabId);
+            memberService.checkPermissionOnLab(userA, labA);
 
             assertThatThrownBy(() -> {
-                memberService.checkPermissionOnLab(baseLabUserId, otherLabId);
+                memberService.checkPermissionOnLab(userA, labB);
             }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @Test
         @DisplayName("멤버는 본인 Lab에 속한 server에만 접근 권한을 갖는다.")
         void checkPermissionOnServer() {
-            memberService.checkPermissionOnServer(baseLabUserId, baseLabServerId);
+            memberService.checkPermissionOnServer(userA, serverA);
 
             assertThatThrownBy(() -> {
-                memberService.checkPermissionOnLab(baseLabUserId, otherLabServerId);
+                memberService.checkPermissionOnServer(userA, serverB);
             }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
     }
@@ -247,39 +247,35 @@ class MemberServiceTest {
     @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
     class checkPermissionOnJob {
+        private Long userA;
+        private Long userB;
 
-        private Long user1;
-        private Long user2;
-
-        private Long user1Job;
-        private Long user2Job;
+        private Long jobA;
+        private Long jobB;
 
         @BeforeEach
         void setUp() {
-            labId = labService.save(new LabRequest("lab"));
-            gpuServerId = gpuServerService.saveGpuServer(gpuServerCreationRequest(), labId);
+            userA = memberService.createMember(userCreationRequest(labId));
+            userB = memberService.createMember(userCreationRequest(labId));
 
-            user1 = memberService.createMember(userCreationRequest(labId));
-            user2 = memberService.createMember(userCreationRequest(labId));
-
-            user1Job = jobService.insert(user1, jobCreationRequest(gpuServerId));
-            user2Job = jobService.insert(user2, jobCreationRequest(gpuServerId));
+            jobA = jobService.insert(userA, jobCreationRequest(gpuServerId));
+            jobB = jobService.insert(userB, jobCreationRequest(gpuServerId));
         }
 
         @Test
         @DisplayName("멤버의 본인 Lab에 속한 Job에 열람 권한을 갖는다.")
         void checkReadableJob() {
-            memberService.checkReadableJob(user1, user1Job);
-            memberService.checkReadableJob(user1, user2Job);
+            memberService.checkReadableJob(userA, jobA);
+            memberService.checkReadableJob(userA, jobB);
         }
 
         @Test
         @DisplayName("일반 사용자(User)는 본인의 작업에만 수정 권한을 갖는다.")
         void checkEditableJobByUser() {
-            memberService.checkEditableJob(user1, user1Job);
+            memberService.checkEditableJob(userA, jobA);
 
             assertThatThrownBy(() -> {
-                memberService.checkEditableJob(user1, user2Job);
+                memberService.checkEditableJob(userA, jobB);
             }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
@@ -288,8 +284,8 @@ class MemberServiceTest {
         void checkEditableJobByManager() {
             Long managerId = memberService.createMember(managerCreationRequest(labId));
 
-            memberService.checkEditableJob(managerId, user1Job);
-            memberService.checkEditableJob(managerId, user2Job);
+            memberService.checkEditableJob(managerId, jobA);
+            memberService.checkEditableJob(managerId, jobB);
         }
     }
 

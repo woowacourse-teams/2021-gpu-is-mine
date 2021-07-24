@@ -32,12 +32,17 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "lab_id")
     private Lab lab;
 
-    public Member(String email, String password, String name, MemberType memberType, Lab lab) {
+    public Member(Long id, String email, String password, String name, MemberType memberType, Lab lab) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.memberType = memberType;
         this.lab = lab;
+    }
+
+    public Member(String email, String password, String name, MemberType memberType, Lab lab) {
+        this(null, email, password, name, memberType, lab);
     }
 
     protected Member() {
