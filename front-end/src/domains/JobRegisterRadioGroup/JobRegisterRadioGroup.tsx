@@ -1,6 +1,7 @@
 import { ChangeEventHandler, FocusEventHandler, ComponentProps, useEffect } from "react";
 import { useFetch } from "../../hooks";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
+import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
 import { StyledRadioGroup } from "./JobRegisterRadioGroup.styled";
 import { API_ENDPOINT } from "../../constants";
 import { GpuServerViewResponses } from "../../types";
@@ -29,7 +30,7 @@ const JobRegisterRadioGroup = ({
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
-  }, [makeRequest, done]);
+  }, [makeRequest]);
 
   useEffect(() => {
     if (status === "succeed") {
@@ -58,7 +59,7 @@ const JobRegisterRadioGroup = ({
         </Text>
       )}
 
-      {status === "succeed" &&
+      {data &&
         data?.gpuServers.map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
           <Radio
             key={id}
@@ -67,13 +68,14 @@ const JobRegisterRadioGroup = ({
             name={name}
             onChange={handleChange}
           >
-            <div>
-              {/* TODO: 라디오 CONTENTS 컴포넌트화 */}
-              <Text>{serverName}</Text>
-              <Text>{isOn}</Text>
-              <Text>{performance}TFLOPS</Text>
-              <Text>{jobs.filter((job) => job.status === "WAITING").length}개</Text>
-            </div>
+            {/** TODO: 추후 remainingTime 실제 데이터로 변경하기 */}
+            <GpuServerSelectItem
+              serverName={serverName}
+              isOn={isOn}
+              performance={performance}
+              jobCount={jobs.filter((job) => job.status === "WAITING").length}
+              remainingTime={24}
+            />
           </Radio>
         ))}
     </StyledRadioGroup>
