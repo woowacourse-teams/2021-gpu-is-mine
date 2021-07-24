@@ -77,6 +77,7 @@ class JobServiceTest {
         Long id = jobService.insert(member.getId(), jobRequest);
 
         JobResponse response = jobService.findById(id);
+
         assertThat(response.getName()).isEqualTo(jobRequest.getName());
         assertThat(response.getStatus()).isEqualTo(JobStatus.WAITING);
     }
@@ -130,6 +131,8 @@ class JobServiceTest {
         JobResponse jobResponse = jobService.findById(job.getId());
         assertThat(jobResponse).isNotNull();
         assertThat(jobResponse.getName()).isEqualTo(job.getName());
+        assertThat(jobResponse.getGpuServerName()).isEqualTo(board.getGpuServer().getName());
+        assertThat(jobResponse.getMemberName()).isEqualTo(job.getMember().getName());
     }
 
     @Test

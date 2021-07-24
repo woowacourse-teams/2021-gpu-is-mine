@@ -2,6 +2,8 @@ package admin.job.domain;
 
 import admin.gpuserver.domain.BaseEntity;
 import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import java.util.Objects;
@@ -92,5 +94,9 @@ public class Job extends BaseEntity {
 
     public void complete() {
         this.status = JobStatus.COMPLETED;
+    }
+
+    public GpuServer getGpuServer() {
+        return gpuBoard.getGpuServer();
     }
 }
