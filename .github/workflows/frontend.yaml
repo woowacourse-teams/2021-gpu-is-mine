@@ -1,0 +1,71 @@
+name: Front-End CI
+
+on:
+  pull_request:
+    branches: [develop]
+
+  workflow_dispatch:
+
+jobs:
+  changes:
+    runs-on: ubuntu-18.04
+    outputs:
+      back-end: ${{ steps.filter.outputs.back-end }}
+      front-end: ${{ steps.filter.outputs.front-end }}
+    steps:
+      - name: check if front-end directory has changed
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            back-end:
+              - 'back-end/**'
+            front-end:
+              - 'front-end/**'
+
+  fe-build:
+    needs: changes
+    if: ${{ needs.changes.outputs.front-end == 'true' }}
+    runs-on: ubuntu-18.04
+    env:
+      working-directory: ./front-end
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ${{ env.working-directory }}
+
+      - name: Build with webpack
+        run: yarn build
+        working-directory: ${{ env.working-directory }}
+
+  storybook-build:
+    needs: [changes, fe-build]
+    if: ${{ needs.changes.outputs.front-end == 'true' }}
+    runs-on: ubuntu-18.04
+    env:
+      working-directory: ./front-end
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ${{ env.working-directory }}
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: ${{ env.working-directory }}
+        id: chromatic
+
+      - name: Get Deployed StorybookUrl
+        run: echo ${{ steps.chromatic.outputs.storybookUrl }} |  sed 's/\/iframe.html$//'
