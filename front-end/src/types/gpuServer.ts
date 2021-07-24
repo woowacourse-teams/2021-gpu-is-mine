@@ -1,12 +1,6 @@
-type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
+import { Job } from "./jobs";
 
-interface Job {
-  id: number;
-  name: string;
-  status: JobStatus;
-}
-
-interface GpuBoard {
+export interface GpuBoard {
   id: number;
   performance: number;
   modelName: string;
