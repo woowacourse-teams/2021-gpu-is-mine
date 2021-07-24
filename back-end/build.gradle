@@ -33,7 +33,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
 }
 
-task copySecret(type: Copy) {
+processResources.dependsOn('copyPrivate')
+
+task copyPrivate(type: Copy) {
     from '../private-configuration/application-mail.properties'
     into 'src/main/resources'
 }
