@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: check if front-end directory has changed
-        run: git diff-index origin/develop | grep front-end || return 0
+        run: git diff-index origin/develop | grep front-end || echo 0
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
