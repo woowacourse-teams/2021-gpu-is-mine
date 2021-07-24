@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#run only if front-end directory has changed
+if git diff-index origin/develop | grep front-end > /dev/null 2>&1
+then
+  cd front-end;
+
+  stagedFilePaths=`git diff --name-only --cached | grep front-end | sed 's/front-end\///'`
+  lintTargets=`echo $stagedFilePaths | tr ' ' '\n' | egrep '.jsx?$|.tsx?$'`;
+  formatTargets=`echo -e $stagedFilePaths | tr ' ' '\n' | egrep '.jsx?$|.tsx?$|.md$|.json$|.s?css$'`;
+
+  echo "[pre-commit] linting"
+  echo -n "################################################################"
+  if ! yarn eslint --cache --fix $lintTargets > /dev/null
+  then
+    echo "################################################################\n"
+    echo "[pre-commit] linting error: check your code with 'yarn lint'" >&2
+    exit 1
+  fi
+  echo "\n################################################################\n"
+
+  echo "[pre-commit] code formatting"
+  echo -n "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+  if ! yarn prettier --write $formatTargets > /dev/null
+  then
+    echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
+    echo "[pre-commit] formatting error: check your code with 'yarn format'"
+    exit 1
+  fi
+    echo "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
+fi

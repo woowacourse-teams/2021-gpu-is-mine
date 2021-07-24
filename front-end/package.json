@@ -62,7 +62,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint": "eslint --cache --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "preinstall": "chmod +x ../.githooks/* && git config core.hooksPath .githooks"
   },
   "resolutions": {
     "styled-components": "^5"
