@@ -107,7 +107,7 @@ jobs:
       run: chmod +x gradlew
       working-directory: ${{ env.working-directory }}
     - name: Checkstyle with Gradle
-      run: ./gradlew checkstyleMain chekstyleTest -q
+      run: ./gradlew checkstyleMain checkstyleTest -q
       working-directory: ${{ env.working-directory }}
 
   BE-test:
