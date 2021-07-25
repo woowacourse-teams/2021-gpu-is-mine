@@ -22,4 +22,5 @@ public enum MemberException {
     public CustomException getException() {
         return customException;
     }
+
 }

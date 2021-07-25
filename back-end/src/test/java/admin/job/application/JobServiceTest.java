@@ -62,70 +62,39 @@ class JobServiceTest {
     @Test
     @DisplayName("정상 등록")
     void insert() {
-        JobRequest jobRequest = jobCreationRequest(serverId);
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long id = jobService.insert(memberId, jobRequest);
-
-        JobResponse response = jobService.findById(id);
-
-        assertThat(response.getName()).isEqualTo(jobRequest.getName());
-        assertThat(response.getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(id).isNotNull();
     }
 
     @Test
-    @DisplayName("존재하지 않는 멤버 id로 job 등록 시 에러 발생")
+    @DisplayName("존재하지 않는 멤버 job등록시 에러 발생")
     void insertNotExistingMember() {
         Long notExistingMemberId = Long.MAX_VALUE;
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
 
-        assertThatThrownBy(() -> {
-            jobService.insert(notExistingMemberId, jobCreationRequest(serverId));
-        }).isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
+        assertThatThrownBy(() -> jobService.insert(notExistingMemberId, jobRequest))
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
     @Test
-    @DisplayName("존재하지 않는 서버 id로 job 등록 시 에러 발생")
+    @DisplayName("존재하지 않는 서버 job등록시 에러 발생")
     void insertNotExistingServer() {
         Long notExistingServerId = Long.MAX_VALUE;
+        JobRequest jobRequest = new JobRequest(notExistingServerId, "job", "metadata", "12");
 
-        assertThatThrownBy(() -> {
-            jobService.insert(memberId, jobCreationRequest(notExistingServerId));
-        }).isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
+        assertThatThrownBy(() -> jobService.insert(memberId, jobRequest))
+                .isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
     }
 
     @Test
-    @DisplayName("삭제된 서버 id로 job 등록 시 에러 발생")
-    void insertWithDeletedServer() {
-        GpuServer gpuServer = gpuServerRepository.findById(serverId).get();
-        gpuServer.setDeleted(true);
-
-        assertThatThrownBy(() -> {
-            jobService.insert(memberId, jobCreationRequest(serverId));
-        }).isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
-    }
-
-    @Test
-    @DisplayName("Job 예약을 취소한다.")
-    void cancelJob() {
-        JobRequest jobRequest = new JobRequest(serverId, "name", "metaData", "expectedTime");
-        Long jobId = jobService.insert(memberId, jobRequest);
-
-        jobService.cancel(jobId);
-
-        Job actualJob = jobRepository.findById(jobId).get();
-        assertThat(actualJob.getStatus()).isEqualTo(JobStatus.CANCELED);
-    }
-
-    @Test
-    @DisplayName("id로 job을 조회한다.")
+    @DisplayName("정상 조회")
     void findById() {
-        JobRequest jobRequest = new JobRequest(serverId, "name", "metaData", "expectedTime");
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.insert(memberId, jobRequest);
-
-        Job actualJob = jobRepository.findById(jobId).get();
 
         JobResponse jobResponse = jobService.findById(jobId);
-        assertThat(jobResponse.getName()).isEqualTo(actualJob.getName());
-        assertThat(jobResponse.getGpuServerName()).isEqualTo(actualJob.getGpuServer().getName());
-        assertThat(jobResponse.getMemberName()).isEqualTo(actualJob.getMember().getName());
+        assertThat(jobResponse).isNotNull();
     }
 
     @Test
