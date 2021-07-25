@@ -33,6 +33,7 @@ public class WorkerService {
         this.gpuBoardRepository = gpuBoardRepository;
     }
 
+    @Transactional(readOnly = true)
     public JobResponse popJobByServerId(Long serverId) {
         GpuBoard gpuBoard = findGpuBoardByGpuServerId(serverId);
         Long gpuBoardId = gpuBoard.getId();
@@ -61,7 +62,7 @@ public class WorkerService {
         List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoardId, JobStatus.WAITING);
 
         if (jobs.size() < ONE) {
-            throw JobException.JOB_NOT_FOUND.getException();
+            throw JobException.NO_WAITING_JOB.getException();
         }
         return JobResponse.of(jobs.get(FIRST));
     }
