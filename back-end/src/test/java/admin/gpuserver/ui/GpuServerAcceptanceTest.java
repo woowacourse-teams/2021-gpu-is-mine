@@ -1,5 +1,7 @@
 package admin.gpuserver.ui;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import admin.AcceptanceTest;
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
@@ -10,18 +12,15 @@ import admin.lab.dto.LabRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("GpuServer 관련 API 테스트")
 public class GpuServerAcceptanceTest extends AcceptanceTest {
@@ -70,7 +69,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest,
-                                                               Long gpuServerId) {
+            Long gpuServerId) {
         return RestAssured
                 .given().log().all()
                 .body(gpuServerNameUpdateRequest)

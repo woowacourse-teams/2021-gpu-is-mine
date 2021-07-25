@@ -30,7 +30,7 @@ public class MemberService {
     private final JobRepository jobRepository;
 
     public MemberService(MemberRepository memberRepository, LabRepository labRepository,
-                         GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
+            GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;

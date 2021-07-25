@@ -1,6 +1,6 @@
 package admin.job.ui;
 
-import static admin.gpuserver.fixture.gpuServerFixtures.gpuServerCreationRequest;
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
 import static admin.gpuserver.ui.GpuServerAcceptanceTest.GpuServer_생성후아이디찾기;
 import static admin.job.fixture.JobFixtures.jobCreationRequest;
 import static admin.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
@@ -35,16 +35,6 @@ class JobAcceptanceTest extends AcceptanceTest {
     private Long memberId;
     private Long serverId;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-
-        labId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab"));
-        memberId = MEMBER_생성_요청_후_생성_ID_리턴(userCreationRequest(labId));
-        serverId = GpuServer_생성후아이디찾기(labId, gpuServerCreationRequest());
-    }
-
     public static List<Long> Job_목록_serverId로_검색_후_ids_추출(Long memberId, Long labId, Long serverId) {
         ExtractableResponse<Response> response = Job_목록_serverId로_검색(memberId, labId, serverId);
         return extractIdsFromJobResponses(response);
@@ -54,7 +44,7 @@ class JobAcceptanceTest extends AcceptanceTest {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/labs/" + labId + "/gpus/"+serverId+"/jobs?memberId=" + memberId)
+                .get("/api/labs/" + labId + "/gpus/" + serverId + "/jobs?memberId=" + memberId)
                 .then()
                 .extract();
     }
@@ -132,6 +122,16 @@ class JobAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+
+        labId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab"));
+        memberId = MEMBER_생성_요청_후_생성_ID_리턴(userCreationRequest(labId));
+        serverId = GpuServer_생성후아이디찾기(labId, gpuServerCreationRequest());
+    }
+
     private List<Long> Job_예약_목록_생성_후_ids_반환(int numberOfJobs) {
         return LongStream.range(0, numberOfJobs)
                 .mapToObj(i -> Job_예약_후_id_반환(memberId, jobCreationRequest(serverId)))
@@ -145,7 +145,7 @@ class JobAcceptanceTest extends AcceptanceTest {
 
     @Nested
     @DisplayName("Job을 예약한다.")
-    class reserveJob {
+    class ReserveJob {
         @DisplayName("Job 예약")
         @Test
         void addJob() {
@@ -166,13 +166,13 @@ class JobAcceptanceTest extends AcceptanceTest {
 
     @Nested
     @DisplayName("Job을 예약 취소한다.")
-    class cancelJob{
+    class CancelJob {
         Long otherLabId;
         Long otherLabServerId;
         Long otherLabMemberId;
 
         @BeforeEach
-        void setUp(){
+        void setUp() {
             otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab2"));
             otherLabServerId = GpuServer_생성후아이디찾기(otherLabId, gpuServerCreationRequest());
             otherLabMemberId = MEMBER_생성_요청_후_생성_ID_리턴(userCreationRequest(otherLabId));
@@ -227,7 +227,7 @@ class JobAcceptanceTest extends AcceptanceTest {
 
     @Nested
     @DisplayName("자신이 속한 lab의 작업 목록을 확인한다. (member별, server별, lab별)")
-    class findJobs{
+    class FindJobs {
 
         private int numberOfJobs = 3;
 
@@ -284,7 +284,7 @@ class JobAcceptanceTest extends AcceptanceTest {
 
     @Nested
     @DisplayName("자신이 속하지 않은 lab의 작업 목록을 확인한다. (member별, server별, lab별)")
-    class findJobsInOtherLab{
+    class FindJobsInOtherLab {
 
         Long otherLabId;
         Long otherMemberId;
@@ -292,7 +292,7 @@ class JobAcceptanceTest extends AcceptanceTest {
         Long otherLabJob;
 
         @BeforeEach
-        void setUp(){
+        void setUp() {
             otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab2"));
             otherMemberId = MEMBER_생성_요청_후_생성_ID_리턴(userCreationRequest(otherLabId));
             otherLabServerId = GpuServer_생성후아이디찾기(otherLabId, gpuServerCreationRequest());

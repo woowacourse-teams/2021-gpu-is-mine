@@ -1,9 +1,16 @@
 package admin.member.application;
 
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.lab.application.LabService;
-import admin.lab.domain.Lab;
 import admin.lab.dto.LabRequest;
 import admin.lab.exception.LabException;
 import admin.member.domain.MemberType;
@@ -22,12 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static admin.gpuserver.fixture.gpuServerFixtures.gpuServerCreationRequest;
-import static admin.job.fixture.JobFixtures.jobCreationRequest;
-import static admin.member.fixture.MemberFixtures.managerCreationRequest;
-import static admin.member.fixture.MemberFixtures.userCreationRequest;
-import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -199,9 +200,14 @@ class MemberServiceTest {
         존재하지_않는_회원_요청_에러_발생(throwable);
     }
 
+    private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
+        return assertThat(throwable)
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
+    }
+
     @Nested
     @DisplayName("사용자는 본인 Lab, Server에만 Job 열람 권한을 갖는다.")
-    class checkPermissionOnLab {
+    class CheckPermissionOnLab {
 
         private Long lab;
         private Long serverInLab;
@@ -241,7 +247,7 @@ class MemberServiceTest {
 
     @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
-    class checkPermissionOnJob {
+    class CheckPermissionOnJob {
         private Long user;
         private Long otherUser;
 
@@ -282,10 +288,5 @@ class MemberServiceTest {
             memberService.checkEditableJob(managerId, jobByUser);
             memberService.checkEditableJob(managerId, jobByOtherUser);
         }
-    }
-
-    private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
-        return assertThat(throwable)
-                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 }

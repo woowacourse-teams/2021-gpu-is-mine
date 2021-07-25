@@ -1,5 +1,9 @@
 package admin.job.application;
 
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
@@ -18,6 +22,8 @@ import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,13 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import static admin.job.fixture.JobFixtures.jobCreationRequest;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -138,9 +137,25 @@ class JobServiceTest {
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
+    private Long saveGpuServerInLab(Lab lab) {
+        GpuServer server = new GpuServer("server", true, 1024L, 1024L, lab);
+        gpuServerRepository.save(server);
+
+        GpuBoard board = new GpuBoard(false, 600L, "nvdia", server);
+        gpuBoardRepository.save(board);
+
+        return server.getId();
+    }
+
+    private Long saveMember(Lab lab) {
+        Member member = new Member("email", "password", "name", MemberType.USER, lab);
+        memberRepository.save(member);
+        return member.getId();
+    }
+
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
-    class findAll {
+    class FindAll {
         Lab lab = new Lab("labA");
         Long memberId;
         Long serverId;
@@ -179,7 +194,7 @@ class JobServiceTest {
             assertJobIdsFromJobResponses(jobService.findByLab(lab.getId()), jobId1, jobId2);
         }
 
-        private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds ) {
+        private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {
             assertThat(
                     responses.getJobResponses().stream()
                             .map(JobResponse::getId)
@@ -187,21 +202,5 @@ class JobServiceTest {
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
         }
 
-    }
-
-    private Long saveGpuServerInLab(Lab lab) {
-        GpuServer server = new GpuServer("server", true, 1024L, 1024L, lab);
-        gpuServerRepository.save(server);
-
-        GpuBoard board = new GpuBoard(false, 600L, "nvdia", server);
-        gpuBoardRepository.save(board);
-
-        return server.getId();
-    }
-
-    private Long saveMember(Lab lab) {
-        Member member = new Member("email", "password", "name", MemberType.USER, lab);
-        memberRepository.save(member);
-        return member.getId();
     }
 }

@@ -2,9 +2,14 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuServerException;
 import admin.lab.domain.Lab;
-
-import javax.persistence.*;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class GpuServer extends BaseEntity {

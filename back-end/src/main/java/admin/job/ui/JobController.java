@@ -5,10 +5,15 @@ import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
@@ -65,9 +70,7 @@ public class JobController {
         return ResponseEntity.ok(jobResponses);
     }
 
-     /*
-     기존의 "/labs/{labId}/gpus/{gpuServerId}/jobs" 꼴을 맞추면, labId가 의미가 없어 labId에 대한 유효성 검증이 필요합니다.
-     */
+    // 기존의 "/labs/{labId}/gpus/{gpuServerId}/jobs" 꼴을 맞추면, labId가 의미가 없어 labId에 대한 유효성 검증이 필요합니다.
 
     @GetMapping("/labs/{labId}/gpus/{gpuServerId}/jobs")
     public ResponseEntity<JobResponses> findJobsByServer(Long memberId, @PathVariable Long gpuServerId) {
