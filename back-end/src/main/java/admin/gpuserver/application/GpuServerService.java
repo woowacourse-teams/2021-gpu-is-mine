@@ -53,7 +53,7 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponses findAllLiveServer(Long labId) {
+    public GpuServerResponses findAllUndeletedServer(Long labId) {
         validateLab(labId);
 
         List<GpuServer> gpuServers = gpuServerRepository.findByLabIdAndDeletedFalse(labId);
