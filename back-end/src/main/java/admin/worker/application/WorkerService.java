@@ -58,7 +58,7 @@ public class WorkerService {
     }
 
     private JobResponse findFirstWaitingJob(Long gpuBoardId) {
-        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusByOrderById(gpuBoardId, JobStatus.WAITING);
+        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoardId, JobStatus.WAITING);
 
         if (jobs.size() < ONE) {
             throw JobException.JOB_NOT_FOUND.getException();

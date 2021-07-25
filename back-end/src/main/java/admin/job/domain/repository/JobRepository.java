@@ -13,5 +13,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Optional<Job> findByIdAndMemberId(Long id, Long memberId);
 
     @Query("SELECT j FROM Job j WHERE j.gpuBoard.id = :boardId AND j.status = :status ORDER BY j.id ASC")
-    List<Job> findAllByBoardIdAndStatusByOrderById(Long boardId, JobStatus status);
+    List<Job> findAllByBoardIdAndStatusOrderById(Long boardId, JobStatus status);
 }

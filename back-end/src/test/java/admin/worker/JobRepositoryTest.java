@@ -58,7 +58,7 @@ class JobRepositoryTest {
         jobRepository.save(job3);
 
         // when
-        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusByOrderById(gpuBoard1.getId(), JobStatus.WAITING);
+        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard1.getId(), JobStatus.WAITING);
 
         // then
         assertThat(jobs.size()).isEqualTo(2);
