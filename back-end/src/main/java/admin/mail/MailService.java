@@ -2,6 +2,7 @@ package admin.mail;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,11 @@ public class MailService {
         message.setSubject(subject);
         message.setText(body);
 
+        send(message);
+    }
+
+    @Async("mailExecutor")
+    public void send(SimpleMailMessage message) {
         mailSender.send(message);
     }
 }
