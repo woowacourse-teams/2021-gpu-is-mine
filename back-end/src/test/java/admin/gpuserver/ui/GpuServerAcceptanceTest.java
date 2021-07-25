@@ -51,18 +51,18 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return gpus.size();
     }
 
-    public static ExtractableResponse<Response> GpuServer_생성(GpuServerRequest gpuServerRequest) {
+    public static ExtractableResponse<Response> GpuServer_생성(Long labId, GpuServerRequest gpuServerRequest) {
         return RestAssured
                 .given().log().all()
                 .body(gpuServerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/labs/" + dummyLabId + "/gpus")
+                .when().post("/api/labs/" + labId + "/gpus")
                 .then().log().all()
                 .extract();
     }
 
-    public static Long GpuServer_생성후아이디찾기(GpuServerRequest gpuServerRequest) {
-        ExtractableResponse<Response> response = GpuServer_생성(gpuServerRequest);
+    public static Long GpuServer_생성후아이디찾기(Long labId, GpuServerRequest gpuServerRequest) {
+        ExtractableResponse<Response> response = GpuServer_생성(labId, gpuServerRequest);
 
         String[] locationPaths = response.header("Location").split("/");
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
@@ -112,7 +112,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         );
 
         dummyGpuServerIds = gpuServerRequests.stream().map(
-                GpuServerAcceptanceTest::GpuServer_생성후아이디찾기
+                request -> GpuServer_생성후아이디찾기(dummyLabId, request)
         ).collect(Collectors.toList());
     }
 
@@ -144,7 +144,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L, gpuBoardRequest);
 
         // when
-        ExtractableResponse<Response> response = GpuServer_생성(gpuServerRequest);
+        ExtractableResponse<Response> response = GpuServer_생성(dummyLabId, gpuServerRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -158,7 +158,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
         GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L,
                 gpuBoardRequest);
-        Long gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
+        Long gpuServerId = GpuServer_생성후아이디찾기(dummyLabId, gpuServerRequest);
 
         // when
         GpuServerUpdateRequest gpuServerNameUpdateRequest = new GpuServerUpdateRequest("서버이름변경");
@@ -176,7 +176,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         int previousCount = GpuServer_전체조회갯수();
         GpuServerRequest gpuServerRequest =
                 new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
-        Long gpuServerId = GpuServer_생성후아이디찾기(gpuServerRequest);
+        Long gpuServerId = GpuServer_생성후아이디찾기(dummyLabId, gpuServerRequest);
 
         int addedCount = GpuServer_전체조회갯수();
         assertThat(addedCount).isEqualTo(previousCount + 1);

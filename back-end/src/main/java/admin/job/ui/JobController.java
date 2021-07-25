@@ -22,14 +22,6 @@ public class JobController {
         this.jobService = jobService;
     }
 
-    @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findById(Long memberId, @PathVariable Long jobId) {
-        memberService.checkReadableJob(memberId, jobId);
-
-        JobResponse jobResponse = jobService.findById(jobId);
-        return ResponseEntity.ok(jobResponse);
-    }
-
     @PostMapping("/jobs")
     public ResponseEntity<Void> addJob(Long memberId, @RequestBody JobRequest jobRequest) {
         memberService.checkPermissionOnServer(memberId, jobRequest.getGpuServerId());
@@ -47,18 +39,35 @@ public class JobController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/jobs/{jobId}")
+    public ResponseEntity<JobResponse> findJobById(Long memberId, @PathVariable Long jobId) {
+        memberService.checkReadableJob(memberId, jobId);
+
+        JobResponse jobResponse = jobService.findById(jobId);
+        return ResponseEntity.ok(jobResponse);
+    }
+
+    /*
+     멤버를 기준으로 Job 조회, 현재는 Job 조회의 일종으로 보았습니다.
+     추후에 "members/me" 관련 기능들이 구현되면 그 컨트롤러와 합쳐도 좋을 것 같습니다.
+     */
+
     @GetMapping("/members/me/jobs")
     public ResponseEntity<JobResponses> findJobsByMember(Long memberId) {
         return ResponseEntity.ok(jobService.findByMember(memberId));
     }
 
     @GetMapping("/labs/{labId}/jobs")
-    public ResponseEntity<JobResponses> findJobsByLab(Long memberId, Long labId) {
+    public ResponseEntity<JobResponses> findJobsByLab(Long memberId, @PathVariable Long labId) {
         memberService.checkPermissionOnLab(memberId, labId);
 
         JobResponses jobResponses = jobService.findByLab(labId);
         return ResponseEntity.ok(jobResponses);
     }
+
+     /*
+     기존의 "/labs/{labId}/gpus/{gpuServerId}/jobs" 꼴을 맞추면, labId가 의미가 없어 labId에 대한 유효성 검증이 필요합니다.
+     */
 
     @GetMapping("/labs/{labId}/gpus/{gpuServerId}/jobs")
     public ResponseEntity<JobResponses> findJobsByServer(Long memberId, @PathVariable Long gpuServerId) {

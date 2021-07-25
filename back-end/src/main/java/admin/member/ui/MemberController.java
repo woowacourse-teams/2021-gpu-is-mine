@@ -1,7 +1,5 @@
 package admin.member.ui;
 
-import admin.job.application.JobService;
-import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
 import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;

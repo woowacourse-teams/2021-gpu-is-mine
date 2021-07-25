@@ -106,8 +106,4 @@ public class GpuServer extends BaseEntity {
     public void update(String name) {
         this.name = name;
     }
-
-    public void changeStatus(Boolean isOn) {
-        this.isOn = isOn;
-    }
 }

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-class MemberAcceptanceTest extends AcceptanceTest {
+public class MemberAcceptanceTest extends AcceptanceTest {
     private MemberRequest memberRequest;
 
     public static ExtractableResponse<Response> MEMBER_생성_요청(MemberRequest memberRequest) {
@@ -32,6 +32,11 @@ class MemberAcceptanceTest extends AcceptanceTest {
                 .post("/api/members/")
                 .then()
                 .extract();
+    }
+
+    public static Long MEMBER_생성_요청_후_생성_ID_리턴(MemberRequest memberRequest) {
+        ExtractableResponse<Response> response = MEMBER_생성_요청(memberRequest);
+        return extractCreatedId(response);
     }
 
     public static ExtractableResponse<Response> MEMBER_조회_요청(Long id) {
