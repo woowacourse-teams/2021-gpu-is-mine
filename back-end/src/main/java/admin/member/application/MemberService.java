@@ -29,7 +29,8 @@ public class MemberService {
     private final GpuServerRepository gpuServerRepository;
     private final JobRepository jobRepository;
 
-    public MemberService(MemberRepository memberRepository, LabRepository labRepository, GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
+    public MemberService(MemberRepository memberRepository, LabRepository labRepository,
+                         GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;

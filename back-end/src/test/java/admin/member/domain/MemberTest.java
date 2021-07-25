@@ -54,7 +54,6 @@ class MemberTest {
         }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
-
     @DisplayName("사용자가 Job 열람 권한이 있는지 확인한다.")
     @Test
     void checkReadable() {
