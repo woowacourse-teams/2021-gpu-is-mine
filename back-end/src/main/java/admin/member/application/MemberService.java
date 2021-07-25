@@ -39,7 +39,8 @@ public class MemberService {
 
     @Transactional
     public Long createMember(MemberRequest request) {
-        Lab lab = findLabById(request.getLabId());
+        Lab lab = labRepository.findById(request.getLabId())
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
 
         Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
@@ -74,7 +75,8 @@ public class MemberService {
     public void changeLab(Long id, ChangeLabRequest changeLabRequest) {
         Member member = findMemberById(id);
 
-        Lab updateLab = findLabById(changeLabRequest.getLabId());
+        Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         member.setLab(updateLab);
     }
 
