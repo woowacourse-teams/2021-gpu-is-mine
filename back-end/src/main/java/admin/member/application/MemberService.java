@@ -124,8 +124,8 @@ public class MemberService {
     }
 
     private Member findMemberById(Long id) {
-        return memberRepository
-                .findById(id).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+        return memberRepository.findById(id)
+                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 
     private GpuServer findAliveServerById(Long gpuServerId) {
