@@ -30,11 +30,12 @@ module.exports = {
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
   },
   overrides: [
     {
-      files: "**/*.stories.tsx",
+      files: ["**/*.stories.tsx", "src/utils/test.tsx"],
       rules: {
         "import/no-extraneous-dependencies": "off",
       },
