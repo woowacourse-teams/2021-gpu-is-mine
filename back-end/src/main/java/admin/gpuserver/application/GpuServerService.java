@@ -11,6 +11,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
@@ -92,6 +93,14 @@ public class GpuServerService {
         return gpuServer.getId();
     }
 
+    @Transactional(readOnly = true)
+    public GpuServerStatusResponse findStatusById(Long gpuServerId) {
+        GpuServer gpuServer = findLiveGpuServerById(gpuServerId);
+        GpuBoard gpuBoard = findAliveGpuBoardByServerId(gpuServer.getId());
+
+        return new GpuServerStatusResponse(gpuServer.getIsOn(), gpuBoard.getIsWorking());
+    }
+
     private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
             throw LabException.LAB_NOT_FOUND.getException();
@@ -106,5 +115,12 @@ public class GpuServerService {
     private GpuServer findLiveGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+    }
+
+    private GpuBoard findAliveGpuBoardByServerId(Long gpuServerId) {
+        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
+                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+        gpuBoard.checkServerAlive();
+        return gpuBoard;
     }
 }

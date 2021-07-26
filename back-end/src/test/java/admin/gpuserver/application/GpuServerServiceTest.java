@@ -13,6 +13,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
@@ -213,5 +214,18 @@ public class GpuServerServiceTest {
 
         assertThatThrownBy(() -> gpuServerService.saveGpuServer(gpuServerRequest, nonexistentLabId))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
+    }
+
+    @DisplayName("서버의 상태를 확인한다.")
+    @Test
+    void findServerStatus() {
+        GpuBoardRequest boardRequest = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest = new GpuServerRequest("server", 1L, 1L, boardRequest);
+
+        Long serverId = gpuServerService.saveGpuServer(gpuServerRequest, lab.getId());
+        GpuServerStatusResponse status = gpuServerService.findStatusById(serverId);
+
+        assertThat(status.getOn()).isFalse();
+        assertThat(status.getWorking()).isFalse();
     }
 }

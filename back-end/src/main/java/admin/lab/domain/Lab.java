@@ -18,9 +18,14 @@ public class Lab extends BaseEntity {
     protected Lab() {
     }
 
-    public Lab(String name) {
+    public Lab(Long id, String name) {
         validate(name);
+        this.id = id;
         this.name = name;
+    }
+
+    public Lab(String name) {
+        this(null, name);
     }
 
     private void validate(String name) {
@@ -39,5 +44,22 @@ public class Lab extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Lab lab = (Lab) o;
+        return id.equals(lab.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

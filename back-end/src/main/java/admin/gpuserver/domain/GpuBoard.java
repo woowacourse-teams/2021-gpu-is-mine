@@ -1,7 +1,6 @@
 package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
-import admin.job.domain.Job;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -76,17 +75,13 @@ public class GpuBoard extends BaseEntity {
         return gpuServer;
     }
 
-    public void addJob(Job job) {
-        // TODO :: JOB QUEUE
+    public boolean isServerDeleted() {
+        return gpuServer.getDeleted();
     }
 
-    public void cancel(Job job) {
-        // TODO :: JOB QUEUE
-        job.cancel();
-    }
-
-    public void complete(Job job) {
-        // TODO :: JOB QUEUE
-        job.complete();
+    public void checkServerAlive() {
+        if (isServerDeleted()) {
+            throw GpuBoardException.GPU_BOARD_NOT_FOUND.getException();
+        }
     }
 }

@@ -5,6 +5,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,5 +61,10 @@ public class GpuServerController {
         gpuServerService.delete(gpuServerId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{gpuServerId}/status")
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId) {
+        return ResponseEntity.ok(gpuServerService.findStatusById(gpuServerId));
     }
 }
