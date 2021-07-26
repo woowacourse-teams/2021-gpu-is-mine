@@ -53,7 +53,7 @@ const JobRegisterRadioGroup = ({
         </Text>
       )}
 
-      {(status === "succeed" || true) &&
+      {status === "succeed" &&
         data?.gpuServers.map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
           <Radio
             key={id}
