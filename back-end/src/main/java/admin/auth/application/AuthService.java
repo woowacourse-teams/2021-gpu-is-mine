@@ -1,7 +1,7 @@
 package admin.auth.application;
 
-import admin.auth.dto.TokenRequest;
-import admin.auth.dto.TokenResponse;
+import admin.auth.dto.LoginRequest;
+import admin.auth.dto.LoginResponse;
 import admin.auth.exception.AuthorizationException;
 import admin.auth.infrastructure.JwtTokenProvider;
 import admin.member.domain.Member;
@@ -21,7 +21,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public TokenResponse login(TokenRequest request) {
+    public LoginResponse login(LoginRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
 
@@ -30,7 +30,7 @@ public class AuthService {
         }
 
         String token = jwtTokenProvider.createToken(request.getEmail());
-        return new TokenResponse(token);
+        return new LoginResponse(token);
     }
 
     @Transactional(readOnly = true)

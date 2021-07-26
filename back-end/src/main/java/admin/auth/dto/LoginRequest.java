@@ -3,7 +3,7 @@ package admin.auth.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-public class TokenRequest {
+public class LoginRequest {
 
     @Email(message = "잘못된 이메일 형식입니다.")
     @NotBlank(message = "이메일 빈칸일 수 없습니다.")
@@ -12,10 +12,10 @@ public class TokenRequest {
     @NotBlank(message = "패스워드는 빈 칸이 될 수 없습니다.")
     private String password;
 
-    public TokenRequest() {
+    public LoginRequest() {
     }
 
-    public TokenRequest(String email, String password) {
+    public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -5,8 +5,8 @@ import static admin.member.ui.MemberAcceptanceTest.MEMBER_생성_요청;
 import static admin.member.ui.MemberAcceptanceTest.MEMBER_정상_조회됨;
 
 import admin.AcceptanceTest;
-import admin.auth.dto.TokenRequest;
-import admin.auth.dto.TokenResponse;
+import admin.auth.dto.LoginRequest;
+import admin.auth.dto.LoginResponse;
 import admin.lab.dto.LabRequest;
 import admin.member.dto.request.MemberRequest;
 import io.restassured.RestAssured;
@@ -28,30 +28,30 @@ public class AuthAcceptanceTest extends AcceptanceTest {
         return MEMBER_생성_요청(memberRequest);
     }
 
-    public static TokenResponse 로그인되어_있음(String email, String password) {
+    public static LoginResponse 로그인되어_있음(String email, String password) {
         ExtractableResponse<Response> response = 로그인_요청(email, password);
-        return response.as(TokenResponse.class);
+        return response.as(LoginResponse.class);
     }
 
     public static ExtractableResponse<Response> 로그인_요청(String email, String password) {
-        TokenRequest tokenRequest = new TokenRequest(email, password);
+        LoginRequest loginRequest = new LoginRequest(email, password);
 
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
+                .body(loginRequest)
                 .when()
-                .post("/api/login/token")
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
     }
 
-    public static ExtractableResponse<Response> 내_회원_정보_조회_요청(TokenResponse tokenResponse) {
+    public static ExtractableResponse<Response> 내_회원_정보_조회_요청(LoginResponse loginResponse) {
         return RestAssured
                 .given()
                 .auth()
-                .oauth2(tokenResponse.getAccessToken())
+                .oauth2(loginResponse.getAccessToken())
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/api/members/me")
@@ -73,10 +73,10 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithBearerAuth() {
         // given
         회원_등록되어_있음(memberRequest);
-        TokenResponse tokenResponse = 로그인되어_있음(EMAIL, PASSWORD);
+        LoginResponse loginResponse = 로그인되어_있음(EMAIL, PASSWORD);
 
         // when
-        ExtractableResponse<Response> response = 내_회원_정보_조회_요청(tokenResponse);
+        ExtractableResponse<Response> response = 내_회원_정보_조회_요청(loginResponse);
 
         // then
         MEMBER_정상_조회됨(response, memberRequest);
@@ -87,14 +87,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void InvalidEmailAddress() {
         회원_등록되어_있음(memberRequest);
 
-        TokenRequest tokenRequest = new TokenRequest("", PASSWORD);
+        LoginRequest loginRequest = new LoginRequest("", PASSWORD);
 
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
+                .body(loginRequest)
                 .when()
-                .post("/api/login/token")
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -104,14 +104,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithNonExistEmailAddress() {
         회원_등록되어_있음(memberRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(EMAIL + "other", PASSWORD);
+        LoginRequest loginRequest = new LoginRequest(EMAIL + "other", PASSWORD);
 
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
+                .body(loginRequest)
                 .when()
-                .post("/api/login/token")
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -121,14 +121,14 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void myInfoWithInvalidPassword() {
         회원_등록되어_있음(memberRequest);
 
-        TokenRequest tokenRequest = new TokenRequest(EMAIL, PASSWORD + "other");
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD + "other");
 
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(tokenRequest)
+                .body(loginRequest)
                 .when()
-                .post("/api/login/token")
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -136,12 +136,12 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     void myInfoWithWrongBearerAuth() {
-        TokenResponse tokenResponse = new TokenResponse("invalid_token");
+        LoginResponse loginResponse = new LoginResponse("invalid_token");
 
         RestAssured
                 .given()
                 .auth()
-                .oauth2(tokenResponse.getAccessToken())
+                .oauth2(loginResponse.getAccessToken())
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/api/members/me")
