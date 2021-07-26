@@ -68,7 +68,8 @@
     "build-storybook": "build-storybook",
     "lint": "eslint --cache --fix .",
     "format": "prettier --write .",
-    "test": "jest --watchAll"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "resolutions": {
     "styled-components": "^5"
