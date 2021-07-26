@@ -59,12 +59,13 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_상태변경(Long jobId, WorkerJobRequest workerJobRequest) {
+    private static ExtractableResponse<Response> Job_상태변경(Long memberId, Long jobId,
+            WorkerJobRequest workerJobRequest) {
         return RestAssured.given()
                 .body(workerJobRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/workers/jobs/" + jobId + "/status")
+                .put("/api/workers/jobs/" + jobId + "/status?memberId=" + memberId)
                 .then()
                 .extract();
     }
@@ -79,11 +80,11 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_조회(Long jobId) {
+    private static ExtractableResponse<Response> Job_조회(Long memberId, Long jobId) {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/jobs/" + jobId)
+                .get("/api/jobs/" + jobId + "?memberId=" + memberId)
                 .then()
                 .extract();
     }
@@ -126,15 +127,15 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     @DisplayName("job 의 상태를 변경한다.")
     @Test
     void updateJobStatus() {
-        ExtractableResponse<Response> jobResponse = Job_조회(job1.getId());
+        ExtractableResponse<Response> jobResponse = Job_조회(member1.getId(), job1.getId());
         assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.RUNNING);
 
-        ExtractableResponse<Response> response = Job_상태변경(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        ExtractableResponse<Response> response = Job_상태변경(member1.getId(), job1.getId(),
+                new WorkerJobRequest(JobStatus.COMPLETED));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        ExtractableResponse<Response> actualJobResponse = Job_조회(job1.getId());
+        ExtractableResponse<Response> actualJobResponse = Job_조회(member1.getId(), job1.getId());
         assertThat(actualJobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.COMPLETED);
-
     }
 
     @DisplayName("GpuServer 의 상태를 변경한다.")
