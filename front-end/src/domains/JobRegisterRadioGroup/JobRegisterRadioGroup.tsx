@@ -4,7 +4,7 @@ import { RadioGroup, Loading, Text, Radio } from "../../components";
 import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
 import { StyledRadioGroup } from "./JobRegisterRadioGroup.styled";
 import { API_ENDPOINT } from "../../constants";
-import { GpuServerViewResponses } from "../../types";
+import { GpuServerViewResponses, GpuServerViewResponse } from "../../types";
 
 interface JobRegisterRadioGroupProps extends Omit<ComponentProps<typeof RadioGroup>, "children"> {
   minPerformance: number;
@@ -13,6 +13,13 @@ interface JobRegisterRadioGroupProps extends Omit<ComponentProps<typeof RadioGro
   onChange: ChangeEventHandler;
   onBlur: FocusEventHandler;
 }
+
+const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): number => {
+  if (a.isOn && !b.isOn) return -1;
+  if (!a.isOn && b.isOn) return 1;
+
+  return 0;
+};
 
 const JobRegisterRadioGroup = ({
   minPerformance,
@@ -54,24 +61,26 @@ const JobRegisterRadioGroup = ({
       )}
 
       {status === "succeed" &&
-        data?.gpuServers.map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
-          <Radio
-            key={id}
-            value={id}
-            checked={selectedValue === String(id)}
-            name={name}
-            onChange={handleChange}
-          >
-            {/** TODO: 추후 remainingTime 실제 데이터로 변경하기 */}
-            <GpuServerSelectItem
-              serverName={serverName}
-              isOn={isOn}
-              performance={performance}
-              jobCount={jobs.filter((job) => job.status === "WAITING").length}
-              remainingTime={24}
-            />
-          </Radio>
-        ))}
+        data?.gpuServers
+          .slice()
+          .sort(sortByIsOn)
+          .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
+            <Radio
+              key={id}
+              value={id}
+              checked={selectedValue === String(id)}
+              name={name}
+              onChange={handleChange}
+              disabled={!isOn}
+            >
+              <GpuServerSelectItem
+                serverName={serverName}
+                isOn={isOn}
+                performance={performance}
+                jobs={jobs}
+              />
+            </Radio>
+          ))}
     </StyledRadioGroup>
   );
 };
