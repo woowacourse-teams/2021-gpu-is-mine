@@ -14,10 +14,11 @@ import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class JobService {
@@ -28,7 +29,7 @@ public class JobService {
     private MemberRepository memberRepository;
 
     public JobService(JobRepository jobRepository, GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
+                      GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -75,7 +76,7 @@ public class JobService {
     public JobResponses findByLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
 
-        for (GpuServer gpuServer : gpuServerRepository.findByLabId(labId)) {
+        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
             GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
