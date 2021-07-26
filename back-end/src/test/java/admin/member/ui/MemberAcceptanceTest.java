@@ -21,7 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-class MemberAcceptanceTest extends AcceptanceTest {
+public class MemberAcceptanceTest extends AcceptanceTest {
+
     private MemberRequest memberRequest;
 
     public static ExtractableResponse<Response> MEMBER_생성_요청(MemberRequest memberRequest) {
