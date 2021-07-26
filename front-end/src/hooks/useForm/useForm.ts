@@ -28,6 +28,8 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!isFormValid) return;
+
     const ret = submitAction(values);
 
     if (ret instanceof Promise) {
@@ -62,6 +64,7 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
     }, [initialValue, name]);
 
     return {
+      name,
       value: values[name] ?? initialValue,
       label,
       onChange,
@@ -73,9 +76,10 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
   return {
     values,
     isValid,
+    reset,
     useInput,
     form: { onSubmit },
-    submit: { disabled: !isFormValid },
+    submit: { disabled: false },
   };
 };
 

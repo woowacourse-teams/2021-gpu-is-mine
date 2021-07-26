@@ -85,4 +85,8 @@ public class Member extends BaseEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
+    }
 }

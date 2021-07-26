@@ -41,8 +41,8 @@ public class GpuServerController {
     }
 
     @GetMapping
-    public ResponseEntity<GpuServerResponses> findAll(@PathVariable Long labId) {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAll(labId);
+    public ResponseEntity<GpuServerResponses> findAllLiveServer(@PathVariable Long labId) {
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllUndeletedServer(labId);
         return ResponseEntity.ok(gpuServerResponses);
     }
 

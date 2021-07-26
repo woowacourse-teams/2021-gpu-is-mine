@@ -21,6 +21,12 @@ WarningFlicker.args = {
   status: "WARNING",
 };
 
+export const OffFlicker = Template.bind({});
+
+OffFlicker.args = {
+  status: "OFF",
+};
+
 export const OnLargeFlicker = Template.bind({});
 
 OnLargeFlicker.args = {
@@ -31,6 +37,13 @@ OnLargeFlicker.args = {
 export const WarningSmallFlicker = Template.bind({});
 
 WarningSmallFlicker.args = {
+  status: "WARNING",
+  size: "sm",
+};
+
+export const OffExtraSmallFlicker = Template.bind({});
+
+OffExtraSmallFlicker.args = {
   status: "WARNING",
   size: "sm",
 };

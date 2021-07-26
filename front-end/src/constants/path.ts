@@ -4,6 +4,10 @@ const PATH = {
       VIEW: "/manager/gpu-server/view",
       REGISTER: "/manager/gpu-server/register",
     },
+    JOB: {
+      VIEW: "/manager/job/view",
+      REGISTER: "/manager/job/register",
+    },
   },
 } as const;
 
