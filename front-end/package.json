@@ -67,7 +67,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint": "eslint --cache --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "jest --watchAll"
   },
   "resolutions": {
     "styled-components": "^5"
