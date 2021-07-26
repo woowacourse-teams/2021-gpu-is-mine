@@ -35,7 +35,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["**/*.stories.tsx", "src/utils/test.tsx"],
+      files: ["**/*.stories.tsx", "src/__test__/**/*"],
       rules: {
         "import/no-extraneous-dependencies": "off",
       },
