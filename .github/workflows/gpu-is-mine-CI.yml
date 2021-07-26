@@ -64,7 +64,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   FE-storybook-build:
-    needs: FE-build
+    needs: FE-test
     if: ${{ needs.changes.outputs.front-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
