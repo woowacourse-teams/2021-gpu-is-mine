@@ -59,12 +59,13 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_상태변경(Long memberId, Long jobId, WorkerJobRequest workerJobRequest) {
+    private static ExtractableResponse<Response> Job_상태변경(Long memberId, Long jobId,
+            WorkerJobRequest workerJobRequest) {
         return RestAssured.given()
                 .body(workerJobRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/workers/jobs/" + jobId + "/status?memberId="+memberId)
+                .put("/api/workers/jobs/" + jobId + "/status?memberId=" + memberId)
                 .then()
                 .extract();
     }
@@ -83,7 +84,7 @@ class WorkerAcceptanceTest extends AcceptanceTest {
         return RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/api/jobs/" + jobId+"?memberId="+memberId)
+                .get("/api/jobs/" + jobId + "?memberId=" + memberId)
                 .then()
                 .extract();
     }
@@ -129,7 +130,8 @@ class WorkerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> jobResponse = Job_조회(member1.getId(), job1.getId());
         assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.RUNNING);
 
-        ExtractableResponse<Response> response = Job_상태변경(member1.getId(), job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        ExtractableResponse<Response> response = Job_상태변경(member1.getId(), job1.getId(),
+                new WorkerJobRequest(JobStatus.COMPLETED));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         ExtractableResponse<Response> actualJobResponse = Job_조회(member1.getId(), job1.getId());
