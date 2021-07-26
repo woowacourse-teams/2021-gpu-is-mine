@@ -12,6 +12,7 @@ interface SubHeaderProps extends HTMLAttributes<HTMLElement> {
 
 const DomainMapper: Record<keyof typeof PATH.MANAGER, string> = {
   GPU_SERVER: "GPU 서버 관리",
+  JOB: "Job 관리",
 };
 
 const PageMapper: Record<keyof typeof PATH.MANAGER.GPU_SERVER, string> = {

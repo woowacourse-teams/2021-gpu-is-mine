@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { useBoolean, useFetch } from "../../hooks";
 import {
   Flicker,
   Text,
@@ -10,8 +11,7 @@ import {
   Loading,
   Dimmer,
 } from "../../components";
-import { useBoolean, useFetch } from "../../hooks";
-import { ServerOffMark, StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
+import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import { API_ENDPOINT } from "../../constants";
 import { GpuServerViewResponse } from "../../types";
 
@@ -80,7 +80,7 @@ const GpuServerInfoItem = ({
           {isOn ? (
             <Flicker className="status-mark" status="ON" size="sm" />
           ) : (
-            <ServerOffMark className="status-mark" />
+            <Flicker className="status-mark" status="OFF" size="sm" />
           )}
         </div>
         <VerticalBox className="gpu-server-details-wrapper">
