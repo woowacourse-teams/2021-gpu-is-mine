@@ -9,6 +9,8 @@ export const StyledLabel = styled.label<{ disabled: boolean }>`
     &:hover {
       cursor: ${disabled ? "not-allowed" : "pointer"};
     }
+
+    ${disabled && "opacity: 0.5;"}
   `}
 
   .radio__input {

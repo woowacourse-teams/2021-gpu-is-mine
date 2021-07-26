@@ -1,6 +1,6 @@
 import { InputHTMLAttributes } from "react";
-import { Require } from "../../types";
 import { StyledLabel } from "./Radio.styled";
+import { Require } from "../../types";
 
 type InputAttributes = "name" | "value" | "onChange" | "checked";
 
