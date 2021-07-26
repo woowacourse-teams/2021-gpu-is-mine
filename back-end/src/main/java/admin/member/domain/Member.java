@@ -1,7 +1,11 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
+import admin.gpuserver.domain.GpuServer;
+import admin.job.domain.Job;
 import admin.lab.domain.Lab;
+import admin.member.exception.MemberException;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,7 +39,8 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "lab_id")
     private Lab lab;
 
-    public Member(String email, String password, String name, MemberType memberType, Lab lab) {
+    public Member(Long id, String email, String password, String name, MemberType memberType, Lab lab) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -43,7 +48,64 @@ public class Member extends BaseEntity {
         this.lab = lab;
     }
 
+    public Member(String email, String password, String name, MemberType memberType, Lab lab) {
+        this(null, email, password, name, memberType, lab);
+    }
+
     protected Member() {
+    }
+
+    public void checkPermissionOnLab(Lab lab) {
+        if (!this.lab.equals(lab)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    public void checkPermissionOnServer(GpuServer gpuServer) {
+        checkPermissionOnLab(gpuServer.getLab());
+    }
+
+    public void checkReadable(Job job) {
+        boolean hasPermission = isSameLab(job.getMember());
+
+        if (!hasPermission) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    public void checkEditable(Job job) {
+        checkReadable(job);
+
+        boolean hasPermission = memberType.isManager() || isMyJob(job);
+
+        if (!hasPermission) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    private boolean isMyJob(Job job) {
+        return this.equals(job.getMember());
+    }
+
+    private boolean isSameLab(Member other) {
+        return this.lab.equals(other.lab);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public Long getId() {
