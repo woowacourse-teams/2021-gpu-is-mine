@@ -93,4 +93,8 @@ public class Job extends BaseEntity {
     public void complete() {
         this.status = JobStatus.COMPLETED;
     }
+
+    public void changeStatus(JobStatus status) {
+        this.status = status;
+    }
 }
