@@ -98,4 +98,8 @@ public class Job extends BaseEntity {
     public GpuServer getGpuServer() {
         return gpuBoard.getGpuServer();
     }
+
+    public void changeStatus(JobStatus status) {
+        this.status = status;
+    }
 }
