@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { gpuServersResponses } from "../../fixtures";
 import RadioGroup from "./RadioGroup";
+import Radio from "../Radio/Radio";
 
 export default {
   title: "Components/RadioGroup",
@@ -9,33 +9,30 @@ export default {
 
 const Template: ComponentStory<typeof RadioGroup> = (args) => <RadioGroup {...args} />;
 
-const defaultOptions = [
-  { value: 1, contents: "radio 1" },
-  { value: 2, contents: "radio 2" },
-  { value: 3, contents: "radio 3" },
-  { value: 4, contents: "radio 4" },
-  { value: 5, contents: "radio 5" },
-];
-
 export const Default = Template.bind({});
+
+const defaultName = "default";
+const defaultOnChange = () => {};
 
 Default.args = {
   label: "LABEL",
-  value: defaultOptions[0].value,
-  options: defaultOptions,
-};
-
-const gpuServerOptions = gpuServersResponses.gpuServers
-  .filter(({ isOn }) => isOn)
-  .map(({ id, serverName, gpuBoard: { performance }, jobs }) => ({
-    value: id,
-    contents: <>{`${serverName} | ${performance} | ${jobs.length}`}</>,
-  }));
-
-export const GpuServerRadioGroup = Template.bind({});
-
-GpuServerRadioGroup.args = {
-  label: "서버선택",
-  value: gpuServersResponses.gpuServers[0].id,
-  options: gpuServerOptions,
+  children: (
+    <>
+      <Radio name={defaultName} onChange={defaultOnChange} checked value={1}>
+        radio 1
+      </Radio>
+      <Radio checked={false} name={defaultName} onChange={defaultOnChange} value={2}>
+        radio 2
+      </Radio>
+      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={3}>
+        radio 3
+      </Radio>
+      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={4}>
+        radio 4
+      </Radio>
+      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={5}>
+        radio 5
+      </Radio>
+    </>
+  ),
 };

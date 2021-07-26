@@ -1,19 +1,23 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const StyledLabel = styled.label`
+export const StyledLabel = styled.label<{ disabled: boolean }>`
   display: flex;
   align-items: center;
   column-gap: 0.75rem;
 
-  &:hover {
-    cursor: pointer;
-  }
+  ${({ disabled }) => css`
+    &:hover {
+      cursor: ${disabled ? "not-allowed" : "pointer"};
+    }
 
-  .input {
+    ${disabled && "opacity: 0.5;"}
+  `}
+
+  .radio__input {
     display: none;
   }
 
-  .radio-button {
+  .radio__button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,17 +27,23 @@ export const StyledLabel = styled.label`
     border-radius: 0.5rem;
   }
 
-  .input:checked + .radio-button {
+  .radio__input:checked + .radio__button {
     background-color: var(--primary-100);
     color: var(--on-primary-100);
   }
 
-  .input:checked + .radio-button::after {
+  .radio__input:disabled + .radio__button {
+    background-color: var(--disabled);
+    color: var(--on-disabled);
+    border: none;
+  }
+
+  .radio__input:checked + .radio__button::after {
     content: "✔";
     font-size: 1.25rem;
   }
 
-  .content {
+  .radio__content {
     width: 100%;
   }
 `;

@@ -86,11 +86,3 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
     filter: brightness(1.5);
   }
 `;
-
-export const ServerOffMark = styled.div`
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  opacity: 80%;
-  background-color: #c4c4c4;
-`;

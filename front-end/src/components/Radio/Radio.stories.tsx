@@ -39,3 +39,10 @@ ServerInfoItemRadio.args = {
     />
   ),
 };
+
+export const DisabledRadio = Template.bind({});
+
+DisabledRadio.args = {
+  disabled: true,
+  children: <Text size="md">Disabled</Text>,
+};

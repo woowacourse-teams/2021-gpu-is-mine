@@ -1,16 +1,16 @@
 import { InputHTMLAttributes } from "react";
-import { Require } from "../../types";
 import { StyledLabel } from "./Radio.styled";
+import { Require } from "../../types";
 
 type InputAttributes = "name" | "value" | "onChange" | "checked";
 
 type RadioProps = Require<InputHTMLAttributes<HTMLInputElement>, InputAttributes>;
 
-const Radio = ({ children, ...rest }: RadioProps) => (
-  <StyledLabel>
-    <input type="radio" className="input" {...rest} />
-    <span className="radio-button" />
-    <div className="content">{children}</div>
+const Radio = ({ children, disabled = false, ...rest }: RadioProps) => (
+  <StyledLabel disabled={disabled}>
+    <input type="radio" className="radio__input" disabled={disabled} {...rest} />
+    <span className="radio__button" />
+    <div className="radio__content">{children}</div>
   </StyledLabel>
 );
 

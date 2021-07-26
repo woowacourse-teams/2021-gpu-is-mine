@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 
-type FlickerStatus = "ON" | "WARNING";
-type Size = "sm" | "md" | "lg";
+type FlickerStatus = "ON" | "WARNING" | "OFF";
+type Size = "xs" | "sm" | "md" | "lg";
 
 export interface StyledFlickerProps {
   status: FlickerStatus;
@@ -9,20 +9,26 @@ export interface StyledFlickerProps {
 }
 
 const flick = keyframes`
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 `;
 
 const getStatusStyle = (status: FlickerStatus) => {
   const style = {
-    // TODO: flicker color 상수화
     ON: css`
-      background-color: #90dd53;
+      background-color: var(--active);
       animation: ${flick} 0.5s ease-in-out infinite alternate;
     `,
     WARNING: css`
-      background-color: #f86565;
-      animation: ${flick} 0.3s ease-in-out infinite alternate;
+      background-color: var(--warning);
+      animation: ${flick} 0.5s ease-in-out infinite alternate;
+    `,
+    OFF: css`
+      background-color: var(--disabled);
     `,
   } as const;
 
@@ -31,7 +37,10 @@ const getStatusStyle = (status: FlickerStatus) => {
 
 const getSizeStyle = (size: Size) => {
   const style = {
-    // TODO: flicker color 상수화
+    xs: css`
+      width: 0.625rem;
+      height: 0.625rem;
+    `,
     sm: css`
       width: 1rem;
       height: 1rem;
