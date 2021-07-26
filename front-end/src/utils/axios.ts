@@ -26,6 +26,8 @@ export const getData = async <T = void, U = never>(
 
   if (method === "get") {
     cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
+  } else {
+    cache.delete(url);
   }
 
   return response.data;
