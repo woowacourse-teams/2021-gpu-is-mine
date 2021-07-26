@@ -118,12 +118,12 @@ public class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAll(lab.getId());
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllUndeletedServer(lab.getId());
         int beforeSize = gpuServerResponses.getGpuServers().size();
 
         gpuServerService.delete(gpuServer1.getId());
 
-        GpuServerResponses gpuServers = gpuServerService.findAll(lab.getId());
+        GpuServerResponses gpuServers = gpuServerService.findAllUndeletedServer(lab.getId());
         assertThat(gpuServers.getGpuServers()).hasSize(beforeSize - 1);
     }
 
@@ -131,7 +131,7 @@ public class GpuServerServiceTest {
     @Test
     void 존재하지_않는_Lab_ID로_전체_조회() {
         final Long nonexistentLabId = Long.MAX_VALUE;
-        assertThatThrownBy(() -> gpuServerService.findAll(nonexistentLabId))
+        assertThatThrownBy(() -> gpuServerService.findAllUndeletedServer(nonexistentLabId))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
