@@ -1,4 +1,10 @@
-import { ChangeEventHandler, FocusEventHandler, ComponentProps, useEffect } from "react";
+import {
+  ChangeEventHandler,
+  FocusEventHandler,
+  ComponentProps,
+  useEffect,
+  FocusEvent,
+} from "react";
 import { useFetch } from "../../hooks";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
 import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
@@ -39,11 +45,9 @@ const JobRegisterRadioGroup = ({
     makeRequest();
   }, [makeRequest]);
 
-  // TODO: event type 지정
-  // eslint-disable-next-line
-  const handleChange = (event: any) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event);
-    onBlur(event);
+    onBlur(event as FocusEvent<HTMLInputElement>);
   };
 
   return (
