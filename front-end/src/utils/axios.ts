@@ -24,7 +24,9 @@ export const getData = async <T = void, U = never>(
 
   const response = (await axios(url, { method, data: body })) as AxiosResponse<T>;
 
-  cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
+  if (method === "get") {
+    cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
+  }
 
   return response.data;
 };
