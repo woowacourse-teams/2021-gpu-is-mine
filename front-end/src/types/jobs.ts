@@ -1,5 +1,3 @@
-import { GpuServer } from "./gpuServer";
-
 type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
 
 export interface Job {
@@ -11,6 +9,6 @@ export interface Job {
 export interface JobRegisterRequest {
   name: string;
   expectedTime: number;
-  gpuServerId: GpuServer["id"];
+  gpuServerId: number;
   metaData: string;
 }
