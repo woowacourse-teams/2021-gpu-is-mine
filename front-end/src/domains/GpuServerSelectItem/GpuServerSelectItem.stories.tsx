@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import GpuServerSelectItem from "./GpuServerSelectItem";
 
 export default {
-  title: "Domains/GpuServer/GpuServerSelectItem",
+  title: "Domains/GpuServer/SelectItem",
   component: GpuServerSelectItem,
 } as ComponentMeta<typeof GpuServerSelectItem>;
 

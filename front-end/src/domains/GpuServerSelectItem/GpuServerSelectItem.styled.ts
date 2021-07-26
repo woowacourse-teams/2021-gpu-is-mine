@@ -6,6 +6,7 @@ export const StyledItem = styled.div`
   width: 100%;
   column-gap: 0.5rem;
   border-bottom: 2px solid var(--primary-50);
+  background-color: inherit;
 
   .column {
     display: flex;
