@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.regex.Pattern;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -18,10 +20,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(origins)
+                .allowedOriginPatterns(origins)
                 .allowedMethods("*")
-                .allowedHeaders(HttpHeaders.CONTENT_TYPE)
-                .exposedHeaders(HttpHeaders.LOCATION);
+                .allowedHeaders(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION)
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION)
+                .allowCredentials(true);
     }
 
     @Bean
