@@ -1,9 +1,7 @@
 package admin.exception;
 
 import admin.exception.dto.ExceptionResponse;
-import admin.exception.http.BadRequestException;
-import admin.exception.http.NotFoundException;
-import admin.exception.http.UnauthorizedException;
+import admin.exception.http.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,22 +16,10 @@ public class ControllerAdvice {
 
     private static Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionResponse> badRequestHandle(BadRequestException exception) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ExceptionResponse> customHandle(CustomException exception) {
         ExceptionResponse response = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ExceptionResponse> unauthorizedHandle(UnauthorizedException exception) {
-        ExceptionResponse response = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ExceptionResponse> notFoundHandle(NotFoundException exception) {
-        ExceptionResponse response = ExceptionResponse.of(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(exception.statusCode()).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
