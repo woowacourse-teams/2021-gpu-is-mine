@@ -64,27 +64,32 @@ const JobRegisterRadioGroup = ({
         </Text>
       )}
 
-      {status === "succeed" &&
-        data?.gpuServers
-          .slice()
-          .sort(sortByIsOn)
-          .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
-            <Radio
-              key={id}
-              value={id}
-              checked={selectedValue === String(id)}
-              name={name}
-              onChange={handleChange}
-              disabled={!isOn}
-            >
-              <GpuServerSelectItem
-                serverName={serverName}
-                isOn={isOn}
-                performance={performance}
-                jobs={jobs}
-              />
-            </Radio>
-          ))}
+      {status === "succeed" && (
+        <ol className="job-register-radio-group__list">
+          {data?.gpuServers
+            .slice()
+            .sort(sortByIsOn)
+            .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
+              <li>
+                <Radio
+                  key={id}
+                  value={id}
+                  checked={selectedValue === String(id)}
+                  name={name}
+                  onChange={handleChange}
+                  disabled={!isOn}
+                >
+                  <GpuServerSelectItem
+                    serverName={serverName}
+                    isOn={isOn}
+                    performance={performance}
+                    jobs={jobs}
+                  />
+                </Radio>
+              </li>
+            ))}
+        </ol>
+      )}
     </StyledRadioGroup>
   );
 };
