@@ -3,7 +3,6 @@ import { useFetch, useForm, Values } from "../../hooks";
 import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { StyledForm } from "./JobRegisterForm.styled";
-import { API_ENDPOINT } from "../../constants";
 import { APICallStatus, JobRegisterRequest } from "../../types";
 import { isLength, isNumber } from "../../utils";
 
@@ -44,7 +43,8 @@ const minPerformanceValidator = (value: string) => {
 
 const JobRegisterForm = (props: JobRegisterFormProps) => {
   const { status, makeRequest, done } = useFetch<void, JobRegisterRequest>(
-    API_ENDPOINT.LABS(1).JOBS,
+    // ${API_ENDPOINT.LABS(1).JOBS,
+    "https://gpuismine.kro.kr/api/jobs?memberId=1", // TODO: API Path 반영
     {
       method: "post",
     }
