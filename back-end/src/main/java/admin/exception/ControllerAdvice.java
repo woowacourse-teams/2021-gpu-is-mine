@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    private static Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ExceptionResponse> customHandle(CustomException exception) {
@@ -26,9 +26,9 @@ public class ControllerAdvice {
     public ResponseEntity<ExceptionResponse> methodValidHandle(MethodArgumentNotValidException exception) {
         FieldError fieldError = exception.getBindingResult().getFieldError();
 
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(fieldError.getDefaultMessage());
+        ExceptionResponse response = ExceptionResponse.of(fieldError.getDefaultMessage());
 
-        return ResponseEntity.badRequest().body(exceptionResponse);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(Exception.class)

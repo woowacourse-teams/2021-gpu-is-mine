@@ -29,7 +29,7 @@ public class GpuServerController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody GpuServerRequest gpuServerRequest, @PathVariable Long labId) {
-        Long gpuServerId = gpuServerService.saveGpuServer(gpuServerRequest, labId);
+        Long gpuServerId = gpuServerService.save(gpuServerRequest, labId);
 
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri).build();
@@ -43,7 +43,7 @@ public class GpuServerController {
 
     @GetMapping
     public ResponseEntity<GpuServerResponses> findAllLiveServer(@PathVariable Long labId) {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllUndeletedServer(labId);
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllLiveServer(labId);
         return ResponseEntity.ok(gpuServerResponses);
     }
 
@@ -51,7 +51,7 @@ public class GpuServerController {
     public ResponseEntity<Void> update(
             @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest,
             @PathVariable Long gpuServerId) {
-        gpuServerService.updateGpuServer(gpuServerUpdateRequest, gpuServerId);
+        gpuServerService.update(gpuServerUpdateRequest, gpuServerId);
 
         return ResponseEntity.noContent().build();
     }

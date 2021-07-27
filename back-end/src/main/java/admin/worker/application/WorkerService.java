@@ -42,7 +42,7 @@ public class WorkerService {
     }
 
     @Transactional
-    public void changeJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
+    public void updateJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
         Job job = findJobById(jobId);
         job.changeStatus(workerJobRequest.getJobStatus());
     }
