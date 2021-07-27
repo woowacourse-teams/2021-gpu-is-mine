@@ -16,7 +16,7 @@ describe("ManagerNavigation", () => {
         <ManagerNavigation />
         <Route
           path="*"
-          render={({ location }: { location: Location }) => {
+          render={({ location }) => {
             testLocation = location;
 
             return null;
