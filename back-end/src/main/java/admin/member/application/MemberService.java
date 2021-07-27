@@ -129,7 +129,7 @@ public class MemberService {
     }
 
     private GpuServer findAliveServerById(Long gpuServerId) {
-        return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
+        return gpuServerRepository.findById(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 

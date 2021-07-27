@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import admin.exception.http.NotFoundException;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
@@ -168,13 +169,14 @@ public class GpuServerServiceTest {
 
     }
 
-    @DisplayName("GPU 서버를 논리적으로 삭제하는 경우")
+    @DisplayName("GPU 서버를 삭제하는 경우 GPU 보드도 같이 삭제된다.")
     @Test
     void deleteWithGpuId() {
         gpuServerService.delete(gpuServer1.getId());
-        GpuServer deletedGpuServer = gpuServerRepository.findById(gpuServer1.getId())
-                .orElseThrow(IllegalArgumentException::new);
-        assertTrue(deletedGpuServer.getDeleted());
+        boolean existenceOfGpuBoard = gpuBoardRepository.findByGpuServerId(gpuServer1.getId()).isPresent();
+
+        assertThatThrownBy(() -> gpuServerService.findById(gpuServer1.getId())).isInstanceOf(NotFoundException.class);
+        assertThat(existenceOfGpuBoard).isFalse();
     }
 
     @DisplayName("GPU 서버 삭제 과정에서 GPU ID를 찾을 수 없는 경우")

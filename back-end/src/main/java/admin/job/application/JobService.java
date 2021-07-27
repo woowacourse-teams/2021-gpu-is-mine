@@ -76,7 +76,7 @@ public class JobService {
     public JobResponses findByLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
 
-        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
+        for (GpuServer gpuServer : gpuServerRepository.findByLabId(labId)) {
             GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
@@ -87,7 +87,6 @@ public class JobService {
     private GpuBoard findAliveBoardByServerId(Long gpuServerId) {
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
-        gpuBoard.checkServerAlive();
         return gpuBoard;
     }
 
