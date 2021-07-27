@@ -85,6 +85,7 @@ public class WorkerService {
             .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 
+    @Transactional
     public Long saveLog(Long jobId, WorkerJobLogRequest workerJobLogRequest) {
         Job job = jobRepository.findById(jobId)
             .orElseThrow(JobException.JOB_NOT_FOUND::getException);
