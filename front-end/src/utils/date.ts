@@ -4,8 +4,8 @@ const padLeftDate = padLeft(2, "0");
 
 export const formatDate = (date: Date): string => {
   const year = date.getFullYear();
-  const month = padLeftDate(String(date.getMonth()));
-  const day = padLeftDate(String(date.getDay()));
+  const month = padLeftDate(String(date.getMonth() + 1));
+  const day = padLeftDate(String(date.getDate()));
 
   const hour = padLeftDate(String(date.getHours()));
   const minute = padLeftDate(String(date.getMinutes()));
