@@ -4,7 +4,6 @@ import admin.auth.application.AuthService;
 import admin.auth.exception.AuthorizationException;
 import admin.auth.infrastructure.AuthorizationExtractor;
 import admin.member.domain.Member;
-import admin.member.domain.MemberType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
-
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String credentials = AuthorizationExtractor.extract(request);
         if (credentials == null) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
