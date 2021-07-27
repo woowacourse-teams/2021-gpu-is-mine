@@ -48,12 +48,6 @@ public class GpuServerServiceTest {
     @Autowired
     private LabRepository labRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private JobRepository jobRepository;
-
     private Lab lab;
 
     private GpuServer gpuServer1;
@@ -61,13 +55,6 @@ public class GpuServerServiceTest {
 
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
-
-    private Member member;
-
-    private Job job1;
-    private Job job2;
-    private Job job3;
-    private Job job4;
 
     @BeforeEach
     private void setUp() {
@@ -78,13 +65,6 @@ public class GpuServerServiceTest {
 
         gpuBoard1 = gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", gpuServer1));
         gpuBoard2 = gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", gpuServer2));
-
-        member = memberRepository.save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
-
-        job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard1, member));
-        job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard1, member));
-        job3 = jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard1, member));
-        job4 = jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard1, member));
     }
 
     @DisplayName("특정 GPU서버를 조회한다.")
@@ -95,8 +75,6 @@ public class GpuServerServiceTest {
         assertThat(gpuServerResponse).isNotNull();
         assertThat(gpuServerResponse.getGpuBoard()).isNotNull();
         assertThat(gpuServerResponse.getGpuBoard().getId()).isNotNull();
-        Assertions.assertThat(gpuServerResponse.getJobs()).isNotNull();
-        assertThat(gpuServerResponse.getJobs().size()).isEqualTo(4);
     }
 
     @DisplayName("존재하지 않는 GPU_ID로 GPU 서버를 조회한다.")
