@@ -1,21 +1,27 @@
 package admin.worker.ui;
 
+import static admin.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
+import static admin.gpuserver.ui.GpuServerAcceptanceTest.GpuServer_생성후아이디찾기;
+import static admin.gpuserver.ui.GpuServerAcceptanceTest.GpuServer_아이디조회;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.job.ui.JobAcceptanceTest.Job_Id로_검색;
+import static admin.job.ui.JobAcceptanceTest.Job_예약_후_id_반환;
+import static admin.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import admin.AcceptanceTest;
-import admin.gpuserver.domain.GpuBoard;
-import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.dto.response.GpuServerResponse;
-import admin.job.domain.Job;
+import admin.gpuserver.ui.GpuServerAcceptanceTest;
 import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
-import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
-import admin.member.domain.Member;
-import admin.member.domain.MemberType;
+import admin.lab.dto.LabRequest;
 import admin.member.domain.repository.MemberRepository;
 import admin.worker.dto.WorkerJobRequest;
 import admin.worker.dto.WorkerRequest;
@@ -43,12 +49,12 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     @Autowired
     private JobRepository jobRepository;
 
-    private Lab lab1;
-    private GpuServer gpuServer1;
-    private GpuBoard gpuBoard1;
-    private Member member1;
-    private Job job1;
-    private Job job2;
+    private Long labId;
+    private Long serverId;
+    private String userToken;
+    private String managerToken;
+    private Long jobId;
+    private Long jobBId;
 
     private static ExtractableResponse<Response> 진행할_job_요청(Long gpuServerId) {
         return RestAssured.given()
@@ -59,13 +65,12 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_상태변경(Long memberId, Long jobId,
-            WorkerJobRequest workerJobRequest) {
+    private static ExtractableResponse<Response> Job_상태변경(Long jobId, WorkerJobRequest workerJobRequest) {
         return RestAssured.given()
                 .body(workerJobRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/workers/jobs/" + jobId + "/status?memberId=" + memberId)
+                .put("/api/workers/jobs/" + jobId + "/status")
                 .then()
                 .extract();
     }
@@ -80,83 +85,56 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_조회(Long memberId, Long jobId) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/jobs/" + jobId + "?memberId=" + memberId)
-                .then()
-                .extract();
-    }
-
-    private static ExtractableResponse<Response> GpuServer_조회(Long labId, Long gpuServerId) {
-        return RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/api/labs/" + labId + "/gpus/" + gpuServerId)
-                .then()
-                .extract();
-    }
-
     @Override
     @BeforeEach
     public void setUp() {
         super.setUp();
-        lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
-        gpuServerRepository.save(gpuServer1);
-        gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
-        memberRepository.save(member1);
-        job1 = new Job("job1", JobStatus.RUNNING, gpuBoard1, member1);
-        jobRepository.save(job1);
-        job2 = new Job("job2", JobStatus.WAITING, gpuBoard1, member1);
-        jobRepository.save(job2);
+        labId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab"));
+
+        userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
+        managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));
+
+        serverId = GpuServer_생성후아이디찾기(labId, gpuServerCreationRequest());
+
+        jobId = Job_예약_후_id_반환(labId, jobCreationRequest(serverId), userToken);
     }
 
     @DisplayName("큐에서 작업을 진행할 job 을 가져온다.")
     @Test
     void takeJob() {
-        ExtractableResponse<Response> response = 진행할_job_요청(gpuServer1.getId());
+        ExtractableResponse<Response> response = 진행할_job_요청(serverId);
 
-        Job_정상_반횐됨(response);
+        JobResponse jobResponse = response.body().as(JobResponse.class);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(jobResponse).isNotNull();
+        assertThat(jobResponse.getId()).isEqualTo(jobId);
     }
 
     @DisplayName("job 의 상태를 변경한다.")
     @Test
     void updateJobStatus() {
-        ExtractableResponse<Response> jobResponse = Job_조회(member1.getId(), job1.getId());
-        assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.RUNNING);
+        ExtractableResponse<Response> jobResponse = Job_Id로_검색(labId, jobId, userToken);
+        assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.WAITING);
 
-        ExtractableResponse<Response> response = Job_상태변경(member1.getId(), job1.getId(),
-                new WorkerJobRequest(JobStatus.COMPLETED));
+        ExtractableResponse<Response> response = Job_상태변경(jobId, new WorkerJobRequest(JobStatus.RUNNING));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        ExtractableResponse<Response> actualJobResponse = Job_조회(member1.getId(), job1.getId());
-        assertThat(actualJobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.COMPLETED);
+        ExtractableResponse<Response> afterResponse = Job_Id로_검색(labId, jobId, userToken);
+        assertThat(afterResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.RUNNING);
     }
 
     @DisplayName("GpuServer 의 상태를 변경한다.")
     @Test
     void updateWorkerStatus() {
-        ExtractableResponse<Response> gpuServerResponse = GpuServer_조회(lab1.getId(), gpuServer1.getId());
-        assertThat(gpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isTrue();
+        ExtractableResponse<Response> gpuServerResponse = GpuServer_아이디조회(labId, serverId);
+        assertThat(gpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isFalse();
 
         ExtractableResponse<Response> response =
-                GpuServer_상태변경(gpuServer1.getId(), new WorkerRequest(false, LocalDateTime.now()));
+                GpuServer_상태변경(serverId, new WorkerRequest(true, LocalDateTime.now()));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        ExtractableResponse<Response> actualGpuServerResponse = GpuServer_조회(lab1.getId(), gpuServer1.getId());
-        assertThat(actualGpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isFalse();
-    }
-
-    private void Job_정상_반횐됨(ExtractableResponse<Response> response) {
-        JobResponse jobResponse = response.body().as(JobResponse.class);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(jobResponse).isNotNull();
-        assertThat(jobResponse.getId()).isEqualTo(job2.getId());
+        ExtractableResponse<Response> actualGpuServerResponse = GpuServer_아이디조회(labId, serverId);
+        assertThat(actualGpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isTrue();
     }
 }

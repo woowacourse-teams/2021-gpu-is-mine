@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-class JobAcceptanceTest extends AcceptanceTest {
+public class JobAcceptanceTest extends AcceptanceTest {
 
     private Long labId;
     private Long serverId;
@@ -300,6 +300,7 @@ class JobAcceptanceTest extends AcceptanceTest {
         }
     }
 
+    @Disabled
     @Nested
     @DisplayName("자신이 속하지 않은 lab의 작업 목록을 확인한다. (member별, server별, lab별)")
     class FindJobsInOtherLab {
