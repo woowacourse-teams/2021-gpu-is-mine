@@ -34,7 +34,7 @@ public class WorkerController {
     @PutMapping("jobs/{jobId}/status")
     public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId,
             @RequestBody WorkerJobRequest workerJobRequest) {
-        workerService.changeJobStatus(jobId, workerJobRequest);
+        workerService.updateJobStatus(jobId, workerJobRequest);
         return ResponseEntity.ok().build();
     }
 

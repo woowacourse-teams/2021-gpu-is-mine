@@ -84,7 +84,7 @@ class WorkerServiceTest {
     void changeJobStatusRunning() {
         assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
 
-        workerService.changeJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
 
         assertThat(job2.getStatus()).isEqualTo(JobStatus.RUNNING);
     }
@@ -96,7 +96,7 @@ class WorkerServiceTest {
         assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
 
         // when
-        workerService.changeJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
         // then
         assertThat(job2.getStatus()).isEqualTo(JobStatus.COMPLETED);
