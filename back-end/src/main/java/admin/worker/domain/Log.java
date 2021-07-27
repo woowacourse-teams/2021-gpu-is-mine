@@ -25,11 +25,11 @@ public class Log extends BaseEntity {
     protected Log() {
     }
 
-    public Log(Long id, String content, Job job) {
-        this.id = id;
+    public Log(String content, Job job) {
         this.content = content;
         this.job = job;
     }
+
 
     public Long getId() {
         return id;

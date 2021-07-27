@@ -46,8 +46,8 @@ public class WorkerController {
     }
 
     @PostMapping("jobs/{jobId}/log")
-    public ResponseEntity<Void> saveJobLog(@PathVariable Long jobId,
-            @RequestBody WorkerJobLogRequest workerJobLogRequest) {
+    public ResponseEntity<Void> saveLog(@PathVariable Long jobId,
+        @RequestBody WorkerJobLogRequest workerJobLogRequest) {
         Long logId = workerService.saveLog(jobId, workerJobLogRequest);
 
         URI uri = URI.create("/api/workers/jobs/" + jobId + "/log/" + logId);

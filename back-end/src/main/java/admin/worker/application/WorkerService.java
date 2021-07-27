@@ -11,6 +11,8 @@ import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
+import admin.worker.domain.Log;
+import admin.worker.domain.repository.LogRepository;
 import admin.worker.dto.WorkerJobLogRequest;
 import admin.worker.dto.WorkerJobRequest;
 import admin.worker.dto.WorkerRequest;
@@ -26,12 +28,16 @@ public class WorkerService {
     private final JobRepository jobRepository;
     private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
+    private final LogRepository logRepository;
 
     public WorkerService(JobRepository jobRepository,
-            GpuServerRepository serverRepository, GpuBoardRepository gpuBoardRepository) {
+        GpuServerRepository serverRepository,
+        GpuBoardRepository gpuBoardRepository,
+        LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;
+        this.logRepository = logRepository;
     }
 
     @Transactional(readOnly = true)
@@ -60,7 +66,8 @@ public class WorkerService {
     }
 
     private JobResponse findFirstWaitingJob(Long gpuBoardId) {
-        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoardId, JobStatus.WAITING);
+        List<Job> jobs = jobRepository
+            .findAllByBoardIdAndStatusOrderById(gpuBoardId, JobStatus.WAITING);
 
         if (jobs.size() < ONE) {
             throw JobException.NO_WAITING_JOB.getException();
@@ -70,15 +77,19 @@ public class WorkerService {
 
     private GpuBoard findGpuBoardByGpuServerId(Long serverId) {
         return gpuBoardRepository.findByGpuServerId(serverId)
-                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+            .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }
 
     private GpuServer findGpuServerById(Long serverId) {
         return serverRepository.findById(serverId)
-                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+            .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 
     public Long saveLog(Long jobId, WorkerJobLogRequest workerJobLogRequest) {
-        return null;
+        Job job = jobRepository.findById(jobId)
+            .orElseThrow(JobException.JOB_NOT_FOUND::getException);
+        Log log = new Log(workerJobLogRequest.getContent(), job);
+        logRepository.save(log);
+        return log.getId();
     }
 }
