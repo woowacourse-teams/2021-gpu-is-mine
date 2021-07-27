@@ -37,10 +37,11 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Void> addJob(@PathVariable Long labId, @AuthenticationPrincipal Member member, @RequestBody JobRequest jobRequest) {
+    public ResponseEntity<Void> addJob(@PathVariable Long labId, @AuthenticationPrincipal Member member,
+            @RequestBody JobRequest jobRequest) {
         Long jobId = jobService.insert(member.getId(), jobRequest);
 
-        URI uri = URI.create("/api/labs/"+ labId +"/jobs/" + jobId);
+        URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
 

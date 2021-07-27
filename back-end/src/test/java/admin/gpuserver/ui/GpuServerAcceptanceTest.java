@@ -119,7 +119,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @DisplayName("GpuServer 개별조회")
     @Test
     void findGpuServer() {
-        ExtractableResponse<Response> response = GpuServer_아이디조회(dummyLabId,1L);
+        ExtractableResponse<Response> response = GpuServer_아이디조회(dummyLabId, 1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         Assertions.assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class))

@@ -16,7 +16,6 @@ import admin.AcceptanceTest;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.dto.response.GpuServerResponse;
-import admin.gpuserver.ui.GpuServerAcceptanceTest;
 import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;

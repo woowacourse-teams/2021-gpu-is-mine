@@ -289,7 +289,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
             assertThat(searchedIds).usingRecursiveComparison().isEqualTo(ids);
         }
 
-//        @Disabled
+        //        @Disabled
         @DisplayName("서버를 기준으로 작업 목록을 조회할 때 url path의 labId와 serverId를 검증한다.")
         @Test
         void findJobsByServerWithMeaninglessLabId() {
@@ -310,7 +310,6 @@ public class JobAcceptanceTest extends AcceptanceTest {
         String otherLabUserToken;
         Long otherLabJob;
 
-
         @BeforeEach
         void setUp() {
             otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab2"));
@@ -318,7 +317,6 @@ public class JobAcceptanceTest extends AcceptanceTest {
             otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "other@other.com", "password"));
             otherLabJob = Job_예약_후_id_반환(otherLabId, jobCreationRequest(otherLabServerId), otherLabUserToken);
         }
-
 
         @DisplayName("사용자는 다른 랩의 작업을 조회할 수 없다.")
         @Test
