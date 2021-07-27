@@ -1,13 +1,5 @@
 package admin.member.application;
 
-import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
-import static admin.job.fixture.JobFixtures.jobCreationRequest;
-import static admin.member.fixture.MemberFixtures.managerCreationRequest;
-import static admin.member.fixture.MemberFixtures.userCreationRequest;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
-
 import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.lab.application.LabService;
@@ -29,6 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -164,7 +162,8 @@ class MemberServiceTest {
         Long newLabId = labService.save(new LabRequest("newLab"));
         ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
 
-        Throwable throwable = catchThrowable(() -> memberService.updateMemberLab(notExistingMemberId, changeLabRequest));
+        Throwable throwable = catchThrowable(
+                () -> memberService.updateMemberLab(notExistingMemberId, changeLabRequest));
         존재하지_않는_회원_요청_에러_발생(throwable);
     }
 
