@@ -30,7 +30,6 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(authService);
     }
-
     /*
     //TODO
     //- interceptor 적용시 주석해제
@@ -38,8 +37,7 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns("/api/login", "/api/labs/","/api/members/", "/api/workers/**")
-                .addPathPatterns("/api/**");
+                .addPathPatterns("/api/labs/{*id}/**");
     }
-     */
+    */
 }

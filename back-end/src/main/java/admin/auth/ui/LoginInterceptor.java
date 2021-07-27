@@ -37,17 +37,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (includeLabId(labIdMatcher) && !isMemberOfLab(member, labIdMatcher)) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
         }
-        /*
-        // TODO: 주석구간 - 매니저 권한부여
-        if (isUser(member) && request.getRequestURI().contains("/매니저만 줄 권한주소")){
-            return false;
-        }
-        */
         return true;
-    }
-
-    private boolean isUser(Member member) {
-        return member.getMemberType() == MemberType.USER;
     }
 
     private boolean isMemberOfLab(Member member, Matcher labIdMatcher) {

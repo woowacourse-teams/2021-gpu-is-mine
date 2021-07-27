@@ -152,7 +152,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     // 해당 테스트를 진행하려면 AuthenticationPrincipalConfig 에서 LoginInterceptor의 주석을 해제 후 진행
     // 다른 테스트코드는 authorization 적용이 되지 않아서 전체를 돌리면 테스트가 깨짐
-    @Disabled
+   // @Disabled
     @DisplayName("GET /api/labs/{id} 에 권한이 있는 사용자가 접근한다.")
     @Test
     void accessLabMember() {
@@ -173,7 +173,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     // 해당 테스트를 진행하려면 AuthenticationPrincipalConfig 에서 LoginInterceptor의 주석을 해제 후 진행
     // 다른 테스트코드는 authorization 적용이 되지 않아서 전체를 돌리면 테스트가 깨짐
-    @Disabled
+  //  @Disabled
     @DisplayName("GET /api/labs/{id} 에 권한이 없는 사용자가 접근한다.")
     @Test
     void accessNonLabMember() {
