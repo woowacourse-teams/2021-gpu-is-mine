@@ -29,15 +29,15 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequest request) {
-        Long createdId = memberService.createMember(request);
+    public ResponseEntity<Void> save(@RequestBody MemberRequest request) {
+        Long createdId = memberService.save(request);
         URI uri = URI.create("/api/members/" + createdId);
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<MemberResponse> findMemberOfMine(@AuthenticationPrincipal Member member) {
-        MemberResponse memberResponse = memberService.findMember(member.getId());
+        MemberResponse memberResponse = memberService.findById(member.getId());
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -58,19 +58,19 @@ public class MemberController {
     @PutMapping("/me/lab")
     public ResponseEntity<Void> updateMemberLabOfMine(@AuthenticationPrincipal Member member,
             @RequestBody ChangeLabRequest request) {
-        memberService.changeLab(member.getId(), request);
+        memberService.updateMemberLab(member.getId(), request);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMemberOfMine(@AuthenticationPrincipal Member member) {
-        memberService.deleteMember(member.getId());
+        memberService.delete(member.getId());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
-        MemberResponse memberResponse = memberService.findMember(id);
+    public ResponseEntity<MemberResponse> findMemberById(@PathVariable Long id) {
+        MemberResponse memberResponse = memberService.findById(id);
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -88,13 +88,13 @@ public class MemberController {
 
     @PutMapping("/{id}/lab")
     public ResponseEntity<Void> updateMemberLab(@PathVariable Long id, @RequestBody ChangeLabRequest request) {
-        memberService.changeLab(id, request);
+        memberService.updateMemberLab(id, request);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+        memberService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
