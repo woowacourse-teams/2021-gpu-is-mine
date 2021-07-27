@@ -7,6 +7,7 @@ const API_ENDPOINT = {
       JOBS: `${BASE_URL}/labs/${labId}/jobs`,
     };
   },
+  MEMBERS: `${BASE_URL}/members`,
 };
 
 export default API_ENDPOINT;
