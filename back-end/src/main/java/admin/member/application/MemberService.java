@@ -38,7 +38,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long createMember(MemberRequest request) {
+    public Long save(MemberRequest request) {
         Lab lab = labRepository.findById(request.getLabId())
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
@@ -50,7 +50,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberResponse findMember(Long memberId) {
+    public MemberResponse findById(Long memberId) {
         Member member = findMemberById(memberId);
         return MemberResponse.of(member);
     }
@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeLab(Long memberId, ChangeLabRequest changeLabRequest) {
+    public void updateMemberLab(Long memberId, ChangeLabRequest changeLabRequest) {
         Member member = findMemberById(memberId);
 
         Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
@@ -81,7 +81,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember(Long memberId) {
+    public void delete(Long memberId) {
         Member member = findMemberById(memberId);
         memberRepository.delete(member);
     }
@@ -97,7 +97,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
         Member member = findMemberById(memberId);
-        GpuServer gpuServer = findAliveServerById(gpuServerId);
+        GpuServer gpuServer = findLiveServerById(gpuServerId);
 
         member.checkPermissionOnServer(gpuServer);
     }
@@ -128,7 +128,7 @@ public class MemberService {
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 
-    private GpuServer findAliveServerById(Long gpuServerId) {
+    private GpuServer findLiveServerById(Long gpuServerId) {
         return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }

@@ -64,7 +64,7 @@ class JobServiceTest {
     @DisplayName("정상 등록")
     void insert() {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long id = jobService.insert(memberId, jobRequest);
+        Long id = jobService.save(memberId, jobRequest);
         assertThat(id).isNotNull();
     }
 
@@ -74,7 +74,7 @@ class JobServiceTest {
         Long notExistingMemberId = Long.MAX_VALUE;
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
 
-        assertThatThrownBy(() -> jobService.insert(notExistingMemberId, jobRequest))
+        assertThatThrownBy(() -> jobService.save(notExistingMemberId, jobRequest))
                 .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
@@ -84,7 +84,7 @@ class JobServiceTest {
         Long notExistingServerId = Long.MAX_VALUE;
         JobRequest jobRequest = new JobRequest(notExistingServerId, "job", "metadata", "12");
 
-        assertThatThrownBy(() -> jobService.insert(memberId, jobRequest))
+        assertThatThrownBy(() -> jobService.save(memberId, jobRequest))
                 .isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
     }
 
@@ -92,7 +92,7 @@ class JobServiceTest {
     @DisplayName("정상 조회")
     void findById() {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long jobId = jobService.insert(memberId, jobRequest);
+        Long jobId = jobService.save(memberId, jobRequest);
 
         JobResponse jobResponse = jobService.findById(jobId);
         assertThat(jobResponse).isNotNull();
@@ -102,7 +102,7 @@ class JobServiceTest {
     @DisplayName("예약을 취소한다.")
     void findCancel() {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long jobId = jobService.insert(memberId, jobRequest);
+        Long jobId = jobService.save(memberId, jobRequest);
 
         jobService.cancel(jobId);
 
@@ -123,7 +123,7 @@ class JobServiceTest {
     @DisplayName("대기 중인 JobId만 예약을 취소할 수 있다.")
     void findCancelWithNotWaitingJob() {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long jobId = jobService.insert(memberId, jobRequest);
+        Long jobId = jobService.save(memberId, jobRequest);
 
         Job job = jobRepository.findById(jobId).get();
         job.changeStatus(JobStatus.RUNNING);
@@ -158,8 +158,8 @@ class JobServiceTest {
         @Test
         @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
         void findAllByMemberId() {
-            Long jobId1 = jobService.insert(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
-            Long jobId2 = jobService.insert(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
+            Long jobId1 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
+            Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
 
             assertJobIdsFromJobResponses(jobService.findByMember(memberId), jobId1, jobId2);
         }
@@ -167,8 +167,8 @@ class JobServiceTest {
         @Test
         @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
         void findAllByServer() {
-            Long jobId1 = jobService.insert(saveMember(lab), jobCreationRequest(serverId));
-            Long jobId2 = jobService.insert(saveMember(lab), jobCreationRequest(serverId));
+            Long jobId1 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
+            Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
 
             assertJobIdsFromJobResponses(jobService.findByServer(serverId), jobId1, jobId2);
         }
@@ -176,8 +176,8 @@ class JobServiceTest {
         @Test
         @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
         void findAllByLab() {
-            Long jobId1 = jobService.insert(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
-            Long jobId2 = jobService.insert(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+            Long jobId1 = jobService.save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+            Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
 
             assertJobIdsFromJobResponses(jobService.findByLab(lab.getId()), jobId1, jobId2);
         }
