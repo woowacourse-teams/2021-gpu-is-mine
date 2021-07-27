@@ -28,24 +28,24 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     static Long dummyLabId;
     static List<Long> dummyGpuServerIds;
 
-    public static ExtractableResponse<Response> GpuServer_아이디조회(Long gpuServerId) {
+    public static ExtractableResponse<Response> GpuServer_아이디조회(Long labId, Long gpuServerId) {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/labs/" + dummyLabId + "/gpus/" + gpuServerId)
+                .when().get("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> GpuServer_전체조회() {
+    public static ExtractableResponse<Response> GpuServer_전체조회(Long labId) {
         return RestAssured
                 .given().log().all()
-                .when().get("/api/labs/" + dummyLabId + "/gpus/")
+                .when().get("/api/labs/" + labId + "/gpus/")
                 .then().log().all()
                 .extract();
     }
 
-    public static int GpuServer_전체조회갯수() {
-        ExtractableResponse<Response> response = GpuServer_전체조회();
+    public static int GpuServer_전체조회갯수(Long labId) {
+        ExtractableResponse<Response> response = GpuServer_전체조회(labId);
         List<GpuServerResponse> gpus = response.jsonPath()
                 .getList("gpuServers", GpuServerResponse.class);
         return gpus.size();
@@ -119,7 +119,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @DisplayName("GpuServer 개별조회")
     @Test
     void findGpuServer() {
-        ExtractableResponse<Response> response = GpuServer_아이디조회(1L);
+        ExtractableResponse<Response> response = GpuServer_아이디조회(dummyLabId,1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         Assertions.assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class))
@@ -129,7 +129,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @DisplayName("GpuServer 전체조회")
     @Test
     void findGpuServers() {
-        ExtractableResponse<Response> response = GpuServer_전체조회();
+        ExtractableResponse<Response> response = GpuServer_전체조회(dummyLabId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
@@ -173,12 +173,12 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteGpuServer() {
         // given
-        int previousCount = GpuServer_전체조회갯수();
+        int previousCount = GpuServer_전체조회갯수(dummyLabId);
         GpuServerRequest gpuServerRequest =
                 new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
         Long gpuServerId = GpuServer_생성후아이디찾기(dummyLabId, gpuServerRequest);
 
-        int addedCount = GpuServer_전체조회갯수();
+        int addedCount = GpuServer_전체조회갯수(dummyLabId);
         assertThat(addedCount).isEqualTo(previousCount + 1);
 
         // when
@@ -186,7 +186,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        int afterDeletedCount = GpuServer_전체조회갯수();
+        int afterDeletedCount = GpuServer_전체조회갯수(dummyLabId);
         assertThat(afterDeletedCount).isEqualTo(previousCount);
     }
 }
