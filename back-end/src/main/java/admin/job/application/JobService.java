@@ -79,16 +79,10 @@ public class JobService {
         return findAllJobsOfServer(serverId);
     }
 
-    private JobResponses findJobsOfLabByStatus(Long labId, String status) {
-        List<Job> jobs = new ArrayList<>();
-
-        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
-            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
-            JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
-            jobs.addAll(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
-        }
-
-        return JobResponses.of(jobs);
+    @Transactional(readOnly = true)
+    public JobResponses findByServer(Long gpuServerId) {
+        GpuBoard gpuBoard = findLiveBoardByServerId(gpuServerId);
+        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
     }
 
     private JobResponses findAllJobsOfLab(Long labId) {
@@ -98,37 +92,6 @@ public class JobService {
             GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
-
-        return JobResponses.of(jobs);
-    }
-
-    private JobResponses findJobsOfServerByStatus(Long serverId, String status) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
-        JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
-        return JobResponses.of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
-    }
-
-    private JobResponses findAllJobsOfServer(Long serverId) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
-        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
-    }
-
-    @Transactional(readOnly = true)
-    public JobResponses findJobsOfMember(Long memberId, String status) {
-        if (StringUtils.hasText(status)) {
-            return findJobsOfMemberByStatus(memberId, status);
-        }
-        return findAllJobsOfMember(memberId);
-    }
-
-    private JobResponses findAllJobsOfMember(Long memberId) {
-        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
-
-        return JobResponses.of(jobs);
-    }
-
-    private JobResponses findJobsOfMemberByStatus(Long memberId, String status) {
-        List<Job> jobs = jobRepository.findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
 
         return JobResponses.of(jobs);
     }

@@ -32,12 +32,20 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
-            @RequestBody JobRequest jobRequest) {
-        Long jobId = jobService.save(member.getId(), jobRequest);
+    public ResponseEntity<Void> save(Long memberId, @RequestBody JobRequest jobRequest) {
+        memberService.checkPermissionOnServer(memberId, jobRequest.getGpuServerId());
+        Long jobId = jobService.save(memberId, jobRequest);
 
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping("/jobs/{jobId}")
+    public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long jobId) {
+        memberService.checkEditableJob(memberId, jobId);
+
+        jobService.cancel(jobId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/jobs/{jobId}")
