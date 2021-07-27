@@ -11,6 +11,7 @@ import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
 import admin.job.exception.JobException;
+import admin.worker.dto.WorkerJobLogRequest;
 import admin.worker.dto.WorkerJobRequest;
 import admin.worker.dto.WorkerRequest;
 import java.util.List;
@@ -75,5 +76,9 @@ public class WorkerService {
     private GpuServer findGpuServerById(Long serverId) {
         return serverRepository.findById(serverId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+    }
+
+    public Long saveLog(Long jobId, WorkerJobLogRequest workerJobLogRequest) {
+        return null;
     }
 }
