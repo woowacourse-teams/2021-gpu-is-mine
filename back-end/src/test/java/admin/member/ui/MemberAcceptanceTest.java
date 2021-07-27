@@ -57,26 +57,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> MEMBER_타입_수정_요청(Long id, MemberTypeRequest memberTypeRequest) {
-        return RestAssured.given()
-                .body(memberTypeRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/api/members/" + id + "/memberType")
-                .then()
-                .extract();
-    }
-
-    public static ExtractableResponse<Response> MEMBER_LAB_수정_요청(Long id, ChangeLabRequest changeLabRequest) {
-        return RestAssured.given()
-                .body(changeLabRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/api/members/" + id + "/lab")
-                .then()
-                .extract();
-    }
-
     public static ExtractableResponse<Response> MEMBER_삭제_요청(Long id) {
         return RestAssured.given()
                 .when()
@@ -147,36 +127,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
         assertThat(searchResponse.getEmail()).isEqualTo(memberInfoRequest.getEmail());
         assertThat(searchResponse.getName()).isEqualTo(memberInfoRequest.getName());
-    }
-
-    @Test
-    @DisplayName("Member 타입 수정 요청")
-    void updateMemberType() {
-        ExtractableResponse<Response> createResponse = MEMBER_생성_요청(memberRequest);
-        Long id = extractCreatedId(createResponse);
-        MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
-
-        ExtractableResponse<Response> response = MEMBER_타입_수정_요청(id, memberTypeRequest);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-        MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
-        Assertions.assertThat(searchResponse.getMemberType()).isEqualTo(memberType);
-    }
-
-    @Test
-    @DisplayName("Member lab 수정 요청")
-    void updateMemberLab() {
-        ExtractableResponse<Response> createResponse = MEMBER_생성_요청(memberRequest);
-        Long id = extractCreatedId(createResponse);
-        Long newLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("newLab"));
-        ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
-
-        ExtractableResponse<Response> response = MEMBER_LAB_수정_요청(id, changeLabRequest);
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-
-        MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-        assertThat(searchResponse.getLabResponse().getId()).isEqualTo(newLabId);
     }
 
     @Test

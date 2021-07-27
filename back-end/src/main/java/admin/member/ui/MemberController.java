@@ -48,20 +48,6 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/me/memberType")
-    public ResponseEntity<Void> updateMemberTypeOfMine(@AuthenticationPrincipal Member member,
-            @RequestBody MemberTypeRequest request) {
-        memberService.updateMemberType(member.getId(), request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/me/lab")
-    public ResponseEntity<Void> updateMemberLabOfMine(@AuthenticationPrincipal Member member,
-            @RequestBody ChangeLabRequest request) {
-        memberService.changeLab(member.getId(), request);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMemberOfMine(@AuthenticationPrincipal Member member) {
         memberService.deleteMember(member.getId());
@@ -77,18 +63,6 @@ public class MemberController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
         memberService.updateMemberInfo(id, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/memberType")
-    public ResponseEntity<Void> updateMemberType(@PathVariable Long id, @RequestBody MemberTypeRequest request) {
-        memberService.updateMemberType(id, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/lab")
-    public ResponseEntity<Void> updateMemberLab(@PathVariable Long id, @RequestBody ChangeLabRequest request) {
-        memberService.changeLab(id, request);
         return ResponseEntity.noContent().build();
     }
 
