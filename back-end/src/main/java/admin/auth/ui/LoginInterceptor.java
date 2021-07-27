@@ -1,0 +1,62 @@
+package admin.auth.ui;
+
+import admin.auth.application.AuthService;
+import admin.auth.exception.AuthorizationException;
+import admin.auth.infrastructure.AuthorizationExtractor;
+import admin.member.domain.Member;
+import admin.member.domain.MemberType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+@Component
+public class LoginInterceptor implements HandlerInterceptor {
+
+    private static final Pattern pattern = Pattern.compile("(?<=labs\\/)\\d+");
+    private final AuthService authService;
+
+    public LoginInterceptor(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+
+        String credentials = AuthorizationExtractor.extract(request);
+        if (credentials == null) {
+            throw AuthorizationException.UNAUTHORIZED_USER.getException();
+        }
+
+        Member member = authService.findMemberByToken(credentials);
+        Matcher labIdMatcher = pattern.matcher(request.getRequestURI());
+
+        if (includeLabId(labIdMatcher)) {
+            return isMemberOfLab(member, labIdMatcher);
+        }
+        /*
+        // TODO: 주석구간 - 매니저 권한부여
+        if (isUser(member) && request.getRequestURI().contains("/매니저만 줄 권한주소")){
+            return false;
+        }
+        */
+        return true;
+    }
+
+    private boolean isUser(Member member) {
+        return member.getMemberType() == MemberType.USER;
+    }
+
+    private boolean isMemberOfLab(Member member, Matcher labIdMatcher) {
+        String uriLabId = labIdMatcher.group();
+        String memberLabId = member.getLab().getId().toString();
+        return uriLabId.equals(memberLabId);
+    }
+
+    private boolean includeLabId(Matcher matcher) {
+        return matcher.find();
+    }
+}
