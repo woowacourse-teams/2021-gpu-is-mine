@@ -30,7 +30,6 @@ public class Log extends BaseEntity {
         this.job = job;
     }
 
-
     public Long getId() {
         return id;
     }
