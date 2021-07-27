@@ -131,8 +131,10 @@ class WorkerServiceTest {
     @Test
     void saveLog() {
         // then
-        Assertions.assertDoesNotThrow(() ->
-            workerService.saveLog(job1.getId(), new WorkerJobLogRequest("content")));
+        Assertions.assertDoesNotThrow(() -> {
+            Long logId = workerService.saveLog(job1.getId(), new WorkerJobLogRequest("content"));
+            assertThat(logId).isNotNull();
+        });
     }
 
     @DisplayName("로그 저장에 실패하는 경우")
@@ -142,7 +144,7 @@ class WorkerServiceTest {
         Long notExistJobId = Long.MAX_VALUE;
         // then
         Assertions.assertThrows(JobException.JOB_NOT_FOUND.getException().getClass(), () ->
-            workerService.saveLog(Long.MAX_VALUE, new WorkerJobLogRequest("content")));
+            workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
     }
 }
 
