@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { GpuServerInfoItem } from "../../domains/GpuServer";
-import { gpuServersResponses } from "../../fixtures";
+import { gpuServersResponses } from "../../__fixtures__";
 import Text from "../Text/Text";
 import Radio from "./Radio";
 
