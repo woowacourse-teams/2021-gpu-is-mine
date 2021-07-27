@@ -14,9 +14,6 @@ class MailServiceTest {
     @Test
     @Disabled
     void name() {
-        for (int i = 0; i < 3; i++) {
-            mailService.sendMail("ktw9695@naver.com", "test", "test");
-            System.out.println("[LOG]Mail Number= " + i);
-        }
+        mailService.sendJobStartMail("email@email.com", "test");
     }
 }

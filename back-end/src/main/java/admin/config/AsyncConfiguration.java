@@ -18,7 +18,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     private static Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
 
     @Override
-    @Bean(name="mailExecutor")
+    @Bean(name = "mailExecutor")
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
