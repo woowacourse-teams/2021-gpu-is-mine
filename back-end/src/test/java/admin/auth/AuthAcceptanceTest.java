@@ -148,4 +148,22 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
+
+    @DisplayName("GET /api/labs/{id} 에 권한이 있는 사용자가 접근한다.")
+    @Test
+    void accessLabMember() {
+        회원_등록되어_있음(memberRequest);
+        LoginResponse loginResponse = 로그인되어_있음(EMAIL, PASSWORD);
+
+        RestAssured
+                .given()
+                .auth()
+                .oauth2(loginResponse.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/labs/" + memberRequest.getLabId())
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+    }
 }
