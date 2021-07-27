@@ -30,6 +30,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
     public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
         return new AuthenticationPrincipalArgumentResolver(authService);
     }
+
+    /*
     //TODO
     //- interceptor 적용시 주석해제
     //- interceptor 적용할 path 설정
@@ -39,4 +41,5 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/login", "/api/labs/","/api/members/")
                 .addPathPatterns("/api/**");
     }
+     */
 }

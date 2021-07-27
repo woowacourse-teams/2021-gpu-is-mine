@@ -34,8 +34,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         Member member = authService.findMemberByToken(credentials);
         Matcher labIdMatcher = pattern.matcher(request.getRequestURI());
 
-        if (includeLabId(labIdMatcher)) {
-            return isMemberOfLab(member, labIdMatcher);
+        if (includeLabId(labIdMatcher) && !isMemberOfLab(member, labIdMatcher)) {
+            throw AuthorizationException.UNAUTHORIZED_USER.getException();
         }
         /*
         // TODO: 주석구간 - 매니저 권한부여
