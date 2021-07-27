@@ -1,82 +1,88 @@
 package admin.job.ui;
 
+import admin.auth.domain.AuthenticationPrincipal;
+import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
+import admin.member.domain.Member;
 import java.net.URI;
+import java.util.Objects;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/labs/{labId}")
 public class JobController {
 
     private MemberService memberService;
     private JobService jobService;
+    private GpuServerService serverService;
 
-    public JobController(MemberService memberService, JobService jobService) {
+    public JobController(MemberService memberService, JobService jobService,
+            GpuServerService serverService) {
         this.memberService = memberService;
         this.jobService = jobService;
+        this.serverService = serverService;
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Void> addJob(Long memberId, @RequestBody JobRequest jobRequest) {
-        memberService.checkPermissionOnServer(memberId, jobRequest.getGpuServerId());
-        Long jobId = jobService.insert(memberId, jobRequest);
+    public ResponseEntity<Void> addJob(@PathVariable Long labId, @AuthenticationPrincipal Member member, @RequestBody JobRequest jobRequest) {
+        Long jobId = jobService.insert(member.getId(), jobRequest);
 
-        URI uri = URI.create("/api/jobs/" + jobId);
+        URI uri = URI.create("/api/labs/"+ labId +"/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/jobs/{jobId}")
-    public ResponseEntity<Void> cancelJob(Long memberId, @PathVariable Long jobId) {
-        memberService.checkEditableJob(memberId, jobId);
-
-        jobService.cancel(jobId);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findJobById(Long memberId, @PathVariable Long jobId) {
-        memberService.checkReadableJob(memberId, jobId);
-
+    public ResponseEntity<JobResponse> findJobById(@PathVariable Long jobId) {
         JobResponse jobResponse = jobService.findById(jobId);
         return ResponseEntity.ok(jobResponse);
     }
 
-    /*
-     멤버를 기준으로 Job 조회, 현재는 Job 조회의 일종으로 보았습니다.
-     추후에 "members/me" 관련 기능들이 구현되면 그 컨트롤러와 합쳐도 좋을 것 같습니다.
-     */
-
-    @GetMapping("/members/me/jobs")
-    public ResponseEntity<JobResponses> findJobsByMember(Long memberId) {
-        return ResponseEntity.ok(jobService.findByMember(memberId));
+    @GetMapping("/jobs/me")
+    public JobResponses findJobsOfMine(@AuthenticationPrincipal Member member,
+            @RequestParam(required = false) String status) {
+        if (StringUtils.hasText(status)) {
+            return jobService.findJobsByMemberByStatus(member.getId(), status);
+        }
+        return jobService.findAllJobsByMember(member.getId());
     }
 
-    @GetMapping("/labs/{labId}/jobs")
-    public ResponseEntity<JobResponses> findJobsByLab(Long memberId, @PathVariable Long labId) {
-        memberService.checkPermissionOnLab(memberId, labId);
+    @GetMapping("/jobs")
+    public JobResponses findJobs(@PathVariable Long labId,
+            @RequestParam(required = false) Long serverId,
+            @RequestParam(required = false) String status) {
+        if (Objects.isNull(serverId)) {
 
-        JobResponses jobResponses = jobService.findByLab(labId);
-        return ResponseEntity.ok(jobResponses);
+            if (StringUtils.hasText(status)) {
+                return jobService.findJobsOfLabByStatus(labId, status);
+            }
+            return jobService.findAllJobsOfLab(labId);
+        }
+
+        serverService.checkServerInLab(serverId, labId);
+        if (StringUtils.hasText(status)) {
+            return jobService.findJobsOfServerByStatus(serverId, status);
+        }
+        return jobService.findAllJobsOfServer(serverId);
     }
 
-    // 기존의 "/labs/{labId}/gpus/{gpuServerId}/jobs" 꼴을 맞추면, labId가 의미가 없어 labId에 대한 유효성 검증이 필요합니다.
+    @PutMapping("/jobs/{jobId}")
+    public ResponseEntity<Void> cancelJob(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+        memberService.checkEditableJob(member.getId(), jobId);
 
-    @GetMapping("/labs/{labId}/gpus/{gpuServerId}/jobs")
-    public ResponseEntity<JobResponses> findJobsByServer(Long memberId, @PathVariable Long gpuServerId) {
-        memberService.checkPermissionOnServer(memberId, gpuServerId);
-
-        JobResponses jobResponses = jobService.findByServer(gpuServerId);
-        return ResponseEntity.ok(jobResponses);
+        jobService.cancel(jobId);
+        return ResponseEntity.noContent().build();
     }
 }

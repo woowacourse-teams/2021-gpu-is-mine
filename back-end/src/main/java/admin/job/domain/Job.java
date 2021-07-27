@@ -49,7 +49,7 @@ public class Job extends BaseEntity {
         }
 
         if (Objects.isNull(status)) {
-            throw JobException.INVALID_STATUS.getException();
+            throw JobException.INVALID_JOB_STATUS.getException();
         }
 
         if (Objects.isNull(gpuBoard)) {

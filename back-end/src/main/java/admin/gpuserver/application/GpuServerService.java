@@ -101,6 +101,13 @@ public class GpuServerService {
         return new GpuServerStatusResponse(gpuServer.getIsOn(), gpuBoard.getIsWorking());
     }
 
+    @Transactional(readOnly = true)
+    public void checkServerInLab(Long serverId, Long labId) {
+        gpuServerRepository
+                .findByIdAndLabIdAndDeletedFalse(serverId, labId)
+                .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
+    }
+
     private void validateLab(Long labId) {
         if (!labRepository.existsById(labId)) {
             throw LabException.LAB_NOT_FOUND.getException();

@@ -50,7 +50,7 @@ public class JobTest {
     @Test
     void 생성_JobStatus_null() {
         assertThatThrownBy(() -> new Job("잡1", null, gpuBoard, member))
-                .isEqualTo(JobException.INVALID_STATUS.getException());
+                .isEqualTo(JobException.INVALID_JOB_STATUS.getException());
     }
 
     @DisplayName("생성 테스트 - GpuBoard가 null")

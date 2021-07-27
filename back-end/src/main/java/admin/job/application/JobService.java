@@ -6,6 +6,7 @@ import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuBoardException;
 import admin.job.domain.Job;
+import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
@@ -14,11 +15,10 @@ import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class JobService {
@@ -29,7 +29,7 @@ public class JobService {
     private MemberRepository memberRepository;
 
     public JobService(JobRepository jobRepository, GpuServerRepository gpuServerRepository,
-                      GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
+            GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -60,26 +60,53 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findByMember(Long memberId) {
-        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
+    public JobResponses findJobsOfLabByStatus(Long labId, String status) {
+        List<Job> jobs = new ArrayList<>();
+
+        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
+            GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
+            jobs.addAll(
+                    jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.ignoreCaseValueOf(status)));
+        }
 
         return JobResponses.of(jobs);
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findByServer(Long gpuServerId) {
-        GpuBoard gpuBoard = findAliveBoardByServerId(gpuServerId);
-        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
-    }
-
-    @Transactional(readOnly = true)
-    public JobResponses findByLab(Long labId) {
+    public JobResponses findAllJobsOfLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
             GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
+
+        return JobResponses.of(jobs);
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findJobsOfServerByStatus(Long serverId, String status) {
+        GpuBoard gpuBoard = findAliveBoardByServerId(serverId);
+        return JobResponses
+                .of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.ignoreCaseValueOf(status)));
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findAllJobsOfServer(Long serverId) {
+        GpuBoard gpuBoard = findAliveBoardByServerId(serverId);
+        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findAllJobsByMember(Long memberId) {
+        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
+
+        return JobResponses.of(jobs);
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponses findJobsByMemberByStatus(Long memberId, String status) {
+        List<Job> jobs = jobRepository.findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
 
         return JobResponses.of(jobs);
     }
