@@ -23,6 +23,7 @@
     "@storybook/addon-links": "^6.3.2",
     "@storybook/react": "^6.3.2",
     "@svgr/webpack": "^5.5.0",
+    "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/react-hooks": "^7.0.1",
@@ -40,12 +41,15 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-jest-dom": "^3.9.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-testing-library": "^4.10.1",
     "history": "^5.0.0",
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.0.6",
+    "msw": "^0.33.0",
     "prettier": "2.3.2",
     "ts-jest": "^27.0.4",
     "ts-loader": "^9.2.3",
@@ -73,7 +77,7 @@
     "lint": "eslint --cache --fix .",
     "format": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll --runInBand"
   },
   "resolutions": {
     "styled-components": "^5"

@@ -25,7 +25,16 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
-  plugins: ["react", "react-hooks", "import", "jsx-a11y", "@typescript-eslint", "jest"],
+  plugins: [
+    "react",
+    "react-hooks",
+    "import",
+    "jsx-a11y",
+    "@typescript-eslint",
+    "jest",
+    "jest-dom",
+    "testing-library",
+  ],
   rules: {
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
