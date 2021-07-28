@@ -30,17 +30,21 @@ const getSizeStyle = (size: Size) => {
 };
 
 export const StyledCalendarCancelIcon = styled(CalendarCancel)`
-  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)}
+  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
+  fill: var(--error);
 `;
 
 export const StyledCalendarCheckIcon = styled(CalendarCheck)`
-  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)}
+  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
+  fill: var(--active);
 `;
 
 export const StyledCalendarRunIcon = styled(CalendarRun)`
-  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)}
+  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
+  fill: var(--primary-900);
 `;
 
 export const StyledCalendarWaitIcon = styled(CalendarWait)`
-  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)}
+  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
+  fill: var(--secondary-700);
 `;
