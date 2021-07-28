@@ -1,7 +1,7 @@
 import { Switch, Route, Redirect } from "react-router-dom";
-import { GpuServerView, GpuServerRegister } from "../pages/manager";
-import { PATH } from "../constants";
+import { GpuServerView, GpuServerRegister, JobRegister } from "../pages/manager";
 import Providers from "../providers/Providers";
+import { PATH } from "../constants";
 
 const App = () => (
   <Providers>
@@ -11,6 +11,9 @@ const App = () => (
       </Route>
       <Route exact path={PATH.MANAGER.GPU_SERVER.REGISTER}>
         <GpuServerRegister />
+      </Route>
+      <Route exact path={PATH.MANAGER.JOB.REGISTER}>
+        <JobRegister />
       </Route>
       <Redirect to={PATH.MANAGER.GPU_SERVER.VIEW} />
     </Switch>

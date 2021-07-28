@@ -6,4 +6,8 @@ public enum JobStatus {
     public boolean isWaiting() {
         return this.equals(WAITING);
     }
+
+    public boolean isRunning() {
+        return this.equals(RUNNING);
+    }
 }

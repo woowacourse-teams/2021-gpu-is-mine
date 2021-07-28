@@ -39,7 +39,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long createMember(MemberRequest request) {
+    public Long save(MemberRequest request) {
         Lab lab = labRepository.findById(request.getLabId())
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
@@ -51,14 +51,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberResponse findMember(Long id) {
-        Member member = findMemberById(id);
+    public MemberResponse findById(Long memberId) {
+        Member member = findMemberById(memberId);
         return MemberResponse.of(member);
     }
 
     @Transactional
-    public void updateMemberInfo(Long id, MemberInfoRequest request) {
-        Member member = findMemberById(id);
+    public void updateMemberInfo(Long memberId, MemberInfoRequest request) {
+        Member member = findMemberById(memberId);
 
         member.setEmail(request.getEmail());
         member.setPassword(request.getPassword());
@@ -66,15 +66,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberType(Long id, MemberTypeRequest memberTypeRequest) {
-        Member member = findMemberById(id);
+    public void updateMemberType(Long memberId, MemberTypeRequest memberTypeRequest) {
+        Member member = findMemberById(memberId);
         MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
         member.setMemberType(memberType);
     }
 
     @Transactional
-    public void changeLab(Long id, ChangeLabRequest changeLabRequest) {
-        Member member = findMemberById(id);
+    public void updateMemberLab(Long memberId, ChangeLabRequest changeLabRequest) {
+        Member member = findMemberById(memberId);
 
         Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
@@ -82,8 +82,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember(Long id) {
-        Member member = findMemberById(id);
+    public void delete(Long memberId) {
+        Member member = findMemberById(memberId);
         memberRepository.delete(member);
     }
 
@@ -98,7 +98,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
         Member member = findMemberById(memberId);
-        GpuServer gpuServer = findAliveServerById(gpuServerId);
+        GpuServer gpuServer = findLiveServerById(gpuServerId);
 
         member.checkPermissionOnServer(gpuServer);
     }
