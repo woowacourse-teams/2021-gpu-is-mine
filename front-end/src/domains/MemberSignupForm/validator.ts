@@ -45,9 +45,9 @@ export const passwordValidator = (value: string) => {
 
   if (
     value
-      .replaceAll(new RegExp(specialCharacterRegex, "g"), "")
-      .replaceAll(new RegExp(numberRegex, "g"), "")
-      .replaceAll(new RegExp(alphabetRegex, "g"), "") !== ""
+      .replace(new RegExp(specialCharacterRegex, "g"), "")
+      .replace(new RegExp(numberRegex, "g"), "")
+      .replace(new RegExp(alphabetRegex, "g"), "") !== ""
   ) {
     return VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER;
   }
