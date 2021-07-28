@@ -1,6 +1,6 @@
 import { padLeft } from "./string";
 
-const padLeftDate = padLeft(2, "0");
+const padLeftDate = (value: string) => padLeft(value, 2, "0");
 
 export const formatDate = (date: Date): string => {
   const year = date.getFullYear();
