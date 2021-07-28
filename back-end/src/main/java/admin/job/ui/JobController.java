@@ -25,19 +25,16 @@ public class JobController {
 
     private MemberService memberService;
     private JobService jobService;
-    private GpuServerService gpuServerService;
 
-    public JobController(MemberService memberService, JobService jobService,
-            GpuServerService gpuServerService) {
+    public JobController(MemberService memberService, JobService jobService) {
         this.memberService = memberService;
         this.jobService = jobService;
-        this.gpuServerService = gpuServerService;
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Void> addJob(@PathVariable Long labId, @AuthenticationPrincipal Member member,
+    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
-        Long jobId = jobService.insert(member.getId(), jobRequest);
+        Long jobId = jobService.save(member.getId(), jobRequest);
 
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
@@ -65,7 +62,7 @@ public class JobController {
     }
 
     @PutMapping("/jobs/{jobId}")
-    public ResponseEntity<Void> cancelJob(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+    public ResponseEntity<Void> cancel(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
 
         jobService.cancel(jobId);

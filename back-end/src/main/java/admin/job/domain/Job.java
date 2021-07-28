@@ -95,6 +95,9 @@ public class Job extends BaseEntity {
     }
 
     public void complete() {
+        if (!this.status.isRunning()) {
+            throw JobException.JOB_NOT_RUNNING.getException();
+        }
         this.status = JobStatus.COMPLETED;
     }
 

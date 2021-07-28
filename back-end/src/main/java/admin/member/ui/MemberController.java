@@ -27,15 +27,15 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequest request) {
-        Long createdId = memberService.createMember(request);
+    public ResponseEntity<Void> save(@RequestBody MemberRequest request) {
+        Long createdId = memberService.save(request);
         URI uri = URI.create("/api/members/" + createdId);
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<MemberResponse> findMemberOfMine(@AuthenticationPrincipal Member member) {
-        MemberResponse memberResponse = memberService.findMember(member.getId());
+        MemberResponse memberResponse = memberService.findById(member.getId());
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -48,13 +48,13 @@ public class MemberController {
 
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMemberOfMine(@AuthenticationPrincipal Member member) {
-        memberService.deleteMember(member.getId());
+        memberService.delete(member.getId());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
-        MemberResponse memberResponse = memberService.findMember(id);
+    public ResponseEntity<MemberResponse> findMemberById(@PathVariable Long id) {
+        MemberResponse memberResponse = memberService.findById(id);
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -66,7 +66,7 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+        memberService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
