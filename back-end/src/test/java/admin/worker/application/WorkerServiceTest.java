@@ -10,14 +10,17 @@ import admin.job.domain.Job;
 import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.job.dto.response.JobResponse;
+import admin.job.exception.JobException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
+import admin.worker.dto.WorkerJobLogRequest;
 import admin.worker.dto.WorkerJobRequest;
 import admin.worker.dto.WorkerRequest;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @DisplayName("[WorkerService]")
 class WorkerServiceTest {
+
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -122,4 +126,25 @@ class WorkerServiceTest {
         assertThat(now1).isNotEqualTo(now2);
         assertThat(gpuServer1.getLastResponse()).isEqualTo(now2);
     }
+
+    @DisplayName("로그를 저장하는 경우")
+    @Test
+    void saveLog() {
+        // then
+        Assertions.assertDoesNotThrow(() -> {
+            Long logId = workerService.saveLog(job1.getId(), new WorkerJobLogRequest("content"));
+            assertThat(logId).isNotNull();
+        });
+    }
+
+    @DisplayName("로그 저장에 실패하는 경우")
+    @Test
+    void saveLogFail() {
+        // given
+        Long notExistJobId = Long.MAX_VALUE;
+        // then
+        Assertions.assertThrows(JobException.JOB_NOT_FOUND.getException().getClass(), () ->
+            workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
+    }
 }
+
