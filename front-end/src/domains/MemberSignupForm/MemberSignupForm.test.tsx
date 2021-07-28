@@ -207,22 +207,26 @@ describe("Member/SignupForm", () => {
         submitButton,
       } = setup();
 
-      fireEvent.change(emailInput, { target: { value: "test@dd.com" } });
+      const validEmail = "test@dd.com";
+      const validPassword = "123@cde!";
+      const validName = "동동;";
+
+      fireEvent.change(emailInput, { target: { value: validEmail } });
       fireEvent.blur(emailInput);
-      fireEvent.change(passwordInput, { target: { value: "123" } });
+      fireEvent.change(passwordInput, { target: { value: validPassword } });
       fireEvent.blur(passwordInput);
-      fireEvent.change(passwordConfirmInput, { target: { value: "123" } });
+      fireEvent.change(passwordConfirmInput, { target: { value: validPassword } });
       fireEvent.blur(passwordConfirmInput);
-      fireEvent.change(nameInput, { target: { value: "동동" } });
+      fireEvent.change(nameInput, { target: { value: validName } });
       fireEvent.blur(nameInput);
       fireEvent.click(managerRadio);
       fireEvent.click(submitButton);
 
       expect(form).toHaveFormValues({
-        email: "test@dd.com",
-        password: "123",
-        passwordConfirm: "123",
-        name: "동동",
+        email:validEmail,
+        password: validPassword,
+        passwordConfirm: validPassword,
+        name: validName,
         memberType: "manager",
       });
 
