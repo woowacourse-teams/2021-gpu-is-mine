@@ -3,12 +3,12 @@ import { useFetch } from "../../hooks";
 import { Text, Loading } from "../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
-import { API_ENDPOINT } from "../../constants";
+import { API_ENDPOINT, MESSAGE } from "../../constants";
 import { JobViewResponses } from "../../types";
 
-const queryParam = "?memberId=1";
-
 const JobInfoList = () => {
+  const queryParam = "?memberId=1"; // TODO: 추후 api 변경시 교체
+
   const { data, status, makeRequest } = useFetch<JobViewResponses>(
     API_ENDPOINT.LABS(1).JOBS + queryParam,
     {
@@ -26,7 +26,7 @@ const JobInfoList = () => {
       {status === "loading" && <Loading size="lg" />}
       {status === "failed" && (
         <Text size="lg" weight="bold">
-          🚫 장애가 발생했습니다. 관리자에게 문의해주세요.
+          {MESSAGE.ERROR.SERVER}
         </Text>
       )}
 
