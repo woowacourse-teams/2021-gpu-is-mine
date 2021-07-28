@@ -25,6 +25,11 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     private static final String PASSWORD = "password";
     private MemberRequest memberRequest;
 
+    public static String 회원_등록_및_로그인_후_토큰_발급(MemberRequest memberRequest) {
+        회원_등록되어_있음(memberRequest);
+        return 로그인되어_있음(memberRequest.getEmail(), memberRequest.getPassword()).getAccessToken();
+    }
+
     public static ExtractableResponse<Response> 회원_등록되어_있음(MemberRequest memberRequest) {
         return MEMBER_생성_요청(memberRequest);
     }
