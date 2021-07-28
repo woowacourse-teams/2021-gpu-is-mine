@@ -39,6 +39,12 @@ describe("Member/SignupForm", () => {
 
       expect(emailInput).toHaveAttribute("autoComplete", "email");
     });
+
+    test("이메일 input의 placeholder는 example@gmail.com 이다", () => {
+      const { emailInput } = setup();
+
+      expect(emailInput).toHaveAttribute("placeholder", "example@gmail.com");
+    });
   });
 
   describe("비밀번호", () => {
@@ -72,6 +78,12 @@ describe("Member/SignupForm", () => {
       const { nameInput } = setup();
 
       expect(nameInput).toHaveAttribute("autoComplete", "name");
+    });
+
+    test("이름 input의 placeholder는 김동동 이다", () => {
+      const { nameInput } = setup();
+
+      expect(nameInput).toHaveAttribute("placeholder", "김동동");
     });
   });
 

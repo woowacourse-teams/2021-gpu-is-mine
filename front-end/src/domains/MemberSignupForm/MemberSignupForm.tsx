@@ -1,7 +1,8 @@
 import { ChangeEventHandler, FocusEvent } from "react";
 import { SubmitAction, useFetch, useForm } from "../../hooks";
 import { unwrapResult } from "../../hooks/useFetch/useFetch";
-import { Radio, Button, Input, RadioGroup, Alert, Text } from "../../components";
+import { Radio, Input, RadioGroup, Alert, Text } from "../../components";
+import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { API_ENDPOINT } from "../../constants";
 import { MemberSignupRequest } from "../../types";
 
@@ -50,17 +51,17 @@ const MemberSignupForm = () => {
   };
 
   return (
-    <form {...form} aria-label="signup-form">
+    <StyledForm {...form} aria-label="signup-form">
       {status === "succeed" && (
         <Alert aria-label="succeed-alert">
           <Text>회원가입에 성공하였습니다.</Text>
         </Alert>
       )}
 
-      <Input {...emailInputProps} autoComplete="email" />
-      <Input {...passwordInputProps} type="password" autoComplete="new-password" />
-      <Input {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
-      <Input {...nameProps} autoComplete="name" />
+      <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gmail.com" />
+      <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
+      <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
+      <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
       <RadioGroup label="멤버타입">
         <Radio
           {...memberTypeProps}
@@ -81,10 +82,10 @@ const MemberSignupForm = () => {
           사용자
         </Radio>
       </RadioGroup>
-      <Button type="submit" aria-label="submit" color="secondary-light">
+      <SubmitButton type="submit" aria-label="submit" color="secondary-light">
         제출
-      </Button>
-    </form>
+      </SubmitButton>
+    </StyledForm>
   );
 };
 
