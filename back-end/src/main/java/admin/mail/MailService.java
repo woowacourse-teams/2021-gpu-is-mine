@@ -1,5 +1,7 @@
 package admin.mail;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -9,9 +11,11 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 @Service
+@PropertySource(value = {"classpath:application-mail.properties"})
 public class MailService {
 
-    private static final String NOREPLY_GPUISMINE_COM = "noreply@gpuismine.com";
+    @Value("${spring.mail.from}")
+    private String fromEmail;
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 
@@ -46,7 +50,7 @@ public class MailService {
         final MimeMessagePreparator messagePreparator =
                 mimeMessage -> {
                     final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-                    helper.setFrom(NOREPLY_GPUISMINE_COM);
+                    helper.setFrom(fromEmail);
                     helper.setTo(to);
                     helper.setSubject(subject);
                     helper.setText(body, true);
