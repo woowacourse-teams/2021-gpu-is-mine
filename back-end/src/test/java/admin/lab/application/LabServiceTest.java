@@ -49,7 +49,6 @@ class LabServiceTest {
     @Autowired
     private JobRepository jobRepository;
 
-
     @Test
     @DisplayName("정상 생성")
     void save() {
