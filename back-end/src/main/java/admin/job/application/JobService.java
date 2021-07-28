@@ -14,10 +14,11 @@ import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class JobService {
@@ -65,20 +66,44 @@ public class JobService {
         return JobResponses.of(jobs);
     }
 
-    @Transactional(readOnly = true)
-    public JobResponses findByServer(Long gpuServerId) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(gpuServerId);
+    private JobResponses findAllJobsOfLab(Long labId) {
+        List<Job> jobs = new ArrayList<>();
+
+        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
+            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
+            jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+        }
+
+        return JobResponses.of(jobs);
+    }
+
+    private JobResponses findJobsOfServerByStatus(Long serverId, String status) {
+        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
+        JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
+        return JobResponses.of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
+    }
+
+    private JobResponses findAllJobsOfServer(Long serverId) {
+        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
         return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findByLab(Long labId) {
-        List<Job> jobs = new ArrayList<>();
-
-        for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
-            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
-            jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+    public JobResponses findJobsOfMember(Long memberId, String status) {
+        if (StringUtils.hasText(status)) {
+            return findJobsOfMemberByStatus(memberId, status);
         }
+        return findAllJobsOfMember(memberId);
+    }
+
+    private JobResponses findAllJobsOfMember(Long memberId) {
+        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
+
+        return JobResponses.of(jobs);
+    }
+
+    private JobResponses findJobsOfMemberByStatus(Long memberId, String status) {
+        List<Job> jobs = jobRepository.findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
 
         return JobResponses.of(jobs);
     }
@@ -98,4 +123,11 @@ public class JobService {
         return memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
+
+    public void checkServerInLab(Long serverId, Long labId) {
+        gpuServerRepository
+                .findByIdAndLabIdAndDeletedFalse(serverId, labId)
+                .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
+    }
+
 }
