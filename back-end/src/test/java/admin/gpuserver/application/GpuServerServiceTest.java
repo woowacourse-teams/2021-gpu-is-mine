@@ -148,12 +148,17 @@ public class GpuServerServiceTest {
     @DisplayName("GPU 서버를 삭제하는 경우 GPU 보드, Job 도 같이 삭제된다.")
     @Test
     void deleteWithGpuId() {
-        gpuServerService.delete(gpuServer1.getId());
-        boolean existenceOfGpuBoard = gpuBoardRepository.findByGpuServerId(gpuServer1.getId()).isPresent();
-        List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard1.getId());
+        Long serverId = gpuServer1.getId();
+        Long boardId = gpuBoardRepository.findByGpuServerId(serverId).get().getId();
 
-        assertThatThrownBy(() -> gpuServerService.findById(gpuServer1.getId())).isInstanceOf(NotFoundException.class);
+        gpuServerService.delete(serverId);
+
+        assertThatThrownBy(() -> gpuServerService.findById(serverId)).isInstanceOf(NotFoundException.class);
+
+        boolean existenceOfGpuBoard = gpuBoardRepository.findById(boardId).isPresent();
         assertThat(existenceOfGpuBoard).isFalse();
+
+        List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard1.getId());
         assertThat(jobs).hasSize(0);
     }
 

@@ -2,6 +2,7 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class GpuBoard extends BaseEntity {
     private Long performance;
     private String modelName;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "gpu_server_id")
     private GpuServer gpuServer;
 

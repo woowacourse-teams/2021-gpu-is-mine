@@ -18,6 +18,7 @@ import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,11 +76,11 @@ public class GpuServerService {
     public void delete(Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
-        gpuBoard.breakGpuServerRelation();
 
-        gpuServerRepository.delete(gpuServer);
         List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         jobRepository.deleteInBatch(jobs);
+        gpuBoardRepository.delete(gpuBoard);
+        gpuServerRepository.delete(gpuServer);
     }
 
     @Transactional
