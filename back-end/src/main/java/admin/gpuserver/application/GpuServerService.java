@@ -50,7 +50,7 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponses findAllLiveServer(Long labId) {
+    public GpuServerResponses findAll(Long labId) {
         validateLab(labId);
 
         List<GpuServer> gpuServers = gpuServerRepository.findAllByLabId(labId);
@@ -61,7 +61,7 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public List<GpuServer> findAllServerByLabId(Long labId) {
+    public List<GpuServer> findAllByLabId(Long labId) {
         return gpuServerRepository.findAllByLabId(labId);
     }
 

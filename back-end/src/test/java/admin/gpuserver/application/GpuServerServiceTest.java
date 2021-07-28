@@ -20,11 +20,7 @@ import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
-import admin.member.domain.Member;
-import admin.member.domain.MemberType;
-import admin.member.domain.repository.MemberRepository;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,12 +96,12 @@ public class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllLiveServer(lab.getId());
+        GpuServerResponses gpuServerResponses = gpuServerService.findAll(lab.getId());
         int beforeSize = gpuServerResponses.getGpuServers().size();
 
         gpuServerService.delete(gpuServer1.getId());
 
-        GpuServerResponses gpuServers = gpuServerService.findAllLiveServer(lab.getId());
+        GpuServerResponses gpuServers = gpuServerService.findAll(lab.getId());
         assertThat(gpuServers.getGpuServers()).hasSize(beforeSize - 1);
     }
 
@@ -113,7 +109,7 @@ public class GpuServerServiceTest {
     @Test
     void 존재하지_않는_Lab_ID로_전체_조회() {
         final Long nonexistentLabId = Long.MAX_VALUE;
-        assertThatThrownBy(() -> gpuServerService.findAllLiveServer(nonexistentLabId))
+        assertThatThrownBy(() -> gpuServerService.findAll(nonexistentLabId))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 

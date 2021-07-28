@@ -62,13 +62,6 @@ public class JobService {
         return JobResponse.of(job);
     }
 
-    @Transactional(readOnly = true)
-    public JobResponses findByMember(Long memberId) {
-        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
-
-        return JobResponses.of(jobs);
-    }
-
     private JobResponses findAllJobsOfLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
 
@@ -112,9 +105,8 @@ public class JobService {
     }
 
     private GpuBoard findLiveBoardByServerId(Long gpuServerId) {
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
+       return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
-        return gpuBoard;
     }
 
     private Job findJobById(Long id) {

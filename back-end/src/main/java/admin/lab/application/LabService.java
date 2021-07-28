@@ -54,7 +54,7 @@ public class LabService {
     @Transactional
     public void delete(Long labId) {
         Lab lab = findLabById(labId);
-        List<GpuServer> gpuServers = gpuServerService.findAllServerByLabId(lab.getId());
+        List<GpuServer> gpuServers = gpuServerService.findAllByLabId(lab.getId());
 
         for (GpuServer gpuServer : gpuServers) {
             gpuServerService.delete(gpuServer.getId());
