@@ -6,11 +6,9 @@ import { StyledJobInfoList } from "./JobInfoList.styled";
 import { API_ENDPOINT } from "../../constants";
 import { JobViewResponses } from "../../types";
 
-interface JobInfoListProps {}
-
 const queryParam = "?memberId=1";
 
-const JobInfoList = ({}: JobInfoListProps) => {
+const JobInfoList = () => {
   const { data, status, makeRequest } = useFetch<JobViewResponses>(
     API_ENDPOINT.LABS(1).JOBS + queryParam,
     {
