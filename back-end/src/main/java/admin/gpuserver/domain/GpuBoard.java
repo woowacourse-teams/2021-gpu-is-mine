@@ -2,7 +2,6 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

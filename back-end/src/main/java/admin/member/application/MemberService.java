@@ -18,6 +18,7 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,5 +137,9 @@ public class MemberService {
     private Lab findLabById(Long labId) {
         return labRepository.findById(labId)
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
+    }
+
+    public List<Member> findAllByLabId(Long labId) {
+        return memberRepository.findAllByLabId(labId);
     }
 }
