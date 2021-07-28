@@ -44,6 +44,14 @@ describe("ManagerNavigation", () => {
     expect(getLocation().pathname).toBe(PATH.MANAGER.GPU_SERVER.REGISTER);
   });
 
+  test("Job 관리 조회  Route 테스트", () => {
+    const getLocation = renderWithRouter();
+
+    userEvent.click(screen.getByRole("link", { name: "job-view" }), leftClick);
+
+    expect(getLocation().pathname).toBe(PATH.MANAGER.JOB.VIEW);
+  });
+
   test("Job 관리 등록  Route 테스트", () => {
     const getLocation = renderWithRouter();
 
