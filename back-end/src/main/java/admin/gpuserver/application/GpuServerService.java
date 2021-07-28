@@ -66,7 +66,7 @@ public class GpuServerService {
     }
 
     @Transactional
-    public void updateGpuServer(GpuServerUpdateRequest updateRequest, Long gpuServerId) {
+    public void update(GpuServerUpdateRequest updateRequest, Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         gpuServer.update(updateRequest.getName());
     }

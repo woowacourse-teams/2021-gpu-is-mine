@@ -15,6 +15,8 @@ import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import admin.gpuserver.exception.GpuServerException;
+import admin.job.domain.Job;
+import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
@@ -42,6 +44,9 @@ public class GpuServerServiceTest {
 
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Autowired
     private LabRepository labRepository;

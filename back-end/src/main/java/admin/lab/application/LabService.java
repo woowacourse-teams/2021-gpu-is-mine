@@ -62,7 +62,7 @@ public class LabService {
 
         List<Member> members = memberService.findAllByLabId(lab.getId());
         for (Member member : members) {
-            memberService.deleteMember(member.getId());
+            memberService.delete(member.getId());
         }
         labRepository.delete(lab);
     }

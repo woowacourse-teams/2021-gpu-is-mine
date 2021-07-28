@@ -76,7 +76,7 @@ public class JobService {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
-            GpuBoard gpuBoard = findAliveBoardByServerId(gpuServer.getId());
+            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
 

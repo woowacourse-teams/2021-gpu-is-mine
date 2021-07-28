@@ -98,7 +98,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
         Member member = findMemberById(memberId);
-        GpuServer gpuServer = findLiveServerById(gpuServerId);
+        GpuServer gpuServer = findAliveServerById(gpuServerId);
 
         member.checkPermissionOnServer(gpuServer);
     }
