@@ -1,1 +1,2 @@
-export const padLeft = (length: number, prefix: string) => (value: string) => value.padStart(length, prefix);
+export const padLeft = (value: string, length: number, prefix: string) =>
+  value.padStart(length, prefix);
