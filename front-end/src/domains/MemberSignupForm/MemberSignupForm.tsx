@@ -5,6 +5,12 @@ import { Radio, Input, RadioGroup, Alert, Text } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { API_ENDPOINT } from "../../constants";
 import { MemberSignupRequest } from "../../types";
+import {
+  emailValidator,
+  passwordValidator,
+  passwordConfirmValidator,
+  nameValidator,
+} from "./validator";
 
 const MemberSignupForm = () => {
   const { makeRequest, status } = useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
@@ -22,16 +28,25 @@ const MemberSignupForm = () => {
 
   const { form, useInput } = useForm(submitAction);
 
-  const emailInputProps = useInput("", { name: "email", label: "이메일" });
+  const emailInputProps = useInput("", {
+    name: "email",
+    label: "이메일",
+    validator: emailValidator,
+  });
 
-  const passwordInputProps = useInput("", { name: "password", label: "비밀번호" });
+  const passwordInputProps = useInput("", {
+    name: "password",
+    label: "비밀번호",
+    validator: passwordValidator,
+  });
 
   const passwordConfirmInputProps = useInput("", {
     name: "passwordConfirm",
     label: "비밀번호 확인",
+    validator: (value) => passwordConfirmValidator(value, String(passwordInputProps.value)),
   });
 
-  const nameProps = useInput("", { name: "name", label: "이름" });
+  const nameProps = useInput("", { name: "name", label: "이름", validator: nameValidator });
 
   const {
     validationMessage,
