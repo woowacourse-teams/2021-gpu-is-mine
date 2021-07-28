@@ -1,6 +1,6 @@
-import { JobViewResponses } from "../types/jobs";
+import { JobViewResponses } from "../types";
 
-const jobResponsesMock: JobViewResponses = {
+const jobsResponsesMock: JobViewResponses = {
   jobResponses: [
     {
       id: 1,
@@ -95,4 +95,4 @@ const jobResponsesMock: JobViewResponses = {
   ],
 } as const;
 
-export default jobResponsesMock;
+export default jobsResponsesMock;

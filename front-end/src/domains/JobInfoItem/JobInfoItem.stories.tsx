@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import jobResponsesMock from "../../__fixtures__/jobsResponses";
+import { jobsResponsesMock } from "../../__fixtures__";
 
 import JobInfoItem from "./JobInfoItem";
 
@@ -23,20 +23,20 @@ CompletedJob.args = {
 export const CanceledJob = Template.bind({});
 
 CanceledJob.args = {
-  ...jobResponsesMock.jobResponses[1],
+  ...jobsResponsesMock.jobResponses[1],
   status: "CANCELED",
 };
 
 export const WaitingJob = Template.bind({});
 
 WaitingJob.args = {
-  ...jobResponsesMock.jobResponses[2],
+  ...jobsResponsesMock.jobResponses[2],
   status: "WAITING",
 };
 
 export const RunningJob = Template.bind({});
 
 RunningJob.args = {
-  ...jobResponsesMock.jobResponses[3],
+  ...jobsResponsesMock.jobResponses[3],
   status: "RUNNING",
 };
