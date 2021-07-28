@@ -9,9 +9,7 @@ import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
 import admin.member.domain.Member;
 import java.net.URI;
-import java.util.Objects;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +25,13 @@ public class JobController {
 
     private MemberService memberService;
     private JobService jobService;
-    private GpuServerService serverService;
+    private GpuServerService gpuServerService;
 
     public JobController(MemberService memberService, JobService jobService,
-            GpuServerService serverService) {
+            GpuServerService gpuServerService) {
         this.memberService = memberService;
         this.jobService = jobService;
-        this.serverService = serverService;
+        this.gpuServerService = gpuServerService;
     }
 
     @PostMapping("/jobs")
@@ -52,31 +50,18 @@ public class JobController {
     }
 
     @GetMapping("/jobs/me")
-    public JobResponses findJobsOfMine(@AuthenticationPrincipal Member member,
+    public ResponseEntity<JobResponses> findJobsOfMine(@AuthenticationPrincipal Member member,
             @RequestParam(required = false) String status) {
-        if (StringUtils.hasText(status)) {
-            return jobService.findJobsByMemberByStatus(member.getId(), status);
-        }
-        return jobService.findAllJobsByMember(member.getId());
+        JobResponses jobResponses = jobService.findJobsOfMember(member.getId(), status);
+        return ResponseEntity.ok(jobResponses);
     }
 
     @GetMapping("/jobs")
-    public JobResponses findJobs(@PathVariable Long labId,
+    public ResponseEntity<JobResponses> findJobs(@PathVariable Long labId,
             @RequestParam(required = false) Long serverId,
             @RequestParam(required = false) String status) {
-        if (Objects.isNull(serverId)) {
-
-            if (StringUtils.hasText(status)) {
-                return jobService.findJobsOfLabByStatus(labId, status);
-            }
-            return jobService.findAllJobsOfLab(labId);
-        }
-
-        serverService.checkServerInLab(serverId, labId);
-        if (StringUtils.hasText(status)) {
-            return jobService.findJobsOfServerByStatus(serverId, status);
-        }
-        return jobService.findAllJobsOfServer(serverId);
+        JobResponses jobResponses = jobService.findJobs(labId, serverId, status);
+        return ResponseEntity.ok(jobResponses);
     }
 
     @PutMapping("/jobs/{jobId}")

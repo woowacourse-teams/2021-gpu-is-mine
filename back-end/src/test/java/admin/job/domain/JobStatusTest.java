@@ -3,13 +3,12 @@ package admin.job.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import admin.AcceptanceTest;
 import admin.job.exception.JobException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class JobStatusTest extends AcceptanceTest {
+public class JobStatusTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"not", "existing", " "})
