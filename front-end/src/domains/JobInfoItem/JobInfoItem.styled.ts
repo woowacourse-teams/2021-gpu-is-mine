@@ -11,6 +11,7 @@ export const StyledJobInfoItem = styled.div`
   column-gap: 1rem;
   padding: 0.75rem 1.25rem;
   box-shadow: 0px 3px 5px 1px #e9eefa;
+  background-color: #fff;
 
   .job-info-title-wrapper {
     display: flex;
