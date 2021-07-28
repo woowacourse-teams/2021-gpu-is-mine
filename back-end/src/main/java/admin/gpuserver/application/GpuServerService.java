@@ -76,8 +76,8 @@ public class GpuServerService {
     public void delete(Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
-
         List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
+
         jobRepository.deleteInBatch(jobs);
         gpuBoardRepository.delete(gpuBoard);
         gpuServerRepository.delete(gpuServer);

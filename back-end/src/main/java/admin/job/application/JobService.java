@@ -105,7 +105,7 @@ public class JobService {
     }
 
     private GpuBoard findLiveBoardByServerId(Long gpuServerId) {
-       return gpuBoardRepository.findByGpuServerId(gpuServerId)
+        return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }
 
