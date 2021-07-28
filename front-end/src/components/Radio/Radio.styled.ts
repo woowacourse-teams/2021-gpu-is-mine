@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { srOnly } from "../../styles";
 
 export const StyledLabel = styled.label<{ disabled: boolean }>`
   display: flex;
@@ -14,7 +15,7 @@ export const StyledLabel = styled.label<{ disabled: boolean }>`
   `}
 
   .radio__input {
-    display: none;
+    ${srOnly}
   }
 
   .radio__button {
