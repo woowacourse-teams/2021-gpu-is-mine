@@ -5,7 +5,7 @@ import { Radio, Button, Input, RadioGroup, Alert, Text } from "../../components"
 import { API_ENDPOINT } from "../../constants";
 import { MemberSignupRequest } from "../../types";
 
-const SignupForm = () => {
+const MemberSignupForm = () => {
   const { makeRequest, status } = useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
     method: "post",
   });
@@ -88,4 +88,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default MemberSignupForm;

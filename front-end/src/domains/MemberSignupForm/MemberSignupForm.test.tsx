@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, userEvent } from "test-utils";
-import SignupForm from "./SignupForm";
+import MemberSignupForm from "./MemberSignupForm";
 
-describe("SignupForm", () => {
+describe("Member/SignupForm", () => {
   const setup = () => {
-    render(<SignupForm />);
+    render(<MemberSignupForm />);
 
     const form = screen.getByRole("form", { name: "signup-form" });
     const emailInput = screen.getByRole("textbox", { name: "이메일" });
