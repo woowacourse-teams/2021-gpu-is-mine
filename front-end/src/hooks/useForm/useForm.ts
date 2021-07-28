@@ -3,7 +3,9 @@ import { ChangeEvent, FocusEvent, FormEvent, useEffect, useState } from "react";
 type Value = string | number;
 export type Values = Record<string, Value>;
 type IsValid = Record<string, boolean>;
-export type SubmitAction<T, U extends Error = Error> = (values: Values) => T | Promise<T | U>;
+export type SubmitAction<T = void, U extends Error = Error> = (
+  values: Values
+) => T | Promise<T | U>;
 
 export interface InputOptions {
   name: string;

@@ -1,8 +1,7 @@
 import { ReactNode, MouseEventHandler, MouseEvent, ComponentProps } from "react";
-import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
-import { AlertWrapper } from "./Alert.styled";
+import { ButtonWrapper, ContentWrapper, StyledAlert, StyledButton } from "./Alert.styled";
 
 interface AlertProps {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
@@ -21,14 +20,14 @@ const Alert = ({ dimmedColor, isOpen = true, close, children, onConfirm }: Alert
   return isOpen ? (
     <Portal>
       <Dimmer color={dimmedColor}>
-        <AlertWrapper>
-          <div className="content-wrapper">{children}</div>
-          <div className="button-wrapper">
-            <Button className="button" color="secondary-light" onClick={handleConfirm}>
+        <StyledAlert role="alertdialog">
+          <ContentWrapper>{children}</ContentWrapper>
+          <ButtonWrapper>
+            <StyledButton aria-label="confirm" color="secondary-light" onClick={handleConfirm}>
               확인
-            </Button>
-          </div>
-        </AlertWrapper>
+            </StyledButton>
+          </ButtonWrapper>
+        </StyledAlert>
       </Dimmer>
     </Portal>
   ) : null;
