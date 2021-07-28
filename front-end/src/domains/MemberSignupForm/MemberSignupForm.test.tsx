@@ -7,7 +7,7 @@ describe("Member/SignupForm", () => {
     render(<MemberSignupForm />);
 
     const form = screen.getByRole("form", { name: "signup-form" });
-    const emailInput = screen.getByRole("textbox", { name: "이메일" });
+    const emailInput = screen.getByLabelText("이메일");
     const passwordInput = screen.getByLabelText("비밀번호");
     const passwordConfirmInput = screen.getByLabelText("비밀번호 확인");
     const nameInput = screen.getByLabelText("이름");
@@ -223,7 +223,7 @@ describe("Member/SignupForm", () => {
       fireEvent.click(submitButton);
 
       expect(form).toHaveFormValues({
-        email:validEmail,
+        email: validEmail,
         password: validPassword,
         passwordConfirm: validPassword,
         name: validName,
