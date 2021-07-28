@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { textEllipsis } from "../../styles/common";
 
 export const StyledJobInfoItem = styled.div`
   display: grid;
@@ -32,9 +33,7 @@ export const StyledJobInfoItem = styled.div`
   }
 
   .job-info-details-wrapper__text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    ${textEllipsis}
   }
 
   .job-info-button-wrapper__button {
