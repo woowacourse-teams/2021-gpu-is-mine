@@ -28,7 +28,9 @@ const ManagerNavigation = (props: NavigationProps) => (
         Job 관리
       </Text>
       <NavLink to={PATH.MANAGER.JOB.VIEW}>
-        <Text className="menu__item">조회</Text>
+        <Text className="menu__item" aria-label="job-view">
+          조회
+        </Text>
       </NavLink>
       <NavLink to={PATH.MANAGER.JOB.REGISTER}>
         <Text className="menu__item" aria-label="job-register">
