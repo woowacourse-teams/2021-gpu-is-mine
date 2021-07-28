@@ -22,7 +22,7 @@ import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
-import java.util.Arrays;
+import admin.member.fixture.MemberFixtures;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -202,7 +202,7 @@ class JobServiceTest {
                     responses.getJobResponses().stream()
                             .map(JobResponse::getId)
                             .collect(Collectors.toList())
-            ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
+            ).containsExactly(jobIds);
         }
     }
 }

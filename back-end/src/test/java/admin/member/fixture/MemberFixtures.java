@@ -5,12 +5,12 @@ import admin.member.dto.request.MemberRequest;
 
 public class MemberFixtures {
 
-    public static final String USER_EMAIL = "email@email.com";
-    public static final String MANAGER_EMAIL = "manager@email.com";
-    public static final String PASSWORD = "password";
-    public static final String NAME = "name";
-    public static final MemberType MANAGER = MemberType.MANAGER;
-    public static final MemberType USER = MemberType.USER;
+    private static final String USER_EMAIL = "email@email.com";
+    private static final String MANAGER_EMAIL = "manager@email.com";
+    private static final String PASSWORD = "password";
+    private static final String NAME = "name";
+    private static final MemberType MANAGER = MemberType.MANAGER;
+    private static final MemberType USER = MemberType.USER;
 
     public static MemberRequest userCreationRequest(Long labId) {
         return new MemberRequest(USER_EMAIL, PASSWORD, NAME, USER.name(), labId);
