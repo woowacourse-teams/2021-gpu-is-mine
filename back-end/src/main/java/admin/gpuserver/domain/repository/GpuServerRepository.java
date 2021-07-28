@@ -6,11 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GpuServerRepository extends JpaRepository<GpuServer, Long> {
-    Optional<GpuServer> findByIdAndDeletedFalse(Long gpuServerId);
-
-    Optional<GpuServer> findByIdAndLabIdAndDeletedFalse(Long serverId, Long labId);
-
-    List<GpuServer> findByLabIdAndDeletedFalse(Long labId);
+    Optional<GpuServer> findByIdAndLabId(Long serverId, Long labId);
 
     List<GpuServer> findAllByLabId(Long labId);
 }
