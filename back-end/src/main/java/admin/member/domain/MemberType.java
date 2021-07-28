@@ -13,4 +13,8 @@ public enum MemberType {
             throw MemberException.INVALID_MEMBER_TYPE.getException();
         }
     }
+
+    public boolean isManager() {
+        return this.equals(MANAGER);
+    }
 }

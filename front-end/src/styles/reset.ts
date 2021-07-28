@@ -1,9 +1,11 @@
 import { css } from "styled-components";
 
 const reset = css`
-  /*! tailwindcss v2.2.4 | MIT License | https://tailwindcss.com */
+  /* check this issue: https://github.com/styled-components/styled-components/issues/1931#issuecomment-585396279 */
 
-  /*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
+  /* tailwindcss v2.2.4 | MIT License | https://tailwindcss.com */
+
+  /* modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
   /*
 Document

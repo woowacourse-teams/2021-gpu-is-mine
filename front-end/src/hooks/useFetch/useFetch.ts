@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import { getData } from "../../utils/axios";
 import {
   APICallState,
   MakeRequestReturnType,
@@ -7,7 +8,7 @@ import {
   UseFetchReturnType,
 } from "../../types";
 
-const getClient = (method: UseFetchOptionParameter["method"]) => axios[method].bind(axios);
+export const unwrapResult = <T>(ret: MakeRequestReturnType<T>) => ret.unwrap.call(ret);
 
 const useFetch = <T, U = void>(
   url: string,
@@ -23,33 +24,24 @@ const useFetch = <T, U = void>(
 
   const makeRequest = useCallback(
     async (body: U) => {
-      const ret: MakeRequestReturnType<T> = {
-        data: null,
-        error: null,
-        unwrap() {
-          if (this.error) {
-            return Promise.reject(this.error);
-          }
-
-          return Promise.resolve(this.data as T);
-        },
+      const unwrap = function unwrap(this: MakeRequestReturnType<T>) {
+        return this.error ? Promise.reject(this.error) : Promise.resolve(this.data as T);
       };
 
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
-        const client = getClient(method);
 
-        const { data } = await client<T>(url, body);
+        const data = await getData<T, U>(url, { body, method });
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
-        return { ...ret, data };
+        return { data, error: null, unwrap };
       } catch (err) {
         const error = err as AxiosError;
 
         setState((prev) => ({ ...prev, status: "failed", error, data: null }));
 
-        return { ...ret, error };
+        return { data: null, error, unwrap };
       }
     },
     [method, url]

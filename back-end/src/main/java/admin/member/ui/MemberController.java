@@ -1,10 +1,10 @@
 package admin.member.ui;
 
+import admin.auth.domain.AuthenticationPrincipal;
 import admin.member.application.MemberService;
-import admin.member.dto.request.ChangeLabRequest;
+import admin.member.domain.Member;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +27,34 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequest request) {
-        Long createdId = memberService.createMember(request);
+    public ResponseEntity<Void> save(@RequestBody MemberRequest request) {
+        Long createdId = memberService.save(request);
         URI uri = URI.create("/api/members/" + createdId);
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponse> findMemberOfMine(@AuthenticationPrincipal Member member) {
+        MemberResponse memberResponse = memberService.findById(member.getId());
+        return ResponseEntity.ok(memberResponse);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateMemberInfoOfMine(@AuthenticationPrincipal Member member,
+            @RequestBody MemberInfoRequest request) {
+        memberService.updateMemberInfo(member.getId(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMemberOfMine(@AuthenticationPrincipal Member member) {
+        memberService.delete(member.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
-        MemberResponse memberResponse = memberService.findMember(id);
+    public ResponseEntity<MemberResponse> findMemberById(@PathVariable Long id) {
+        MemberResponse memberResponse = memberService.findById(id);
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -45,21 +64,9 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/memberType")
-    public ResponseEntity<Void> updateMemberType(@PathVariable Long id, @RequestBody MemberTypeRequest request) {
-        memberService.updateMemberType(id, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/lab")
-    public ResponseEntity<Void> updateMemberLab(@PathVariable Long id, @RequestBody ChangeLabRequest request) {
-        memberService.changeLab(id, request);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+        memberService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

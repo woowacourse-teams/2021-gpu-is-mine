@@ -25,16 +25,26 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
-  plugins: ["react", "react-hooks", "import", "jsx-a11y", "@typescript-eslint"],
+  plugins: [
+    "react",
+    "react-hooks",
+    "import",
+    "jsx-a11y",
+    "@typescript-eslint",
+    "jest",
+    "jest-dom",
+    "testing-library",
+  ],
   rules: {
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
   },
   overrides: [
     {
-      files: "**/*.stories.tsx",
+      files: ["**/*.stories.tsx", "src/__test__/**/*"],
       rules: {
         "import/no-extraneous-dependencies": "off",
       },

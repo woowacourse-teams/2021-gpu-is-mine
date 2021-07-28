@@ -12,11 +12,28 @@ const ManagerNavigation = (props: NavigationProps) => (
       <Text weight="medium" className="menu__title">
         GPU 서버 관리
       </Text>
-      <NavLink to={PATH.MANAGER.GPU_SERVER.VIEW} activeClassName="active">
-        <Text className="menu__item">조회</Text>
+      <NavLink to={PATH.MANAGER.GPU_SERVER.VIEW}>
+        <Text className="menu__item" aria-label="gpu-server-view">
+          조회
+        </Text>
       </NavLink>
       <NavLink to={PATH.MANAGER.GPU_SERVER.REGISTER}>
-        <Text className="menu__item">등록</Text>
+        <Text className="menu__item" aria-label="gpu-server-register">
+          등록
+        </Text>
+      </NavLink>
+    </section>
+    <section className="menu">
+      <Text weight="medium" className="menu__title">
+        Job 관리
+      </Text>
+      <NavLink to={PATH.MANAGER.JOB.VIEW}>
+        <Text className="menu__item">조회</Text>
+      </NavLink>
+      <NavLink to={PATH.MANAGER.JOB.REGISTER}>
+        <Text className="menu__item" aria-label="job-register">
+          등록
+        </Text>
       </NavLink>
     </section>
     <section className="menu">

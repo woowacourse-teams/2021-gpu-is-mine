@@ -2,6 +2,7 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuServerException;
 import admin.lab.domain.Lab;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,9 @@ public class GpuServer extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "lab_id")
     private Lab lab;
+
+    @Column(name = "last_response")
+    private LocalDateTime lastResponse;
 
     protected GpuServer() {
     }
@@ -105,5 +109,17 @@ public class GpuServer extends BaseEntity {
 
     public void update(String name) {
         this.name = name;
+    }
+
+    public void changeStatus(Boolean isOn) {
+        this.isOn = isOn;
+    }
+
+    public void updateLastResponse(LocalDateTime lastResponse) {
+        this.lastResponse = lastResponse;
+    }
+
+    public LocalDateTime getLastResponse() {
+        return lastResponse;
     }
 }

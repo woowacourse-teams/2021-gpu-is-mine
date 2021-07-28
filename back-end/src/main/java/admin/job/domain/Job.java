@@ -2,6 +2,7 @@ package admin.job.domain;
 
 import admin.gpuserver.domain.BaseEntity;
 import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
 import admin.job.exception.JobException;
 import admin.member.domain.Member;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class Job extends BaseEntity {
         }
 
         if (Objects.isNull(status)) {
-            throw JobException.INVALID_STATUS.getException();
+            throw JobException.INVALID_JOB_STATUS.getException();
         }
 
         if (Objects.isNull(gpuBoard)) {
@@ -87,10 +88,24 @@ public class Job extends BaseEntity {
     }
 
     public void cancel() {
+        if (!this.status.isWaiting()) {
+            throw JobException.NO_WAITING_JOB.getException();
+        }
         this.status = JobStatus.CANCELED;
     }
 
     public void complete() {
+        if (!this.status.isRunning()) {
+            throw JobException.JOB_NOT_RUNNING.getException();
+        }
         this.status = JobStatus.COMPLETED;
+    }
+
+    public GpuServer getGpuServer() {
+        return gpuBoard.getGpuServer();
+    }
+
+    public void changeStatus(JobStatus status) {
+        this.status = status;
     }
 }

@@ -5,6 +5,7 @@ import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
+import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +29,7 @@ public class GpuServerController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody GpuServerRequest gpuServerRequest, @PathVariable Long labId) {
-        Long gpuServerId = gpuServerService.saveGpuServer(gpuServerRequest, labId);
+        Long gpuServerId = gpuServerService.save(gpuServerRequest, labId);
 
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri).build();
@@ -41,8 +42,8 @@ public class GpuServerController {
     }
 
     @GetMapping
-    public ResponseEntity<GpuServerResponses> findAll(@PathVariable Long labId) {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAll(labId);
+    public ResponseEntity<GpuServerResponses> findAllLiveServer(@PathVariable Long labId) {
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllLiveServer(labId);
         return ResponseEntity.ok(gpuServerResponses);
     }
 
@@ -50,7 +51,7 @@ public class GpuServerController {
     public ResponseEntity<Void> update(
             @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest,
             @PathVariable Long gpuServerId) {
-        gpuServerService.updateGpuServer(gpuServerUpdateRequest, gpuServerId);
+        gpuServerService.update(gpuServerUpdateRequest, gpuServerId);
 
         return ResponseEntity.noContent().build();
     }
@@ -60,5 +61,10 @@ public class GpuServerController {
         gpuServerService.delete(gpuServerId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{gpuServerId}/status")
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId) {
+        return ResponseEntity.ok(gpuServerService.findStatusById(gpuServerId));
     }
 }

@@ -6,6 +6,7 @@ export const StyledInfoList = styled.section`
   align-items: center;
   flex-direction: column;
   row-gap: 0.75rem;
+  width: 100%;
 
   ${up("tablet")} {
     grid-column: 2 / 3;
