@@ -1,4 +1,4 @@
-import { JobViewResponses } from "./../types/jobs";
+import { JobViewResponses } from "../types/jobs";
 
 const jobResponsesMock: JobViewResponses = {
   jobResponses: [

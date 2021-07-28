@@ -83,7 +83,7 @@ const JobInfoItem = ({
           </div>
           <div className="job-info-details-wrapper__detail-col">
             <Text size="sm" weight="bold">
-              {"(예상) 시작 시간"}
+              (예상) 시작 시간
             </Text>
             <Text size="sm" weight="medium">
               {startTime}
@@ -91,7 +91,7 @@ const JobInfoItem = ({
           </div>
           <div className="job-info-details-wrapper__detail-col">
             <Text size="sm" weight="bold">
-              {"(예상) 완료 시간"}
+              (예상) 완료 시간
             </Text>
             <Text size="sm" weight="medium">
               {endTime}

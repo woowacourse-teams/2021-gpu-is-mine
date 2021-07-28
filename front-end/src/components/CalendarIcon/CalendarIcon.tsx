@@ -1,4 +1,5 @@
 import { HTMLAttributes } from "react";
+import { JobStatus } from "types";
 import {
   StyledCalendarCheckIcon,
   StyledCalendarCancelIcon,
@@ -6,7 +7,6 @@ import {
   StyledCalendarWaitIcon,
   StyledCalendarIconProps,
 } from "./CalendarIcon.styled";
-import { JobStatus } from "types";
 
 type CalendarIconProps = Partial<StyledCalendarIconProps> &
   HTMLAttributes<HTMLOrSVGElement> & {
