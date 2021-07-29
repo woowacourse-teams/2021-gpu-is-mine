@@ -1,11 +1,11 @@
 package admin.job.ui;
 
 import admin.auth.domain.AuthenticationPrincipal;
-import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
+import admin.mail.MailService;
 import admin.member.application.MemberService;
 import admin.member.domain.Member;
 import java.net.URI;
@@ -25,16 +25,19 @@ public class JobController {
 
     private MemberService memberService;
     private JobService jobService;
+    private MailService mailService;
 
-    public JobController(MemberService memberService, JobService jobService) {
+    public JobController(MemberService memberService, JobService jobService, MailService mailService) {
         this.memberService = memberService;
         this.jobService = jobService;
+        this.mailService = mailService;
     }
 
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
         Long jobId = jobService.save(member.getId(), jobRequest);
+        mailService.sendJobReserveMail(member.getEmail(), jobRequest.getName());
 
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
@@ -65,7 +68,10 @@ public class JobController {
     public ResponseEntity<Void> cancel(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
 
+        JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);
+        mailService.sendJobCancelMail(member.getEmail(), job.getName());
+
         return ResponseEntity.noContent().build();
     }
 }

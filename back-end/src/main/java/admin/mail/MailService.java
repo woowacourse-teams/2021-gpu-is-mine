@@ -25,6 +25,28 @@ public class MailService {
     }
 
     @Async("mailExecutor")
+    public void sendJobReserveMail(String to, String jobName) {
+        Context context = new Context();
+        context.setVariable("jobName", jobName);
+
+        String subject = "[GPU-IS_MINE] Job 예약 완료 메일";
+        String body = templateEngine.process("job-reserve.html", context);
+
+        sendMail(to, subject, body);
+    }
+
+    @Async("mailExecutor")
+    public void sendJobCancelMail(String to, String jobName) {
+        Context context = new Context();
+        context.setVariable("jobName", jobName);
+
+        String subject = "[GPU-IS_MINE] Job 취소 완료 메일";
+        String body = templateEngine.process("job-cancel.html", context);
+
+        sendMail(to, subject, body);
+    }
+
+    @Async("mailExecutor")
     public void sendJobStartMail(String to, String jobName) {
         Context context = new Context();
         context.setVariable("jobName", jobName);
