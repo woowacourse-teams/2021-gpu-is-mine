@@ -109,76 +109,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("UPDATE - MemberType 변경")
-    void updateMemberType() {
-        Long createdId = memberService.save(memberRequest);
-        MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
-
-        memberService.updateMemberType(createdId, memberTypeRequest);
-
-        MemberResponse response = memberService.findById(createdId);
-        Assertions.assertThat(response.getMemberType()).isEqualTo(MemberType.USER);
-    }
-
-    @Test
-    @DisplayName("UPDATE - 존재하지 멤버, 타입 수정시 에러 발생")
-    void updateNotExistingMemberMemberType() {
-        Long notExistingMemberId = Long.MAX_VALUE;
-        MemberTypeRequest memberTypeRequest = new MemberTypeRequest("USER");
-
-        Throwable throwable = catchThrowable(() -> memberService
-                .updateMemberType(notExistingMemberId, memberTypeRequest));
-        존재하지_않는_회원_요청_에러_발생(throwable);
-    }
-
-    @Test
-    @DisplayName("UPDATE - 존재하지 않는 MemberType 변경 요청시 에러 발생")
-    void updateNotExistingMemberType() {
-        Long createdId = memberService.save(memberRequest);
-        MemberTypeRequest notMemberType = new MemberTypeRequest("NOT_MEMBER_TYPE");
-
-        assertThatThrownBy(() -> memberService.updateMemberType(createdId, notMemberType))
-                .isEqualTo(MemberException.INVALID_MEMBER_TYPE.getException());
-    }
-
-    @Test
-    @DisplayName("UPDATE - Lab 수정")
-    void updateMemberExistingLab() {
-        Long createdId = memberService.save(memberRequest);
-        Long newLabId = labService.save(new LabRequest("newLab"));
-        ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
-
-        memberService.updateMemberLab(createdId, changeLabRequest);
-
-        MemberResponse response = memberService.findById(createdId);
-        assertThat(response.getLabResponse()
-                .getId()).isEqualTo(newLabId);
-    }
-
-    @Test
-    @DisplayName("UPDATE - 존재하지 멤버, Lab 수정시 에러 발생")
-    void updateNotExistingMemberLab() {
-        Long notExistingMemberId = Long.MAX_VALUE;
-        Long newLabId = labService.save(new LabRequest("newLab"));
-        ChangeLabRequest changeLabRequest = new ChangeLabRequest(newLabId);
-
-        Throwable throwable = catchThrowable(
-                () -> memberService.updateMemberLab(notExistingMemberId, changeLabRequest));
-        존재하지_않는_회원_요청_에러_발생(throwable);
-    }
-
-    @Test
-    @DisplayName("UPDATE - 존재하지 않는 Lab으로 수정시 에러 발생")
-    void updateMemberNotExistingLab() {
-        Long createdId = memberService.save(memberRequest);
-        Long notExistingLabId = Long.MAX_VALUE;
-        ChangeLabRequest changeLabRequest = new ChangeLabRequest(notExistingLabId);
-
-        assertThatThrownBy(() -> memberService.updateMemberLab(createdId, changeLabRequest))
-                .isEqualTo(LabException.LAB_NOT_FOUND.getException());
-    }
-
-    @Test
     @DisplayName("존재하는 멤버 삭제 요청")
     void deleteMember() {
         Long createdId = memberService.save(memberRequest);
@@ -205,46 +135,6 @@ class MemberServiceTest {
     }
 
     @Nested
-    @DisplayName("사용자는 본인 Lab, Server에만 Job 열람 권한을 갖는다.")
-    class CheckPermissionOnLab {
-
-        private Long lab;
-        private Long serverInLab;
-        private Long userInLab;
-
-        @BeforeEach
-        void setUp() {
-            lab = labService.save(new LabRequest("labA"));
-            serverInLab = gpuServerService.save(gpuServerCreationRequest(), lab);
-            userInLab = memberService.save(userCreationRequest(lab));
-        }
-
-        @Test
-        @DisplayName("멤버의 본인 Lab에만 Job 열람 권한을 갖는다.")
-        void checkPermissionOnLab() {
-            Long otherLab = labService.save(new LabRequest("labB"));
-            memberService.checkPermissionOnLab(userInLab, lab);
-
-            assertThatThrownBy(() -> {
-                memberService.checkPermissionOnLab(userInLab, otherLab);
-            }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
-        }
-
-        @Test
-        @DisplayName("멤버는 본인 Lab에 속한 server에만 접근 권한을 갖는다.")
-        void checkPermissionOnServer() {
-            Long otherLab = labService.save(new LabRequest("labB"));
-            Long serverInOtherLab = gpuServerService.save(gpuServerCreationRequest(), otherLab);
-
-            memberService.checkPermissionOnServer(userInLab, serverInLab);
-
-            assertThatThrownBy(() -> {
-                memberService.checkPermissionOnServer(userInLab, serverInOtherLab);
-            }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
-        }
-    }
-
-    @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
     class CheckPermissionOnJob {
         private Long user;
@@ -262,12 +152,6 @@ class MemberServiceTest {
             jobByOtherUser = jobService.save(otherUser, jobCreationRequest(gpuServerId));
         }
 
-        @Test
-        @DisplayName("멤버의 본인 Lab에 속한 Job에 열람 권한을 갖는다.")
-        void checkReadableJob() {
-            memberService.checkReadableJob(user, jobByUser);
-            memberService.checkReadableJob(user, jobByOtherUser);
-        }
 
         @Test
         @DisplayName("일반 사용자(User)는 본인의 작업에만 수정 권한을 갖는다.")

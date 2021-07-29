@@ -141,6 +141,7 @@ class LabServiceTest {
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
+    // todo : 테스트코드 수정
     @DisplayName("lab 이 삭제되면 관련된 모든 gpuServer, gpuBoard, jobs, member 가 삭제된다.")
     @Test
     void deleteLab() {

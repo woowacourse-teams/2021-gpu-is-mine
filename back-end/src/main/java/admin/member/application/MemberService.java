@@ -65,55 +65,10 @@ public class MemberService {
         member.setName(request.getName());
     }
 
-    //todo: 삭제
-    @Transactional
-    public void updateMemberType(Long memberId, MemberTypeRequest memberTypeRequest) {
-        Member member = findMemberById(memberId);
-        MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
-        member.setMemberType(memberType);
-    }
-
-    //todo: 삭제
-    @Transactional
-    public void updateMemberLab(Long memberId, ChangeLabRequest changeLabRequest) {
-        Member member = findMemberById(memberId);
-
-        Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
-                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
-        member.setLab(updateLab);
-    }
-
     @Transactional
     public void delete(Long memberId) {
         Member member = findMemberById(memberId);
         memberRepository.delete(member);
-    }
-
-    //todo: 삭제
-    @Transactional(readOnly = true)
-    public void checkPermissionOnLab(Long memberId, Long labId) {
-        Member member = findMemberById(memberId);
-        Lab lab = findLabById(labId);
-
-        member.checkPermissionOnLab(lab);
-    }
-
-    //todo: 삭제
-    @Transactional(readOnly = true)
-    public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
-        Member member = findMemberById(memberId);
-        GpuServer gpuServer = findAliveServerById(gpuServerId);
-
-        member.checkPermissionOnServer(gpuServer);
-    }
-
-    //todo: 삭제
-    @Transactional(readOnly = true)
-    public void checkReadableJob(Long memberId, Long jobId) {
-        Member member = findMemberById(memberId);
-        Job job = findJobById(jobId);
-
-        member.checkReadable(job);
     }
 
     @Transactional(readOnly = true)

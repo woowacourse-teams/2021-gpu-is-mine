@@ -55,16 +55,6 @@ public class Member extends BaseEntity {
     protected Member() {
     }
 
-    public void checkPermissionOnLab(Lab lab) {
-        if (!this.lab.equals(lab)) {
-            throw MemberException.UNAUTHORIZED_MEMBER.getException();
-        }
-    }
-
-    public void checkPermissionOnServer(GpuServer gpuServer) {
-        checkPermissionOnLab(gpuServer.getLab());
-    }
-
     public void checkReadable(Job job) {
         boolean hasPermission = isSameLab(job.getMember());
 
