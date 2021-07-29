@@ -14,6 +14,7 @@ export { default as Modal } from "./Modal/Modal";
 export { default as ModalProvider } from "./ModalProvider/ModalProvider";
 export { default as Portal } from "./Portal/Portal";
 export { default as PrivateRoute } from "./PrivateRoute/PrivateRoute";
+export { default as PublicRoute } from "./PublicRoute/PublicRoute";
 export { default as Radio } from "./Radio/Radio";
 export { default as RadioGroup } from "./RadioGroup/RadioGroup";
 export { default as ServerIcon } from "./ServerIcon/ServerIcon";

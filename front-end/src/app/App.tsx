@@ -1,5 +1,5 @@
-import { Switch, Route, Redirect } from "react-router-dom";
-import { PrivateRoute } from "../components";
+import { Switch, Redirect } from "react-router-dom";
+import { PrivateRoute, PublicRoute } from "../components";
 import { GpuServerView, GpuServerRegister, JobView, JobRegister } from "../pages/manager";
 import { Login, Signup, Logout } from "../pages/member";
 import Providers from "../providers/Providers";
@@ -8,15 +8,15 @@ import { PATH } from "../constants";
 const App = () => (
   <Providers>
     <Switch>
-      <Route exact path={PATH.MEMBER.LOGIN}>
-        <Login />
-      </Route>
-      <Route exact path={PATH.MEMBER.LOGOUT}>
-        <Logout />
-      </Route>
-      <Route exact path={PATH.MEMBER.SIGNUP}>
+      <PublicRoute exact path={PATH.MEMBER.SIGNUP}>
         <Signup />
-      </Route>
+      </PublicRoute>
+      <PublicRoute exact path={PATH.MEMBER.LOGIN}>
+        <Login />
+      </PublicRoute>
+      <PrivateRoute exact path={PATH.MEMBER.LOGOUT}>
+        <Logout />
+      </PrivateRoute>
       <PrivateRoute exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
         <GpuServerView />
       </PrivateRoute>
