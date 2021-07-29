@@ -46,6 +46,10 @@ const JobInfoItem = ({
     done();
   };
 
+  const handleDetailClick = () => {
+    history.push(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
+  };
+
   return (
     <>
       {(status === "succeed" || status === "failed") && (
@@ -108,7 +112,7 @@ const JobInfoItem = ({
             <Button
               className="job-info-button-wrapper__button"
               color="primary"
-              onClick={() => history.push(`${PATH.MANAGER.JOB.VIEW}/${jobId}`)}
+              onClick={handleDetailClick}
             >
               상세
             </Button>
