@@ -1,4 +1,4 @@
-type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
+export type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
 
 export interface Job {
   id: number;
@@ -11,4 +11,18 @@ export interface JobRegisterRequest {
   expectedTime: number;
   gpuServerId: number;
   metaData: string;
+}
+
+export interface JobViewResponse {
+  id: number;
+  name: string;
+  status: JobStatus;
+  memberId: number;
+  memberName: string;
+  gpuServerId: number;
+  gpuServerName: string;
+}
+
+export interface JobViewResponses {
+  jobResponses: Readonly<JobViewResponse[]>;
 }

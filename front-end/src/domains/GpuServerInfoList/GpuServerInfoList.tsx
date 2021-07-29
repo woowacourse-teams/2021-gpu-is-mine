@@ -3,7 +3,7 @@ import { useFetch, useBreakpoints } from "../../hooks";
 import { Text, Loading } from "../../components";
 import GpuServerInfoItem from "../GpuServerInfoItem/GpuServerInfoItem";
 import { StyledInfoList } from "./GpuServerInfoList.styled";
-import { API_ENDPOINT } from "../../constants";
+import { API_ENDPOINT, MESSAGE } from "../../constants";
 import { GpuServerViewResponses } from "../../types";
 
 const GpuServerInfoList = () => {
@@ -15,7 +15,6 @@ const GpuServerInfoList = () => {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 
@@ -25,7 +24,7 @@ const GpuServerInfoList = () => {
 
       {status === "failed" && (
         <Text size={isTablet || isLaptop ? "lg" : "md"} weight="bold">
-          장애가 발생했습니다. 관리자에게 문의해주세요.
+          {MESSAGE.ERROR.SERVER}
         </Text>
       )}
 
