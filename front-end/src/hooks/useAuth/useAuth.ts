@@ -1,6 +1,8 @@
-import { createContext, useContext /* ,useState */ } from "react";
-
-import { useBoolean } from "../../hooks";
+import { createContext, useContext } from "react";
+import useBoolean from "../useBoolean/useBoolean";
+import useFetch from "../useFetch/useFetch";
+import { API_ENDPOINT } from "../../constants";
+import { MemberLoginResponse, MemberLoginRequest } from "../../types";
 
 interface AuthContext {
   isAuthenticated: boolean;
@@ -22,23 +24,28 @@ export const useAuth = () => {
 
 export const useAuthProvider = () => {
   const [isAuthenticated, authenticate, unauthenticate] = useBoolean(false);
-  // const [member, setMember] = useState();
 
-  // console.log(member, setMember);
+  const { makeRequest: loginRequest } = useFetch<MemberLoginResponse, MemberLoginRequest>(
+    API_ENDPOINT.LOGIN,
+    {
+      method: "post",
+    }
+  );
 
   const login = async ({ email, password }: { email: string; password: string }) => {
-    // useFetch login
-    console.log(email, password);
+    const { accessToken } = await (await loginRequest({ email, password })).unwrap();
 
     authenticate();
 
-    // sessionStorage.setItem
+    sessionStorage.setItem("accessToken", accessToken);
   };
 
   const logout = async () => {
     // useFetch logout
 
     unauthenticate();
+
+    sessionStorage.removeItem("accessToken");
   };
 
   return { isAuthenticated, login, logout };
