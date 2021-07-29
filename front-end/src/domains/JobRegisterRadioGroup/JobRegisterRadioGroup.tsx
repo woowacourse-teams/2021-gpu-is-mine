@@ -70,9 +70,8 @@ const JobRegisterRadioGroup = ({
             .slice()
             .sort(sortByIsOn)
             .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
-              <li>
+              <li key={id}>
                 <Radio
-                  key={id}
                   value={id}
                   checked={selectedValue === String(id)}
                   name={name}
