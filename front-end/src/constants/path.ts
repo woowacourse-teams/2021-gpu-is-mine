@@ -11,7 +11,8 @@ const PATH = {
   },
   MEMBER: {
     SIGNUP: "/member/signup",
-    LOGIN: "/login",
+    LOGIN: "/member/login",
+    LOGOUT: "/member/logout",
   },
 } as const;
 
