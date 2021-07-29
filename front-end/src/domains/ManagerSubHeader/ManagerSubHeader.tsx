@@ -1,14 +1,12 @@
 import { HTMLAttributes } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useBreakpoints, useToggle } from "../../hooks";
+import { useAuth, useBreakpoints, useToggle } from "../../hooks";
 import { Text } from "../../components";
 import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
 import { StyledManagerSubHeader } from "./ManagerSubHeader.styled";
 import { PATH } from "../../constants";
 
-interface SubHeaderProps extends HTMLAttributes<HTMLElement> {
-  labName: string;
-}
+type SubHeaderProps = HTMLAttributes<HTMLElement>;
 
 const DomainMapper: Record<keyof typeof PATH.MANAGER, string> = {
   GPU_SERVER: "GPU 서버 관리",
@@ -22,8 +20,9 @@ const PageMapper: Record<keyof typeof PATH.MANAGER.GPU_SERVER, string> = {
 
 const transformPath = (path: string): string => path.toUpperCase().replace("-", "_");
 
-const ManagerSubHeader = ({ labName, children, ...rest }: SubHeaderProps) => {
+const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
   const { pathname } = useLocation();
+  const { myInfo } = useAuth();
 
   const [, , domain, page] = pathname.split("/").map(transformPath) as [
     never,
@@ -54,7 +53,7 @@ const ManagerSubHeader = ({ labName, children, ...rest }: SubHeaderProps) => {
         </div>
 
         <Text className="lab-name" size="md" weight="medium">
-          {labName}
+          {myInfo?.labResponse.name}
         </Text>
         <button type="button" className="down-arrow" onClick={toggleIsNavVisible}>
           {isNavVisible ? "▲" : "▼"}
