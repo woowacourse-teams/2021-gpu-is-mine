@@ -40,5 +40,9 @@ export const StyledManagerNavigation = styled.nav`
 
   .menu-logout {
     margin-top: auto;
+
+    button {
+      text-align: left;
+    }
   }
 `;

@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Location } from "history";
 import { MemoryRouter, Route } from "react-router-dom";
+import { AuthProvider } from "../../components";
 import ManagerNavigation from "./ManagerNavigation";
 import { PATH } from "../../constants";
 
@@ -12,17 +13,19 @@ describe("ManagerNavigation", () => {
     let testLocation = {} as Location;
 
     render(
-      <MemoryRouter initialEntries={["/"]}>
-        <ManagerNavigation />
-        <Route
-          path="*"
-          render={({ location }: { location: Location }) => {
-            testLocation = location;
+      <AuthProvider>
+        <MemoryRouter initialEntries={["/"]}>
+          <ManagerNavigation />
+          <Route
+            path="*"
+            render={({ location }: { location: Location }) => {
+              testLocation = location;
 
-            return null;
-          }}
-        />
-      </MemoryRouter>
+              return null;
+            }}
+          />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     return () => testLocation;
