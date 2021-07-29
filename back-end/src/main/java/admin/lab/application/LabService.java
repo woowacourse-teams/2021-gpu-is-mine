@@ -57,7 +57,7 @@ public class LabService {
         List<GpuServer> gpuServers = gpuServerService.findAllByLabId(lab.getId());
 
         for (GpuServer gpuServer : gpuServers) {
-            gpuServerService.delete(gpuServer.getId());
+            gpuServerService.deleteServerInLab(labId, gpuServer.getId());
         }
 
         List<Member> members = memberService.findAllByLabId(lab.getId());

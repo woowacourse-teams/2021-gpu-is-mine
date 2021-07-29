@@ -1,8 +1,5 @@
 package admin.member.application;
 
-import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.job.exception.JobException;
@@ -12,10 +9,8 @@ import admin.lab.exception.LabException;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
-import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
 import java.util.List;
@@ -27,14 +22,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final LabRepository labRepository;
-    private final GpuServerRepository gpuServerRepository;
     private final JobRepository jobRepository;
 
     public MemberService(MemberRepository memberRepository, LabRepository labRepository,
-            GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
+            JobRepository jobRepository) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
-        this.gpuServerRepository = gpuServerRepository;
         this.jobRepository = jobRepository;
     }
 
@@ -87,16 +80,6 @@ public class MemberService {
     private Member findMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
-    }
-
-    private GpuServer findAliveServerById(Long gpuServerId) {
-        return gpuServerRepository.findById(gpuServerId)
-                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
-    }
-
-    private Lab findLabById(Long labId) {
-        return labRepository.findById(labId)
-                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 
     public List<Member> findAllByLabId(Long labId) {

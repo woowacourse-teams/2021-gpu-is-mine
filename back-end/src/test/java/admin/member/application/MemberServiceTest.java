@@ -1,15 +1,20 @@
 package admin.member.application;
 
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
-import admin.lab.exception.LabException;
 import admin.member.domain.MemberType;
-import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -21,12 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
-import static admin.job.fixture.JobFixtures.jobCreationRequest;
-import static admin.member.fixture.MemberFixtures.managerCreationRequest;
-import static admin.member.fixture.MemberFixtures.userCreationRequest;
-import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

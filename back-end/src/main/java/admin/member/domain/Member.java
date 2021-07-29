@@ -1,7 +1,6 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
-import admin.gpuserver.domain.GpuServer;
 import admin.job.domain.Job;
 import admin.lab.domain.Lab;
 import admin.member.exception.MemberException;

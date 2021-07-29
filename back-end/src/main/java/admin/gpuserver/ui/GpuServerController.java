@@ -36,8 +36,8 @@ public class GpuServerController {
     }
 
     @GetMapping("/{gpuServerId}")
-    public ResponseEntity<GpuServerResponse> findById(@PathVariable Long gpuServerId) {
-        GpuServerResponse gpuServerResponse = gpuServerService.findById(gpuServerId);
+    public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        GpuServerResponse gpuServerResponse = gpuServerService.findServerInLab(labId, gpuServerId);
         return ResponseEntity.ok(gpuServerResponse);
     }
 
@@ -49,22 +49,22 @@ public class GpuServerController {
 
     @PutMapping("/{gpuServerId}")
     public ResponseEntity<Void> update(
-            @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest,
-            @PathVariable Long gpuServerId) {
-        gpuServerService.update(gpuServerUpdateRequest, gpuServerId);
-
+            @PathVariable Long labId,
+            @PathVariable Long gpuServerId,
+            @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest) {
+        gpuServerService.updateServerInLab(labId, gpuServerId, gpuServerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{gpuServerId}")
-    public ResponseEntity<Void> delete(@PathVariable Long gpuServerId) {
-        gpuServerService.delete(gpuServerId);
-
+    public ResponseEntity<Void> delete(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        gpuServerService.deleteServerInLab(labId, gpuServerId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{gpuServerId}/status")
-    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId) {
-        return ResponseEntity.ok(gpuServerService.findStatusById(gpuServerId));
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        GpuServerStatusResponse response = gpuServerService.findServerStatusInLab(labId, gpuServerId);
+        return ResponseEntity.ok(response);
     }
 }
