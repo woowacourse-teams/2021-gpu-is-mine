@@ -41,7 +41,11 @@ public class JobService {
 
     @Transactional
     public Long save(Long memberId, JobRequest jobRequest) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(jobRequest.getGpuServerId());
+        Member member = findMemberById(memberId);
+        GpuBoard gpuBoard = findBoardByServerId(jobRequest.getGpuServerId());
+
+        member.checkPermissionOnServer(gpuBoard.getGpuServer());
+
         Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId));
         jobRepository.save(job);
         return job.getId();
@@ -53,9 +57,25 @@ public class JobService {
         job.cancel();
     }
 
-    @Transactional(readOnly = true)
-    public JobResponse findById(Long jobId) {
+    @Transactional
+    public JobResponse cancel(Long memberId, Long jobId) {
         Job job = findJobById(jobId);
+
+        Member member = findMemberById(memberId);
+        member.checkEditable(job);
+
+        job.cancel();
+
+        return JobResponse.of(job);
+    }
+
+    @Transactional(readOnly = true)
+    public JobResponse findById(Long memberId, Long jobId) {
+        Job job = findJobById(jobId);
+
+        Member member = findMemberById(memberId);
+        member.checkReadable(job);
+
         return JobResponse.of(job);
     }
 
@@ -80,7 +100,7 @@ public class JobService {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
-            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
+            GpuBoard gpuBoard = findBoardByServerId(gpuServer.getId());
             JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
             jobs.addAll(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
         }
@@ -92,21 +112,21 @@ public class JobService {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
-            GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
+            GpuBoard gpuBoard = findBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
         return JobResponses.of(jobs);
     }
 
     private JobResponses findJobsOfServerByStatus(Long serverId, String status) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
+        GpuBoard gpuBoard = findBoardByServerId(serverId);
         JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
         return JobResponses
                 .of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
     }
 
     private JobResponses findAllJobsOfServer(Long serverId) {
-        GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
+        GpuBoard gpuBoard = findBoardByServerId(serverId);
         return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
     }
 
@@ -129,7 +149,7 @@ public class JobService {
         return JobResponses.of(jobs);
     }
 
-    private GpuBoard findLiveBoardByServerId(Long gpuServerId) {
+    private GpuBoard findBoardByServerId(Long gpuServerId) {
         return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }

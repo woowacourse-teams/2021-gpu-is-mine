@@ -93,7 +93,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.save(memberId, jobRequest);
 
-        JobResponse jobResponse = jobService.findById(jobId);
+        JobResponse jobResponse = jobService.findById(memberId, jobId);
         assertThat(jobResponse).isNotNull();
     }
 
@@ -105,7 +105,7 @@ class JobServiceTest {
 
         jobService.cancel(jobId);
 
-        JobResponse jobResponse = jobService.findById(jobId);
+        JobResponse jobResponse = jobService.findById(memberId, jobId);
         assertThat(jobResponse.getStatus()).isEqualTo(JobStatus.CANCELED);
     }
 

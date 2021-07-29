@@ -7,7 +7,6 @@ import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
 import admin.mail.MailDto;
 import admin.mail.MailService;
-import admin.member.application.MemberService;
 import admin.member.domain.Member;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/labs/{labId}")
 public class JobController {
-    private MemberService memberService;
     private JobService jobService;
     private MailService mailService;
 
-    public JobController(MemberService memberService, JobService jobService, MailService mailService) {
-        this.memberService = memberService;
+    public JobController(JobService jobService, MailService mailService) {
         this.jobService = jobService;
         this.mailService = mailService;
     }
@@ -43,8 +40,8 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId) {
-        JobResponse jobResponse = jobService.findById(jobId);
+    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+        JobResponse jobResponse = jobService.findById(member.getId(), jobId);
         return ResponseEntity.ok(jobResponse);
     }
 
@@ -65,10 +62,8 @@ public class JobController {
 
     @PutMapping("/jobs/{jobId}")
     public ResponseEntity<Void> cancel(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
-        memberService.checkEditableJob(member.getId(), jobId);
-        JobResponse job = jobService.findById(jobId);
-        jobService.cancel(jobId);
-        mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
+        JobResponse canceled = jobService.cancel(member.getId(), jobId);
+        mailService.sendJobCancelMail(new MailDto(member.getEmail(), canceled.getName()));
         return ResponseEntity.noContent().build();
     }
 }

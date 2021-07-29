@@ -1,6 +1,7 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
+import admin.gpuserver.domain.GpuServer;
 import admin.job.domain.Job;
 import admin.lab.domain.Lab;
 import admin.member.exception.MemberException;
@@ -90,6 +91,16 @@ public class Member extends BaseEntity {
         }
         Member member = (Member) o;
         return Objects.equals(id, member.id);
+    }
+
+    public void checkPermissionOnLab(Lab lab) {
+        if(!this.lab.equals(lab)){
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+    }
+
+    public void checkPermissionOnServer(GpuServer gpuServer) {
+        checkPermissionOnLab(gpuServer.getLab());
     }
 
     @Override
