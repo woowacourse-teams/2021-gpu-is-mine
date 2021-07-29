@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
     public Member(Long id, String email, String password, String name, MemberType memberType, Lab lab) {
         this.id = id;
         this.email = email;
-        this.password = encrypt(password, email);
+        this.password = password;
         this.name = name;
         this.memberType = memberType;
         this.lab = lab;
@@ -52,11 +52,6 @@ public class Member extends BaseEntity {
     }
 
     protected Member() {
-    }
-
-    private String encrypt(String password, String salt) {
-        Encryptor encryptor = new Encryptor(password, salt);
-        return encryptor.hashedPassword();
     }
 
     public void checkReadable(Job job) {
@@ -142,7 +137,7 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public boolean hasSamePassword(String password, String email) {
-        return this.password.equals(encrypt(password, email));
+    public boolean hasSamePassword(String password) {
+        return this.password.equals(password);
     }
 }

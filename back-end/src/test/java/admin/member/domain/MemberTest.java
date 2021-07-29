@@ -1,8 +1,6 @@
 package admin.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
@@ -81,26 +79,5 @@ class MemberTest {
 
         manager.checkEditable(jobByUser1);
         manager.checkEditable(jobByUser2);
-    }
-
-    @DisplayName("비밀번호가 동일한지 확인")
-    @Test
-    void samePassword() {
-        String email = "email";
-        String password = "password";
-        Member user = new Member(0L, email, password, "name", MemberType.USER, lab1);
-
-        assertTrue(user.hasSamePassword(password, email));
-    }
-
-    @DisplayName("비밀번호가 다른지 확인")
-    @Test
-    void NotSamePassword() {
-        String email = "email";
-        String password1 = "password1";
-        String password2 = "password2";
-        Member user = new Member(0L, email, password1, "name", MemberType.USER, lab1);
-
-        assertFalse(user.hasSamePassword(password2, email));
     }
 }
