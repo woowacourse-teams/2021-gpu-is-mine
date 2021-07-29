@@ -21,7 +21,7 @@ const JobInfoItem = ({
 }: JobInfoItemProps) => {
   // TODO: 실제 예상 시간으로 교체
   // TODO: 서버별 job의 현재 실행 중인 job의 예상 종료 시간 + 나머지 jobs들의 expected time을 전부 더함
-  // TODO: jobs의 순서 (우선순위)는 index인지 확인 필요
+
   const startTime = formatDate(new Date());
   const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
 
@@ -75,9 +75,6 @@ const JobInfoItem = ({
               할당 서버
             </Text>
             <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
-              {/** TFLOPS 를 적으려 했지만, 응답에 데이터 X */}
-              {/** 방법1. BE에 응답 추가해달라고 요청 */}
-              {/** 방법2. 최초 GPU 서버 데이터 요청 및 전역 공간에 저장 */}
               {gpuServerName}
             </Text>
           </div>
