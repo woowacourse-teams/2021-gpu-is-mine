@@ -1,4 +1,5 @@
 export { default as Alert } from "./Alert/Alert";
+export { default as AuthProvider } from "./AuthProvider/AuthProvider";
 export { default as Button } from "./Button/Button";
 export { default as Confirm } from "./Confirm/Confirm";
 export { default as Dimmer } from "./Dimmer/Dimmer";
