@@ -3,10 +3,23 @@ package admin.lab.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import admin.exception.http.NotFoundException;
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+import admin.gpuserver.domain.repository.GpuBoardRepository;
+import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.job.domain.Job;
+import admin.job.domain.JobStatus;
+import admin.job.domain.repository.JobRepository;
+import admin.lab.domain.Lab;
+import admin.lab.domain.repository.LabRepository;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
 import admin.lab.dto.LabResponses;
 import admin.lab.exception.LabException;
+import admin.member.domain.Member;
+import admin.member.domain.MemberType;
+import admin.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +33,21 @@ class LabServiceTest {
 
     @Autowired
     private LabService labService;
+
+    @Autowired
+    private GpuServerRepository gpuServerRepository;
+
+    @Autowired
+    private GpuBoardRepository gpuBoardRepository;
+
+    @Autowired
+    private LabRepository labRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Test
     @DisplayName("정상 생성")
@@ -111,5 +139,37 @@ class LabServiceTest {
 
         assertThatThrownBy(() -> labService.delete(notExistingId))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
+    }
+
+    @DisplayName("lab 이 삭제되면 관련된 모든 gpuServer, gpuBoard, jobs, member 가 삭제된다.")
+    @Test
+    void deleteLab() {
+        // given
+        Lab lab = labRepository.save(new Lab("랩1"));
+        GpuServer gpuServer = gpuServerRepository
+                .save(new GpuServer("GPU서버1", false, 600L, 1024L, lab));
+        GpuBoard gpuBoard = gpuBoardRepository
+                .save(new GpuBoard(true, 800L, "aaa", gpuServer));
+        Member member = memberRepository
+                .save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
+        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard, member));
+        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard, member));
+        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard, member));
+        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard, member));
+        final Long labId = lab.getId();
+        final Long gpuServerId = gpuServer.getId();
+        final Long gpuBoardId = gpuBoard.getId();
+        final Long memberId = member.getId();
+
+        // when
+        labService.delete(labId);
+
+        // then
+        assertThatThrownBy(() -> labService.findById(labId)).isInstanceOf(NotFoundException.class);
+        assertThat(gpuServerRepository.findAllByLabId(labId)).hasSize(0);
+        assertThat(gpuBoardRepository.findById(gpuBoardId).isPresent()).isFalse();
+        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId).isPresent()).isFalse();
+        assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).hasSize(0);
+        assertThat(memberRepository.findById(memberId).isPresent()).isFalse();
     }
 }

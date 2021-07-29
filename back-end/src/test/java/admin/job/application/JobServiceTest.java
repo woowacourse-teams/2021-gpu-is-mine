@@ -176,7 +176,7 @@ class JobServiceTest {
             Long jobId1 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
             Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
 
-            assertJobIdsFromJobResponses(jobService.findByMember(memberId), jobId1, jobId2);
+            assertJobIdsFromJobResponses(jobService.findJobsOfMember(memberId, null), jobId1, jobId2);
         }
 
         @Test
@@ -185,7 +185,7 @@ class JobServiceTest {
             Long jobId1 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
             Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
 
-            assertJobIdsFromJobResponses(jobService.findByServer(serverId), jobId1, jobId2);
+            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null), jobId1, jobId2);
         }
 
         @Test
@@ -194,7 +194,7 @@ class JobServiceTest {
             Long jobId1 = jobService.save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
             Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
 
-            assertJobIdsFromJobResponses(jobService.findByLab(lab.getId()), jobId1, jobId2);
+            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null), jobId1, jobId2);
         }
 
         private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {

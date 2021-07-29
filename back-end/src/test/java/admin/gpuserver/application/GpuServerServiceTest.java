@@ -2,8 +2,8 @@ package admin.gpuserver.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import admin.exception.http.NotFoundException;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
@@ -15,9 +15,12 @@ import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.dto.response.GpuServerStatusResponse;
 import admin.gpuserver.exception.GpuServerException;
+import admin.job.domain.Job;
+import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +40,9 @@ public class GpuServerServiceTest {
 
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @Autowired
     private LabRepository labRepository;
@@ -90,12 +96,12 @@ public class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllLiveServer(lab.getId());
+        GpuServerResponses gpuServerResponses = gpuServerService.findAll(lab.getId());
         int beforeSize = gpuServerResponses.getGpuServers().size();
 
         gpuServerService.delete(gpuServer1.getId());
 
-        GpuServerResponses gpuServers = gpuServerService.findAllLiveServer(lab.getId());
+        GpuServerResponses gpuServers = gpuServerService.findAll(lab.getId());
         assertThat(gpuServers.getGpuServers()).hasSize(beforeSize - 1);
     }
 
@@ -103,7 +109,7 @@ public class GpuServerServiceTest {
     @Test
     void 존재하지_않는_Lab_ID로_전체_조회() {
         final Long nonexistentLabId = Long.MAX_VALUE;
-        assertThatThrownBy(() -> gpuServerService.findAllLiveServer(nonexistentLabId))
+        assertThatThrownBy(() -> gpuServerService.findAll(nonexistentLabId))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
@@ -139,13 +145,21 @@ public class GpuServerServiceTest {
 
     }
 
-    @DisplayName("GPU 서버를 논리적으로 삭제하는 경우")
+    @DisplayName("GPU 서버를 삭제하는 경우 GPU 보드, Job 도 같이 삭제된다.")
     @Test
     void deleteWithGpuId() {
-        gpuServerService.delete(gpuServer1.getId());
-        GpuServer deletedGpuServer = gpuServerRepository.findById(gpuServer1.getId())
-                .orElseThrow(IllegalArgumentException::new);
-        assertTrue(deletedGpuServer.getDeleted());
+        Long serverId = gpuServer1.getId();
+        Long boardId = gpuBoardRepository.findByGpuServerId(serverId).get().getId();
+
+        gpuServerService.delete(serverId);
+
+        assertThatThrownBy(() -> gpuServerService.findById(serverId)).isInstanceOf(NotFoundException.class);
+
+        boolean existenceOfGpuBoard = gpuBoardRepository.findById(boardId).isPresent();
+        assertThat(existenceOfGpuBoard).isFalse();
+
+        List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard1.getId());
+        assertThat(jobs).hasSize(0);
     }
 
     @DisplayName("GPU 서버 삭제 과정에서 GPU ID를 찾을 수 없는 경우")

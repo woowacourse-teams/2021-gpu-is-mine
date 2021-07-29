@@ -1,10 +1,13 @@
 package admin.job.ui;
 
+import admin.auth.domain.AuthenticationPrincipal;
+import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
 import admin.member.application.MemberService;
+import admin.member.domain.Member;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/labs/{labId}")
 public class JobController {
 
     private MemberService memberService;
@@ -28,55 +32,40 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<Void> save(Long memberId, @RequestBody JobRequest jobRequest) {
-        memberService.checkPermissionOnServer(memberId, jobRequest.getGpuServerId());
-        Long jobId = jobService.save(memberId, jobRequest);
+    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
+            @RequestBody JobRequest jobRequest) {
+        Long jobId = jobService.save(member.getId(), jobRequest);
 
-        URI uri = URI.create("/api/jobs/" + jobId);
+        URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/jobs/{jobId}")
-    public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long jobId) {
-        memberService.checkEditableJob(memberId, jobId);
-
-        jobService.cancel(jobId);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findJobById(Long memberId, @PathVariable Long jobId) {
-        memberService.checkReadableJob(memberId, jobId);
-
+    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId) {
         JobResponse jobResponse = jobService.findById(jobId);
         return ResponseEntity.ok(jobResponse);
     }
 
-    /*
-     멤버를 기준으로 Job 조회, 현재는 Job 조회의 일종으로 보았습니다.
-     추후에 "members/me" 관련 기능들이 구현되면 그 컨트롤러와 합쳐도 좋을 것 같습니다.
-     */
-
-    @GetMapping("/members/me/jobs")
-    public ResponseEntity<JobResponses> findJobsByMember(Long memberId) {
-        return ResponseEntity.ok(jobService.findByMember(memberId));
-    }
-
-    @GetMapping("/labs/{labId}/jobs")
-    public ResponseEntity<JobResponses> findJobsByLab(Long memberId, @PathVariable Long labId) {
-        memberService.checkPermissionOnLab(memberId, labId);
-
-        JobResponses jobResponses = jobService.findByLab(labId);
+    @GetMapping("/jobs/me")
+    public ResponseEntity<JobResponses> findJobsOfMine(@AuthenticationPrincipal Member member,
+            @RequestParam(required = false) String status) {
+        JobResponses jobResponses = jobService.findJobsOfMember(member.getId(), status);
         return ResponseEntity.ok(jobResponses);
     }
 
-    // 기존의 "/labs/{labId}/gpus/{gpuServerId}/jobs" 꼴을 맞추면, labId가 의미가 없어 labId에 대한 유효성 검증이 필요합니다.
-
-    @GetMapping("/labs/{labId}/gpus/{gpuServerId}/jobs")
-    public ResponseEntity<JobResponses> findJobsByServer(Long memberId, @PathVariable Long gpuServerId) {
-        memberService.checkPermissionOnServer(memberId, gpuServerId);
-
-        JobResponses jobResponses = jobService.findByServer(gpuServerId);
+    @GetMapping("/jobs")
+    public ResponseEntity<JobResponses> findAll(@PathVariable Long labId,
+            @RequestParam(required = false) Long serverId,
+            @RequestParam(required = false) String status) {
+        JobResponses jobResponses = jobService.findJobs(labId, serverId, status);
         return ResponseEntity.ok(jobResponses);
+    }
+
+    @PutMapping("/jobs/{jobId}")
+    public ResponseEntity<Void> cancel(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+        memberService.checkEditableJob(member.getId(), jobId);
+
+        jobService.cancel(jobId);
+        return ResponseEntity.noContent().build();
     }
 }
