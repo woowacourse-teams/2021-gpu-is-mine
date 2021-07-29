@@ -23,7 +23,7 @@ const MemberSignupForm = () => {
       labId: 1,
       password: String(password),
       name: String(name),
-      memberType: memberType === "manager" ? "manager" : "user",
+      memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
     }).then(unwrapResult);
 
   const { form, useInput } = useForm(submitAction);
@@ -97,7 +97,7 @@ const MemberSignupForm = () => {
           사용자
         </Radio>
       </RadioGroup>
-      <SubmitButton type="submit" aria-label="submit" color="secondary-light">
+      <SubmitButton type="submit" aria-label="submit" color="secondary">
         제출
       </SubmitButton>
     </StyledForm>
