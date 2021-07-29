@@ -5,6 +5,7 @@ import admin.job.application.JobService;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
 import admin.job.dto.response.JobResponses;
+import admin.mail.MailDto;
 import admin.mail.MailService;
 import admin.member.application.MemberService;
 import admin.member.domain.Member;
@@ -37,7 +38,7 @@ public class JobController {
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
         Long jobId = jobService.save(member.getId(), jobRequest);
-        mailService.sendJobReserveMail(member.getEmail(), jobRequest.getName());
+        mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
 
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
@@ -70,7 +71,7 @@ public class JobController {
 
         JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);
-        mailService.sendJobCancelMail(member.getEmail(), job.getName());
+        mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
 
         return ResponseEntity.noContent().build();
     }

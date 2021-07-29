@@ -93,4 +93,22 @@ public class WorkerService {
         logRepository.save(log);
         return log.getId();
     }
+
+    @Transactional
+    public void start(Long jobId) {
+        Job job = findJobById(jobId);
+        if (job.getStatus() != JobStatus.WAITING) {
+            throw new IllegalArgumentException();
+        }
+        job.changeStatus(JobStatus.RUNNING);
+    }
+
+    @Transactional
+    public void end(Long jobId) {
+        Job job = findJobById(jobId);
+        if (job.getStatus() != JobStatus.RUNNING) {
+            throw new IllegalArgumentException();
+        }
+        job.changeStatus(JobStatus.COMPLETED);
+    }
 }
