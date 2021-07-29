@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MemberLoginForm } from "../../../domains/Member";
 
 export const Container = styled.div`
   margin: auto;
@@ -11,4 +12,8 @@ export const Paragraph = styled.p`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+`;
+
+export const StyledMemberLoginForm = styled(MemberLoginForm)`
+  margin-bottom: 10rem;
 `;

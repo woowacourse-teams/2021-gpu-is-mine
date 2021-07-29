@@ -1,6 +1,6 @@
 import { Text } from "../../../components";
-import { MemberLoginForm, MemberLayout } from "../../../domains/Member";
-import { Container, Paragraph } from "./Login.styled";
+import { MemberLayout } from "../../../domains/Member";
+import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
 
 const Login = () => (
   <MemberLayout>
@@ -13,7 +13,7 @@ const Login = () => (
           GPU 사용 극대화
         </Text>
       </Paragraph>
-      <MemberLoginForm />
+      <StyledMemberLoginForm />
     </Container>
   </MemberLayout>
 );
