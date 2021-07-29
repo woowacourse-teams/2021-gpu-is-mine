@@ -1,13 +1,21 @@
 package admin.member.domain;
 
+import admin.member.exception.MemberException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
+@PropertySource(value = {"classpath:application-encryption.properties"})
 public class Encryptor {
-    private static final String HASH_ALGORITHM = "SHA-256";
-    private static final int KEY_STRETCHING = 10000;
     private static final String HEX = "%02x";
+
+    @Value("${encryption.hash.algorithm}")
+    private String hashAlgorithm;
+
+    @Value("${encryption.key.stretching}")
+    private int keyStretching;
 
     private String password;
     private final String salt;
@@ -19,14 +27,15 @@ public class Encryptor {
 
     public String hashedPassword() {
         try {
-            MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
-            for (int i = 0; i < KEY_STRETCHING; i++) {
+            MessageDigest md = MessageDigest.getInstance(hashAlgorithm);
+
+            for (int i = 0; i < keyStretching; i++) {
                 String combination = password + salt;
                 md.update(combination.getBytes(StandardCharsets.UTF_8));
                 password = convertByteToString(md.digest());
             }
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw MemberException.HASH_ALGORITHM_NOT_FOUND.getException();
         }
 
         return password;

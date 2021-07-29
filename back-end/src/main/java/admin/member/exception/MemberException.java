@@ -7,6 +7,8 @@ import admin.exception.http.UnauthorizedException;
 
 public enum MemberException {
 
+    HASH_ALGORITHM_NOT_FOUND(new NotFoundException("암호화 해시 알고리즘이 없습니다.")),
+
     MEMBER_NOT_FOUND(new NotFoundException("해당 id의 회원이 존재하지 않습니다.")),
 
     INVALID_MEMBER_TYPE(new BadRequestException("존재하지 않는 MemberType 입니다.")),
