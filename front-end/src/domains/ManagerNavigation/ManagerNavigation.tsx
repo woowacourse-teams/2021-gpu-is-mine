@@ -46,10 +46,12 @@ const ManagerNavigation = (props: NavigationProps) => (
       <Text className="menu__item">등록</Text>
     </section>
 
-    <section className="menu menu-login">
-      <Text weight="medium" className="menu__title">
-        로그인
-      </Text>
+    <section className="menu menu-logout">
+      <NavLink to={PATH.MEMBER.LOGOUT}>
+        <Text weight="medium" className="menu__title">
+          로그아웃
+        </Text>
+      </NavLink>
     </section>
   </StyledManagerNavigation>
 );

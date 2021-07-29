@@ -1,11 +1,21 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import { GpuServerView, GpuServerRegister, JobView, JobRegister } from "../pages/manager";
+import { Login, Signup, Logout } from "../pages/member";
 import Providers from "../providers/Providers";
 import { PATH } from "../constants";
 
 const App = () => (
   <Providers>
     <Switch>
+      <Route exact path={PATH.MEMBER.LOGIN}>
+        <Login />
+      </Route>
+      <Route exact path={PATH.MEMBER.LOGOUT}>
+        <Logout />
+      </Route>
+      <Route exact path={PATH.MEMBER.SIGNUP}>
+        <Signup />
+      </Route>
       <Route exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
         <GpuServerView />
       </Route>
@@ -18,7 +28,7 @@ const App = () => (
       <Route exact path={PATH.MANAGER.JOB.VIEW}>
         <JobView />
       </Route>
-      <Redirect to={PATH.MANAGER.GPU_SERVER.VIEW} />
+      <Redirect to={PATH.MEMBER.LOGIN} />
     </Switch>
   </Providers>
 );

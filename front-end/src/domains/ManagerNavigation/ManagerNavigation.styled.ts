@@ -38,7 +38,7 @@ export const StyledManagerNavigation = styled.nav`
     color: var(--on-secondary-700);
   }
 
-  .menu-login {
+  .menu-logout {
     margin-top: auto;
   }
 `;
