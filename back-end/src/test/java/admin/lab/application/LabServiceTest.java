@@ -146,27 +146,27 @@ class LabServiceTest {
     void deleteLab() {
         // given
         Lab lab = labRepository.save(new Lab("랩1"));
-        GpuServer gpuServer1 = gpuServerRepository
+        GpuServer gpuServer = gpuServerRepository
                 .save(new GpuServer("GPU서버1", false, 600L, 1024L, lab));
-        GpuBoard gpuBoard1 = gpuBoardRepository
-                .save(new GpuBoard(true, 800L, "aaa", gpuServer1));
+        GpuBoard gpuBoard = gpuBoardRepository
+                .save(new GpuBoard(true, 800L, "aaa", gpuServer));
         Member member = memberRepository
                 .save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
-        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard1, member));
-        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard1, member));
-        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard1, member));
-        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard1, member));
-        Long labId = lab.getId();
-        Long gpuServerId = gpuServer1.getId();
-        Long gpuBoardId = gpuBoard1.getId();
-        Long memberId = member.getId();
+        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard, member));
+        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard, member));
+        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard, member));
+        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard, member));
+        final Long labId = lab.getId();
+        final Long gpuServerId = gpuServer.getId();
+        final Long gpuBoardId = gpuBoard.getId();
+        final Long memberId = member.getId();
 
         // when
         labService.delete(labId);
 
         // then
         assertThatThrownBy(() -> labService.findById(labId)).isInstanceOf(NotFoundException.class);
-        assertThat(gpuServerRepository.findAllByLabId(lab.getId())).hasSize(0);
+        assertThat(gpuServerRepository.findAllByLabId(labId)).hasSize(0);
         assertThat(gpuBoardRepository.findById(gpuBoardId).isPresent()).isFalse();
         assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId).isPresent()).isFalse();
         assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).hasSize(0);

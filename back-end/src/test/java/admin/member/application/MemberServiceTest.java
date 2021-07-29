@@ -152,7 +152,6 @@ class MemberServiceTest {
             jobByOtherUser = jobService.save(otherUser, jobCreationRequest(gpuServerId));
         }
 
-
         @Test
         @DisplayName("일반 사용자(User)는 본인의 작업에만 수정 권한을 갖는다.")
         void checkEditableJobByUser() {
