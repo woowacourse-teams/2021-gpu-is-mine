@@ -1,8 +1,8 @@
 import { ChangeEventHandler, FocusEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { SubmitAction, useFetch, useForm } from "../../hooks";
 import { unwrapResult } from "../../hooks/useFetch/useFetch";
-import { Radio, Input, RadioGroup, Alert, Text } from "../../components";
+import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH, API_ENDPOINT } from "../../constants";
 import { MemberSignupRequest } from "../../types";
@@ -21,6 +21,8 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
   const { makeRequest, status } = useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
     method: "post",
   });
+
+  const history = useHistory();
 
   const submitAction: SubmitAction = ({ email, password, name, memberType }) =>
     makeRequest({
@@ -70,10 +72,13 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     onBlur(event as FocusEvent<HTMLInputElement>);
   };
 
+  const moveToLoginPage = () => history.push(PATH.MEMBER.LOGIN);
+
   return (
     <StyledForm {...form} {...props} aria-label="signup-form">
+      {status === "loading" && <Loading size="lg" />}
       {status === "succeed" && (
-        <Alert aria-label="succeed-alert">
+        <Alert aria-label="succeed-alert" onConfirm={moveToLoginPage}>
           <Text>회원가입에 성공하였습니다.</Text>
         </Alert>
       )}
@@ -102,7 +107,12 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
           사용자
         </Radio>
       </RadioGroup>
-      <SubmitButton type="submit" aria-label="submit" color="secondary">
+      <SubmitButton
+        type="submit"
+        aria-label="submit"
+        color="secondary"
+        disabled={status === "loading"}
+      >
         제출
       </SubmitButton>
       <Link to={PATH.MEMBER.LOGIN}>

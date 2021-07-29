@@ -8,6 +8,7 @@ export const StyledForm = styled.form`
   flex-direction: column;
   row-gap: 0.5rem;
   box-shadow: 2px 2px 10px 2px rgb(200 200 200 / 50%);
+  position: relative;
 
   background-color: white;
   padding: 1rem;

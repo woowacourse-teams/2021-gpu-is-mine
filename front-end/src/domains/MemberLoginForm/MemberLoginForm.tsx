@@ -1,7 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import { isEmail } from "../../utils";
 import { useBoolean, useForm, useAuth } from "../../hooks";
-import { Alert, Input, Text } from "../../components";
+import { Alert, Input, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 import { PATH } from "../../constants";
 import { passwordValidator } from "../MemberSignupForm/validator";
@@ -14,7 +14,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const history = useHistory();
 
   const [isAlertOpen, openAlert, closeAlert] = useBoolean(false);
-  const { login } = useAuth();
+  const { login, loginStatus } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submitAction: any = async ({ email, password }: { email: string; password: string }) => {
@@ -31,7 +31,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
       await login({ email: String(email), password: String(password) });
       history.push(PATH.MANAGER.GPU_SERVER.VIEW);
     } catch (err) {
-      console.dir(err);
+      console.error();
       openAlert();
 
       throw err;
@@ -46,6 +46,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
 
   return (
     <StyledForm {...form} aria-label="로그인" className={className}>
+      {loginStatus === "loading" && <Loading size="lg" />}
       <Alert isOpen={isAlertOpen} close={closeAlert}>
         이메일 또는 비밀번호를 확인해주세요
       </Alert>
