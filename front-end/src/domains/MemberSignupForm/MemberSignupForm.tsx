@@ -12,7 +12,11 @@ import {
   nameValidator,
 } from "./validator";
 
-const MemberSignupForm = () => {
+interface MemberSignupFormProps {
+  className?: string;
+}
+
+const MemberSignupForm = (props: MemberSignupFormProps) => {
   const { makeRequest, status } = useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
     method: "post",
   });
@@ -23,7 +27,7 @@ const MemberSignupForm = () => {
       labId: 1,
       password: String(password),
       name: String(name),
-      memberType: memberType === "manager" ? "manager" : "user",
+      memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
     }).then(unwrapResult);
 
   const { form, useInput } = useForm(submitAction);
@@ -66,7 +70,7 @@ const MemberSignupForm = () => {
   };
 
   return (
-    <StyledForm {...form} aria-label="signup-form">
+    <StyledForm {...form} {...props} aria-label="signup-form">
       {status === "succeed" && (
         <Alert aria-label="succeed-alert">
           <Text>회원가입에 성공하였습니다.</Text>
@@ -97,7 +101,7 @@ const MemberSignupForm = () => {
           사용자
         </Radio>
       </RadioGroup>
-      <SubmitButton type="submit" aria-label="submit" color="secondary-light">
+      <SubmitButton type="submit" aria-label="submit" color="secondary">
         제출
       </SubmitButton>
     </StyledForm>

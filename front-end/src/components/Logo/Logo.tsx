@@ -3,8 +3,12 @@ import GpuIcon from "../GpuIcon/GpuIcon";
 import Text from "../Text/Text";
 import { StyledLogo } from "./Logo.styled";
 
-const Logo = () => (
-  <Link to="/">
+interface LogoProps {
+  className?: string;
+}
+
+const Logo = ({ className }: LogoProps) => (
+  <Link to="/" className={className}>
     <StyledLogo>
       <GpuIcon size="lg" />
       <Text size="lg" weight="bold">

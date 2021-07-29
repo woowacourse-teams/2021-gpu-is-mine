@@ -1,4 +1,4 @@
-import { isLength } from "../../utils";
+import { isEmail, isLength } from "../../utils";
 
 export const VALIDATION_MESSAGE = {
   EMAIL: "형식에 맞지 않은 이메일입니다",
@@ -13,12 +13,7 @@ export const VALIDATION_MESSAGE = {
   NAME: "2자 이상 15자 이하로 입력해주세요",
 } as const;
 
-export const emailValidator = (value: string) => {
-  const emailRegex =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  return emailRegex.test(value) ? "" : VALIDATION_MESSAGE.EMAIL;
-};
+export const emailValidator = (value: string) => (isEmail(value) ? "" : VALIDATION_MESSAGE.EMAIL);
 
 export const passwordValidator = (value: string) => {
   if (!isLength(value, { min: 8, max: 32 })) {
