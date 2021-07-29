@@ -1,7 +1,6 @@
 package admin.member.domain;
 
 import admin.gpuserver.domain.BaseEntity;
-import admin.gpuserver.domain.GpuServer;
 import admin.job.domain.Job;
 import admin.lab.domain.Lab;
 import admin.member.exception.MemberException;
@@ -42,10 +41,15 @@ public class Member extends BaseEntity {
     public Member(Long id, String email, String password, String name, MemberType memberType, Lab lab) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.password = encrypt(password, email);
         this.name = name;
         this.memberType = memberType;
         this.lab = lab;
+    }
+
+    private String encrypt(String password, String salt) {
+        Encryptor encryptor = new Encryptor(password, salt);
+        return encryptor.hashedPassword();
     }
 
     public Member(String email, String password, String name, MemberType memberType, Lab lab) {
@@ -138,7 +142,8 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public boolean hasSamePassword(String password) {
-        return this.password.equals(password);
+    public boolean hasSamePassword(String password, String email) {
+        Encryptor encryptor = new Encryptor(password, email);
+        return this.password.equals(encryptor.hashedPassword());
     }
 }

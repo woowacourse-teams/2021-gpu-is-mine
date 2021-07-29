@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Encryptor {
     private static final String HASH_ALGORITHM = "SHA-256";
-    private static final int KEY_STRECHING = 10000;
+    private static final int KEY_STRETCHING = 10000;
     private static final String HEX = "%02x";
 
     private String password;
@@ -20,7 +20,7 @@ public class Encryptor {
     public String hashedPassword() {
         try {
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
-            for (int i = 0; i < KEY_STRECHING; i++) {
+            for (int i = 0; i < KEY_STRETCHING; i++) {
                 String combination = password + salt;
                 md.update(combination.getBytes(StandardCharsets.UTF_8));
                 password = convertByteToString(md.digest());

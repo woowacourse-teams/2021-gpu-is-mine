@@ -25,7 +25,7 @@ public class AuthService {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
 
-        if (!member.hasSamePassword(request.getPassword())) {
+        if (!member.hasSamePassword(request.getPassword(), request.getEmail())) {
             throw AuthorizationException.NOT_CORRECT_PASSWORD.getException();
         }
 
