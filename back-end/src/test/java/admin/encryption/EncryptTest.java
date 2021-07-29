@@ -20,7 +20,7 @@ class EncryptTest {
 
         String hashedPassword1 = encrypt.hashedPassword(password, salt);
         String hashedPassword2 = encrypt.hashedPassword(password, salt);
-        System.out.println(hashedPassword1);
+
         assertEquals(hashedPassword1, hashedPassword2);
     }
 
