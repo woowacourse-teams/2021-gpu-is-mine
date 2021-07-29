@@ -1,6 +1,7 @@
 package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
+import admin.lab.domain.Lab;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,5 +74,9 @@ public class GpuBoard extends BaseEntity {
 
     public GpuServer getGpuServer() {
         return gpuServer;
+    }
+
+    public Lab getLab(){
+        return gpuServer.getLab();
     }
 }

@@ -1,5 +1,8 @@
 package admin.gpuserver.dto.request;
 
+import admin.gpuserver.domain.GpuServer;
+import admin.lab.domain.Lab;
+
 public class GpuServerRequest {
 
     private String serverName;
@@ -32,5 +35,9 @@ public class GpuServerRequest {
 
     public GpuBoardRequest getGpuBoardRequest() {
         return gpuBoardRequest;
+    }
+
+    public GpuServer toEntity(Lab lab) {
+        return new GpuServer(serverName, memorySize, diskSize, lab);
     }
 }

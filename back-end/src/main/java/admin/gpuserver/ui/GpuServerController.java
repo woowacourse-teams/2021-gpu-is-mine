@@ -1,11 +1,13 @@
 package admin.gpuserver.ui;
 
+import admin.auth.domain.AuthenticationPrincipal;
 import admin.gpuserver.application.GpuServerService;
 import admin.gpuserver.dto.request.GpuServerRequest;
 import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.dto.response.GpuServerStatusResponse;
+import admin.member.domain.Member;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,17 +29,11 @@ public class GpuServerController {
         this.gpuServerService = gpuServerService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody GpuServerRequest gpuServerRequest, @PathVariable Long labId) {
-        Long gpuServerId = gpuServerService.save(gpuServerRequest, labId);
 
-        URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
-        return ResponseEntity.created(uri).build();
-    }
 
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId, @PathVariable Long gpuServerId) {
-        GpuServerResponse gpuServerResponse = gpuServerService.findServerInLab(labId, gpuServerId);
+        GpuServerResponse gpuServerResponse = gpuServerService.findById(labId, gpuServerId);
         return ResponseEntity.ok(gpuServerResponse);
     }
 
@@ -47,18 +43,25 @@ public class GpuServerController {
         return ResponseEntity.ok(gpuServerResponses);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
+            @RequestBody GpuServerRequest gpuServerRequest) {
+        Long gpuServerId = gpuServerService.save(member.getId(), labId, gpuServerRequest);
+
+        URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
+        return ResponseEntity.created(uri).build();
+    }
+
     @PutMapping("/{gpuServerId}")
-    public ResponseEntity<Void> update(
-            @PathVariable Long labId,
-            @PathVariable Long gpuServerId,
+    public ResponseEntity<Void> update(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member,
             @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest) {
-        gpuServerService.updateServerInLab(labId, gpuServerId, gpuServerUpdateRequest);
+        gpuServerService.update(member.getId(), gpuServerId, gpuServerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{gpuServerId}")
-    public ResponseEntity<Void> delete(@PathVariable Long labId, @PathVariable Long gpuServerId) {
-        gpuServerService.deleteServerInLab(labId, gpuServerId);
+    public ResponseEntity<Void> delete(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member) {
+        gpuServerService.delete(member.getId(), gpuServerId);
         return ResponseEntity.noContent().build();
     }
 

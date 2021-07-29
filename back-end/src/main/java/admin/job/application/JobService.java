@@ -44,17 +44,11 @@ public class JobService {
         Member member = findMemberById(memberId);
         GpuBoard gpuBoard = findBoardByServerId(jobRequest.getGpuServerId());
 
-        member.checkPermissionOnServer(gpuBoard.getGpuServer());
+        member.checkMemberOfLab(gpuBoard.getLab());
 
         Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId));
         jobRepository.save(job);
         return job.getId();
-    }
-
-    @Transactional
-    public void cancel(Long jobId) {
-        Job job = findJobById(jobId);
-        job.cancel();
     }
 
     @Transactional

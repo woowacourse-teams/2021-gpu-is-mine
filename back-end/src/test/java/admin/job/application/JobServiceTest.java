@@ -103,7 +103,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.save(memberId, jobRequest);
 
-        jobService.cancel(jobId);
+        jobService.cancel(memberId, jobId);
 
         JobResponse jobResponse = jobService.findById(memberId, jobId);
         assertThat(jobResponse.getStatus()).isEqualTo(JobStatus.CANCELED);
@@ -114,7 +114,7 @@ class JobServiceTest {
     void findCancelWithNotExistingJob() {
         Long notExistingServerId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> jobService.cancel(notExistingServerId))
+        assertThatThrownBy(() -> jobService.cancel(memberId, notExistingServerId))
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
@@ -127,16 +127,16 @@ class JobServiceTest {
         Job job = jobRepository.findById(jobId).get();
         job.changeStatus(JobStatus.RUNNING);
 
-        assertThatThrownBy(() -> jobService.cancel(jobId))
+        assertThatThrownBy(() -> jobService.cancel(memberId, jobId))
                 .isEqualTo(JobException.NO_WAITING_JOB.getException());
     }
 
     @Test
-    @DisplayName("존재하지 않는 Job Id로 조회")
+    @DisplayName("존재하지 않는 Job Id로 예약을 취소할 수 없다.")
     void findByNotExistingId() {
         Long notExistingJobId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> jobService.cancel(notExistingJobId))
+        assertThatThrownBy(() -> jobService.cancel(memberId, notExistingJobId))
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
