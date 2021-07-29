@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { isEmail } from "../../utils";
-import { useBoolean, useForm, useFetch } from "../../hooks";
+import { useBoolean, useForm, useAuth } from "../../hooks";
 import { Alert, Input, Text } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
-import { PATH, API_ENDPOINT } from "../../constants";
-import { MemberLoginRequest, MemberLoginResponse } from "../../types";
+import { PATH } from "../../constants";
 import { passwordValidator } from "../MemberSignupForm/validator";
 
 interface MemberLoginFormProps {
@@ -16,21 +14,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const history = useHistory();
 
   const [isAlertOpen, openAlert, closeAlert] = useBoolean(false);
-
-  const { data, makeRequest, status } = useFetch<MemberLoginResponse, MemberLoginRequest>(
-    API_ENDPOINT.LOGIN,
-    {
-      method: "post",
-    }
-  );
-
-  // const {
-  //   data: myInfo,
-  //   makeRequest: fetchMyInfo,
-  //   status: myInfoStatus,
-  // } = useFetch<MyInfoResponse>(API_ENDPOINT.ME, {
-  //   method: "get",
-  // });
+  const { login } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submitAction: any = async ({ email, password }: { email: string; password: string }) => {
@@ -43,28 +27,16 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
       return;
     }
 
-    // eslint-disable-next-line consistent-return
-    return (
-      await makeRequest({
-        email: String(email),
-        password: String(password),
-      })
-    ).unwrap();
-  };
-
-  useEffect(() => {
-    if (status === "succeed") {
-      if (!data) {
-        return;
-      }
-
-      const { accessToken } = data;
-
-      sessionStorage.setItem("accessToken", accessToken);
-
+    try {
+      await login({ email: String(email), password: String(password) });
       history.push(PATH.MANAGER.GPU_SERVER.VIEW);
+    } catch (err) {
+      console.dir(err);
+      openAlert();
+
+      throw err;
     }
-  }, [history, status, data]);
+  };
 
   const { form, submit, useInput } = useForm(submitAction);
 
