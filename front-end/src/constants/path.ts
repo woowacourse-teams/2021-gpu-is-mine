@@ -9,6 +9,10 @@ const PATH = {
       REGISTER: "/manager/job/register",
     },
   },
+  MEMBER: {
+    SIGNUP: "/member/signup",
+    LOGIN: "/login",
+  },
 } as const;
 
 export default PATH;

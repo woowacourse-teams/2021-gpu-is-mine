@@ -1,11 +1,15 @@
 package admin.lab.application;
 
+import admin.gpuserver.application.GpuServerService;
+import admin.gpuserver.domain.GpuServer;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.dto.LabRequest;
 import admin.lab.dto.LabResponse;
 import admin.lab.dto.LabResponses;
 import admin.lab.exception.LabException;
+import admin.member.application.MemberService;
+import admin.member.domain.Member;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LabService {
     private final LabRepository labRepository;
+    private final GpuServerService gpuServerService;
+    private final MemberService memberService;
 
-    public LabService(LabRepository labRepository) {
+    public LabService(LabRepository labRepository, GpuServerService gpuServerService, MemberService memberService) {
         this.labRepository = labRepository;
+        this.gpuServerService = gpuServerService;
+        this.memberService = memberService;
     }
 
     @Transactional
@@ -46,6 +54,16 @@ public class LabService {
     @Transactional
     public void delete(Long labId) {
         Lab lab = findLabById(labId);
+        List<GpuServer> gpuServers = gpuServerService.findAllByLabId(lab.getId());
+
+        for (GpuServer gpuServer : gpuServers) {
+            gpuServerService.delete(gpuServer.getId());
+        }
+
+        List<Member> members = memberService.findAllByLabId(lab.getId());
+        for (Member member : members) {
+            memberService.delete(member.getId());
+        }
         labRepository.delete(lab);
     }
 

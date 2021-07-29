@@ -18,6 +18,7 @@ import admin.member.dto.request.MemberRequest;
 import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,49 +66,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberType(Long memberId, MemberTypeRequest memberTypeRequest) {
-        Member member = findMemberById(memberId);
-        MemberType memberType = MemberType.ignoreCaseValueOf(memberTypeRequest.getMemberType());
-        member.setMemberType(memberType);
-    }
-
-    @Transactional
-    public void updateMemberLab(Long memberId, ChangeLabRequest changeLabRequest) {
-        Member member = findMemberById(memberId);
-
-        Lab updateLab = labRepository.findById(changeLabRequest.getLabId())
-                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
-        member.setLab(updateLab);
-    }
-
-    @Transactional
     public void delete(Long memberId) {
         Member member = findMemberById(memberId);
         memberRepository.delete(member);
-    }
-
-    @Transactional(readOnly = true)
-    public void checkPermissionOnLab(Long memberId, Long labId) {
-        Member member = findMemberById(memberId);
-        Lab lab = findLabById(labId);
-
-        member.checkPermissionOnLab(lab);
-    }
-
-    @Transactional(readOnly = true)
-    public void checkPermissionOnServer(Long memberId, Long gpuServerId) {
-        Member member = findMemberById(memberId);
-        GpuServer gpuServer = findLiveServerById(gpuServerId);
-
-        member.checkPermissionOnServer(gpuServer);
-    }
-
-    @Transactional(readOnly = true)
-    public void checkReadableJob(Long memberId, Long jobId) {
-        Member member = findMemberById(memberId);
-        Job job = findJobById(jobId);
-
-        member.checkReadable(job);
     }
 
     @Transactional(readOnly = true)
@@ -128,13 +89,17 @@ public class MemberService {
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 
-    private GpuServer findLiveServerById(Long gpuServerId) {
-        return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
+    private GpuServer findAliveServerById(Long gpuServerId) {
+        return gpuServerRepository.findById(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 
     private Lab findLabById(Long labId) {
         return labRepository.findById(labId)
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
+    }
+
+    public List<Member> findAllByLabId(Long labId) {
+        return memberRepository.findAllByLabId(labId);
     }
 }

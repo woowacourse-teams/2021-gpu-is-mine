@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import Gpu from "./gpu.svg";
 
-export type Size = "sm" | "md" | "lg";
+export type Size = "sm" | "md" | "lg" | "xl";
 
 export interface StyledGpuIconProps {
   size: Size;
@@ -20,6 +20,10 @@ const getSizeStyle = (size: Size) => {
     lg: css`
       width: 3rem;
       height: 3rem;
+    `,
+    xl: css`
+      width: 4rem;
+      height: 4rem;
     `,
   };
 

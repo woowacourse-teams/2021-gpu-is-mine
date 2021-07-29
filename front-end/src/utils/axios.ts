@@ -9,6 +9,19 @@ type RequestConfig<U> = {
 
 const REFRESH_PERIOD_IN_MS = 60_000;
 
+const httpClient = axios.create();
+
+httpClient.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("accessToken");
+
+  if (token) {
+    // eslint-disable-next-line
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 // eslint-disable-next-line import/prefer-default-export
 export const getData = async <T = void, U = never>(
   url: string,
@@ -22,7 +35,7 @@ export const getData = async <T = void, U = never>(
     return cached.data as T;
   }
 
-  const response = (await axios(url, { method, data: body })) as AxiosResponse<T>;
+  const response = (await httpClient(url, { method, data: body })) as AxiosResponse<T>;
 
   if (method === "get") {
     cache.set(url, { lastFetchedTime: Date.now(), data: response.data });

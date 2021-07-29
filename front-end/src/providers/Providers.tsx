@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { AuthProvider } from "../components";
 import { GlobalStyle, ThemeProvider } from "../styles";
 
 interface ProvidersProps {
@@ -9,7 +10,9 @@ interface ProvidersProps {
 const Providers = ({ children }: ProvidersProps): JSX.Element => (
   <ThemeProvider>
     <GlobalStyle />
-    <Router>{children}</Router>
+    <AuthProvider>
+      <Router>{children}</Router>
+    </AuthProvider>
   </ThemeProvider>
 );
 

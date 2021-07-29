@@ -58,15 +58,17 @@ public class JobService {
         Job job = findJobById(jobId);
         return JobResponse.of(job);
     }
-
+  
     @Transactional(readOnly = true)
     public JobResponses findJobs(Long labId, Long serverId, String status) {
         if (Objects.isNull(serverId)) {
+
             if (StringUtils.hasText(status)) {
                 return findJobsOfLabByStatus(labId, status);
             }
             return findAllJobsOfLab(labId);
         }
+
         checkServerInLab(serverId, labId);
         if (StringUtils.hasText(status)) {
             return findJobsOfServerByStatus(serverId, status);
@@ -76,17 +78,20 @@ public class JobService {
 
     private JobResponses findJobsOfLabByStatus(Long labId, String status) {
         List<Job> jobs = new ArrayList<>();
-        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
+
+        for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
             GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
             JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
             jobs.addAll(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
         }
+
         return JobResponses.of(jobs);
     }
 
     private JobResponses findAllJobsOfLab(Long labId) {
         List<Job> jobs = new ArrayList<>();
-        for (GpuServer gpuServer : gpuServerRepository.findByLabIdAndDeletedFalse(labId)) {
+
+        for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
             GpuBoard gpuBoard = findLiveBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
@@ -125,10 +130,8 @@ public class JobService {
     }
 
     private GpuBoard findLiveBoardByServerId(Long gpuServerId) {
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
+        return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
-        gpuBoard.checkServerAlive();
-        return gpuBoard;
     }
 
     private Job findJobById(Long id) {
@@ -143,7 +146,7 @@ public class JobService {
 
     public void checkServerInLab(Long serverId, Long labId) {
         gpuServerRepository
-                .findByIdAndLabIdAndDeletedFalse(serverId, labId)
+                .findByIdAndLabId(serverId, labId)
                 .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
     }
 
@@ -151,5 +154,4 @@ public class JobService {
         Job job = findJobById(jobId);
         Member member = job.getMember();
         return new MailDto(member.getEmail(), job.getName());
-    }
 }

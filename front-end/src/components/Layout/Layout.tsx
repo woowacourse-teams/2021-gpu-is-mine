@@ -14,6 +14,7 @@ interface LayoutProps {
   Navigation: ReactNode;
   Content: ReactNode;
   Footer?: ReactNode;
+  className?: string;
 }
 
 const Layout = ({
@@ -22,8 +23,9 @@ const Layout = ({
   Navigation,
   Content,
   Footer = <span>All Rights Reserved gpu-is-mine</span>,
+  className,
 }: LayoutProps) => (
-  <StyledLayout>
+  <StyledLayout className={className}>
     <HeaderContainer>{Header}</HeaderContainer>
     <SubHeaderContainer>{SubHeader}</SubHeaderContainer>
     <NavContainer>{Navigation}</NavContainer>

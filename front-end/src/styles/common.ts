@@ -22,3 +22,9 @@ export const notSrOnly = css`
   clip: auto;
   white-space: normal;
 `;
+
+export const textEllipsis = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
