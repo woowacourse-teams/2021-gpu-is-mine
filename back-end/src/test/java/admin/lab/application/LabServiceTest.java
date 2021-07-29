@@ -141,10 +141,10 @@ class LabServiceTest {
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
-    // todo : 테스트코드 수정
     @DisplayName("lab 이 삭제되면 관련된 모든 gpuServer, gpuBoard, jobs, member 가 삭제된다.")
     @Test
     void deleteLab() {
+        // given
         Lab lab = labRepository.save(new Lab("랩1"));
         GpuServer gpuServer1 = gpuServerRepository
                 .save(new GpuServer("GPU서버1", false, 600L, 1024L, lab));
@@ -152,17 +152,24 @@ class LabServiceTest {
                 .save(new GpuBoard(true, 800L, "aaa", gpuServer1));
         Member member = memberRepository
                 .save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
-        Job job1 = jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard1, member));
-        Job job2 = jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard1, member));
-        Job job3 = jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard1, member));
-        Job job4 = jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard1, member));
+        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard1, member));
+        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard1, member));
+        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard1, member));
+        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard1, member));
+        Long labId = lab.getId();
+        Long gpuServerId = gpuServer1.getId();
+        Long gpuBoardId = gpuBoard1.getId();
+        Long memberId = member.getId();
 
-        labService.delete(lab.getId());
+        // when
+        labService.delete(labId);
 
-        assertThatThrownBy(() -> labService.findById(lab.getId())).isInstanceOf(NotFoundException.class);
+        // then
+        assertThatThrownBy(() -> labService.findById(labId)).isInstanceOf(NotFoundException.class);
         assertThat(gpuServerRepository.findAllByLabId(lab.getId())).hasSize(0);
-        assertThat(gpuBoardRepository.findByGpuServerId(gpuServer1.getId()).isPresent()).isFalse();
-        assertThat(jobRepository.findAllByGpuBoardId(gpuBoard1.getId())).hasSize(0);
-        assertThat(memberRepository.findById(member.getId()).isPresent()).isFalse();
+        assertThat(gpuBoardRepository.findById(gpuBoardId).isPresent()).isFalse();
+        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId).isPresent()).isFalse();
+        assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).hasSize(0);
+        assertThat(memberRepository.findById(memberId).isPresent()).isFalse();
     }
 }
