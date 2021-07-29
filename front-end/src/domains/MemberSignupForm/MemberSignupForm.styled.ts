@@ -18,6 +18,16 @@ export const StyledForm = styled.form`
     padding: 2rem;
     margin: auto;
   }
+
+  .signup-form__login {
+    margin-top: 0.5rem;
+    color: var(--primary-800);
+    text-align: center;
+  }
+
+  .signup-form__login:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const SubmitButton = styled(Button)`

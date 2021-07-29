@@ -1,9 +1,10 @@
 import { ChangeEventHandler, FocusEvent } from "react";
+import { Link } from "react-router-dom";
 import { SubmitAction, useFetch, useForm } from "../../hooks";
 import { unwrapResult } from "../../hooks/useFetch/useFetch";
 import { Radio, Input, RadioGroup, Alert, Text } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
-import { API_ENDPOINT } from "../../constants";
+import { PATH, API_ENDPOINT } from "../../constants";
 import { MemberSignupRequest } from "../../types";
 import {
   emailValidator,
@@ -104,6 +105,11 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       <SubmitButton type="submit" aria-label="submit" color="secondary">
         제출
       </SubmitButton>
+      <Link to={PATH.MEMBER.LOGIN}>
+        <Text size="sm" className="signup-form__login">
+          로그인하러 가기
+        </Text>
+      </Link>
     </StyledForm>
   );
 };
