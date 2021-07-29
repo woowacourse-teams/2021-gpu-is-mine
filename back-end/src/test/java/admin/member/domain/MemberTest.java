@@ -33,27 +33,6 @@ class MemberTest {
         boardInLab2 = new GpuBoard(1L, "name", serverInLab2);
     }
 
-    @DisplayName("사용자가 랩 접근 권한이 있는지 확인한다.")
-    @Test
-    void checkPermissionOnLab() {
-        Member member = new Member("email", "password", "name", MemberType.USER, lab1);
-        member.checkPermissionOnLab(lab1);
-
-        assertThatThrownBy(() -> member.checkPermissionOnLab(lab2))
-                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
-    }
-
-    @DisplayName("사용자가 서버 접근 권한이 있는지 확인한다.")
-    @Test
-    void checkPermissionOnServer() {
-        Member member = new Member("email", "password", "name", MemberType.USER, lab1);
-        member.checkPermissionOnServer(serverInLab1);
-
-        assertThatThrownBy(() -> {
-            member.checkPermissionOnServer(serverInLab2);
-        }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
-    }
-
     @DisplayName("사용자가 Job 열람 권한이 있는지 확인한다.")
     @Test
     void checkReadable() {

@@ -27,9 +27,6 @@ public class GpuServer extends BaseEntity {
     private Long memorySize;
     private Long diskSize;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
     @ManyToOne
     @JoinColumn(name = "lab_id")
     private Lab lab;
@@ -97,14 +94,6 @@ public class GpuServer extends BaseEntity {
 
     public Boolean getOn() {
         return isOn;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public void update(String name) {

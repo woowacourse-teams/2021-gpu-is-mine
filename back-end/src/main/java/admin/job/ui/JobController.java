@@ -41,7 +41,7 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findJobById(@PathVariable Long jobId) {
+    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId) {
         JobResponse jobResponse = jobService.findById(jobId);
         return ResponseEntity.ok(jobResponse);
     }
@@ -54,7 +54,7 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public ResponseEntity<JobResponses> findJobs(@PathVariable Long labId,
+    public ResponseEntity<JobResponses> findAll(@PathVariable Long labId,
             @RequestParam(required = false) Long serverId,
             @RequestParam(required = false) String status) {
         JobResponses jobResponses = jobService.findJobs(labId, serverId, status);

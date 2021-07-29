@@ -1,9 +1,7 @@
 package admin.gpuserver.application;
 
-import admin.gpuserver.domain.DeleteHistory;
 import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
-import admin.gpuserver.domain.repository.DeleteHistoryRepository;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.dto.request.GpuBoardRequest;
@@ -20,6 +18,7 @@ import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,22 +29,20 @@ public class GpuServerService {
     private LabRepository labRepository;
     private GpuServerRepository gpuServerRepository;
     private GpuBoardRepository gpuBoardRepository;
-    private DeleteHistoryRepository deleteHistoryRepository;
     private JobRepository jobRepository;
 
-    public GpuServerService(LabRepository labRepository, GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, DeleteHistoryRepository deleteHistoryRepository,
-            JobRepository jobRepository) {
+    public GpuServerService(LabRepository labRepository,
+            GpuServerRepository gpuServerRepository,
+            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
-        this.deleteHistoryRepository = deleteHistoryRepository;
         this.jobRepository = jobRepository;
     }
 
     @Transactional(readOnly = true)
     public GpuServerResponse findById(Long gpuServerId) {
-        GpuServer gpuServer = findLiveGpuServerById(gpuServerId);
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
 
@@ -54,27 +51,36 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponses findAllLiveServer(Long labId) {
+    public GpuServerResponses findAll(Long labId) {
         validateLab(labId);
 
-        List<GpuServer> gpuServers = gpuServerRepository.findByLabIdAndDeletedFalse(labId);
+        List<GpuServer> gpuServers = gpuServerRepository.findAllByLabId(labId);
         List<GpuServerResponse> gpuServerResponses = gpuServers.stream()
                 .map(server -> findById(server.getId()))
                 .collect(Collectors.toList());
         return GpuServerResponses.of(gpuServerResponses);
     }
 
+    @Transactional(readOnly = true)
+    public List<GpuServer> findAllByLabId(Long labId) {
+        return gpuServerRepository.findAllByLabId(labId);
+    }
+
     @Transactional
     public void update(GpuServerUpdateRequest updateRequest, Long gpuServerId) {
-        GpuServer gpuServer = findLiveGpuServerById(gpuServerId);
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
         gpuServer.update(updateRequest.getName());
     }
 
     @Transactional
     public void delete(Long gpuServerId) {
-        GpuServer gpuServer = findLiveGpuServerById(gpuServerId);
-        gpuServer.setDeleted(true);
-        deleteHistoryRepository.save(new DeleteHistory(gpuServer));
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
+        List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
+
+        jobRepository.deleteInBatch(jobs);
+        gpuBoardRepository.delete(gpuBoard);
+        gpuServerRepository.delete(gpuServer);
     }
 
     @Transactional
@@ -95,9 +101,8 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerStatusResponse findStatusById(Long gpuServerId) {
-        GpuServer gpuServer = findLiveGpuServerById(gpuServerId);
-        GpuBoard gpuBoard = findLiveGpuBoardByServerId(gpuServer.getId());
-
+        GpuServer gpuServer = findGpuServerById(gpuServerId);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
         return new GpuServerStatusResponse(gpuServer.getIsOn(), gpuBoard.getIsWorking());
     }
 
@@ -112,15 +117,13 @@ public class GpuServerService {
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 
-    private GpuServer findLiveGpuServerById(Long gpuServerId) {
-        return gpuServerRepository.findByIdAndDeletedFalse(gpuServerId)
+    private GpuServer findGpuServerById(Long gpuServerId) {
+        return gpuServerRepository.findById(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
-
-    private GpuBoard findLiveGpuBoardByServerId(Long gpuServerId) {
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
+  
+    private GpuBoard findGpuBoardByServerId(Long gpuServerId) {
+        return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
-        gpuBoard.checkServerAlive();
-        return gpuBoard;
     }
 }

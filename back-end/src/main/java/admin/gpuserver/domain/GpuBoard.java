@@ -2,6 +2,7 @@ package admin.gpuserver.domain;
 
 import admin.gpuserver.exception.GpuBoardException;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -75,13 +76,7 @@ public class GpuBoard extends BaseEntity {
         return gpuServer;
     }
 
-    public boolean isServerDeleted() {
-        return gpuServer.getDeleted();
-    }
-
-    public void checkServerAlive() {
-        if (isServerDeleted()) {
-            throw GpuBoardException.GPU_BOARD_NOT_FOUND.getException();
-        }
+    public void breakGpuServerRelation() {
+        this.gpuServer = null;
     }
 }
