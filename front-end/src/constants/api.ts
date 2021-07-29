@@ -1,4 +1,4 @@
-const BASE_URL = "https://gpuismine.kro.kr/api";
+export const BASE_URL = "https://gpuismine.kro.kr/api";
 
 const API_ENDPOINT = {
   LABS(labId: number) {
@@ -8,6 +8,8 @@ const API_ENDPOINT = {
     };
   },
   MEMBERS: `${BASE_URL}/members`,
+  ME: `${BASE_URL}/members/me`,
+  LOGIN: `${BASE_URL}/login`,
 };
 
 export default API_ENDPOINT;
