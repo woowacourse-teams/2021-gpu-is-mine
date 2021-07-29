@@ -13,7 +13,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service
 @PropertySource(value = {"classpath:application-mail.properties"})
 public class MailService {
-
     @Value("${spring.mail.from}")
     private String fromEmail;
     private final JavaMailSender mailSender;
@@ -25,47 +24,39 @@ public class MailService {
     }
 
     @Async("mailExecutor")
-    public void sendJobReserveMail(String to, String jobName) {
+    public void sendJobReserveMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("jobName", jobName);
-
+        context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 예약 완료 메일";
         String body = templateEngine.process("job-reserve.html", context);
-
-        sendMail(to, subject, body);
+        sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
-    public void sendJobCancelMail(String to, String jobName) {
+    public void sendJobCancelMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("jobName", jobName);
-
+        context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 취소 완료 메일";
         String body = templateEngine.process("job-cancel.html", context);
-
-        sendMail(to, subject, body);
+        sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
-    public void sendJobStartMail(String to, String jobName) {
+    public void sendJobStartMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("jobName", jobName);
-
+        context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 시작 알림 메일";
         String body = templateEngine.process("job-start.html", context);
-
-        sendMail(to, subject, body);
+        sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
-    public void sendJobEndMail(String to, String jobName) {
+    public void sendJobEndMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("jobName", jobName);
-
+        context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 종료 알림 메일";
         String body = templateEngine.process("job-end.html", context);
-
-        sendMail(to, subject, body);
+        sendMail(mailDto.getEmail(), subject, body);
     }
 
     private void sendMail(String to, String subject, String body) {
