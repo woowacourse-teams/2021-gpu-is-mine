@@ -16,4 +16,6 @@ export const Paragraph = styled.p`
 
 export const StyledMemberLoginForm = styled(MemberLoginForm)`
   margin-bottom: 10rem;
+  background-color: var(--background);
+  color: var(--on-background);
 `;

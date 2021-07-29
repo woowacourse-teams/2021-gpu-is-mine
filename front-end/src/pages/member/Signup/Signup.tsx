@@ -1,8 +1,9 @@
-import { MemberSignupForm, MemberLayout } from "../../../domains/Member";
+import { MemberLayout } from "../../../domains/Member";
+import { StyledSignupForm } from "./Signup.styled";
 
 const Login = () => (
   <MemberLayout>
-    <MemberSignupForm />
+    <StyledSignupForm />
   </MemberLayout>
 );
 
