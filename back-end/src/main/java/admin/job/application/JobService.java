@@ -58,7 +58,7 @@ public class JobService {
         Job job = findJobById(jobId);
         return JobResponse.of(job);
     }
-  
+
     @Transactional(readOnly = true)
     public JobResponses findJobs(Long labId, Long serverId, String status) {
         if (Objects.isNull(serverId)) {
@@ -154,4 +154,5 @@ public class JobService {
         Job job = findJobById(jobId);
         Member member = job.getMember();
         return new MailDto(member.getEmail(), job.getName());
+    }
 }
