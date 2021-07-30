@@ -52,24 +52,6 @@ class GpuServerControllerTest {
         gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", serverInLab));
     }
 
-    @DisplayName("lab에 속하는 server로 조회할 수 있다.")
-    @Test
-    void findServerInLab() {
-        gpuServerController.findById(lab.getId(), serverInLab.getId());
-    }
-
-    @DisplayName("lab에 속하는 server 목록을 검색할 수 있다.")
-    @Test
-    void findAll() {
-        gpuServerController.findAll(lab.getId());
-    }
-
-    @DisplayName("lab에 속하는 server로 상태를 조회할 수 있다.")
-    @Test
-    void status() {
-        gpuServerController.status(lab.getId(), serverInLab.getId());
-    }
-
     @DisplayName("lab에 속하지 않은 server에는 조회 권한이 없다.")
     @Test
     void searchWithOtherLabServer() {

@@ -144,7 +144,7 @@ class WorkerServiceTest {
         Long notExistJobId = Long.MAX_VALUE;
         // then
         Assertions.assertThrows(JobException.JOB_NOT_FOUND.getException().getClass(), () ->
-                workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
+            workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
     }
 }
 

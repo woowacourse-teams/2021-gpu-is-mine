@@ -115,8 +115,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 
-    String userToken;
-    String managerToken;
+    private String userToken;
+    private String managerToken;
 
     @BeforeEach
     public void setUp() {

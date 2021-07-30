@@ -32,6 +32,16 @@ public class GpuServerController {
         this.memberService = memberService;
     }
 
+    @PostMapping
+    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
+            @RequestBody GpuServerRequest gpuServerRequest) {
+        memberService.checkManagerOnLab(member.getId(), labId);
+
+        Long gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerRequest);
+        URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
+        return ResponseEntity.created(uri).build();
+    }
+
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId, @PathVariable Long gpuServerId) {
         GpuServerResponse gpuServerResponse = gpuServerService.findServerInLab(labId, gpuServerId);
@@ -42,22 +52,6 @@ public class GpuServerController {
     public ResponseEntity<GpuServerResponses> findAll(@PathVariable Long labId) {
         GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId);
         return ResponseEntity.ok(gpuServerResponses);
-    }
-
-    @GetMapping("/{gpuServerId}/status")
-    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long labId, @PathVariable Long gpuServerId) {
-        GpuServerStatusResponse response = gpuServerService.findServerStatusInLab(labId, gpuServerId);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
-            @RequestBody GpuServerRequest gpuServerRequest) {
-        memberService.checkManagerOnLab(member.getId(), labId);
-
-        Long gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerRequest);
-        URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
-        return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{gpuServerId}")
@@ -77,5 +71,11 @@ public class GpuServerController {
 
         gpuServerService.deleteServerInLab(labId, gpuServerId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{gpuServerId}/status")
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        GpuServerStatusResponse response = gpuServerService.findServerStatusInLab(labId, gpuServerId);
+        return ResponseEntity.ok(response);
     }
 }

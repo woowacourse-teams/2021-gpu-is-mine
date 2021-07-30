@@ -52,11 +52,9 @@ public class JobService {
     }
 
     @Transactional
-    public JobResponse cancel(Long jobId) {
+    public void cancel(Long jobId) {
         Job job = findJobById(jobId);
         job.cancel();
-
-        return JobResponse.of(job);
     }
 
     @Transactional(readOnly = true)
