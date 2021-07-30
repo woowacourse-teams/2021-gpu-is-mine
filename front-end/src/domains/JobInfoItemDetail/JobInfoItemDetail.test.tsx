@@ -1,6 +1,6 @@
 import { render, screen } from "test-utils";
 import JobInfoItemDetail from "./JobInfoItemDetail";
-import { JobResponseMock } from "../../__fixtures__/jobsResponses";
+import { JobResponseMock } from "../../__fixtures__";
 
 describe("JobInfoItemDetail", () => {
   const setup = () => {
