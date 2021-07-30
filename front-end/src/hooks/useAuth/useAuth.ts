@@ -54,8 +54,11 @@ export const useAuthProvider = () => {
       sessionStorage.setItem("accessToken", accessToken);
 
       authenticate();
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetchMyInfo();
     },
-    [authenticate, requestLogin]
+    [authenticate, fetchMyInfo, requestLogin]
   );
 
   const logout = useCallback(async () => {
