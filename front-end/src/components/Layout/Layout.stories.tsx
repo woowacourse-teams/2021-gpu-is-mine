@@ -14,8 +14,6 @@ const Template: ComponentStory<typeof Layout> = (args) => <Layout {...args} />;
 
 export const Default = Template.bind({});
 
-const labName = "GPU내꼬야Lab";
-
 const StyledRegisterForm = styled(GpuServerRegisterForm)`
   background-color: white;
   padding: 1rem;
@@ -29,8 +27,8 @@ const StyledRegisterForm = styled(GpuServerRegisterForm)`
 `;
 
 Default.args = {
-  Header: <ManagerHeader labName={labName} />,
-  SubHeader: <ManagerSubHeader labName={labName} /* onClick={handleClick} */ />,
+  Header: <ManagerHeader />,
+  SubHeader: <ManagerSubHeader /* onClick={handleClick} */ />,
   Navigation: <ManagerNavigation />,
   Content: <StyledRegisterForm />,
 };

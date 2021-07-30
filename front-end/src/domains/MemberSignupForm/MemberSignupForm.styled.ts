@@ -8,6 +8,7 @@ export const StyledForm = styled.form`
   flex-direction: column;
   row-gap: 0.5rem;
   box-shadow: 2px 2px 10px 2px rgb(200 200 200 / 50%);
+  position: relative;
 
   background-color: white;
   padding: 1rem;
@@ -17,6 +18,16 @@ export const StyledForm = styled.form`
     max-width: 40rem;
     padding: 2rem;
     margin: auto;
+  }
+
+  .signup-form__login {
+    margin-top: 0.5rem;
+    color: var(--primary-800);
+    text-align: center;
+  }
+
+  .signup-form__login:hover {
+    text-decoration: underline;
   }
 `;
 

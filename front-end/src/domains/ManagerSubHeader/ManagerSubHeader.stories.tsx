@@ -10,6 +10,4 @@ const Template: ComponentStory<typeof ManagerSubHeader> = (args) => <ManagerSubH
 
 export const Default = Template.bind({});
 
-Default.args = {
-  labName: "우아한 Lab",
-};
+Default.args = {};
