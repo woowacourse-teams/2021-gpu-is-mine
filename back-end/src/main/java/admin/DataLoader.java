@@ -86,13 +86,13 @@ public class DataLoader implements CommandLineRunner {
         Job job2 = new Job("가짜 뉴스 검증을 위한 댓글 분류 학습", JobStatus.RUNNING, gpuBoard1, member1);
         jobRepository.save(job2);
 
-        Job job3 = new Job("붓꽃 분류 학습 - 교차 검증 예제", JobStatus.COMPLETED, gpuBoard1, member1);
+        Job job3 = new Job("신경망을 이용한 스포츠 경기 비디오와 텍스트 요약", JobStatus.COMPLETED, gpuBoard1, member1);
         jobRepository.save(job3);
 
         Job job4 = new Job("보스턴 주택 가격 예측과 k-겹 검증", JobStatus.COMPLETED, gpuBoard1, member1);
         jobRepository.save(job4);
 
-        Job job5 = new Job("CNN, 남녀 분류 학습", JobStatus.WAITING, gpuBoard1, member2);
+        Job job5 = new Job("소셜 미디어 게시물을 기반으로 한 우울증 감정 분석", JobStatus.WAITING, gpuBoard1, member2);
         jobRepository.save(job5);
 
         Job job6 = new Job("교통 표지판 분류 학습", JobStatus.CANCELED, gpuBoard2, member2);
