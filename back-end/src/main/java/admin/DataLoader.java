@@ -45,31 +45,31 @@ public class DataLoader implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) {
-        Lab lab1 = new Lab("lab1");
+        Lab lab1 = new Lab("GIM Lab - woowacourse");
         labRepository.save(lab1);
 
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
+        GpuServer gpuServer1 = new GpuServer("serverA", true, 1024L, 1024L, lab1);
         gpuServerRepository.save(gpuServer1);
 
         GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
         gpuBoardRepository.save(gpuBoard1);
 
-        GpuServer gpuServer2 = new GpuServer("server2", true, 1024L, 1024L, lab1);
+        GpuServer gpuServer2 = new GpuServer("serverB", true, 1024L, 1024L, lab1);
         gpuServerRepository.save(gpuServer2);
 
-        GpuBoard gpuBoard2 = new GpuBoard(false, 700L, "NVIDIA231", gpuServer2);
+        GpuBoard gpuBoard2 = new GpuBoard(false, 700L, "NVIDIA Titan V", gpuServer2);
         gpuBoardRepository.save(gpuBoard2);
 
-        GpuServer gpuServer3 = new GpuServer("server3", true, 1024L, 1024L, lab1);
+        GpuServer gpuServer3 = new GpuServer("serverC", true, 1024L, 1024L, lab1);
         gpuServerRepository.save(gpuServer3);
 
-        GpuBoard gpuBoard3 = new GpuBoard(true, 670L, "NVIDIA13", gpuServer3);
+        GpuBoard gpuBoard3 = new GpuBoard(true, 670L, "RTX 6000", gpuServer3);
         gpuBoardRepository.save(gpuBoard3);
 
-        GpuServer gpuServer4 = new GpuServer("server4", false, 1024L, 1024L, lab1);
+        GpuServer gpuServer4 = new GpuServer("serverD", false, 1024L, 1024L, lab1);
         gpuServerRepository.save(gpuServer4);
 
-        GpuBoard gpuBoard4 = new GpuBoard(false, 300L, "NVIDIA24", gpuServer4);
+        GpuBoard gpuBoard4 = new GpuBoard(false, 300L, "RTX 2080 Ti", gpuServer4);
         gpuBoardRepository.save(gpuBoard4);
 
         Long savedMemberId1 = memberService
@@ -80,34 +80,34 @@ public class DataLoader implements CommandLineRunner {
                 .save(new MemberRequest("test@test.com", "test1234!", "name", "manager", lab1.getId()));
         Member member2 = memberRepository.findById(savedMemberId2).get();
 
-        Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard1, member1);
+        Job job1 = new Job("영화 리뷰 분석을 통한 긍정도 평가", JobStatus.WAITING, gpuBoard1, member1);
         jobRepository.save(job1);
 
-        Job job2 = new Job("job2", JobStatus.RUNNING, gpuBoard1, member1);
+        Job job2 = new Job("가짜 뉴스 검증을 위한 댓글 분류 학습", JobStatus.RUNNING, gpuBoard1, member1);
         jobRepository.save(job2);
 
-        Job job3 = new Job("job3", JobStatus.COMPLETED, gpuBoard1, member1);
+        Job job3 = new Job("붓꽃 분류 학습 - 교차 검증 예제", JobStatus.COMPLETED, gpuBoard1, member1);
         jobRepository.save(job3);
 
-        Job job4 = new Job("job4", JobStatus.COMPLETED, gpuBoard1, member1);
+        Job job4 = new Job("보스턴 주택 가격 예측과 k-겹 검증", JobStatus.COMPLETED, gpuBoard1, member1);
         jobRepository.save(job4);
 
-        Job job5 = new Job("job5", JobStatus.WAITING, gpuBoard1, member2);
+        Job job5 = new Job("CNN, 남녀 분류 학습", JobStatus.WAITING, gpuBoard1, member2);
         jobRepository.save(job5);
 
-        Job job6 = new Job("job6", JobStatus.CANCELED, gpuBoard2, member2);
+        Job job6 = new Job("교통 표지판 분류 학습", JobStatus.CANCELED, gpuBoard2, member2);
         jobRepository.save(job6);
 
-        Job job7 = new Job("job7", JobStatus.WAITING, gpuBoard2, member1);
+        Job job7 = new Job("CNN 모델을 활용한 마스크 인식 학습", JobStatus.WAITING, gpuBoard2, member1);
         jobRepository.save(job7);
 
-        Job job8 = new Job("job8", JobStatus.RUNNING, gpuBoard3, member1);
+        Job job8 = new Job("자연어 처리 : 문자-단위 RNN으로 이름 생성하기", JobStatus.RUNNING, gpuBoard3, member1);
         jobRepository.save(job8);
 
-        Job job9 = new Job("job9", JobStatus.WAITING, gpuBoard4, member2);
+        Job job9 = new Job("유튜브 댓글 긍정도 평가 학습", JobStatus.WAITING, gpuBoard4, member2);
         jobRepository.save(job9);
 
-        Job job10 = new Job("job10", JobStatus.RUNNING, gpuBoard4, member2);
+        Job job10 = new Job("망막 이미지 분류, 망막 질환 진단 학습", JobStatus.RUNNING, gpuBoard4, member2);
         jobRepository.save(job10);
     }
 }
