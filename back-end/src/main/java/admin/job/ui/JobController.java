@@ -66,7 +66,7 @@ public class JobController {
 
     @PutMapping("/jobs/{jobId}")
     public ResponseEntity<Void> cancel(@PathVariable Long jobId,
-        @AuthenticationPrincipal Member member) {
+            @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
         JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);

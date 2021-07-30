@@ -29,16 +29,16 @@ import org.springframework.util.StringUtils;
 @Service
 public class JobService {
 
-    private JobRepository jobRepository;
-    private GpuServerRepository gpuServerRepository;
-    private GpuBoardRepository gpuBoardRepository;
-    private MemberRepository memberRepository;
-    private LogRepository logRepository;
+    private final JobRepository jobRepository;
+    private final GpuServerRepository gpuServerRepository;
+    private final GpuBoardRepository gpuBoardRepository;
+    private final MemberRepository memberRepository;
+    private final LogRepository logRepository;
 
     public JobService(JobRepository jobRepository,
-        GpuServerRepository gpuServerRepository,
-        GpuBoardRepository gpuBoardRepository,
-        MemberRepository memberRepository, LogRepository logRepository) {
+            GpuServerRepository gpuServerRepository,
+            GpuBoardRepository gpuBoardRepository,
+            MemberRepository memberRepository, LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -109,7 +109,7 @@ public class JobService {
         GpuBoard gpuBoard = findLiveBoardByServerId(serverId);
         JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
         return JobResponses
-            .of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
+                .of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
     }
 
     private JobResponses findAllJobsOfServer(Long serverId) {
@@ -132,29 +132,29 @@ public class JobService {
 
     private JobResponses findJobsOfMemberByStatus(Long memberId, String status) {
         List<Job> jobs = jobRepository
-            .findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
+                .findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
         return JobResponses.of(jobs);
     }
 
     private GpuBoard findLiveBoardByServerId(Long gpuServerId) {
         return gpuBoardRepository.findByGpuServerId(gpuServerId)
-            .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }
 
     private Job findJobById(Long id) {
         return jobRepository.findById(id)
-            .orElseThrow(JobException.JOB_NOT_FOUND::getException);
+                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
     }
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-            .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
     }
 
     public void checkServerInLab(Long serverId, Long labId) {
         gpuServerRepository
-            .findByIdAndLabId(serverId, labId)
-            .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
+                .findByIdAndLabId(serverId, labId)
+                .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
     }
 
     public MailDto mailDtoOfJob(Long jobId) {

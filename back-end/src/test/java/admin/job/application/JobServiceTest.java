@@ -79,7 +79,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
 
         assertThatThrownBy(() -> jobService.save(notExistingMemberId, jobRequest))
-            .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
+                .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
     @Test
@@ -89,7 +89,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(notExistingServerId, "job", "metadata", "12");
 
         assertThatThrownBy(() -> jobService.save(memberId, jobRequest))
-            .isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
+                .isEqualTo(GpuBoardException.GPU_BOARD_NOT_FOUND.getException());
     }
 
     @Test
@@ -120,7 +120,7 @@ class JobServiceTest {
         Long notExistingServerId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> jobService.cancel(notExistingServerId))
-            .isEqualTo(JobException.JOB_NOT_FOUND.getException());
+                .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
     @Test
@@ -133,7 +133,7 @@ class JobServiceTest {
         job.changeStatus(JobStatus.RUNNING);
 
         assertThatThrownBy(() -> jobService.cancel(jobId))
-            .isEqualTo(JobException.NO_WAITING_JOB.getException());
+                .isEqualTo(JobException.NO_WAITING_JOB.getException());
     }
 
     @Test
@@ -142,7 +142,7 @@ class JobServiceTest {
         Long notExistingJobId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> jobService.cancel(notExistingJobId))
-            .isEqualTo(JobException.JOB_NOT_FOUND.getException());
+                .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
     private Long saveGpuServerInLab(Lab lab) {
@@ -159,6 +159,29 @@ class JobServiceTest {
         Member member = new Member("email", "password", "name", MemberType.USER, lab);
         memberRepository.save(member);
         return member.getId();
+    }
+
+    @Test
+    @DisplayName("로그 정보 모두 조회")
+    void findAllLogsByJob() {
+        //given
+        Lab lab1 = new Lab("lab1");
+        labRepository.save(lab1);
+        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
+        gpuServerRepository.save(gpuServer1);
+        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
+        gpuBoardRepository.save(gpuBoard1);
+        Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER,
+                lab1);
+        memberRepository.save(member1);
+        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1);
+        jobRepository.save(job1);
+
+        logRepository.save(new Log("content1", job1));
+        logRepository.save(new Log("content1", job1));
+        logRepository.save(new Log("content1", job1));
+
+        assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 
     @Nested
@@ -183,7 +206,7 @@ class JobServiceTest {
             Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
 
             assertJobIdsFromJobResponses(jobService.findJobsOfMember(memberId, null), jobId1,
-                jobId2);
+                    jobId2);
         }
 
         @Test
@@ -193,50 +216,27 @@ class JobServiceTest {
             Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
 
             assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null), jobId1,
-                jobId2);
+                    jobId2);
         }
 
         @Test
         @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
         void findAllByLab() {
             Long jobId1 = jobService
-                .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+                    .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
             Long jobId2 = jobService
-                .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+                    .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
 
             assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null), jobId1,
-                jobId2);
+                    jobId2);
         }
 
         private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {
             assertThat(
-                responses.getJobResponses().stream()
-                    .map(JobResponse::getId)
-                    .collect(Collectors.toList())
+                    responses.getJobResponses().stream()
+                            .map(JobResponse::getId)
+                            .collect(Collectors.toList())
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
         }
-    }
-
-    @Test
-    @DisplayName("로그 정보 모두 조회")
-    void findAllLogsByJob() {
-        //given
-        Lab lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
-        gpuServerRepository.save(gpuServer1);
-        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER,
-            lab1);
-        memberRepository.save(member1);
-        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1);
-        jobRepository.save(job1);
-
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-
-        assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 }
