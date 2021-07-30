@@ -105,4 +105,18 @@ const jobsResponsesMock: JobViewResponses = {
   ],
 } as const;
 
+export const logData = `
+Train on 60000 samples, validate on 10000 samples
+Epoch 1/5
+60000/60000 [==============================] - 15s 246us/sample - loss: 0.2217 - accuracy: 0.9343 - val_loss: 0.1019 - val_accuracy: 0.9685
+Epoch 2/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 3/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 4/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 5/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+`;
+
 export default jobsResponsesMock;
