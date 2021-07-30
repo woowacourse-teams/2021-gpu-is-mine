@@ -86,7 +86,6 @@ class GpuServerControllerTest {
                 .isInstanceOf(GpuServerException.GPU_SERVER_NOT_FOUND.getException().getClass());
     }
 
-
     @DisplayName("관리자 권한을 확인한다.")
     @Nested
     class ManagerAuthorization {

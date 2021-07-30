@@ -58,7 +58,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return gpus.size();
     }
 
-    public static ExtractableResponse<Response> GpuServer_생성(String token, Long labId, GpuServerRequest gpuServerRequest) {
+    public static ExtractableResponse<Response> GpuServer_생성(String token, Long labId,
+            GpuServerRequest gpuServerRequest) {
         return RestAssured
                 .given().log().all()
                 .auth()
@@ -77,7 +78,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 
-    public static ExtractableResponse<Response> GpuServer_이름변경(String token, GpuServerUpdateRequest gpuServerNameUpdateRequest,
+    public static ExtractableResponse<Response> GpuServer_이름변경(String token,
+            GpuServerUpdateRequest gpuServerNameUpdateRequest,
             Long gpuServerId) {
         return RestAssured
                 .given().log().all()
@@ -112,7 +114,6 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         String[] locationPaths = response.header("Location").split("/");
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
-
 
     String userToken;
     String managerToken;

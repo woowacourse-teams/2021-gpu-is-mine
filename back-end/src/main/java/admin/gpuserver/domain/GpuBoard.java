@@ -76,7 +76,7 @@ public class GpuBoard extends BaseEntity {
         return gpuServer;
     }
 
-    public Lab getLab(){
+    public Lab getLab() {
         return gpuServer.getLab();
     }
 }

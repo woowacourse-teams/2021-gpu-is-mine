@@ -1,5 +1,7 @@
 package admin.lab.ui;
 
+import static admin.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import admin.AcceptanceTest;
@@ -39,8 +41,10 @@ public class LabAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
-    public static ExtractableResponse<Response> LAB_조회_요청(Long id) {
+    public static ExtractableResponse<Response> LAB_조회_요청(String accessToken, Long id) {
         return RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
                 .when()
                 .get("/api/labs/" + id)
                 .then()
@@ -62,8 +66,10 @@ public class LabAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> LAB_수정_요청(Long id, LabRequest updateLabRequest) {
+    public static ExtractableResponse<Response> LAB_수정_요청(String accessToken, Long id, LabRequest updateLabRequest) {
         return RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
                 .body(updateLabRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
@@ -72,8 +78,10 @@ public class LabAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> LAB_삭제_요청(Long id) {
+    public static ExtractableResponse<Response> LAB_삭제_요청(String accessToken, Long id) {
         return RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
                 .when()
                 .delete("/api/labs/" + id)
                 .then()
@@ -104,7 +112,8 @@ public class LabAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
         Long id = extractCreatedId(createResponse);
 
-        ExtractableResponse<Response> response = LAB_조회_요청(id);
+        String managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(id, "managerTemp@email.com", "password"));
+        ExtractableResponse<Response> response = LAB_조회_요청(managerToken, id);
 
         LAB_정상_조회됨(response, LAB_REQUEST.getName());
     }
@@ -134,9 +143,11 @@ public class LabAcceptanceTest extends AcceptanceTest {
     void update() {
         ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
         Long id = extractCreatedId(createResponse);
-        LabRequest updateLabRequest = new LabRequest("updateLabName");
 
-        ExtractableResponse<Response> response = LAB_수정_요청(id, updateLabRequest);
+        String managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(id, "managerTemp@email.com", "password"));
+
+        LabRequest updateLabRequest = new LabRequest("updateLabName");
+        ExtractableResponse<Response> response = LAB_수정_요청(managerToken, id, updateLabRequest);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -147,7 +158,8 @@ public class LabAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createResponse = LAB_생성_요청(LAB_REQUEST);
         Long id = extractCreatedId(createResponse);
 
-        ExtractableResponse<Response> response = LAB_삭제_요청(id);
+        String managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(id, "managerTemp@email.com", "password"));
+        ExtractableResponse<Response> response = LAB_삭제_요청(managerToken, id);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }

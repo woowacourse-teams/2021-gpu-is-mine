@@ -13,16 +13,11 @@ import admin.AcceptanceTest;
 import admin.job.domain.JobStatus;
 import admin.job.dto.request.JobRequest;
 import admin.job.dto.response.JobResponse;
-import admin.job.dto.response.JobResponses;
 import admin.lab.dto.LabRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -103,22 +98,18 @@ public class JobAcceptanceTest extends AcceptanceTest {
         serverId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerCreationRequest());
     }
 
-    private void 접근_권한이_없는_회원_응답_확인(ExtractableResponse<Response> response) {
-        assertThat((String) response.body().jsonPath().get("message"))
-                .isEqualTo("접근 권한이 없는 회원입니다.");
-    }
-
-    @Disabled
     @DisplayName("소속되지 않는 lab에 job을 예약할 수 없다.")
     @Test
     void addJobWithoutPermission() {
         Long otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("otherLabId"));
-        String otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "other@other.com", "password"));
+        String otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(
+                managerCreationRequest(otherLabId, "other@other.com", "password"));
         Long otherLabServerId = GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, gpuServerCreationRequest());
 
         ExtractableResponse<Response> response =
                 Job_예약(otherLabId, jobCreationRequest(otherLabServerId), userToken);
-        접근_권한이_없는_회원_응답_확인(response);
+        assertThat((String) response.body().jsonPath().get("message"))
+                .isEqualTo("접근 권한이 없는 사용자 입니다.");
     }
 
     @DisplayName("일반 사용자는 같은 랩의 다른 사용자의 Job 예약을 취소할 수 없다.")
@@ -132,7 +123,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         Long otherMemberJobId = Job_예약_후_id_반환(labId, jobCreationRequest(serverId), otherToken);
 
         ExtractableResponse<Response> response = Job_취소(labId, otherMemberJobId, userToken);
-        접근_권한이_없는_회원_응답_확인(response);
+        assertThat((String) response.body().jsonPath().get("message"))
+                .isEqualTo("접근 권한이 없는 회원입니다.");
     }
 
     @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")

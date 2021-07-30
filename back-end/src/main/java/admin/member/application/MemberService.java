@@ -1,9 +1,7 @@
 package admin.member.application;
 
 import admin.encryption.Encrypt;
-import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.job.exception.JobException;

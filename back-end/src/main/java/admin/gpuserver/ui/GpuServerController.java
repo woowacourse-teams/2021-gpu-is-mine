@@ -61,7 +61,8 @@ public class GpuServerController {
     }
 
     @PutMapping("/{gpuServerId}")
-    public ResponseEntity<Void> update(@PathVariable Long labId, @PathVariable Long gpuServerId, @AuthenticationPrincipal Member member,
+    public ResponseEntity<Void> update(@PathVariable Long labId, @PathVariable Long gpuServerId,
+            @AuthenticationPrincipal Member member,
             @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest) {
         memberService.checkManagerOnLab(member.getId(), labId);
 

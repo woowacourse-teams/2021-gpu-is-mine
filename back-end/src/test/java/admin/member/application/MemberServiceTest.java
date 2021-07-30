@@ -157,17 +157,17 @@ class MemberServiceTest {
         @DisplayName("사용자가 Lab에 일반 유저인 경우 예외를 발생한다.")
         @Test
         void validateManagerWithUser() {
-            assertThatThrownBy(()-> memberService.checkManagerOnLab(user, labId))
+            assertThatThrownBy(() -> memberService.checkManagerOnLab(user, labId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @DisplayName("사용자가 해당 랩의 멤버가 아닌 경우 예외를 발생한다.")
         @Test
         void validateManagerWithOtherLab() {
-            assertThatThrownBy(()-> memberService.checkManagerOnLab(manager, otherLabId))
+            assertThatThrownBy(() -> memberService.checkManagerOnLab(manager, otherLabId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
-            assertThatThrownBy(()-> memberService.checkManagerOnLab(user, otherLabId))
+            assertThatThrownBy(() -> memberService.checkManagerOnLab(user, otherLabId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
     }

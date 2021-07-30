@@ -93,13 +93,13 @@ public class Member extends BaseEntity {
     }
 
     public void checkMemberOfLab(Lab lab) {
-        if(!this.lab.equals(lab)){
+        if (!this.lab.equals(lab)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
     }
 
-    public void checkManagerOfLab(Lab lab){
-        if(!memberType.isManager()){
+    public void checkManagerOfLab(Lab lab) {
+        if (!memberType.isManager()) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
         checkMemberOfLab(lab);
