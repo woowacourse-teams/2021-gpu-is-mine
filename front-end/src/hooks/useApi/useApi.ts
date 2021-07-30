@@ -14,6 +14,11 @@ export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number
     method: "get",
   });
 
+export const usePutJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
+  useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
+    method: "put",
+  });
+
 export const useGetMyInfo = () =>
   useFetch<MyInfoResponse>(API_ENDPOINT.MEMBER.ME, {
     method: "get",

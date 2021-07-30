@@ -54,4 +54,8 @@ export const StyledJobInfoItem = styled.div`
   .job-info-button-wrapper__button:hover {
     filter: brightness(1.1);
   }
+
+  .job-info-title-wrapper__status + p {
+    white-space: pre;
+  }
 `;

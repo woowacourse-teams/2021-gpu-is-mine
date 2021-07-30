@@ -1,14 +1,13 @@
 import { useHistory } from "react-router-dom";
-import { AxiosError } from "axios";
 import { formatDate, addHours } from "../../utils";
-import { useBoolean, useFetch } from "../../hooks";
-import { Alert, Button, CalendarIcon, Confirm, Text } from "../../components";
+import { useBoolean, useAuth, usePutJobDetail } from "../../hooks";
+import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
-import { API_ENDPOINT, PATH } from "../../constants";
-import { JobViewResponse } from "../../types";
+import { PATH } from "../../constants";
+import { JobViewResponse, MyInfoResponse } from "../../types";
 
 interface JobInfoItemProps extends JobViewResponse {
-  refresh: () => Promise<unknown | AxiosError<unknown>>;
+  refresh: () => Promise<unknown>;
 }
 
 const JobInfoItem = ({
@@ -22,40 +21,35 @@ const JobInfoItem = ({
   // TODO: 실제 예상 시간으로 교체
   // TODO: 서버별 job의 현재 실행 중인 job의 예상 종료 시간 + 나머지 jobs들의 expected time을 전부 더함
 
-  const startTime = formatDate(new Date());
-  const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
-
   const history = useHistory();
 
-  const { status, makeRequest, done } = useFetch<void>(`${API_ENDPOINT.LABS(1).JOBS}/${jobId}`, {
-    method: "put",
-  });
+  const { myInfo } = useAuth() as { myInfo: MyInfoResponse };
+
+  const { status, makeRequest, done } = usePutJobDetail({ labId: myInfo.labResponse.id, jobId });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
-
-  const alertMessage: { [key in "succeed" | "failed"]: string } = {
-    succeed: `${jobName}이(가) 취소되었습니다.`,
-    failed: `${jobName} 취소에 실패하였습니다.`,
-  };
-
-  const handleAlertConfirm = async () => {
-    if (status === "succeed") {
-      await refresh();
-    }
-
-    done();
-  };
 
   const handleDetailClick = () => {
     history.push(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
   };
 
+  const startTime = formatDate(new Date());
+  const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
+
   return (
     <>
-      {(status === "succeed" || status === "failed") && (
-        <Alert onConfirm={handleAlertConfirm}>
+      {status === "succeed" && (
+        <Alert onConfirm={refresh}>
           <Text size="md" weight="regular">
-            {alertMessage[status] ?? ""}
+            {`${jobName}이(가) 취소되었습니다.`}
+          </Text>
+        </Alert>
+      )}
+
+      {status === "failed" && (
+        <Alert onConfirm={done}>
+          <Text size="md" weight="regular">
+            {`${jobName} 취소에 실패하였습니다.`}
           </Text>
         </Alert>
       )}
@@ -68,7 +62,10 @@ const JobInfoItem = ({
 
       <StyledJobInfoItem>
         <div className="job-info-title-wrapper">
-          <CalendarIcon className="job-info-title-wrapper__status" size="md" status={jobStatus} />
+          <VerticalBox>
+            <CalendarIcon className="job-info-title-wrapper__status" size="md" status={jobStatus} />
+            <Text size="xs">작업중</Text>
+          </VerticalBox>
           <Text className="job-info-title-wrapper__title" size="sm" weight="bold">
             {jobName}
           </Text>
@@ -118,7 +115,7 @@ const JobInfoItem = ({
           <Button
             className="job-info-button-wrapper__button"
             color="error"
-            disabled={jobStatus === "CANCELED" || status === "loading"}
+            disabled={jobStatus === "CANCELED" || jobStatus === "COMPLETED" || status === "loading"}
             onClick={openConfirm}
           >
             취소
