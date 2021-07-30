@@ -15,7 +15,21 @@ const statusName = {
   RUNNING: "진행중",
   COMPLETED: "완료됨",
   CANCELED: "취소됨",
-};
+} as const;
+
+const startTimeLabel = {
+  WAITING: "예상 시작 시간",
+  RUNNING: "시작 시간",
+  COMPLETED: "시작 시간",
+  CANCELED: "시작 시간",
+} as const;
+
+const endTimeLabel = {
+  WAITING: "예상 완료 시간",
+  RUNNING: "예상 완료 시간",
+  COMPLETED: "완료 시간",
+  CANCELED: "완료 시간",
+} as const;
 
 const JobInfoItem = ({
   id: jobId,
@@ -42,6 +56,13 @@ const JobInfoItem = ({
 
   const startTime = formatDate(new Date());
   const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
+
+  const details = [
+    { label: "할당 서버", content: gpuServerName },
+    { label: startTimeLabel[jobStatus], content: startTime },
+    { label: endTimeLabel[jobStatus], content: endTime },
+    { label: "예약자", content: memberName },
+  ];
 
   return (
     <>
@@ -78,38 +99,16 @@ const JobInfoItem = ({
           </Text>
         </div>
         <div className="job-info-details-wrapper">
-          <div className="job-info-details-wrapper__detail-col">
-            <Text size="sm" weight="bold">
-              할당 서버
-            </Text>
-            <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
-              {gpuServerName}
-            </Text>
-          </div>
-          <div className="job-info-details-wrapper__detail-col">
-            <Text size="sm" weight="bold">
-              (예상) 시작 시간
-            </Text>
-            <Text size="sm" weight="medium">
-              {startTime}
-            </Text>
-          </div>
-          <div className="job-info-details-wrapper__detail-col">
-            <Text size="sm" weight="bold">
-              (예상) 완료 시간
-            </Text>
-            <Text size="sm" weight="medium">
-              {endTime}
-            </Text>
-          </div>
-          <div className="job-info-details-wrapper__detail-col">
-            <Text size="sm" weight="bold">
-              예약자
-            </Text>
-            <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
-              {memberName}
-            </Text>
-          </div>
+          {details.map(({ label, content }) => (
+            <div className="job-info-details-wrapper__detail-col" key={label}>
+              <Text size="sm" weight="bold">
+                {label}
+              </Text>
+              <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
+                {content}
+              </Text>
+            </div>
+          ))}
         </div>
         <div className="job-info-button-wrapper">
           <Button
