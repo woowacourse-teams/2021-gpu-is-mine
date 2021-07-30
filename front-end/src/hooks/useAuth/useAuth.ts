@@ -31,17 +31,17 @@ export const useAuth = () => {
 };
 
 const useGetMyInfo = () =>
-  useFetch<MyInfoResponse>(API_ENDPOINT.ME, {
+  useFetch<MyInfoResponse>(API_ENDPOINT.MEMBER.ME, {
     method: "get",
   });
 
 const usePostLogin = () =>
-  useFetch<MemberLoginResponse, MemberLoginRequest>(API_ENDPOINT.LOGIN, {
+  useFetch<MemberLoginResponse, MemberLoginRequest>(API_ENDPOINT.MEMBER.LOGIN, {
     method: "post",
   });
 
 const usePostSignup = () =>
-  useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
+  useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBER.SIGNUP, {
     method: "post",
   });
 
