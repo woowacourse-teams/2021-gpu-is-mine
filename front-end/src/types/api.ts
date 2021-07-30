@@ -8,7 +8,7 @@ export interface APIResponse<T> {
 }
 
 export interface MakeRequestReturnType<T> extends APIResponse<T> {
-  unwrap: () => Promise<T | AxiosError<any>>;
+  unwrap: () => Promise<T>;
 }
 
 export interface APIFunctions<T, U = void> {

@@ -5,6 +5,7 @@ import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGrou
 import { StyledForm } from "./JobRegisterForm.styled";
 import { APICallStatus, JobRegisterRequest } from "../../types";
 import { isLength, isNumber } from "../../utils";
+import { API_ENDPOINT } from "../../constants";
 
 type JobRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -43,8 +44,7 @@ const minPerformanceValidator = (value: string) => {
 
 const JobRegisterForm = (props: JobRegisterFormProps) => {
   const { status, makeRequest, done } = useFetch<void, JobRegisterRequest>(
-    // ${API_ENDPOINT.LABS(1).JOBS,
-    "https://gpuismine.kro.kr/api/jobs?memberId=1", // TODO: API Path 반영
+    API_ENDPOINT.LABS(1).JOBS,
     {
       method: "post",
     }

@@ -40,7 +40,8 @@ dependencies {
 processResources.dependsOn('copyPrivate')
 
 task copyPrivate(type: Copy) {
-    from '../private-configuration/application-mail.properties'
+    from '../private-configuration'
+    include "**/*.properties"
     into 'src/main/resources'
 }
 

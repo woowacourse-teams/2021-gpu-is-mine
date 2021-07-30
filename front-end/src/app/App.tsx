@@ -1,24 +1,32 @@
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
+import { PrivateRoute, PublicRoute } from "../components";
 import { GpuServerView, GpuServerRegister, JobView, JobRegister } from "../pages/manager";
+import { Login, Signup } from "../pages/member";
 import Providers from "../providers/Providers";
 import { PATH } from "../constants";
 
 const App = () => (
   <Providers>
     <Switch>
-      <Route exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
+      <PublicRoute exact path={PATH.MEMBER.SIGNUP}>
+        <Signup />
+      </PublicRoute>
+      <PublicRoute exact path={PATH.MEMBER.LOGIN}>
+        <Login />
+      </PublicRoute>
+      <PrivateRoute exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
         <GpuServerView />
-      </Route>
-      <Route exact path={PATH.MANAGER.GPU_SERVER.REGISTER}>
+      </PrivateRoute>
+      <PrivateRoute exact path={PATH.MANAGER.GPU_SERVER.REGISTER}>
         <GpuServerRegister />
-      </Route>
-      <Route exact path={PATH.MANAGER.JOB.REGISTER}>
+      </PrivateRoute>
+      <PrivateRoute exact path={PATH.MANAGER.JOB.REGISTER}>
         <JobRegister />
-      </Route>
-      <Route exact path={PATH.MANAGER.JOB.VIEW}>
+      </PrivateRoute>
+      <PrivateRoute exact path={PATH.MANAGER.JOB.VIEW}>
         <JobView />
-      </Route>
-      <Redirect to={PATH.MANAGER.GPU_SERVER.VIEW} />
+      </PrivateRoute>
+      <Redirect to={PATH.MEMBER.LOGIN} />
     </Switch>
   </Providers>
 );
