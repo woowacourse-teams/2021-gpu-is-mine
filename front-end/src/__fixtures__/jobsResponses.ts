@@ -1,5 +1,15 @@
 import { JobViewResponses } from "../types";
 
+export const JobResponseMock = {
+  id: 4,
+  name: "위암 1,2기 구분 학습",
+  status: "COMPLETED",
+  memberId: 1,
+  memberName: "name1",
+  gpuServerId: 1,
+  gpuServerName: "server1",
+};
+
 const jobsResponsesMock: JobViewResponses = {
   jobResponses: [
     {
