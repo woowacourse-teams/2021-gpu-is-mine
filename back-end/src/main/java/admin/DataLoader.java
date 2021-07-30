@@ -9,9 +9,11 @@ import admin.job.domain.JobStatus;
 import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
+import admin.member.application.MemberService;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
+import admin.member.dto.request.MemberRequest;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -26,14 +28,18 @@ public class DataLoader implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final JobRepository jobRepository;
 
-    public DataLoader(LabRepository labRepository, GpuServerRepository gpuServerRepository,
+    private final MemberService memberService;
+
+    public DataLoader(LabRepository labRepository,
+            GpuServerRepository gpuServerRepository,
             GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository,
-            JobRepository jobRepository) {
+            JobRepository jobRepository, MemberService memberService) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
         this.jobRepository = jobRepository;
+        this.memberService = memberService;
     }
 
     @Transactional
@@ -66,11 +72,13 @@ public class DataLoader implements CommandLineRunner {
         GpuBoard gpuBoard4 = new GpuBoard(false, 300L, "NVIDIA24", gpuServer4);
         gpuBoardRepository.save(gpuBoard4);
 
-        Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
-        memberRepository.save(member1);
+        Long savedMemberId1 = memberService
+                .save(new MemberRequest("email@email.com", "password", "name", "manager", lab1.getId()));
+        Member member1 = memberRepository.findById(savedMemberId1).get();
 
-        Member member2 = new Member("test@test.com", "test1234!", "name2", MemberType.MANAGER, lab1);
-        memberRepository.save(member2);
+        Long savedMemberId2 = memberService
+                .save(new MemberRequest("test@test.com", "test1234!", "name", "manager", lab1.getId()));
+        Member member2 = memberRepository.findById(savedMemberId2).get();
 
         Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard1, member1);
         jobRepository.save(job1);
