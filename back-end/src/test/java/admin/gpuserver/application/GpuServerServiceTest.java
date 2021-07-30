@@ -20,6 +20,9 @@ import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
+import admin.member.domain.Member;
+import admin.member.domain.MemberType;
+import admin.member.domain.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +50,9 @@ public class GpuServerServiceTest {
     @Autowired
     private LabRepository labRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     private Lab lab;
 
     private GpuServer gpuServer1;
@@ -54,6 +60,8 @@ public class GpuServerServiceTest {
 
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
+
+    private Member user;
 
     @BeforeEach
     private void setUp() {
@@ -64,6 +72,9 @@ public class GpuServerServiceTest {
 
         gpuBoard1 = gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", gpuServer1));
         gpuBoard2 = gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", gpuServer2));
+
+        user = new Member("email@email.com", "password", "name", MemberType.USER, lab);
+        memberRepository.save(user);
     }
 
     @DisplayName("특정 GPU서버를 조회한다.")
@@ -189,7 +200,7 @@ public class GpuServerServiceTest {
         GpuBoardRequest boardRequest = new GpuBoardRequest("nvdia", 10L);
         GpuServerRequest gpuServerRequest = new GpuServerRequest("server", 1L, 1L, boardRequest);
 
-        Long gpuServerId = gpuServerService.save(lab.getId(), gpuServerRequest);
+        Long gpuServerId = gpuServerService.save(user.getId(), lab.getId(), gpuServerRequest);
         assertThat(gpuServerRepository.findById(gpuServerId)).isNotEmpty();
     }
 
@@ -200,7 +211,7 @@ public class GpuServerServiceTest {
         GpuServerRequest gpuServerRequest = new GpuServerRequest("server", 1L, 1L, boardRequest);
         Long nonexistentLabId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> gpuServerService.save(, nonexistentLabId, gpuServerRequest))
+        assertThatThrownBy(() -> gpuServerService.save(user.getId(), nonexistentLabId, gpuServerRequest))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
