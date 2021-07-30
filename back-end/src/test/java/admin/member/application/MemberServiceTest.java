@@ -134,6 +134,45 @@ class MemberServiceTest {
     }
 
     @Nested
+    @DisplayName("사용자의 Lab 접근 권한을 확인한다.")
+    class CheckPermissionOnLab {
+
+        private Long user;
+        private Long manager;
+        private Long otherLabId;
+
+        @BeforeEach
+        void setUp() {
+            user = memberService.save(userCreationRequest(labId));
+            manager = memberService.save(managerCreationRequest(labId));
+            otherLabId = labService.save(new LabRequest("otherLab"));
+        }
+
+        @DisplayName("사용자가 Lab에 매니저인지 확인한다.")
+        @Test
+        void validateManager() {
+            memberService.checkManagerOnLab(manager, labId);
+        }
+
+        @DisplayName("사용자가 Lab에 일반 유저인 경우 예외를 발생한다.")
+        @Test
+        void validateManagerWithUser() {
+            assertThatThrownBy(()-> memberService.checkManagerOnLab(user, labId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+        }
+
+        @DisplayName("사용자가 해당 랩의 멤버가 아닌 경우 예외를 발생한다.")
+        @Test
+        void validateManagerWithOtherLab() {
+            assertThatThrownBy(()-> memberService.checkManagerOnLab(manager, otherLabId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+
+            assertThatThrownBy(()-> memberService.checkManagerOnLab(user, otherLabId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+        }
+    }
+
+    @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
     class CheckPermissionOnJob {
         private Long user;

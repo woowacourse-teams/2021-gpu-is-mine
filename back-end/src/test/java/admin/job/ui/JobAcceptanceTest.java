@@ -289,7 +289,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
             assertThat(searchedIds).usingRecursiveComparison().isEqualTo(ids);
         }
 
-        //        @Disabled
+        @Disabled
         @DisplayName("서버를 기준으로 작업 목록을 조회할 때 url path의 labId와 serverId를 검증한다.")
         @Test
         void findJobsByServerWithMeaninglessLabId() {
