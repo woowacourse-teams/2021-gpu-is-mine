@@ -41,9 +41,9 @@ public class JobService {
 
     @Transactional
     public Long save(Long memberId, JobRequest jobRequest) {
-        Member member = findMemberById(memberId);
         GpuBoard gpuBoard = findBoardByServerId(jobRequest.getGpuServerId());
 
+        Member member = findMemberById(memberId);
         member.checkMemberOfLab(gpuBoard.getLab());
 
         Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId));
