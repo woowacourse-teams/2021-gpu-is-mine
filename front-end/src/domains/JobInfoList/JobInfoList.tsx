@@ -7,16 +7,12 @@ import { API_ENDPOINT, MESSAGE } from "../../constants";
 import { JobViewResponses } from "../../types";
 
 const JobInfoList = () => {
-  const queryParam = "?memberId=1"; // TODO: 추후 api 변경시 교체
-
-  const { data, status, makeRequest } = useFetch<JobViewResponses>(
-    API_ENDPOINT.LABS(1).JOBS + queryParam,
-    {
-      method: "get",
-    }
-  );
+  const { data, status, makeRequest } = useFetch<JobViewResponses>(API_ENDPOINT.LABS(1).JOBS, {
+    method: "get",
+  });
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 

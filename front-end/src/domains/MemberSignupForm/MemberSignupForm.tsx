@@ -1,10 +1,9 @@
 import { ChangeEventHandler, FocusEvent } from "react";
-import { SubmitAction, useFetch, useForm } from "../../hooks";
-import { unwrapResult } from "../../hooks/useFetch/useFetch";
-import { Radio, Input, RadioGroup, Alert, Text } from "../../components";
+import { Link, useHistory } from "react-router-dom";
+import { SubmitAction, useAuth, useBoolean, useForm } from "../../hooks";
+import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
-import { API_ENDPOINT } from "../../constants";
-import { MemberSignupRequest } from "../../types";
+import { PATH } from "../../constants";
 import {
   emailValidator,
   passwordValidator,
@@ -17,18 +16,19 @@ interface MemberSignupFormProps {
 }
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { makeRequest, status } = useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBERS, {
-    method: "post",
-  });
+  const { signup, isLoading } = useAuth();
+  const [isAlertOpen, openAlert] = useBoolean(false);
+
+  const history = useHistory();
 
   const submitAction: SubmitAction = ({ email, password, name, memberType }) =>
-    makeRequest({
+    signup({
       email: String(email),
-      labId: 1,
       password: String(password),
+      labId: 1,
       name: String(name),
       memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
-    }).then(unwrapResult);
+    }).then(openAlert);
 
   const { form, useInput } = useForm(submitAction);
 
@@ -69,13 +69,14 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     onBlur(event as FocusEvent<HTMLInputElement>);
   };
 
+  const moveToLoginPage = () => history.push(PATH.MEMBER.LOGIN);
+
   return (
     <StyledForm {...form} {...props} aria-label="signup-form">
-      {status === "succeed" && (
-        <Alert aria-label="succeed-alert">
-          <Text>회원가입에 성공하였습니다.</Text>
-        </Alert>
-      )}
+      {isLoading && <Loading size="lg" />}
+      <Alert aria-label="succeed-alert" isOpen={isAlertOpen} onConfirm={moveToLoginPage}>
+        <Text>회원가입에 성공하였습니다.</Text>
+      </Alert>
 
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gmail.com" />
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
@@ -101,9 +102,14 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
           사용자
         </Radio>
       </RadioGroup>
-      <SubmitButton type="submit" aria-label="submit" color="secondary">
+      <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={isLoading}>
         제출
       </SubmitButton>
+      <Link to={PATH.MEMBER.LOGIN}>
+        <Text size="sm" className="signup-form__login">
+          로그인하러 가기
+        </Text>
+      </Link>
     </StyledForm>
   );
 };

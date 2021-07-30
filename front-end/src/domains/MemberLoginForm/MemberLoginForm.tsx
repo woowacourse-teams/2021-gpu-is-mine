@@ -1,11 +1,9 @@
-import { useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { isEmail } from "../../utils";
-import { useBoolean, useForm, useFetch } from "../../hooks";
-import { Alert, Input, Text } from "../../components";
+import { useBoolean, useForm, useAuth } from "../../hooks";
+import { Alert, Input, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
-import { PATH, API_ENDPOINT } from "../../constants";
-import { MemberLoginRequest, MemberLoginResponse } from "../../types";
+import { PATH } from "../../constants";
 import { passwordValidator } from "../MemberSignupForm/validator";
 
 interface MemberLoginFormProps {
@@ -13,24 +11,8 @@ interface MemberLoginFormProps {
 }
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
-  const history = useHistory();
-
   const [isAlertOpen, openAlert, closeAlert] = useBoolean(false);
-
-  const { data, makeRequest, status } = useFetch<MemberLoginResponse, MemberLoginRequest>(
-    API_ENDPOINT.LOGIN,
-    {
-      method: "post",
-    }
-  );
-
-  // const {
-  //   data: myInfo,
-  //   makeRequest: fetchMyInfo,
-  //   status: myInfoStatus,
-  // } = useFetch<MyInfoResponse>(API_ENDPOINT.ME, {
-  //   method: "get",
-  // });
+  const { login, isLoading } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const submitAction: any = async ({ email, password }: { email: string; password: string }) => {
@@ -43,28 +25,15 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
       return;
     }
 
-    // eslint-disable-next-line consistent-return
-    return (
-      await makeRequest({
-        email: String(email),
-        password: String(password),
-      })
-    ).unwrap();
-  };
+    try {
+      await login({ email: String(email), password: String(password) });
+    } catch (err) {
+      console.error();
+      openAlert();
 
-  useEffect(() => {
-    if (status === "succeed") {
-      if (!data) {
-        return;
-      }
-
-      const { accessToken } = data;
-
-      sessionStorage.setItem("accessToken", accessToken);
-
-      history.push(PATH.MANAGER.GPU_SERVER.VIEW);
+      throw err;
     }
-  }, [history, status, data]);
+  };
 
   const { form, submit, useInput } = useForm(submitAction);
 
@@ -74,6 +43,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
 
   return (
     <StyledForm {...form} aria-label="로그인" className={className}>
+      {isLoading && <Loading size="lg" />}
       <Alert isOpen={isAlertOpen} close={closeAlert}>
         이메일 또는 비밀번호를 확인해주세요
       </Alert>
