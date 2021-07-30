@@ -10,6 +10,13 @@ interface JobInfoItemProps extends JobViewResponse {
   refresh: () => Promise<unknown>;
 }
 
+const statusName = {
+  WAITING: "대기중",
+  RUNNING: "진행중",
+  COMPLETED: "완료됨",
+  CANCELED: "취소됨",
+};
+
 const JobInfoItem = ({
   id: jobId,
   name: jobName,
@@ -64,7 +71,7 @@ const JobInfoItem = ({
         <div className="job-info-title-wrapper">
           <VerticalBox>
             <CalendarIcon className="job-info-title-wrapper__status" size="md" status={jobStatus} />
-            <Text size="xs">작업중</Text>
+            <Text size="xs">{statusName[jobStatus]}</Text>
           </VerticalBox>
           <Text className="job-info-title-wrapper__title" size="sm" weight="bold">
             {jobName}
