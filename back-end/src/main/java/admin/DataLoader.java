@@ -69,6 +69,9 @@ public class DataLoader implements CommandLineRunner {
         Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
         memberRepository.save(member1);
 
+        Member member2 = new Member("test@test.com", "test1234!", "name2", MemberType.MANAGER, lab1);
+        memberRepository.save(member2);
+
         Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard1, member1);
         jobRepository.save(job1);
 
@@ -81,10 +84,10 @@ public class DataLoader implements CommandLineRunner {
         Job job4 = new Job("job4", JobStatus.COMPLETED, gpuBoard1, member1);
         jobRepository.save(job4);
 
-        Job job5 = new Job("job5", JobStatus.WAITING, gpuBoard1, member1);
+        Job job5 = new Job("job5", JobStatus.WAITING, gpuBoard1, member2);
         jobRepository.save(job5);
 
-        Job job6 = new Job("job6", JobStatus.CANCELED, gpuBoard2, member1);
+        Job job6 = new Job("job6", JobStatus.CANCELED, gpuBoard2, member2);
         jobRepository.save(job6);
 
         Job job7 = new Job("job7", JobStatus.WAITING, gpuBoard2, member1);
@@ -93,10 +96,10 @@ public class DataLoader implements CommandLineRunner {
         Job job8 = new Job("job8", JobStatus.RUNNING, gpuBoard3, member1);
         jobRepository.save(job8);
 
-        Job job9 = new Job("job9", JobStatus.WAITING, gpuBoard4, member1);
+        Job job9 = new Job("job9", JobStatus.WAITING, gpuBoard4, member2);
         jobRepository.save(job9);
 
-        Job job10 = new Job("job10", JobStatus.RUNNING, gpuBoard4, member1);
+        Job job10 = new Job("job10", JobStatus.RUNNING, gpuBoard4, member2);
         jobRepository.save(job10);
     }
 }
