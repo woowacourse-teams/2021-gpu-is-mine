@@ -17,9 +17,6 @@ import admin.job.domain.repository.JobRepository;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.lab.exception.LabException;
-import admin.member.domain.Member;
-import admin.member.domain.repository.MemberRepository;
-import admin.member.exception.MemberException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,7 @@ public class GpuServerService {
     @Transactional(readOnly = true)
     public GpuServerResponse findServerInLab(Long labId, Long gpuServerId) {
         GpuServer gpuServer = findServerByIdAndLabId(labId, gpuServerId);
-        GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
-                .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+        GpuBoard gpuBoard = findGpuBoardByServerId(gpuServerId);
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
