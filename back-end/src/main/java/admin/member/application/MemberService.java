@@ -1,5 +1,6 @@
 package admin.member.application;
 
+import admin.encryption.Encrypt;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuServerRepository;
 import admin.gpuserver.exception.GpuServerException;
@@ -12,10 +13,8 @@ import admin.lab.exception.LabException;
 import admin.member.domain.Member;
 import admin.member.domain.MemberType;
 import admin.member.domain.repository.MemberRepository;
-import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
 import java.util.List;
@@ -29,13 +28,16 @@ public class MemberService {
     private final LabRepository labRepository;
     private final GpuServerRepository gpuServerRepository;
     private final JobRepository jobRepository;
+    private final Encrypt encrypt;
 
     public MemberService(MemberRepository memberRepository, LabRepository labRepository,
-            GpuServerRepository gpuServerRepository, JobRepository jobRepository) {
+            GpuServerRepository gpuServerRepository, JobRepository jobRepository,
+            Encrypt encrypt) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.jobRepository = jobRepository;
+        this.encrypt = encrypt;
     }
 
     @Transactional
@@ -43,8 +45,9 @@ public class MemberService {
         Lab lab = labRepository.findById(request.getLabId())
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
+        String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
 
-        Member member = new Member(request.getEmail(), request.getPassword(), request.getName(), memberType, lab);
+        Member member = new Member(request.getEmail(), password, request.getName(), memberType, lab);
         memberRepository.save(member);
 
         return member.getId();
@@ -59,9 +62,10 @@ public class MemberService {
     @Transactional
     public void updateMemberInfo(Long memberId, MemberInfoRequest request) {
         Member member = findMemberById(memberId);
+        String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
 
         member.setEmail(request.getEmail());
-        member.setPassword(request.getPassword());
+        member.setPassword(password);
         member.setName(request.getName());
     }
 
