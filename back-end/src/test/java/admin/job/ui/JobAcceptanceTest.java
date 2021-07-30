@@ -142,10 +142,10 @@ public class JobAcceptanceTest extends AcceptanceTest {
 
         labId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab"));
 
-        userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
-        managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));
+        userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId, "userTemp@email.com", "password"));
+        managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId, "managerTemp@email.com", "password"));
 
-        serverId = GpuServer_생성후아이디찾기(labId, gpuServerCreationRequest());
+        serverId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerCreationRequest());
     }
 
     private List<Long> Job_예약_목록_생성_후_ids_반환(int numberOfJobs) {
@@ -174,7 +174,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         @Test
         void addJobWithoutPermission() {
             Long otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("otherLabId"));
-            Long otherLabServerId = GpuServer_생성후아이디찾기(otherLabId, gpuServerCreationRequest());
+            String otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "other@other.com", "password"));
+            Long otherLabServerId = GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, gpuServerCreationRequest());
 
             ExtractableResponse<Response> response =
                     Job_예약(otherLabId, jobCreationRequest(otherLabServerId), userToken);
@@ -192,8 +193,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         @BeforeEach
         void setUp() {
             otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab2"));
-            otherLabServerId = GpuServer_생성후아이디찾기(otherLabId, gpuServerCreationRequest());
-            otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "other@other.com", "password"));
+            otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(otherLabId, "otherLabManager@other.com", "password"));
+            otherLabServerId = GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, gpuServerCreationRequest());
         }
 
         @DisplayName("Job 예약을 취소한다.")
@@ -207,7 +208,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
             assertThat(jobResponse.getStatus()).isEqualTo(JobStatus.CANCELED);
         }
 
-        @Disabled
+//        @Disabled
         @DisplayName("일반 사용자는 같은 랩의 다른 사용자의 Job 예약을 취소할 수 없다.")
         @Test
         void userCancelJobWithoutPermission() {
@@ -313,8 +314,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         @BeforeEach
         void setUp() {
             otherLabId = LAB_생성_요청_후_생성_ID_리턴(new LabRequest("lab2"));
-            otherLabServerId = GpuServer_생성후아이디찾기(otherLabId, gpuServerCreationRequest());
-            otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "other@other.com", "password"));
+            otherLabUserToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(otherLabId, "otherLabUser@other.com", "password"));
+            otherLabServerId = GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, gpuServerCreationRequest());
             otherLabJob = Job_예약_후_id_반환(otherLabId, jobCreationRequest(otherLabServerId), otherLabUserToken);
         }
 

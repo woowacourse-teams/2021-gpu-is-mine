@@ -93,7 +93,7 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.save(memberId, jobRequest);
 
-        JobResponse jobResponse = jobService.findById(memberId, jobId);
+        JobResponse jobResponse = jobService.findById(jobId);
         assertThat(jobResponse).isNotNull();
     }
 
@@ -103,9 +103,9 @@ class JobServiceTest {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.save(memberId, jobRequest);
 
-        jobService.cancel(memberId, jobId);
+        jobService.cancel(jobId);
 
-        JobResponse jobResponse = jobService.findById(memberId, jobId);
+        JobResponse jobResponse = jobService.findById(jobId);
         assertThat(jobResponse.getStatus()).isEqualTo(JobStatus.CANCELED);
     }
 
@@ -114,7 +114,7 @@ class JobServiceTest {
     void findCancelWithNotExistingJob() {
         Long notExistingServerId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> jobService.cancel(memberId, notExistingServerId))
+        assertThatThrownBy(() -> jobService.cancel(notExistingServerId))
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
@@ -127,7 +127,7 @@ class JobServiceTest {
         Job job = jobRepository.findById(jobId).get();
         job.changeStatus(JobStatus.RUNNING);
 
-        assertThatThrownBy(() -> jobService.cancel(memberId, jobId))
+        assertThatThrownBy(() -> jobService.cancel(jobId))
                 .isEqualTo(JobException.NO_WAITING_JOB.getException());
     }
 
@@ -136,7 +136,7 @@ class JobServiceTest {
     void findByNotExistingId() {
         Long notExistingJobId = Long.MAX_VALUE;
 
-        assertThatThrownBy(() -> jobService.cancel(memberId, notExistingJobId))
+        assertThatThrownBy(() -> jobService.cancel(notExistingJobId))
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 

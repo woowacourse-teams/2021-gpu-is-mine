@@ -83,6 +83,14 @@ public class MemberService {
         member.checkEditable(job);
     }
 
+    @Transactional(readOnly = true)
+    public void checkReadableJob(Long memberId, Long jobId) {
+        Member member = findMemberById(memberId);
+        Job job = findJobById(jobId);
+
+        member.checkReadable(job);
+    }
+
     private Job findJobById(Long jobId) {
         return jobRepository
                 .findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);

@@ -52,24 +52,16 @@ public class JobService {
     }
 
     @Transactional
-    public JobResponse cancel(Long memberId, Long jobId) {
+    public JobResponse cancel(Long jobId) {
         Job job = findJobById(jobId);
-
-        Member member = findMemberById(memberId);
-        member.checkEditable(job);
-
         job.cancel();
 
         return JobResponse.of(job);
     }
 
     @Transactional(readOnly = true)
-    public JobResponse findById(Long memberId, Long jobId) {
+    public JobResponse findById(Long jobId) {
         Job job = findJobById(jobId);
-
-        Member member = findMemberById(memberId);
-        member.checkReadable(job);
-
         return JobResponse.of(job);
     }
 
