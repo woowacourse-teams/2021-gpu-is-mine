@@ -96,4 +96,12 @@ public class MemberService {
     public List<Member> findAllByLabId(Long labId) {
         return memberRepository.findAllByLabId(labId);
     }
+
+    public void checkManagerOnLab(Long memberId, Long labId) {
+        Lab lab = labRepository.findById(labId)
+                .orElseThrow(LabException.LAB_NOT_FOUND::getException);
+
+        Member member = findMemberById(memberId);
+        member.checkManagerOfLab(lab);
+    }
 }

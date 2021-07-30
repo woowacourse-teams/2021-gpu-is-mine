@@ -105,10 +105,6 @@ public class Member extends BaseEntity {
         checkMemberOfLab(lab);
     }
 
-    public void checkPermissionOnServer(GpuServer gpuServer) {
-        checkMemberOfLab(gpuServer.getLab());
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);

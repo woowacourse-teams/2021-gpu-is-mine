@@ -32,21 +32,18 @@ public class GpuServerService {
     private GpuServerRepository gpuServerRepository;
     private GpuBoardRepository gpuBoardRepository;
     private JobRepository jobRepository;
-    private MemberRepository memberRepository;
 
     public GpuServerService(LabRepository labRepository,
             GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository,
-            MemberRepository memberRepository) {
+            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.jobRepository = jobRepository;
-        this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponse findById(Long labId, Long gpuServerId) {
+    public GpuServerResponse findServerInLab(Long labId, Long gpuServerId) {
         GpuServer gpuServer = findServerByIdAndLabId(labId, gpuServerId);
         GpuBoard gpuBoard = gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
@@ -56,12 +53,12 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerResponses findAll(Long labId) {
+    public GpuServerResponses findAllInLab(Long labId) {
         validateLab(labId);
 
         List<GpuServer> gpuServers = gpuServerRepository.findAllByLabId(labId);
         List<GpuServerResponse> gpuServerResponses = gpuServers.stream()
-                .map(server -> findById(labId, server.getId()))
+                .map(server -> findServerInLab(labId, server.getId()))
                 .collect(Collectors.toList());
         return GpuServerResponses.of(gpuServerResponses);
     }
@@ -72,20 +69,14 @@ public class GpuServerService {
     }
 
     @Transactional
-    public void update(Long memberId, Long gpuServerId, GpuServerUpdateRequest updateRequest) {
-        GpuServer gpuServer = findGpuServerById(gpuServerId);
-        Member member = findMemberById(memberId);
-        member.checkManagerOfLab(gpuServer.getLab());
-
+    public void updateServerInLab(Long labId, Long gpuServerId, GpuServerUpdateRequest updateRequest) {
+        GpuServer gpuServer = findServerByIdAndLabId(labId, gpuServerId);
         gpuServer.update(updateRequest.getName());
     }
 
     @Transactional
-    public void delete(Long memberId, Long gpuServerId) {
-        GpuServer gpuServer = findGpuServerById(gpuServerId);
-        Member member = findMemberById(memberId);
-        member.checkManagerOfLab(gpuServer.getLab());
-
+    public void deleteServerInLab(Long labId, Long gpuServerId) {
+        GpuServer gpuServer = findServerByIdAndLabId(labId, gpuServerId);
         GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
         List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
 
@@ -95,10 +86,8 @@ public class GpuServerService {
     }
 
     @Transactional
-    public Long save(Long memberId, Long labId, GpuServerRequest gpuServerRequest) {
+    public Long saveServerInLab(Long labId, GpuServerRequest gpuServerRequest) {
         Lab lab = findLabById(labId);
-        Member member = findMemberById(memberId);
-        member.checkManagerOfLab(lab);
 
         GpuServer gpuServer = gpuServerRequest.toEntity(lab);
         gpuServerRepository.save(gpuServer);
@@ -127,22 +116,12 @@ public class GpuServerService {
                 .orElseThrow(LabException.LAB_NOT_FOUND::getException);
     }
 
-    private GpuServer findGpuServerById(Long gpuServerId) {
-        return gpuServerRepository.findById(gpuServerId)
-                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
-    }
-
     private GpuBoard findGpuBoardByServerId(Long gpuServerId) {
         return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
     }
 
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
-    }
-
-    private GpuServer findServerByIdAndLabId(Long gpuServerId, Long labId) {
+    private GpuServer findServerByIdAndLabId(Long labId, Long gpuServerId) {
         return gpuServerRepository.findByIdAndLabId(gpuServerId, labId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }

@@ -47,8 +47,8 @@ class MemberServiceTest {
     @BeforeEach
     void setUp() {
         labId = labService.save(new LabRequest("lab"));
-        gpuServerId = gpuServerService.save(gpuServerCreationRequest(), labId);
         memberRequest = new MemberRequest("email@email.com", "password", "name", "MANAGER", labId);
+        gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerCreationRequest());
     }
 
     @Test

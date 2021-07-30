@@ -7,6 +7,7 @@ import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 import admin.gpuserver.dto.response.GpuServerResponse;
 import admin.gpuserver.dto.response.GpuServerResponses;
 import admin.gpuserver.dto.response.GpuServerStatusResponse;
+import admin.member.application.MemberService;
 import admin.member.domain.Member;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +25,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class GpuServerController {
 
     private final GpuServerService gpuServerService;
+    private final MemberService memberService;
 
-    public GpuServerController(GpuServerService gpuServerService) {
+    public GpuServerController(GpuServerService gpuServerService, MemberService memberService) {
         this.gpuServerService = gpuServerService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId, @PathVariable Long gpuServerId) {
-        GpuServerResponse gpuServerResponse = gpuServerService.findById(labId, gpuServerId);
+        GpuServerResponse gpuServerResponse = gpuServerService.findServerInLab(labId, gpuServerId);
         return ResponseEntity.ok(gpuServerResponse);
     }
 
     @GetMapping
     public ResponseEntity<GpuServerResponses> findAll(@PathVariable Long labId) {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAll(labId);
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId);
         return ResponseEntity.ok(gpuServerResponses);
     }
 
@@ -50,22 +53,28 @@ public class GpuServerController {
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody GpuServerRequest gpuServerRequest) {
-        Long gpuServerId = gpuServerService.save(member.getId(), labId, gpuServerRequest);
+        memberService.checkManagerOnLab(member.getId(), labId);
 
+        Long gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerRequest);
         URI uri = URI.create("/api/labs/" + labId + "/gpus/" + gpuServerId);
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{gpuServerId}")
-    public ResponseEntity<Void> update(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member,
+    public ResponseEntity<Void> update(@PathVariable Long labId, @PathVariable Long gpuServerId, @AuthenticationPrincipal Member member,
             @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest) {
-        gpuServerService.update(member.getId(), gpuServerId, gpuServerUpdateRequest);
+        memberService.checkManagerOnLab(member.getId(), labId);
+
+        gpuServerService.updateServerInLab(labId, gpuServerId, gpuServerUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{gpuServerId}")
-    public ResponseEntity<Void> delete(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member) {
-        gpuServerService.delete(member.getId(), gpuServerId);
+    public ResponseEntity<Void> delete(@PathVariable Long labId, @PathVariable Long gpuServerId,
+            @AuthenticationPrincipal Member member) {
+        memberService.checkManagerOnLab(member.getId(), labId);
+
+        gpuServerService.deleteServerInLab(labId, gpuServerId);
         return ResponseEntity.noContent().build();
     }
 }
