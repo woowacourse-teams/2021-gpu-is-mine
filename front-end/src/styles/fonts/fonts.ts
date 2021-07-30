@@ -21,7 +21,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 100;
-    src: local("Noto Sans KR"), url(${n100w2}) format("woff2"), url(${n100w}) format("woff");
+    src: url(${n100w2}) format("woff2"), url(${n100w}) format("woff");
   }
 
   /* noto-sans-kr-300 - latin_korean */
@@ -29,7 +29,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 300;
-    src: local("Noto Sans KR"), url(${n300w2}) format("woff2"), url(${n300w}) format("woff");
+    src: url(${n300w2}) format("woff2"), url(${n300w}) format("woff");
   }
 
   /* noto-sans-kr-regular - latin_korean */
@@ -37,7 +37,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 400;
-    src: local("Noto Sans KR"), url(${n400w2}) format("woff2"), url(${n400w}) format("woff");
+    src: url(${n400w2}) format("woff2"), url(${n400w}) format("woff");
   }
 
   /* noto-sans-kr-500 - latin_korean */
@@ -45,7 +45,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 500;
-    src: local("Noto Sans KR"), url(${n500w2}) format("woff2"), url(${n500w}) format("woff");
+    src: url(${n500w2}) format("woff2"), url(${n500w}) format("woff");
   }
 
   /* noto-sans-kr-700 - latin_korean */
@@ -53,7 +53,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 700;
-    src: local("Noto Sans KR"), url(${n700w2}) format("woff2"), url(${n700w}) format("woff");
+    src: url(${n700w2}) format("woff2"), url(${n700w}) format("woff");
   }
 
   /* noto-sans-kr-900 - latin_korean */
@@ -61,7 +61,7 @@ const notoSansKR = css`
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 900;
-    src: local("Noto Sans KR"), url(${n900w2}) format("woff2"), url(${n900w}) format("woff");
+    src: url(${n900w2}) format("woff2"), url(${n900w}) format("woff");
   }
 `;
 
