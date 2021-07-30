@@ -29,8 +29,6 @@ public class GpuServerController {
         this.gpuServerService = gpuServerService;
     }
 
-
-
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long labId, @PathVariable Long gpuServerId) {
         GpuServerResponse gpuServerResponse = gpuServerService.findById(labId, gpuServerId);
@@ -41,6 +39,12 @@ public class GpuServerController {
     public ResponseEntity<GpuServerResponses> findAll(@PathVariable Long labId) {
         GpuServerResponses gpuServerResponses = gpuServerService.findAll(labId);
         return ResponseEntity.ok(gpuServerResponses);
+    }
+
+    @GetMapping("/{gpuServerId}/status")
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long labId, @PathVariable Long gpuServerId) {
+        GpuServerStatusResponse response = gpuServerService.findServerStatusInLab(labId, gpuServerId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
@@ -63,11 +67,5 @@ public class GpuServerController {
     public ResponseEntity<Void> delete(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member) {
         gpuServerService.delete(member.getId(), gpuServerId);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{gpuServerId}/status")
-    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long labId, @PathVariable Long gpuServerId) {
-        GpuServerStatusResponse response = gpuServerService.findServerStatusInLab(labId, gpuServerId);
-        return ResponseEntity.ok(response);
     }
 }

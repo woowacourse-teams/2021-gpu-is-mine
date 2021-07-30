@@ -74,9 +74,8 @@ public class GpuServerService {
     @Transactional
     public void update(Long memberId, Long gpuServerId, GpuServerUpdateRequest updateRequest) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
-
-        Member memberById = findMemberById(memberId);
-        memberById.checkManagerOfLab(gpuServer.getLab());
+        Member member = findMemberById(memberId);
+        member.checkManagerOfLab(gpuServer.getLab());
 
         gpuServer.update(updateRequest.getName());
     }
@@ -84,9 +83,8 @@ public class GpuServerService {
     @Transactional
     public void delete(Long memberId, Long gpuServerId) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
-
-        Member memberById = findMemberById(memberId);
-        memberById.checkManagerOfLab(gpuServer.getLab());
+        Member member = findMemberById(memberId);
+        member.checkManagerOfLab(gpuServer.getLab());
 
         GpuBoard gpuBoard = findGpuBoardByServerId(gpuServer.getId());
         List<Job> jobs = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
@@ -98,8 +96,8 @@ public class GpuServerService {
 
     @Transactional
     public Long save(Long memberId, Long labId, GpuServerRequest gpuServerRequest) {
-        Member member = findMemberById(memberId);
         Lab lab = findLabById(labId);
+        Member member = findMemberById(memberId);
         member.checkManagerOfLab(lab);
 
         GpuServer gpuServer = gpuServerRequest.toEntity(lab);
