@@ -16,6 +16,7 @@ const DomainMapper: Record<keyof typeof PATH.MANAGER, string> = {
 const PageMapper: Record<keyof typeof PATH.MANAGER.GPU_SERVER, string> = {
   VIEW: "조회",
   REGISTER: "등록",
+  VIEW_DETAIL: "상세",
 } as const;
 
 const transformPath = (path: string): string => path.toUpperCase().replace("-", "_");
