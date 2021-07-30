@@ -35,3 +35,7 @@ out/
 
 ### Log ###
 logs
+
+### Private ###
+/src/main/resources/application-mail.properties
+/src/main/resources/application-encryption.properties
