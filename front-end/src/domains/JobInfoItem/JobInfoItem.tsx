@@ -108,24 +108,21 @@ const JobInfoItem = ({
           </div>
         </div>
         <div className="job-info-button-wrapper">
-          {jobStatus === "COMPLETED" ? (
-            <Button
-              className="job-info-button-wrapper__button"
-              color="primary"
-              onClick={handleDetailClick}
-            >
-              상세
-            </Button>
-          ) : (
-            <Button
-              className="job-info-button-wrapper__button"
-              color="error"
-              disabled={jobStatus === "CANCELED" || status === "loading"}
-              onClick={openConfirm}
-            >
-              취소
-            </Button>
-          )}
+          <Button
+            className="job-info-button-wrapper__button"
+            color="primary"
+            onClick={handleDetailClick}
+          >
+            상세
+          </Button>
+          <Button
+            className="job-info-button-wrapper__button"
+            color="error"
+            disabled={jobStatus === "CANCELED" || status === "loading"}
+            onClick={openConfirm}
+          >
+            취소
+          </Button>
         </div>
       </StyledJobInfoItem>
     </>
