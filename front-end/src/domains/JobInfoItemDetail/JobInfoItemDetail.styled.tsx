@@ -53,18 +53,11 @@ export const LogConsole = styled.div`
 `;
 
 export const Anchor = styled.a`
-  text-decoration: underline;
+  color: var(--secondary-900);
 
-  /* TODO: 색깔 수정 */
   &:hover {
     color: var(--secondary-600);
-  }
-
-  &:visited {
-    color: var(--secondary-900);
-  }
-
-  &:hover:visited {
-    color: var(--secondary-300);
+    font-weight: 500;
+    font-size: 97.8%;
   }
 `;
