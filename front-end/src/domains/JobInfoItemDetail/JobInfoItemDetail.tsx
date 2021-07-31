@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { useGetJobDetail, useAuth } from "../../hooks";
+import { useJobInfoItemDetail } from "./useJobInfoItemDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
   StyledJobInfoItemDetail,
@@ -11,30 +9,10 @@ import {
   Graph,
   Anchor,
 } from "./JobInfoItemDetail.styled";
-import { MyInfoResponse } from "../../types";
-import { logData } from "../../__fixtures__/jobsResponses";
-
-const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) => {
-  const { status, makeRequest, data } = useGetJobDetail({ labId, jobId });
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    makeRequest();
-  }, [makeRequest]);
-
-  return { status, detail: data };
-};
+import { logData } from "../../__fixtures__";
 
 const JobInfoItemDetail = () => {
-  const history = useHistory();
-
-  const { myInfo } = useAuth() as { myInfo: MyInfoResponse };
-
-  const { jobId } = useParams<{ jobId?: string }>();
-
-  const { status, detail } = useJobDetail({ labId: myInfo.labResponse.id, jobId: Number(jobId) });
-
-  const goToPreviousPage = () => history.go(-1);
+  const { detail, goToPreviousPage, status } = useJobInfoItemDetail();
 
   return (
     <>
