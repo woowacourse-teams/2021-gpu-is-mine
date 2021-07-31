@@ -38,7 +38,9 @@ public class JobController {
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
-        Long jobId = jobService.save(labId, member.getId(), jobRequest);
+        memberService.checkUserOfServer(member.getId(), jobRequest.getGpuServerId());
+
+        Long jobId = jobService.save(member.getId(), jobRequest);
         mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();

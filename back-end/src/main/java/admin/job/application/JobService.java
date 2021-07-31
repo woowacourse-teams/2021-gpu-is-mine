@@ -47,10 +47,8 @@ public class JobService {
     }
 
     @Transactional
-    public Long save(Long labId, Long memberId, JobRequest jobRequest) {
+    public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
-        checkServerInLab(serverId, labId);
-
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
         jobRepository.save(job);
         return job.getId();

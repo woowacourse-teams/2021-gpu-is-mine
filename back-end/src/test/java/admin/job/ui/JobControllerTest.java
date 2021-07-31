@@ -240,7 +240,7 @@ public class JobControllerTest {
         void addJobWithoutPermission() {
             assertThatThrownBy(
                     () -> jobController.save(lab.getId(), userInLab, jobCreationRequest(serverInOtherLab.getId())))
-                    .isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @DisplayName("소속되지 않은 랩의 Job을 예약 취소할 수 없다.")

@@ -1,7 +1,9 @@
 package admin.member.application;
 
 import admin.encryption.Encrypt;
+import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuServerRepository;
+import admin.gpuserver.exception.GpuServerException;
 import admin.job.domain.Job;
 import admin.job.domain.repository.JobRepository;
 import admin.job.exception.JobException;
@@ -109,5 +111,13 @@ public class MemberService {
 
         Member member = findMemberById(memberId);
         member.checkManagerOfLab(lab);
+    }
+
+    public void checkUserOfServer(Long memberId, Long gpuServerId) {
+        Member member = findMemberById(memberId);
+        GpuServer gpuServer = gpuServerRepository.findById(gpuServerId)
+                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+
+        member.checkMemberOfLab(gpuServer.getLab());
     }
 }
