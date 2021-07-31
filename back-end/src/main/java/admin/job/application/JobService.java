@@ -17,6 +17,8 @@ import admin.mail.MailDto;
 import admin.member.domain.Member;
 import admin.member.domain.repository.MemberRepository;
 import admin.member.exception.MemberException;
+import admin.worker.domain.repository.LogRepository;
+import admin.worker.dto.LogsResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,17 +28,22 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class JobService {
-    private JobRepository jobRepository;
-    private GpuServerRepository gpuServerRepository;
-    private GpuBoardRepository gpuBoardRepository;
-    private MemberRepository memberRepository;
 
-    public JobService(JobRepository jobRepository, GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository) {
+    private final JobRepository jobRepository;
+    private final GpuServerRepository gpuServerRepository;
+    private final GpuBoardRepository gpuBoardRepository;
+    private final MemberRepository memberRepository;
+    private final LogRepository logRepository;
+
+    public JobService(JobRepository jobRepository,
+            GpuServerRepository gpuServerRepository,
+            GpuBoardRepository gpuBoardRepository,
+            MemberRepository memberRepository, LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
+        this.logRepository = logRepository;
     }
 
     @Transactional
@@ -155,5 +162,9 @@ public class JobService {
         Job job = findJobById(jobId);
         Member member = job.getMember();
         return new MailDto(member.getEmail(), job.getName());
+    }
+
+    public LogsResponse findLogAllById(Long jobId) {
+        return LogsResponse.of(logRepository.findAllByJobId(jobId));
     }
 }
