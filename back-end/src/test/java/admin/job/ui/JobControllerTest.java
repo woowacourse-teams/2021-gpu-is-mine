@@ -263,5 +263,12 @@ public class JobControllerTest {
             assertThatThrownBy(() -> jobController.findAll(jobInOtherLab.getId(), serverInOtherLab.getId(), null))
                     .isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
         }
+
+        @DisplayName("사용자의 랩이 아닌 다른 랩의 작업 로그를 확인할 수 없다.")
+        @Test
+        void findLogAll() {
+            assertThatThrownBy(() -> jobController.findLogAll(jobInOtherLab.getId(), managerInLab))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+        }
     }
 }

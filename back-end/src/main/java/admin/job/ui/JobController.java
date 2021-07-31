@@ -80,8 +80,7 @@ public class JobController {
     @GetMapping("/jobs/{jobId}/logs")
     public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId,
             @AuthenticationPrincipal Member member) {
-
-
+        memberService.checkReadableJob(member.getId(), jobId);
         LogsResponse logsResponse = jobService.findLogAllById(jobId);
         return ResponseEntity.ok(logsResponse);
     }
