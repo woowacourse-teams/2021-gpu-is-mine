@@ -186,8 +186,8 @@ class MemberServiceTest {
             user = memberService.save(userCreationRequest(labId));
             otherUser = memberService.save(userCreationRequest(labId));
 
-            jobByUser = jobService.save(user, jobCreationRequest(gpuServerId));
-            jobByOtherUser = jobService.save(otherUser, jobCreationRequest(gpuServerId));
+            jobByUser = jobService.save(labId, user, jobCreationRequest(gpuServerId));
+            jobByOtherUser = jobService.save(labId, otherUser, jobCreationRequest(gpuServerId));
         }
 
         @Test

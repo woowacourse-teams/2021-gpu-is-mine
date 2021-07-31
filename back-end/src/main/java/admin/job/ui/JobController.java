@@ -38,7 +38,7 @@ public class JobController {
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
-        Long jobId = jobService.save(member.getId(), jobRequest);
+        Long jobId = jobService.save(labId, member.getId(), jobRequest);
         mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
@@ -78,7 +78,10 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}/logs")
-    public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId) {
+    public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId,
+            @AuthenticationPrincipal Member member) {
+
+
         LogsResponse logsResponse = jobService.findLogAllById(jobId);
         return ResponseEntity.ok(logsResponse);
     }

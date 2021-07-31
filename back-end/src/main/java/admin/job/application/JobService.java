@@ -47,15 +47,11 @@ public class JobService {
     }
 
     @Transactional
-    public Long save(Long memberId, JobRequest jobRequest) {
-        GpuBoard gpuBoard = findBoardByServerId(jobRequest.getGpuServerId());
+    public Long save(Long labId, Long memberId, JobRequest jobRequest) {
+        Long serverId = jobRequest.getGpuServerId();
+        checkServerInLab(serverId, labId);
 
-        Member member = findMemberById(memberId);
-        member.checkMemberOfLab(gpuBoard.getLab());
-
-        Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId),
-                jobRequest.getMetaData(), jobRequest.getExpectedTime());
-
+        Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
         jobRepository.save(job);
         return job.getId();
     }
