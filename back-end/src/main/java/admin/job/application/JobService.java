@@ -49,7 +49,8 @@ public class JobService {
     @Transactional
     public Long save(Long memberId, JobRequest jobRequest) {
         GpuBoard gpuBoard = findLiveBoardByServerId(jobRequest.getGpuServerId());
-        Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId));
+        Job job = new Job(jobRequest.getName(), gpuBoard, findMemberById(memberId),
+                jobRequest.getMetaData(), jobRequest.getExpectedTime());
         jobRepository.save(job);
         return job.getId();
     }

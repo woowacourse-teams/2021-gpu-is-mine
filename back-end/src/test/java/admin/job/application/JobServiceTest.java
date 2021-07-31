@@ -174,7 +174,7 @@ class JobServiceTest {
         Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER,
                 lab1);
         memberRepository.save(member1);
-        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1);
+        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
         jobRepository.save(job1);
 
         logRepository.save(new Log("content1", job1));

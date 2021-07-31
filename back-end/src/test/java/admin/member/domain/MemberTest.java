@@ -39,8 +39,8 @@ class MemberTest {
         Member user1 = new Member(0L, "email", "password", "name", MemberType.USER, lab1);
         Member user2 = new Member(1L, "email", "password", "name", MemberType.USER, lab2);
 
-        Job jobInLab1 = new Job("job", boardInLab1, user1);
-        Job jobInLab2 = new Job("job", boardInLab2, user2);
+        Job jobInLab1 = new Job("job", boardInLab1, user1, "metaData1", "10");
+        Job jobInLab2 = new Job("job", boardInLab2, user2, "metaData2", "10");
 
         user1.checkReadable(jobInLab1);
         assertThatThrownBy(() -> {
@@ -54,8 +54,8 @@ class MemberTest {
         Member user1 = new Member(0L, "email", "password", "name", MemberType.USER, lab1);
         Member user2 = new Member(1L, "email", "password", "name", MemberType.USER, lab1);
 
-        Job jobByUser1 = new Job("job", boardInLab1, user1);
-        Job jobByUser2 = new Job("job", boardInLab1, user2);
+        Job jobByUser1 = new Job("job", boardInLab1, user1, "metaData1", "10");
+        Job jobByUser2 = new Job("job", boardInLab1, user2, "metaData2", "10");
 
         user1.checkEditable(jobByUser1);
         user2.checkEditable(jobByUser2);
@@ -74,8 +74,8 @@ class MemberTest {
 
         GpuBoard boardInLab1 = new GpuBoard(1L, "name", serverInLab1);
 
-        Job jobByUser1 = new Job("job", boardInLab1, user1);
-        Job jobByUser2 = new Job("job", boardInLab1, user2);
+        Job jobByUser1 = new Job("job", boardInLab1, user1, "metaData1", "10");
+        Job jobByUser2 = new Job("job", boardInLab1, user2, "metaData2", "10");
 
         manager.checkEditable(jobByUser1);
         manager.checkEditable(jobByUser2);
