@@ -6,7 +6,7 @@ import {
   performanceValidator,
   modelNameValidator,
 } from "./validator";
-import { useForm, usePostGpuServer, Values } from "../../hooks";
+import { useForm, SubmitAction, usePostGpuServer } from "../../hooks";
 import { PATH } from "../../constants";
 
 export const useGoToGpuServerView = () => {
@@ -20,25 +20,25 @@ export const useGoToGpuServerView = () => {
 const useGpuServerRegisterForm = () => {
   const { status, makeRequest, done } = usePostGpuServer();
 
-  const submitAction = async ({
+  const submitAction: SubmitAction = ({
     memorySize,
     diskSize,
     serverName,
     performance,
     modelName,
-  }: Values) => {
+  }) => {
     const requestBody = {
       memorySize: Number(memorySize),
       diskSize: Number(diskSize),
-      serverName: String(serverName),
+      serverName,
       gpuBoardRequest: {
         performance: Number(performance),
-        modelName: String(modelName),
+        modelName,
       },
     };
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    return (await makeRequest(requestBody)).unwrap();
+    makeRequest(requestBody);
   };
 
   const { form, submit, useInput } = useForm(submitAction);
