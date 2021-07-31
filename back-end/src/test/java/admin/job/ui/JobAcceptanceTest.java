@@ -260,6 +260,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
             assertThat(job.getId()).isEqualTo(jobId);
             assertThat(job.getName()).isEqualTo(jobRequest.getName());
             assertThat(job.getStatus()).isEqualTo(JobStatus.WAITING);
+            assertThat(job.getMetaData()).isEqualTo(jobRequest.getMetaData());
+            assertThat(job.getExpectedTime()).isEqualTo(jobRequest.getExpectedTime());
         }
 
         @DisplayName("사용자를 기준으로 Job을 조회한다.")

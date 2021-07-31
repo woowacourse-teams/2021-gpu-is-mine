@@ -34,22 +34,33 @@ public class Job extends BaseEntity {
     @ManyToOne
     private Member member;
 
+    @Column(nullable = false)
+    private String metaData;
+
+    @Column(nullable = false)
+    private String expectedTime;
+
     protected Job() {
     }
 
-    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member) {
-        validate(name, status, gpuBoard, member);
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+               String metaData, String expectedTime) {
+        validate(name, status, gpuBoard, member, metaData, expectedTime);
         this.name = name;
         this.status = status;
         this.gpuBoard = gpuBoard;
         this.member = member;
+        this.metaData = metaData;
+        this.expectedTime = expectedTime;
     }
 
-    public Job(String name, GpuBoard gpuBoard, Member member) {
-        this(name, JobStatus.WAITING, gpuBoard, member);
+    public Job(String name, GpuBoard gpuBoard, Member member, String metaData,
+               String expectedTime) {
+        this(name, JobStatus.WAITING, gpuBoard, member, metaData, expectedTime);
     }
 
-    private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member) {
+    private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+                          String metaData, String expectedTime) {
         if (Objects.isNull(name) || name.isEmpty()) {
             throw JobException.INVALID_JOB_NAME.getException();
         }
@@ -64,6 +75,14 @@ public class Job extends BaseEntity {
 
         if (Objects.isNull(member)) {
             throw JobException.INVALID_MEMBER.getException();
+        }
+
+        if (Objects.isNull(metaData) || metaData.isEmpty()) {
+            throw JobException.INVALID_META_DATA.getException();
+        }
+
+        if (Objects.isNull(expectedTime) || expectedTime.isEmpty()) {
+            throw JobException.INVALID_EXPECTED_TIME.getException();
         }
     }
 
@@ -85,6 +104,14 @@ public class Job extends BaseEntity {
 
     public Member getMember() {
         return member;
+    }
+
+    public String getMetaData() {
+        return metaData;
+    }
+
+    public String getExpectedTime() {
+        return expectedTime;
     }
 
     public void cancel() {
