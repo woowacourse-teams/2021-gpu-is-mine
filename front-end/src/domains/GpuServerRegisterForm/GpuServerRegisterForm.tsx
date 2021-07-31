@@ -1,6 +1,6 @@
 import { FormHTMLAttributes } from "react";
-import { Input, Button, Text, Alert, Loading, Dimmer } from "../../components";
-import { StyledForm } from "./GpuServerRegisterForm.styled";
+import { Input, Text, Alert, Loading, Dimmer } from "../../components";
+import { StyledForm, StyledButton } from "./GpuServerRegisterForm.styled";
 import useGpuServerRegisterForm, { useGoToGpuServerView } from "./useGpuServerRegisterForm";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
@@ -49,14 +49,9 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
         <Input size="sm" {...diskSizeInputProps} />
         <Input size="sm" {...performanceInputProps} />
         <Input size="sm" {...modelNameInputProps} />
-        <Button
-          className="submit"
-          color="secondary"
-          {...submit}
-          disabled={submit.disabled || status !== "idle"}
-        >
+        <StyledButton color="secondary" {...submit} disabled={submit.disabled || status !== "idle"}>
           제출
-        </Button>
+        </StyledButton>
       </StyledForm>
     </>
   );
