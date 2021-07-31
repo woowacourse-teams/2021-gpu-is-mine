@@ -6,9 +6,9 @@ import {
   MemberLoginResponse,
   MemberLoginRequest,
   MemberSignupRequest,
+  GpuServerRegisterRequest,
 } from "../../types";
 
-// eslint-disable-next-line import/prefer-default-export
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "get",
@@ -33,3 +33,6 @@ export const usePostSignup = () =>
   useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBER.SIGNUP, {
     method: "post",
   });
+
+export const usePostGpuServer = () =>
+  useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(1).GPUS, { method: "post" });

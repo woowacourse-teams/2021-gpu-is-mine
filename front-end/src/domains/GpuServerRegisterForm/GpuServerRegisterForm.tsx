@@ -8,19 +8,15 @@ import {
   modelNameValidator,
 } from "./validator";
 import { Input, Button, Text, Alert, Loading, Dimmer } from "../../components";
-import { useFetch, useForm, Values } from "../../hooks";
+import { useForm, usePostGpuServer, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
-import { PATH, API_ENDPOINT } from "../../constants";
-import { APICallStatus, GpuServerRegisterRequest } from "../../types";
+import { PATH } from "../../constants";
+import { APICallStatus } from "../../types";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { status, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
-    API_ENDPOINT.LABS(1).GPUS,
-    { method: "post" }
-  );
-
+  const { status, makeRequest, done } = usePostGpuServer();
   const history = useHistory();
 
   const submitAction = async ({
