@@ -5,4 +5,4 @@ export const membersMeResponse = {
   name: "dd",
   memberType: "USER",
   labResponse: { id: 1, name: "GIM Lab - woowacourse" },
-};
+} as const;
