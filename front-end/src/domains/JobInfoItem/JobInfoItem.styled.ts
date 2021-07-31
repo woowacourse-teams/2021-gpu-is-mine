@@ -32,6 +32,11 @@ export const StyledJobInfoItem = styled.div`
     grid-template-columns: minmax(0, 1fr) 1.5fr 1.5fr minmax(0, 1fr);
   }
 
+  .job-info-button-wrapper {
+    display: flex;
+    column-gap: 0.25rem;
+  }
+
   .job-info-details-wrapper__text {
     ${textEllipsis}
   }
@@ -48,5 +53,9 @@ export const StyledJobInfoItem = styled.div`
 
   .job-info-button-wrapper__button:hover {
     filter: brightness(1.1);
+  }
+
+  .job-info-title-wrapper__status + p {
+    white-space: pre;
   }
 `;

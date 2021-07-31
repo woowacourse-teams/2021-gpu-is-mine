@@ -26,3 +26,5 @@ export interface JobViewResponse {
 export interface JobViewResponses {
   jobResponses: Readonly<JobViewResponse[]>;
 }
+
+export type JobDetailResponse = JobViewResponse;

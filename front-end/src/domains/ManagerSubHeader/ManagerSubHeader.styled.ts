@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
+import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
 
 export const StyledManagerSubHeader = styled.header`
   background-color: var(--primary-700);
@@ -21,14 +22,12 @@ export const StyledManagerSubHeader = styled.header`
     flex-shrink: 0;
   }
 
-  .title__domain,
-  .title__page {
+  .title__name {
     font-weight: 500;
     transition: all 0.1s ease-in-out;
   }
 
-  .title__domain:hover,
-  .title__page:hover {
+  .title__name:hover {
     color: var(--secondary-600);
   }
 
@@ -46,5 +45,11 @@ export const StyledManagerSubHeader = styled.header`
     ${up("tablet")} {
       display: none;
     }
+  }
+`;
+
+export const StyledManagerNavigation = styled(ManagerNavigation)`
+  ${up("mobile")} {
+    display: none;
   }
 `;

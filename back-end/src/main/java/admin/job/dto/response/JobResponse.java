@@ -13,9 +13,12 @@ public class JobResponse {
     private final String memberName;
     private final Long gpuServerId;
     private final String gpuServerName;
+    private final String metaData;
+    private final String expectedTime;
 
     public JobResponse(Long id, String name, JobStatus status, Long memberId,
-            String memberName, Long gpuServerId, String gpuServerName) {
+                       String memberName, Long gpuServerId, String gpuServerName,
+                       String metaData, String expectedTime) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -23,6 +26,8 @@ public class JobResponse {
         this.memberName = memberName;
         this.gpuServerId = gpuServerId;
         this.gpuServerName = gpuServerName;
+        this.metaData = metaData;
+        this.expectedTime = expectedTime;
     }
 
     public static JobResponse of(Job job) {
@@ -33,7 +38,9 @@ public class JobResponse {
                 job.getMember().getId(),
                 job.getMember().getName(),
                 job.getGpuServer().getId(),
-                job.getGpuServer().getName()
+                job.getGpuServer().getName(),
+                job.getMetaData(),
+                job.getExpectedTime()
         );
     }
 
@@ -69,5 +76,13 @@ public class JobResponse {
 
     public String getGpuServerName() {
         return gpuServerName;
+    }
+
+    public String getMetaData() {
+        return metaData;
+    }
+
+    public String getExpectedTime() {
+        return expectedTime;
     }
 }

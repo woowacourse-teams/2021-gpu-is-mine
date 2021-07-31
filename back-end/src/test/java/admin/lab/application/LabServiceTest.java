@@ -152,10 +152,10 @@ class LabServiceTest {
                 .save(new GpuBoard(true, 800L, "aaa", gpuServer));
         Member member = memberRepository
                 .save(new Member("email@email.com", "password", "name", MemberType.MANAGER, lab));
-        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard, member));
-        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard, member));
-        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard, member));
-        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard, member));
+        jobRepository.save(new Job("예약1", JobStatus.RUNNING, gpuBoard, member, "metaData1", "10"));
+        jobRepository.save(new Job("예약2", JobStatus.WAITING, gpuBoard, member, "metaData2", "10"));
+        jobRepository.save(new Job("예약3", JobStatus.WAITING, gpuBoard, member, "metaData3", "10"));
+        jobRepository.save(new Job("예약4", JobStatus.WAITING, gpuBoard, member, "metaData4", "10"));
         final Long labId = lab.getId();
         final Long gpuServerId = gpuServer.getId();
         final Long gpuBoardId = gpuBoard.getId();
