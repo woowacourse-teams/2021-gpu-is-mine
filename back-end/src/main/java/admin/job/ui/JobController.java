@@ -9,6 +9,7 @@ import admin.mail.MailDto;
 import admin.mail.MailService;
 import admin.member.application.MemberService;
 import admin.member.domain.Member;
+import admin.worker.dto.LogsResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,11 +65,18 @@ public class JobController {
     }
 
     @PutMapping("/jobs/{jobId}")
-    public ResponseEntity<Void> cancel(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+    public ResponseEntity<Void> cancel(@PathVariable Long jobId,
+            @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
         JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);
         mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/jobs/{jobId}/logs")
+    public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId) {
+        LogsResponse logsResponse = jobService.findLogAllById(jobId);
+        return ResponseEntity.ok(logsResponse);
     }
 }
