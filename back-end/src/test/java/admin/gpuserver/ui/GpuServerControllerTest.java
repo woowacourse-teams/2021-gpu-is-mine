@@ -82,14 +82,6 @@ class GpuServerControllerTest {
             labRepository.save(otherLab);
         }
 
-        @DisplayName("랩 관리자는 본인 랩의 서버를 생성, 수정, 삭제 할 수 있다.")
-        @Test
-        void createUpdateAndDelete() {
-            gpuServerController.save(lab.getId(), manager, gpuServerCreationRequest());
-            gpuServerController.update(lab.getId(), serverInLab.getId(), manager, gpuServerUpdateRequest());
-            gpuServerController.delete(lab.getId(), serverInLab.getId(), manager);
-        }
-
         @DisplayName("일반 사용자 또는 외부 랩 관리자가 서버를 생성할 수 없다.")
         @Test
         void saveWithUnAuthorizedMember() {
