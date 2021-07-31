@@ -1,6 +1,12 @@
 import { FormHTMLAttributes } from "react";
 import { useHistory } from "react-router-dom";
-import { isLength, isNumber } from "../../utils";
+import {
+  serverNameValidator,
+  memorySizeValidator,
+  diskSizeValidator,
+  performanceValidator,
+  modelNameValidator,
+} from "./validator";
 import { Input, Button, Text, Alert, Loading, Dimmer } from "../../components";
 import { useFetch, useForm, Values } from "../../hooks";
 import { StyledForm } from "./GpuServerRegisterForm.styled";
@@ -8,46 +14,6 @@ import { PATH, API_ENDPOINT } from "../../constants";
 import { APICallStatus, GpuServerRegisterRequest } from "../../types";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
-
-const serverNameValidator = (value: string) => {
-  if (!isLength(value, { min: 1, max: 15 })) {
-    return `1글자 이상 15글자 이하만 가능합니다.`;
-  }
-
-  return null;
-};
-
-const memorySizeValidator = (value: string) => {
-  if (!isNumber(value, { min: 1, max: 10000 })) {
-    return `1GB 이상 10,000GB 이하만 가능합니다.`;
-  }
-
-  return null;
-};
-
-const diskSizeValidator = (value: string) => {
-  if (!isNumber(value, { min: 1, max: 10000 })) {
-    return `1GB 이상 10,000GB 이하만 가능합니다.`;
-  }
-
-  return null;
-};
-
-const performanceValidator = (value: string) => {
-  if (!isNumber(value, { min: 1, max: 10000 })) {
-    return `1TFLOPS 이상 10,000TFLOPS 이하만 가능합니다.`;
-  }
-
-  return null;
-};
-
-const modelNameValidator = (value: string) => {
-  if (!isLength(value, { min: 1, max: 50 })) {
-    return `1글자 이상 50글자 이하만 가능합니다.`;
-  }
-
-  return null;
-};
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   const { status, makeRequest, done } = useFetch<void, GpuServerRegisterRequest>(
