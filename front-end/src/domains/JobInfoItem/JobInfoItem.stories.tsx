@@ -1,11 +1,15 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { jobsResponsesMock } from "../../__fixtures__";
-
 import JobInfoItem from "./JobInfoItem";
+import { authContext } from "../../hooks/useAuth/useAuth";
+import { authContextValue } from "../../__fixtures__/authContext";
 
 export default {
   title: "Domains/Job/InfoItem",
   component: JobInfoItem,
+  decorators: [
+    (story) => <authContext.Provider value={authContextValue}>{story()}</authContext.Provider>,
+  ],
 } as ComponentMeta<typeof JobInfoItem>;
 
 const Template: ComponentStory<typeof JobInfoItem> = (args) => <JobInfoItem {...args} />;

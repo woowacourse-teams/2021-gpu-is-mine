@@ -10,7 +10,7 @@ import {
 
 export const unwrapResult = <T>(ret: MakeRequestReturnType<T>) => ret.unwrap.call(ret);
 
-const useFetch = <T, U = void>(
+const useFetch = <T = never, U = void>(
   url: string,
   option?: UseFetchOptionParameter
 ): UseFetchReturnType<T, U> => {

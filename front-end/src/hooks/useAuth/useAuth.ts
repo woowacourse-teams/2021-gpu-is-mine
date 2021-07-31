@@ -1,13 +1,7 @@
 import { createContext, useCallback, useContext, useEffect } from "react";
 import useBoolean from "../useBoolean/useBoolean";
-import useFetch from "../useFetch/useFetch";
-import { API_ENDPOINT } from "../../constants";
-import {
-  MemberLoginResponse,
-  MemberLoginRequest,
-  MyInfoResponse,
-  MemberSignupRequest,
-} from "../../types";
+import { usePostLogin, useGetMyInfo, usePostSignup } from "../useApi/useApi";
+import { MemberLoginRequest, MyInfoResponse, MemberSignupRequest } from "../../types";
 
 interface AuthContext {
   isAuthenticated: boolean;
@@ -29,21 +23,6 @@ export const useAuth = () => {
 
   return cxt;
 };
-
-const useGetMyInfo = () =>
-  useFetch<MyInfoResponse>(API_ENDPOINT.MEMBER.ME, {
-    method: "get",
-  });
-
-const usePostLogin = () =>
-  useFetch<MemberLoginResponse, MemberLoginRequest>(API_ENDPOINT.MEMBER.LOGIN, {
-    method: "post",
-  });
-
-const usePostSignup = () =>
-  useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBER.SIGNUP, {
-    method: "post",
-  });
 
 export const useRequest = () => {
   const { makeRequest: requestLogin, status: loginStatus } = usePostLogin();
@@ -75,8 +54,11 @@ export const useAuthProvider = () => {
       sessionStorage.setItem("accessToken", accessToken);
 
       authenticate();
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetchMyInfo();
     },
-    [authenticate, requestLogin]
+    [authenticate, fetchMyInfo, requestLogin]
   );
 
   const logout = useCallback(async () => {

@@ -1,6 +1,16 @@
 import { JobViewResponses } from "../types";
 
-const jobsResponsesMock: JobViewResponses = {
+export const JobResponseMock = {
+  id: 4,
+  name: "위암 1,2기 구분 학습",
+  status: "COMPLETED",
+  memberId: 1,
+  memberName: "name1",
+  gpuServerId: 1,
+  gpuServerName: "server1",
+};
+
+export const jobsResponsesMock: JobViewResponses = {
   jobResponses: [
     {
       id: 1,
@@ -95,4 +105,16 @@ const jobsResponsesMock: JobViewResponses = {
   ],
 } as const;
 
-export default jobsResponsesMock;
+export const logData = `
+Train on 60000 samples, validate on 10000 samples
+Epoch 1/5
+60000/60000 [==============================] - 15s 246us/sample - loss: 0.2217 - accuracy: 0.9343 - val_loss: 0.1019 - val_accuracy: 0.9685
+Epoch 2/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 3/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 4/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+Epoch 5/5
+60000/60000 [==============================] - 14s 229us/sample - loss: 0.0975 - accuracy: 0.9698 - val_loss: 0.0787 - val_accuracy: 0.9758
+`;

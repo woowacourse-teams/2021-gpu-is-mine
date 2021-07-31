@@ -7,7 +7,7 @@ interface LoadingProps extends Partial<StyledLoadingProps>, HTMLAttributes<HTMLE
 
 const Loading = ({ size = "md", isOpen = true, ...rest }: LoadingProps) =>
   isOpen ? (
-    <StyledLoading {...rest} size={size}>
+    <StyledLoading {...rest} size={size} role="progressbar" aria-busy={isOpen}>
       <div className="spinner" />
     </StyledLoading>
   ) : null;

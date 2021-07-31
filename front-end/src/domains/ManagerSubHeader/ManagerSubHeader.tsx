@@ -1,37 +1,59 @@
-import { HTMLAttributes } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth, useBreakpoints, useToggle } from "../../hooks";
+import { Fragment, HTMLAttributes } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useAuth, useToggle } from "../../hooks";
 import { Text } from "../../components";
-import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
-import { StyledManagerSubHeader } from "./ManagerSubHeader.styled";
-import { PATH } from "../../constants";
+import { StyledManagerSubHeader, StyledManagerNavigation } from "./ManagerSubHeader.styled";
 
 type SubHeaderProps = HTMLAttributes<HTMLElement>;
 
-const DomainMapper: Record<keyof typeof PATH.MANAGER, string> = {
-  GPU_SERVER: "GPU 서버 관리",
-  JOB: "Job 관리",
+const getDomainName = (domain: string) =>
+  ({
+    "gpu-server": "GPU 서버 관리",
+    job: "Job 관리",
+  }[domain] ?? "");
+
+const getPageName = (page: string) =>
+  ({
+    view: "조회",
+    register: "등록",
+  }[page] ?? "");
+
+const useParsePathname = ({
+  pathname,
+  jobId,
+  serverId,
+}: {
+  pathname: string;
+  jobId: string | undefined;
+  serverId: string | undefined;
+}) => {
+  const detailId = (jobId || serverId) ?? "";
+
+  const [, member, domain, page] = pathname.split("/");
+
+  const domainPath = ["", member, domain, "view"].join("/");
+  const pagePath = ["", member, domain, page].join("/");
+  const detailPath = ["", member, domain, page, detailId].join("/");
+
+  const domainName = getDomainName(domain);
+  const pageName = getPageName(page);
+
+  return [
+    { path: domainPath, name: domainName },
+    { path: pagePath, name: pageName },
+    { path: detailPath, name: detailId },
+  ].filter(({ name }) => Boolean(name));
 };
 
-const PageMapper: Record<keyof typeof PATH.MANAGER.GPU_SERVER, string> = {
-  VIEW: "조회",
-  REGISTER: "등록",
-} as const;
-
-const transformPath = (path: string): string => path.toUpperCase().replace("-", "_");
-
 const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
-  const { pathname } = useLocation();
   const { myInfo } = useAuth();
-
-  const [, , domain, page] = pathname.split("/").map(transformPath) as [
-    never,
-    never,
-    keyof typeof DomainMapper,
-    keyof typeof PageMapper
-  ];
-
-  const { isMobile } = useBreakpoints();
+  const { pathname } = useLocation();
+  const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
+  const list = useParsePathname({
+    pathname,
+    jobId,
+    serverId,
+  });
 
   const [isNavVisible, toggleIsNavVisible] = useToggle(false);
 
@@ -39,17 +61,16 @@ const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
     <>
       <StyledManagerSubHeader {...rest}>
         <div className="title">
-          <Link to={pathname.split("/").slice(0, -1).join("/")}>
-            <Text className="title__domain" size="md">
-              {DomainMapper[domain]}
-            </Text>
-          </Link>
-          <Text size="md">{">"}</Text>
-          <Link to={pathname}>
-            <Text className="title__page" size="md">
-              {PageMapper[page]}
-            </Text>
-          </Link>
+          {list.map(({ path, name }, index) => (
+            <Fragment key={name}>
+              {index > 0 && <Text size="md">{">"}</Text>}
+              <Link to={path}>
+                <Text className="title__name" size="md">
+                  {name}
+                </Text>
+              </Link>
+            </Fragment>
+          ))}
         </div>
 
         <Text className="lab-name" size="md" weight="medium">
@@ -59,7 +80,7 @@ const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
           {isNavVisible ? "▲" : "▼"}
         </button>
       </StyledManagerSubHeader>
-      {isMobile && isNavVisible && <ManagerNavigation className="navigation" />}
+      {isNavVisible && <StyledManagerNavigation />}
     </>
   );
 };
