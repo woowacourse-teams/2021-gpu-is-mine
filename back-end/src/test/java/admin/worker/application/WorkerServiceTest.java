@@ -64,9 +64,9 @@ class WorkerServiceTest {
         gpuBoardRepository.save(gpuBoard1);
         member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
         memberRepository.save(member1);
-        job1 = new Job("job1", JobStatus.RUNNING, gpuBoard1, member1);
+        job1 = new Job("job1", JobStatus.RUNNING, gpuBoard1, member1, "metaData1", "10");
         jobRepository.save(job1);
-        job2 = new Job("job2", JobStatus.WAITING, gpuBoard1, member1);
+        job2 = new Job("job2", JobStatus.WAITING, gpuBoard1, member1, "metaData2", "10");
         jobRepository.save(job2);
     }
 

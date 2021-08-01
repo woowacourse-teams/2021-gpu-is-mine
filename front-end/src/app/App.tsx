@@ -1,6 +1,12 @@
 import { Switch, Redirect } from "react-router-dom";
 import { PrivateRoute, PublicRoute } from "../components";
-import { GpuServerView, GpuServerRegister, JobView, JobRegister } from "../pages/manager";
+import {
+  GpuServerView,
+  GpuServerRegister,
+  JobView,
+  JobRegister,
+  JobViewDetail,
+} from "../pages/manager";
 import { Login, Signup } from "../pages/member";
 import Providers from "../providers/Providers";
 import { PATH } from "../constants";
@@ -25,6 +31,9 @@ const App = () => (
       </PrivateRoute>
       <PrivateRoute exact path={PATH.MANAGER.JOB.VIEW}>
         <JobView />
+      </PrivateRoute>
+      <PrivateRoute path={PATH.MANAGER.JOB.VIEW_DETAIL}>
+        <JobViewDetail />
       </PrivateRoute>
       <Redirect to={PATH.MEMBER.LOGIN} />
     </Switch>

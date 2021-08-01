@@ -30,15 +30,9 @@
 
   <property name="severity" value="warning"/>
 
-  <!-- [newline-lf] -->
-  <module name="RegexpMultiline">
-    <property name="format" value="\r\n"/>
-    <property name="message" value="[newline-lf] Line must end with LF, not CRLF"/>
-  </module>
-
   <!-- [newline-eof] -->
   <module name="NewlineAtEndOfFile">
-    <property name="lineSeparator" value="lf"/>
+    <property name="lineSeparator" value="lf_cr_crlf"/>
   </module>
 
   <property name="fileExtensions" value="java, properties, xml"/>
