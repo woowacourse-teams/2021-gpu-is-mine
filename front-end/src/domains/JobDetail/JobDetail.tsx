@@ -6,7 +6,6 @@ import {
   StyledJobDetailGraph,
   StyledJobDetailLog,
 } from "./JobDetail.styled";
-import { logs } from "../../__fixtures__";
 
 interface JobDetailProps {
   className?: string;
@@ -32,7 +31,7 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
         <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
           <StyledJobDetailGraph detail={detail} />
-          <StyledJobDetailLog logs={logs.logs} labId={labId} />
+          <StyledJobDetailLog labId={labId} jobId={jobId} />
         </StyledJobDetail>
       )}
     </>

@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { authContext } from "../../hooks/useAuth/useAuth";
 import JobDetailLog from "./JobDetailLog";
-import { authContextValue, logs } from "../../__fixtures__";
+import { authContextValue } from "../../__fixtures__";
 
 export default {
   title: "Domains/Job/DetailLog",
@@ -16,5 +16,6 @@ const Template: ComponentStory<typeof JobDetailLog> = (args) => <JobDetailLog {.
 export const Default = Template.bind({});
 
 Default.args = {
-  logs: logs.logs,
+  labId: 1,
+  jobId: 1,
 };

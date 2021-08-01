@@ -30,3 +30,5 @@ export interface JobViewResponses {
 }
 
 export type JobDetailResponse = JobViewResponse;
+
+export type JobDetailLogResponse = { logs: string[] };
