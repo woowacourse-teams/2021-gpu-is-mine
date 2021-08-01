@@ -1,23 +1,25 @@
 import { FormHTMLAttributes } from "react";
+import { useMoveToPage, usePostGpuServer } from "../../hooks";
+import useGpuServerRegisterForm from "./useGpuServerRegisterForm";
 import { Input, Text, Alert, Loading, Dimmer } from "../../components";
 import { StyledForm, StyledButton } from "./GpuServerRegisterForm.styled";
-import useGpuServerRegisterForm, { useGoToGpuServerView } from "./useGpuServerRegisterForm";
+import { PATH } from "../../constants";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { goToGpuServerView } = useGoToGpuServerView();
+  const goToGpuServerView = useMoveToPage(PATH.MANAGER.GPU_SERVER.VIEW);
+
+  const { status, makeRequest, done } = usePostGpuServer();
+
   const {
-    status,
-    done,
     form,
-    submit,
     serverNameInputProps,
     memorySizeInputProps,
     diskSizeInputProps,
     performanceInputProps,
     modelNameInputProps,
-  } = useGpuServerRegisterForm();
+  } = useGpuServerRegisterForm(makeRequest);
 
   return (
     <>
@@ -49,7 +51,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
         <Input size="sm" {...diskSizeInputProps} />
         <Input size="sm" {...performanceInputProps} />
         <Input size="sm" {...modelNameInputProps} />
-        <StyledButton color="secondary" {...submit} disabled={submit.disabled || status !== "idle"}>
+        <StyledButton color="secondary" disabled={status !== "idle"}>
           제출
         </StyledButton>
       </StyledForm>

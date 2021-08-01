@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 import {
   serverNameValidator,
   memorySizeValidator,
@@ -6,74 +5,79 @@ import {
   performanceValidator,
   modelNameValidator,
 } from "./validator";
-import { useForm, SubmitAction, usePostGpuServer } from "../../hooks";
-import { PATH } from "../../constants";
+import useForm from "../../hooks/useFormNew/useFormNew";
+import { APIFunctions, GpuServerRegisterRequest } from "../../types";
 
-export const useGoToGpuServerView = () => {
-  const history = useHistory();
-
-  const goToGpuServerView = () => history.push(PATH.MANAGER.GPU_SERVER.VIEW);
-
-  return { goToGpuServerView };
+type Values = {
+  memorySize: number;
+  diskSize: number;
+  serverName: string;
+  performance: number;
+  modelName: string;
 };
 
-const useGpuServerRegisterForm = () => {
-  const { status, makeRequest, done } = usePostGpuServer();
+const useGpuServerRegisterForm = (
+  onSubmit: APIFunctions<void, GpuServerRegisterRequest>["makeRequest"]
+) => {
+  const { state, dispatch, getInputProps, getFormProps } = useForm<Values>({
+    memorySize: "" as unknown as number,
+    diskSize: "" as unknown as number,
+    serverName: "",
+    performance: "" as unknown as number,
+    modelName: "",
+  });
 
-  const submitAction: SubmitAction = ({
-    memorySize,
-    diskSize,
-    serverName,
-    performance,
-    modelName,
-  }) => {
-    const requestBody = {
-      memorySize: Number(memorySize),
-      diskSize: Number(diskSize),
-      serverName,
-      gpuBoardRequest: {
-        performance: Number(performance),
-        modelName,
-      },
-    };
+  console.log(JSON.stringify(state, null, 2));
 
+  const handleSubmit = ({ memorySize, diskSize, serverName, performance, modelName }: Values) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    makeRequest(requestBody);
+    onSubmit({ memorySize, diskSize, serverName, gpuBoardRequest: { performance, modelName } });
   };
 
-  const { form, submit, useInput } = useForm(submitAction);
+  const form = getFormProps({ state, dispatch, handleSubmit });
 
-  const serverNameInputProps = useInput("", {
+  const serverNameInputProps = getInputProps({
+    state,
+    dispatch,
     name: "serverName",
     label: "서버 이름",
     validator: serverNameValidator,
   });
-  const memorySizeInputProps = useInput("", {
+
+  const memorySizeInputProps = getInputProps({
+    state,
+    dispatch,
     name: "memorySize",
     label: "RAM 용량(GB)",
     validator: memorySizeValidator,
   });
-  const diskSizeInputProps = useInput("", {
+
+  const diskSizeInputProps = getInputProps({
+    state,
+    dispatch,
     name: "diskSize",
     label: "디스크 용랑(GB)",
     validator: diskSizeValidator,
   });
-  const performanceInputProps = useInput("", {
+
+  const performanceInputProps = getInputProps({
+    state,
+    dispatch,
     name: "performance",
     label: "성능(TFLOPS)",
     validator: performanceValidator,
   });
-  const modelNameInputProps = useInput("", {
+
+  const modelNameInputProps = getInputProps({
+    state,
+    dispatch,
     name: "modelName",
     label: "GPU 장치명",
     validator: modelNameValidator,
   });
 
   return {
-    status,
-    done,
     form,
-    submit,
     serverNameInputProps,
     memorySizeInputProps,
     diskSizeInputProps,
