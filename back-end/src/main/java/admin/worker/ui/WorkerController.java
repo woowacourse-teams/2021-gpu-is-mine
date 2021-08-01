@@ -47,7 +47,7 @@ public class WorkerController {
         if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
             mailService.sendJobStartMail(mailDto);
         }
-        if (workerJobRequest.getJobStatus() == JobStatus.WAITING) {
+        if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
             mailService.sendJobEndMail(mailDto);
         }
         return ResponseEntity.ok().build();

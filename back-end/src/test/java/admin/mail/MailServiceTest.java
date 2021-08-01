@@ -15,7 +15,7 @@ class MailServiceTest {
     @DisplayName("메일 보내기")
     @Test
     @Disabled
-    void name() {
+    void mailTest() {
         mailService.sendJobStartMail(new MailDto("email@email.com", "test"));
     }
 }
