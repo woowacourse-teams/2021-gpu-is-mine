@@ -1,79 +1,14 @@
-import { ChangeEvent, Dispatch, FC, FocusEvent, FormEvent } from "react";
+import { FC } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
-import { Action, State, useForm } from "./useForm";
-
-const getFormProps = ({
-  state: currState,
-  dispatch: currDispatch,
-  handleSubmit,
-}: {
-  state: State;
-  dispatch: Dispatch<Action>;
-  handleSubmit: (state: State) => void | Promise<void>;
-}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const ret = handleSubmit(currState);
-
-    if (ret instanceof Promise) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      ret.then(() => currDispatch({ type: "submit" }));
-    } else {
-      currDispatch({ type: "submit" });
-    }
-  };
-
-  return { onSubmit };
-};
-
-const getInputProps = ({
-  state: currState,
-  dispatch: currDispatch,
-  label,
-  name,
-  validator = (value) => (value === "" ? "공백불가요" : ""),
-}: {
-  label: string;
-  name: string;
-  state: State;
-  dispatch: Dispatch<Action>;
-  validator?: (value: string) => string;
-}) => {
-  const onChange = (event: ChangeEvent<HTMLInputElement>) =>
-    currDispatch({
-      type: "change",
-      payload: {
-        name: event.target.name,
-        value: event.target.value,
-        validationMessage: validator?.(event.target.value) ?? "",
-      },
-    });
-
-  const onBlur = (event: FocusEvent<HTMLInputElement>) =>
-    currDispatch({
-      type: "showValidationMessage",
-      payload: {
-        name: event.target.name,
-      },
-    });
-
-  return {
-    label,
-    name,
-    value: currState.values[name],
-    onChange,
-    onBlur,
-    validationMessage: currState.areValidationMessagesVisible[name]
-      ? currState.validationMessages[name]
-      : "",
-  };
-};
+import useForm from "./useForm";
 
 const Form: FC = (props) => {
-  const [state, dispatch] = useForm({ password: "", passwordConfirm: "", email: "" });
+  const { state, dispatch, getInputProps, getFormProps } = useForm({
+    password: "",
+    passwordConfirm: "",
+    email: "",
+  });
 
   console.log(JSON.stringify(state, null, 2));
 
