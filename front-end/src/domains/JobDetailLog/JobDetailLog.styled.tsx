@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button } from "../../components";
 
 export const StyledJobDetailLog = styled.div`
   display: flex;
@@ -14,4 +15,13 @@ export const LogConsole = styled.div`
   color: var(--on-primary-900);
   border-radius: 0.5rem;
   overflow-y: auto;
+`;
+
+export const LogHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const RefreshButton = styled(Button)`
+  width: fit-content;
 `;

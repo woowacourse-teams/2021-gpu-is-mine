@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useGetJobDetailLog } from "../../hooks";
 import { unwrapResult } from "../../hooks/useFetch/useFetch";
 import { Text } from "../../components";
-import { StyledJobDetailLog, LogConsole } from "./JobDetailLog.styled";
+import { StyledJobDetailLog, LogConsole, LogHeader, RefreshButton } from "./JobDetailLog.styled";
 
 interface JobDetailLogProps {
   className?: string;
@@ -12,11 +12,15 @@ interface JobDetailLogProps {
 
 const NormalLog = ({ logs }: { logs: string[] }) => (
   <>
-    {logs.map((line) => (
-      <Text size="sm" key={line}>
-        {line}
-      </Text>
-    ))}
+    {logs.length === 0 ? (
+      <Text size="sm">로그 데이터가 존재하지 않습니다.</Text>
+    ) : (
+      logs.map((line) => (
+        <Text size="sm" key={line}>
+          {line}
+        </Text>
+      ))
+    )}
   </>
 );
 
@@ -43,13 +47,23 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
       .catch((err) => console.error(err));
   }, [makeRequest]);
 
+  const refreshLog = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
+  };
+
   return (
     <StyledJobDetailLog {...rest}>
-      <Text as="h3" weight="bold" size="lg">
-        Log
-      </Text>
+      <LogHeader>
+        <Text as="h3" weight="bold" size="lg">
+          Log
+        </Text>
+        <RefreshButton color="secondary" disabled={status === "loading"} onClick={refreshLog}>
+          로그 조회
+        </RefreshButton>
+      </LogHeader>
       <LogConsole>
-        {status === "loading" && <NormalLog logs={cachedLog} />}
+        {status === "loading" && <Text size="sm">로그 데이터를 불러오는 중입니다</Text>}
         {status === "failed" && <FailedLog logs={cachedLog} />}
         {status === "succeed" && data && <NormalLog logs={data.logs} />}
       </LogConsole>
