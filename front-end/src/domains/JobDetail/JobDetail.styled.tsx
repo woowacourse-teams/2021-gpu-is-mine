@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import JobDetailSummary from "../JobDetailSummary/JobDetailSummary";
+import JobDetailGraph from "../JobDetailGraph/JobDetailGraph";
+import JobDetailLog from "../JobDetailLog/JobDetailLog";
 
 export const StyledJobDetail = styled.section`
   width: 100%;
@@ -13,51 +16,14 @@ export const StyledJobDetail = styled.section`
   row-gap: 2rem;
 `;
 
-export const JobSummaryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.75rem;
+export const StyledJobDetailSummary = styled(JobDetailSummary)`
   grid-area: summary;
 `;
 
-export const GraphContainer = styled.div`
+export const StyledJobDetailGraph = styled(JobDetailGraph)`
   grid-area: graph;
-
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.5rem;
 `;
 
-export const Graph = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: var(--primary-400);
-`;
-
-export const LogContainer = styled.div`
+export const StyledJobDetailLog = styled(JobDetailLog)`
   grid-area: log;
-
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.5rem;
-`;
-
-export const LogConsole = styled.div`
-  width: 100%;
-  max-height: 30rem;
-  padding: 1.5rem 2rem;
-  background-color: var(--primary-900);
-  color: var(--on-primary-900);
-  border-radius: 0.5rem;
-  overflow-y: auto;
-`;
-
-export const Anchor = styled.a`
-  color: var(--secondary-900);
-
-  &:hover {
-    color: var(--secondary-600);
-    font-weight: 500;
-    font-size: 97.8%;
-  }
 `;
