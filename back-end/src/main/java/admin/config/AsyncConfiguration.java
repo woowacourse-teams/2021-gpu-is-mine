@@ -15,7 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class AsyncConfiguration implements AsyncConfigurer {
 
-    private static Logger logger = LoggerFactory.getLogger(ControllerAdvice.class);
+    private static Logger logger = LoggerFactory.getLogger(AsyncConfiguration.class);
 
     @Override
     @Bean(name = "mailExecutor")
