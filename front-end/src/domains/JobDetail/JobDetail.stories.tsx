@@ -6,8 +6,10 @@ export default {
   component: JobDetail,
 } as ComponentMeta<typeof JobDetail>;
 
-const Template: ComponentStory<typeof JobDetail> = () => <JobDetail />;
+const Template: ComponentStory<typeof JobDetail> = (args) => <JobDetail {...args} />;
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  labId: 1,
+};

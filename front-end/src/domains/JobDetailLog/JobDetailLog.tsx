@@ -4,9 +4,10 @@ import { StyledJobDetailLog, LogConsole } from "./JobDetailLog.styled";
 interface JobDetailLogProps {
   className?: string;
   logs: string[];
+  labId: number;
 }
 
-const JobDetailLog = ({ logs, ...rest }: JobDetailLogProps) => (
+const JobDetailLog = ({ labId: number, logs, ...rest }: JobDetailLogProps) => (
   <StyledJobDetailLog {...rest}>
     <Text as="h3" weight="bold" size="lg">
       Log

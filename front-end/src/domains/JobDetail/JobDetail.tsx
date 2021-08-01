@@ -1,4 +1,3 @@
-import { useLabId } from "../../hooks";
 import { useGoToPage, useJobId, useJobDetail } from "./useJobDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
@@ -9,8 +8,12 @@ import {
 } from "./JobDetail.styled";
 import { logs } from "../../__fixtures__";
 
-const JobDetail = () => {
-  const labId = useLabId();
+interface JobDetailProps {
+  className?: string;
+  labId: number;
+}
+
+const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
   const jobId = useJobId();
 
   const { detail, status } = useJobDetail({ labId, jobId });
@@ -26,10 +29,10 @@ const JobDetail = () => {
         </Alert>
       )}
       {status === "succeed" && detail && (
-        <StyledJobDetail>
+        <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
           <StyledJobDetailGraph detail={detail} />
-          <StyledJobDetailLog logs={logs.logs} />
+          <StyledJobDetailLog logs={logs.logs} labId={labId} />
         </StyledJobDetail>
       )}
     </>

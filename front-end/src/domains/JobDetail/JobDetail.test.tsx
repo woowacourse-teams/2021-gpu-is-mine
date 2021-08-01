@@ -14,7 +14,7 @@ jest.mock("./useJobDetail", () => ({
 
 describe("JobDetail", () => {
   const setup = async () => {
-    render(<JobDetail />);
+    render(<JobDetail labId={1} />);
 
     const jobNameHeading = await screen.findByRole("heading", { level: 4, name: /job 이름/i });
     const jobName = screen.getByText(JobResponseMock.name);
@@ -97,7 +97,7 @@ describe("JobDetail", () => {
   test("status가 loading 일 때 Loading 스피너가 표시된다", () => {
     mock({ status: "loading" });
 
-    render(<JobDetail />);
+    render(<JobDetail labId={1} />);
 
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
@@ -105,7 +105,7 @@ describe("JobDetail", () => {
   test("status가 failed 일 때 Alert가 표시된다. 확인 버튼을 클릭하면 이전 페이지로 이동한다", () => {
     mock({ status: "failed" });
 
-    render(<JobDetail />);
+    render(<JobDetail labId={1} />);
 
     expect(screen.getByRole("alertdialog")).toBeInTheDocument();
 
