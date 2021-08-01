@@ -1,21 +1,16 @@
 import { FormHTMLAttributes } from "react";
 import { jobNameValidator, expectedTimeValidator, minPerformanceValidator } from "./validator";
-import { useFetch, useForm, Values } from "../../hooks";
+import { useForm, Values, usePostJobRegister } from "../../hooks";
 import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
-import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { StyledForm } from "./JobRegisterForm.styled";
-import { API_ENDPOINT } from "../../constants";
-import { APICallStatus, JobRegisterRequest } from "../../types";
+import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 
-type JobRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
+interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
+  labId: number;
+}
 
-const JobRegisterForm = (props: JobRegisterFormProps) => {
-  const { status, makeRequest, done } = useFetch<void, JobRegisterRequest>(
-    API_ENDPOINT.LABS(1).JOBS,
-    {
-      method: "post",
-    }
-  );
+const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
+  const { status, makeRequest, done } = usePostJobRegister({ labId });
 
   const submitAction = async ({ jobName, expectedTime, gpuServerId }: Values) => {
     const requestBody = {
@@ -28,7 +23,7 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     return (await makeRequest(requestBody)).unwrap();
   };
 
-  const { form, submit, reset, useInput } = useForm(submitAction);
+  const { form, reset, useInput } = useForm(submitAction);
 
   const jobNameInputProps = useInput("", {
     name: "jobName",
@@ -54,35 +49,36 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
     label: "GPU 서버 선택",
   });
 
-  const isAlertOpen = ["succeed", "failed"].includes(status);
-
-  const alertMessages: { [key in APICallStatus]?: string } = {
-    succeed: "Job 등록에 성공하였습니다.",
-    failed: "Job 등록에 실패하였습니다.",
-  };
-
   const handleConfirm = () => {
-    if (status === "succeed") {
-      reset();
-    }
+    reset();
     done();
   };
 
   return (
     <>
-      <Alert isOpen={isAlertOpen} onConfirm={handleConfirm}>
-        <Text size="md" weight="bold">
-          {alertMessages[status] ?? ""}
-        </Text>
-      </Alert>
+      {status === "succeed" && (
+        <Alert onConfirm={handleConfirm}>
+          <Text size="md" weight="bold">
+            Job 등록에 성공하였습니다.
+          </Text>
+        </Alert>
+      )}
 
-      <StyledForm {...props} {...form}>
-        {status !== "idle" && (
-          <Dimmer>
-            <Loading isOpen={status === "loading"} />
-          </Dimmer>
-        )}
+      {status === "failed" && (
+        <Alert onConfirm={done}>
+          <Text size="md" weight="bold">
+            Job 등록에 실패하였습니다.
+          </Text>
+        </Alert>
+      )}
 
+      {status === "loading" && (
+        <Dimmer>
+          <Loading size="lg" />
+        </Dimmer>
+      )}
+
+      <StyledForm {...rest} {...form}>
         <Input size="sm" {...jobNameInputProps} />
         <Input size="sm" {...expectedTimeInputProps} />
         <Input size="sm" {...minPerformanceInputProps} />
@@ -91,12 +87,7 @@ const JobRegisterForm = (props: JobRegisterFormProps) => {
           {...gpuServerSelectProps}
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button
-          className="submit"
-          color="secondary"
-          {...submit}
-          disabled={submit.disabled || status !== "idle"}
-        >
+        <Button className="submit" color="secondary" disabled={status !== "idle"}>
           제출
         </Button>
       </StyledForm>
