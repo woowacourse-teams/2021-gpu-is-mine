@@ -10,6 +10,8 @@ const mockUseJobDetail = jest.fn();
 jest.mock("./useJobDetail", () => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   useJobDetail: () => mockUseJobDetail(),
+  useJobId: () => 1,
+  useGoToPage: () => mockGoBack,
 }));
 
 describe("JobDetail", () => {
@@ -39,15 +41,10 @@ describe("JobDetail", () => {
     };
   };
 
-  const mock = ({
-    detail = JobResponseMock,
-    status = "succeed",
-    goToPreviousPage = mockGoBack,
-  } = {}) => {
+  const mock = ({ detail = JobResponseMock, status = "succeed" } = {}) => {
     mockUseJobDetail.mockImplementationOnce(() => ({
       detail,
       status,
-      goToPreviousPage,
     }));
   };
 
