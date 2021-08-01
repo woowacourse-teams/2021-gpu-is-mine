@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGetJobDetailLog } from "../../hooks";
+import { unwrapResult } from "../../hooks/useFetch/useFetch";
 import { Text } from "../../components";
 import { StyledJobDetailLog, LogConsole } from "./JobDetailLog.styled";
 
@@ -11,10 +12,14 @@ interface JobDetailLogProps {
 
 const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
   const { data, makeRequest, status } = useGetJobDetailLog({ labId, jobId });
+  const [cachedLog, setCachedLog] = useState([""]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    makeRequest();
+    makeRequest()
+      .then(unwrapResult)
+      .then((data) => setCachedLog(data.logs))
+      .catch((err) => console.error(err));
   }, [makeRequest]);
 
   return (
@@ -23,16 +28,33 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
         Log
       </Text>
       <LogConsole>
-        {status === "failed" && <Text size="sm">Log 데이터를 불러오는데 실패했습니다.</Text>}
-        {status === "succeed" &&
-          data?.logs.map((line) => (
-            <Text size="sm" key={line}>
-              {line}
-            </Text>
-          ))}
+        {status === "loading" && <NormalLog logs={cachedLog} />}
+        {status === "failed" && <FailedLog logs={cachedLog} />}
+        {status === "succeed" && data && <NormalLog logs={data.logs} />}
       </LogConsole>
     </StyledJobDetailLog>
   );
 };
+
+const NormalLog = ({ logs }: { logs: string[] }) => (
+  <>
+    {logs.map((line) => (
+      <Text size="sm" key={line}>
+        {line}
+      </Text>
+    ))}
+  </>
+);
+
+const FailedLog = ({ logs }: { logs: string[] }) => (
+  <>
+    {logs.map((line) => (
+      <Text size="sm" key={line}>
+        {line}
+      </Text>
+    ))}
+    <Text size="sm">Log 데이터를 불러오는데 실패했습니다.</Text>
+  </>
+);
 
 export default JobDetailLog;
