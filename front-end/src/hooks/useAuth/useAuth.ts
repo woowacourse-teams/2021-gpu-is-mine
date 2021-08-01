@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import useBoolean from "../useBoolean/useBoolean";
 import { usePostLogin, useGetMyInfo, usePostSignup } from "../useApi/useApi";
 import { MemberLoginRequest, MyInfoResponse, MemberSignupRequest } from "../../types";
-import { unwrapResult } from "../../hooks/useFetch/useFetch";
+import { unwrapResult } from "../useFetch/useFetch";
 
 interface AuthContext {
   isAuthenticated: boolean;
