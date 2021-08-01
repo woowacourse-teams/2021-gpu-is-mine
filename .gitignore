@@ -10,3 +10,4 @@ logs
 
 # Local Netlify folder
 .netlify
+/back-end/src/main/resources/application-db.properties
