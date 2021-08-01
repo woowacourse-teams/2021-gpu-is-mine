@@ -2,6 +2,12 @@ import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth, useGetJobDetail } from "../../hooks";
 
+export const useGoToPage = (pointer: number) => {
+  const history = useHistory();
+
+  return () => history.go(pointer);
+};
+
 export const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) => {
   const { status, makeRequest, data } = useGetJobDetail({ labId, jobId });
 
@@ -13,17 +19,14 @@ export const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number })
   return { status, detail: data };
 };
 
-export const useJobInfoItemDetail = () => {
-  const history = useHistory();
+export const useLabId = () => {
   const { myInfo } = useAuth();
+
+  return myInfo?.labResponse.id ?? 1;
+};
+
+export const useJobId = () => {
   const { jobId } = useParams<{ jobId?: string }>();
 
-  const { status, detail } = useJobDetail({
-    labId: myInfo?.labResponse.id ?? 1,
-    jobId: Number(jobId),
-  });
-
-  const goToPreviousPage = () => history.go(-1);
-
-  return { detail, goToPreviousPage, status };
+  return Number(jobId);
 };

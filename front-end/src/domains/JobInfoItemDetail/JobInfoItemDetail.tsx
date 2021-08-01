@@ -1,4 +1,4 @@
-import { useJobInfoItemDetail } from "./useJobInfoItemDetail";
+import { useGoToPage, useJobId, useJobDetail, useLabId } from "./useJobInfoItemDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
   StyledJobInfoItemDetail,
@@ -12,7 +12,12 @@ import {
 import { logData } from "../../__fixtures__";
 
 const JobInfoItemDetail = () => {
-  const { detail, goToPreviousPage, status } = useJobInfoItemDetail();
+  const labId = useLabId();
+  const jobId = useJobId();
+
+  const { detail, status } = useJobDetail({ labId, jobId });
+
+  const goToPreviousPage = useGoToPage(-1);
 
   return (
     <>
@@ -56,16 +61,19 @@ const JobInfoItemDetail = () => {
               <Text as="h4" weight="bold">
                 {detail.status === "RUNNING" ? "" : "예상 "}실행시간
               </Text>
-              <Text>{/* TODO: detail.expectedTime으로 수정 */} 3.5시간</Text>
+              <Text>{detail.expectedTime}</Text>
             </div>
             <div>
               <Text as="h4" weight="bold">
                 DockerHub URL
               </Text>
               <Text>
-                {/* TODO: detail.metaData로 수정 */}
-                <Anchor target="_blank" href="https://hub.docker.com/abcdefg" rel="noreferrer">
-                  https://hub.docker.com/abcdefg
+                <Anchor
+                  target="_blank"
+                  href={`https://hub.docker.com/${detail.metaData}`}
+                  rel="noreferrer"
+                >
+                  {`https://hub.docker.com/${detail.metaData}`}
                 </Anchor>
               </Text>
             </div>
