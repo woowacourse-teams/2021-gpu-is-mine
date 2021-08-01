@@ -10,7 +10,7 @@ interface JobDetailLogProps {
 }
 
 const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
-  const { data, makeRequest } = useGetJobDetailLog({ labId, jobId });
+  const { data, makeRequest, status } = useGetJobDetailLog({ labId, jobId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -23,11 +23,13 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
         Log
       </Text>
       <LogConsole>
-        {data?.logs.map((line) => (
-          <Text size="sm" key={line}>
-            {line}
-          </Text>
-        ))}
+        {status === "failed" && <Text size="sm">Log 데이터를 불러오는데 실패했습니다.</Text>}
+        {status === "succeed" &&
+          data?.logs.map((line) => (
+            <Text size="sm" key={line}>
+              {line}
+            </Text>
+          ))}
       </LogConsole>
     </StyledJobDetailLog>
   );
