@@ -39,3 +39,5 @@ logs
 ### Private ###
 /src/main/resources/application-mail.properties
 /src/main/resources/application-encryption.properties
+/src/main/resources/application-db.properties
+/docker/docker-compose.yml
