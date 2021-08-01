@@ -21,6 +21,8 @@ export interface JobViewResponse {
   memberName: string;
   gpuServerId: number;
   gpuServerName: string;
+  expectedTime: string;
+  metaData: string;
 }
 
 export interface JobViewResponses {
@@ -28,3 +30,5 @@ export interface JobViewResponses {
 }
 
 export type JobDetailResponse = JobViewResponse;
+
+export type JobDetailLogResponse = { logs: string[] };

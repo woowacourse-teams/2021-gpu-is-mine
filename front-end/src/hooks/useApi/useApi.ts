@@ -7,10 +7,16 @@ import {
   MemberLoginRequest,
   MemberSignupRequest,
   GpuServerRegisterRequest,
+  JobDetailLogResponse,
 } from "../../types";
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
+    method: "get",
+  });
+
+export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: number }) =>
+  useFetch<JobDetailLogResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs`, {
     method: "get",
   });
 
