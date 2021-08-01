@@ -1,17 +1,17 @@
-import { useGoToPage, useJobId, useJobDetail, useLabId } from "./useJobInfoItemDetail";
+import { useGoToPage, useJobId, useJobDetail, useLabId } from "./useJobDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
-  StyledJobInfoItemDetail,
+  StyledJobDetail,
   JobSummaryContainer,
   GraphContainer,
   LogContainer,
   LogConsole,
   Graph,
   Anchor,
-} from "./JobInfoItemDetail.styled";
+} from "./JobDetail.styled";
 import { logData } from "../../__fixtures__";
 
-const JobInfoItemDetail = () => {
+const JobDetail = () => {
   const labId = useLabId();
   const jobId = useJobId();
 
@@ -28,7 +28,7 @@ const JobInfoItemDetail = () => {
         </Alert>
       )}
       {status === "succeed" && detail && (
-        <StyledJobInfoItemDetail>
+        <StyledJobDetail>
           <JobSummaryContainer>
             <Text as="h3" weight="bold" size="lg">
               요약 정보
@@ -97,10 +97,10 @@ const JobInfoItemDetail = () => {
               ))}
             </LogConsole>
           </LogContainer>
-        </StyledJobInfoItemDetail>
+        </StyledJobDetail>
       )}
     </>
   );
 };
 
-export default JobInfoItemDetail;
+export default JobDetail;

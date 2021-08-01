@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledJobInfoItemDetail = styled.section`
+export const StyledJobDetail = styled.section`
   width: 100%;
 
   display: grid;
