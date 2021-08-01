@@ -11,6 +11,10 @@ export const useGoToPage = (pointer: number) => {
 export const useJobId = () => {
   const { jobId } = useParams<{ jobId?: string }>();
 
+  if (jobId == null || jobId === "" || Number.isNaN(Number(jobId))) {
+    throw Error(`Invalid jobId in params: ${String(jobId)}`);
+  }
+
   return Number(jobId);
 };
 
