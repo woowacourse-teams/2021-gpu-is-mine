@@ -1,17 +1,11 @@
 import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { useAuth, useGetJobDetail } from "../../hooks";
+import { useGetJobDetail } from "../../hooks";
 
 export const useGoToPage = (pointer: number) => {
   const history = useHistory();
 
   return () => history.go(pointer);
-};
-
-export const useLabId = () => {
-  const { myInfo } = useAuth();
-
-  return myInfo?.labResponse.id ?? 1;
 };
 
 export const useJobId = () => {

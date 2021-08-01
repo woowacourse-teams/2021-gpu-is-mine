@@ -1,4 +1,5 @@
-import { useGoToPage, useJobId, useJobDetail, useLabId } from "./useJobDetail";
+import { useLabId } from "../../hooks";
+import { useGoToPage, useJobId, useJobDetail } from "./useJobDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
   StyledJobDetail,
