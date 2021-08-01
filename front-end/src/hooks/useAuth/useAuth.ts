@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import useBoolean from "../useBoolean/useBoolean";
 import { usePostLogin, useGetMyInfo, usePostSignup } from "../useApi/useApi";
 import { MemberLoginRequest, MyInfoResponse, MemberSignupRequest } from "../../types";
+import { unwrapResult } from "../../hooks/useFetch/useFetch";
 
 interface AuthContext {
   isAuthenticated: boolean;
@@ -69,7 +70,7 @@ export const useAuthProvider = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem("accessToken")) {
-      fetchMyInfo().then(authenticate).catch(logout);
+      fetchMyInfo().then(unwrapResult).then(authenticate).catch(logout);
     }
   }, [authenticate, fetchMyInfo, logout]);
 
