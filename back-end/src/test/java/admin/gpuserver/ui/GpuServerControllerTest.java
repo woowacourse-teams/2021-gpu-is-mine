@@ -8,7 +8,6 @@ import admin.gpuserver.domain.GpuBoard;
 import admin.gpuserver.domain.GpuServer;
 import admin.gpuserver.domain.repository.GpuBoardRepository;
 import admin.gpuserver.domain.repository.GpuServerRepository;
-import admin.gpuserver.exception.GpuServerException;
 import admin.lab.domain.Lab;
 import admin.lab.domain.repository.LabRepository;
 import admin.member.domain.Member;
@@ -44,12 +43,14 @@ class GpuServerControllerTest {
 
     private Lab lab = new Lab("lab1");
     private GpuServer serverInLab = new GpuServer("server1", false, 600L, 1024L, lab);
+    private Member member = new Member("email@email.com", "password", "name", MemberType.USER, lab);
 
     @BeforeEach
     private void setUp() {
         labRepository.save(lab);
         gpuServerRepository.save(serverInLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", serverInLab));
+        memberRepository.save(member);
     }
 
     @DisplayName("lab에 속하지 않은 server에는 조회 권한이 없다.")
@@ -61,11 +62,11 @@ class GpuServerControllerTest {
         gpuServerRepository.save(serverInOtherLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));
 
-        assertThatThrownBy(() -> gpuServerController.findById(lab.getId(), serverInOtherLab.getId()))
-                .isInstanceOf(GpuServerException.GPU_SERVER_NOT_FOUND.getException().getClass());
+        assertThatThrownBy(() -> gpuServerController.findById(serverInOtherLab.getId(), member))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
-        assertThatThrownBy(() -> gpuServerController.status(lab.getId(), serverInOtherLab.getId()))
-                .isInstanceOf(GpuServerException.GPU_SERVER_NOT_FOUND.getException().getClass());
+        assertThatThrownBy(() -> gpuServerController.status(serverInOtherLab.getId(), member))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
     @DisplayName("관리자 권한을 확인한다.")
@@ -105,11 +106,11 @@ class GpuServerControllerTest {
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
             assertThatThrownBy(() -> gpuServerController
-                    .update(lab.getId(), serverInOtherLab.getId(), manager, gpuServerUpdateRequest()))
-                    .isInstanceOf(GpuServerException.GPU_SERVER_NOT_FOUND.getException().getClass());
+                    .update(serverInOtherLab.getId(), manager, gpuServerUpdateRequest()))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
-            assertThatThrownBy(() -> gpuServerController.delete(lab.getId(), serverInOtherLab.getId(), manager))
-                    .isInstanceOf(GpuServerException.GPU_SERVER_NOT_FOUND.getException().getClass());
+            assertThatThrownBy(() -> gpuServerController.delete(serverInOtherLab.getId(), manager))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
     }
 }

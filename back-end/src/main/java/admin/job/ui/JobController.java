@@ -38,7 +38,7 @@ public class JobController {
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
-        memberService.checkUserOfServer(member.getId(), jobRequest.getGpuServerId());
+        memberService.checkMemberOfServer(member.getId(), jobRequest.getGpuServerId());
 
         Long jobId = jobService.save(member.getId(), jobRequest);
         mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));

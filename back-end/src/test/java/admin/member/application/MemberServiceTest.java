@@ -151,23 +151,23 @@ class MemberServiceTest {
         @DisplayName("사용자가 Lab에 매니저인지 확인한다.")
         @Test
         void validateManager() {
-            memberService.checkManagerOnLab(manager, labId);
+            memberService.checkManagerOfLab(manager, labId);
         }
 
         @DisplayName("사용자가 Lab에 일반 유저인 경우 예외를 발생한다.")
         @Test
         void validateManagerWithUser() {
-            assertThatThrownBy(() -> memberService.checkManagerOnLab(user, labId))
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(user, labId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @DisplayName("사용자가 해당 랩의 멤버가 아닌 경우 예외를 발생한다.")
         @Test
         void validateManagerWithOtherLab() {
-            assertThatThrownBy(() -> memberService.checkManagerOnLab(manager, otherLabId))
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(manager, otherLabId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
-            assertThatThrownBy(() -> memberService.checkManagerOnLab(user, otherLabId))
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(user, otherLabId))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
     }
