@@ -108,7 +108,7 @@ describe("Member/LoginForm", () => {
   });
 
   describe("제출", () => {
-    test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
+    test.skip("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
       const { emailInput, passwordInput, loginButton, loginForm } = setup();
 
       const validEmail = "test@dd.com";

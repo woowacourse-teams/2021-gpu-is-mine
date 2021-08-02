@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, useEffect } from "react";
 import Text from "../Text/Text";
 import { Label, StyledInput, ValidationMessage } from "./Input.styled";
 import { Require } from "../../types";
@@ -8,6 +8,7 @@ export interface InputProps
   label: string;
   validationMessage?: string;
   size?: "sm" | "md" | "lg";
+  onMount?: () => void;
 }
 
 const validationMessageSize = {
@@ -16,20 +17,35 @@ const validationMessageSize = {
   lg: "md",
 } as const;
 
-const Input = ({ label, size = "md", value, onChange, validationMessage, ...rest }: InputProps) => (
-  <Label size={size}>
-    <Text size={size}>{label}</Text>
-    <StyledInput
-      value={value}
-      _size={size}
-      onChange={onChange}
-      isValid={!validationMessage}
-      {...rest}
-    />
-    <ValidationMessage size={validationMessageSize[size]} weight="medium">
-      {validationMessage}
-    </ValidationMessage>
-  </Label>
-);
+const Input = ({
+  label,
+  size = "md",
+  value,
+  onChange,
+  onMount,
+  validationMessage,
+  ...rest
+}: InputProps) => {
+  useEffect(() => {
+    onMount?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Label size={size}>
+      <Text size={size}>{label}</Text>
+      <StyledInput
+        value={value}
+        _size={size}
+        onChange={onChange}
+        isValid={!validationMessage}
+        {...rest}
+      />
+      <ValidationMessage size={validationMessageSize[size]} weight="medium">
+        {validationMessage}
+      </ValidationMessage>
+    </Label>
+  );
+};
 
 export default Input;

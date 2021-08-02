@@ -7,8 +7,10 @@ export default {
   component: JobRegisterForm,
 } as ComponentMeta<typeof JobRegisterForm>;
 
-const Template: ComponentStory<typeof JobRegisterForm> = () => <JobRegisterForm />;
+const Template: ComponentStory<typeof JobRegisterForm> = (args) => <JobRegisterForm {...args} />;
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  labId: 1,
+};

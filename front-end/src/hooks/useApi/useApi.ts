@@ -1,13 +1,20 @@
 import useFetch from "../useFetch/useFetch";
 import { API_ENDPOINT } from "../../constants";
 import {
+  JobRegisterRequest,
   JobDetailResponse,
   MyInfoResponse,
   MemberLoginResponse,
   MemberLoginRequest,
   MemberSignupRequest,
+  GpuServerRegisterRequest,
   JobDetailLogResponse,
 } from "../../types";
+
+export const usePostJobRegister = ({ labId }: { labId: number }) =>
+  useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(labId).JOBS, {
+    method: "post",
+  });
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
@@ -38,3 +45,6 @@ export const usePostSignup = () =>
   useFetch<void, MemberSignupRequest>(API_ENDPOINT.MEMBER.SIGNUP, {
     method: "post",
   });
+
+export const usePostGpuServer = () =>
+  useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(1).GPUS, { method: "post" });
