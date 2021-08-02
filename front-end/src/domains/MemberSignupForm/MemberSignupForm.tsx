@@ -1,6 +1,7 @@
 import { ChangeEventHandler, FocusEvent } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { SubmitAction, useAuth, useBoolean, useForm } from "../../hooks";
+import { Link } from "react-router-dom";
+import { useAuth, useMoveToPage } from "../../hooks";
+import useFormNew, { getFormProps, getInputProps } from "../../hooks/useFormNew/useFormNew";
 import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH } from "../../constants";
@@ -15,42 +16,67 @@ interface MemberSignupFormProps {
   className?: string;
 }
 
+type Values = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  name: string;
+  memberType: "MANAGER" | "USER" | "";
+};
+
 const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { signup, isLoading } = useAuth();
-  const [isAlertOpen, openAlert] = useBoolean(false);
+  const { signup, isLoading, isSucceed } = useAuth();
 
-  const history = useHistory();
-
-  const submitAction: SubmitAction = ({ email, password, name, memberType }) =>
+  const handleSubmit = ({ email, password, name, memberType }: Values) =>
     signup({
-      email: String(email),
-      password: String(password),
+      email,
+      password,
       labId: 1,
-      name: String(name),
+      name,
       memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
-    }).then(openAlert);
+    });
 
-  const { form, useInput } = useForm(submitAction);
+  const { state, dispatch } = useFormNew<Values>({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    name: "",
+    memberType: "",
+  });
 
-  const emailInputProps = useInput("", {
+  const form = getFormProps({ state, dispatch, handleSubmit });
+
+  const emailInputProps = getInputProps({
+    state,
+    dispatch,
     name: "email",
     label: "이메일",
     validator: emailValidator,
   });
 
-  const passwordInputProps = useInput("", {
+  const passwordInputProps = getInputProps({
+    state,
+    dispatch,
     name: "password",
     label: "비밀번호",
     validator: passwordValidator,
   });
 
-  const passwordConfirmInputProps = useInput("", {
+  const passwordConfirmInputProps = getInputProps({
+    state,
+    dispatch,
     name: "passwordConfirm",
     label: "비밀번호 확인",
-    validator: (value) => passwordConfirmValidator(value, String(passwordInputProps.value)),
+    validator: (value) => passwordConfirmValidator(value, passwordInputProps.value),
   });
 
-  const nameProps = useInput("", { name: "name", label: "이름", validator: nameValidator });
+  const nameProps = getInputProps({
+    state,
+    dispatch,
+    name: "name",
+    label: "이름",
+    validator: nameValidator,
+  });
 
   const {
     validationMessage,
@@ -59,24 +85,23 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     onChange,
     onBlur,
     ...memberTypeProps
-  } = useInput("", {
-    name: "memberType",
-    label: "멤버타입",
-  });
+  } = getInputProps({ state, dispatch, name: "memberType", label: "멤버타입" });
 
   const handleRadioChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event);
     onBlur(event as FocusEvent<HTMLInputElement>);
   };
 
-  const moveToLoginPage = () => history.push(PATH.MEMBER.LOGIN);
+  const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
   return (
     <StyledForm {...form} {...props} aria-label="signup-form">
       {isLoading && <Loading size="lg" />}
-      <Alert aria-label="succeed-alert" isOpen={isAlertOpen} onConfirm={moveToLoginPage}>
-        <Text>회원가입에 성공하였습니다.</Text>
-      </Alert>
+      {isSucceed && (
+        <Alert aria-label="succeed-alert" onConfirm={moveToLoginPage}>
+          <Text>회원가입에 성공하였습니다.</Text>
+        </Alert>
+      )}
 
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gmail.com" />
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
@@ -85,9 +110,9 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       <RadioGroup label="멤버타입">
         <Radio
           {...memberTypeProps}
-          onChange={handleRadioChange}
           value="manager"
           aria-label="manager"
+          onChange={handleRadioChange}
           checked={radioGroupValue === "manager"}
         >
           관리자
@@ -95,8 +120,8 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
         <Radio
           {...memberTypeProps}
           value="user"
-          onChange={handleRadioChange}
           aria-label="user"
+          onChange={handleRadioChange}
           checked={radioGroupValue === "user"}
         >
           사용자
