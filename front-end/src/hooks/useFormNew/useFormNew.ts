@@ -75,8 +75,6 @@ const formReducer = <T extends Record<string, string | number>>(
   state: FormState<T>,
   action: FormAction<T>
 ): FormState<T> => {
-  console.log(action.type, JSON.stringify(action, null, 2));
-
   if (action.type === "updateValue") {
     const { name, value, validationMessage } = action.payload;
 
@@ -190,6 +188,7 @@ export const getInputProps = <T>({
   };
 };
 
+// FIXME: T type 지정 필요
 export const getRadioProps = (...args: Parameters<typeof getInputProps>) => {
   const [{ name, validator, dispatch }] = args;
   const { onChange, onBlur, ...rest } = getInputProps(...args);

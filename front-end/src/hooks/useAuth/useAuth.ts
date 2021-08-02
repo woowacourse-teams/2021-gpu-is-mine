@@ -52,8 +52,6 @@ export const useRequest = () => {
     ) &&
     [loginStatus, myInfoStatus, signupStatus].find((status) => status === "succeed") !== undefined;
 
-  console.log(loginStatus, myInfoStatus, signupStatus);
-
   const done = () => {
     loginDone();
     myInfoDone();

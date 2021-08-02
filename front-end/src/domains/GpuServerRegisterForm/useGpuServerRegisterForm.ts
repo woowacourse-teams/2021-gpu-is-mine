@@ -27,8 +27,6 @@ const useGpuServerRegisterForm = (
     modelName: "",
   });
 
-  console.log(JSON.stringify(state, null, 2));
-
   const handleSubmit = ({ memorySize, diskSize, serverName, performance, modelName }: Values) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     onSubmit({ memorySize, diskSize, serverName, gpuBoardRequest: { performance, modelName } });
