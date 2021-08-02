@@ -43,7 +43,8 @@ public class GpuServerController {
     }
 
     @GetMapping("/{gpuServerId}")
-    public ResponseEntity<GpuServerResponse> findById(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member) {
+    public ResponseEntity<GpuServerResponse> findById(@PathVariable Long gpuServerId,
+            @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfServer(member.getId(), gpuServerId);
 
         GpuServerResponse gpuServerResponse = gpuServerService.findById(gpuServerId);
@@ -51,7 +52,8 @@ public class GpuServerController {
     }
 
     @GetMapping
-    public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId, @AuthenticationPrincipal Member member) {
+    public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId,
+            @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfLab(member.getId(), labId);
 
         GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId);
@@ -76,7 +78,8 @@ public class GpuServerController {
     }
 
     @GetMapping("/{gpuServerId}/status")
-    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member) {
+    public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId,
+            @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfServer(member.getId(), gpuServerId);
 
         GpuServerStatusResponse response = gpuServerService.findStatusById(gpuServerId);
