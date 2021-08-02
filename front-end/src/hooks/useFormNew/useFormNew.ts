@@ -24,7 +24,8 @@ type FormAction<T> =
       };
     }
   | { type: "showValidationMessage"; payload: { name: keyof T } }
-  | { type: "showAllValidationMessage" };
+  | { type: "showAllValidationMessage" }
+  | { type: "reset" };
 
 const useForm = <T extends Record<string, string | number>>(initialValues: T) => {
   const showAllValidationMessage = () => ({ type: "showAllValidationMessage" } as const);
@@ -53,6 +54,8 @@ const useForm = <T extends Record<string, string | number>>(initialValues: T) =>
       payload: { name },
     } as const);
 
+  const reset = () => ({ type: "reset" } as const);
+
   const formReducer: Reducer<FormState<T>, FormAction<T>> = (state, action) => {
     console.log(action.type, JSON.stringify(action, null, 2));
 
@@ -80,6 +83,22 @@ const useForm = <T extends Record<string, string | number>>(initialValues: T) =>
       ) as { [key in keyof T]: true };
 
       return { ...state, areValidationMessagesVisible };
+    }
+
+    if (action.type === "reset") {
+      const keys = Object.keys(state.values) as Array<keyof T>;
+
+      const values = Object.fromEntries(keys.map((key) => [key, ""])) as T;
+
+      const validationMessages = Object.fromEntries(
+        keys.map((key) => [key, ""])
+      ) as FormState<T>["validationMessages"];
+
+      const areValidationMessagesVisible = Object.fromEntries(
+        keys.map((key) => [key, false])
+      ) as FormState<T>["areValidationMessagesVisible"];
+
+      return { values, validationMessages, areValidationMessagesVisible, isFormValid: false };
     }
 
     return state;
@@ -149,6 +168,10 @@ const useForm = <T extends Record<string, string | number>>(initialValues: T) =>
     const onBlur: FocusEventHandler<HTMLInputElement> = () =>
       dispatch(showValidationMessage({ name }));
 
+    const validationMessage = state.areValidationMessagesVisible[name]
+      ? state.validationMessages[name]
+      : "";
+
     return {
       label,
       name,
@@ -156,31 +179,49 @@ const useForm = <T extends Record<string, string | number>>(initialValues: T) =>
       onMount,
       onChange,
       onBlur,
-      validationMessage: state.areValidationMessagesVisible[name]
-        ? state.validationMessages[name]
-        : "",
+      validationMessage,
       ...rest,
     };
   };
 
-  const keys = Object.keys(initialValues) as Array<keyof T>;
+  const getRadioProps = (...args: Parameters<typeof getInputProps>) => {
+    const [{ name, validator, dispatch }] = args;
+    const { onChange, onBlur, ...rest } = getInputProps(...args);
 
-  const initialValidationMessages = Object.fromEntries(
-    keys.map((key) => [key, ""])
-  ) as FormState<T>["validationMessages"];
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+      dispatch(
+        updateValue({
+          name,
+          value: event.target.value,
+          validationMessage: validator?.(event.target.value) ?? "",
+        })
+      );
+      dispatch(showValidationMessage({ name }));
+    };
 
-  const initialAreValidationMessagesVisible = Object.fromEntries(
-    keys.map((key) => [key, false])
-  ) as FormState<T>["areValidationMessagesVisible"];
+    return { onChange: handleChange, ...rest };
+  };
 
-  const [state, dispatch] = useReducer<typeof formReducer>(formReducer, {
-    values: initialValues,
-    validationMessages: initialValidationMessages,
-    areValidationMessagesVisible: initialAreValidationMessagesVisible,
-    isFormValid: false,
-  });
+  const createInitialState = (values: T) => {
+    const keys = Object.keys(values) as Array<keyof T>;
 
-  return { state, dispatch, getInputProps, getFormProps } as const;
+    const validationMessages = Object.fromEntries(
+      keys.map((key) => [key, ""])
+    ) as FormState<T>["validationMessages"];
+
+    const areValidationMessagesVisible = Object.fromEntries(
+      keys.map((key) => [key, false])
+    ) as FormState<T>["areValidationMessagesVisible"];
+
+    return { values, validationMessages, areValidationMessagesVisible, isFormValid: false };
+  };
+
+  const [state, dispatch] = useReducer<typeof formReducer>(
+    formReducer,
+    createInitialState(initialValues)
+  );
+
+  return { state, dispatch, getInputProps, getFormProps, getRadioProps, reset } as const;
 };
 
 export default useForm;
