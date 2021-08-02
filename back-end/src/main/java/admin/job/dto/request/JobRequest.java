@@ -1,5 +1,9 @@
 package admin.job.dto.request;
 
+import admin.gpuserver.domain.GpuBoard;
+import admin.job.domain.Job;
+import admin.member.domain.Member;
+
 public class JobRequest {
     private Long gpuServerId;
     private String name;
@@ -27,5 +31,9 @@ public class JobRequest {
 
     public String getExpectedTime() {
         return expectedTime;
+    }
+
+    public Job toEntity(GpuBoard gpuBoard, Member member) {
+        return new Job(name, gpuBoard, member, metaData, expectedTime);
     }
 }

@@ -24,19 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/labs/{labId}")
 public class JobController {
-    private MemberService memberService;
     private JobService jobService;
     private MailService mailService;
+    private MemberService memberService;
 
-    public JobController(MemberService memberService, JobService jobService, MailService mailService) {
-        this.memberService = memberService;
+    public JobController(JobService jobService, MailService mailService,
+            MemberService memberService) {
         this.jobService = jobService;
         this.mailService = mailService;
+        this.memberService = memberService;
     }
 
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
             @RequestBody JobRequest jobRequest) {
+        memberService.checkMemberOfServer(member.getId(), jobRequest.getGpuServerId());
+
         Long jobId = jobService.save(member.getId(), jobRequest);
         mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
@@ -44,7 +47,9 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}")
-    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId) {
+    public ResponseEntity<JobResponse> findById(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
+        memberService.checkReadableJob(member.getId(), jobId);
+
         JobResponse jobResponse = jobService.findById(jobId);
         return ResponseEntity.ok(jobResponse);
     }
@@ -75,7 +80,9 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}/logs")
-    public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId) {
+    public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId,
+            @AuthenticationPrincipal Member member) {
+        memberService.checkReadableJob(member.getId(), jobId);
         LogsResponse logsResponse = jobService.findLogAllById(jobId);
         return ResponseEntity.ok(logsResponse);
     }

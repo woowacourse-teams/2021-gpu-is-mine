@@ -2,6 +2,7 @@ package admin.gpuserver.fixture;
 
 import admin.gpuserver.dto.request.GpuBoardRequest;
 import admin.gpuserver.dto.request.GpuServerRequest;
+import admin.gpuserver.dto.request.GpuServerUpdateRequest;
 
 public class GpuServerFixtures {
 
@@ -9,6 +10,8 @@ public class GpuServerFixtures {
     private static final Long GPU_BOARD_PERFORMANCE = 10L;
 
     private static final String GPU_SERVER_NAME = "SERVER_NAME";
+    private static final String NEW_GPU__SERVER_NAME = "NEW_SERVER_NAME";
+
     private static final Long GPU_SERVER_MEMORY_SIZE = 10L;
     private static final Long GPU_SERVER_DISK_SIZE = 10L;
 
@@ -23,5 +26,9 @@ public class GpuServerFixtures {
                 GPU_SERVER_DISK_SIZE,
                 gpuBoardCreationRequest()
         );
+    }
+
+    public static GpuServerUpdateRequest gpuServerUpdateRequest() {
+        return new GpuServerUpdateRequest(NEW_GPU__SERVER_NAME);
     }
 }

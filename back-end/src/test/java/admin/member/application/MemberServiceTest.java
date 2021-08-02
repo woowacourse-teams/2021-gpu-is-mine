@@ -1,15 +1,20 @@
 package admin.member.application;
 
+import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
+import static admin.job.fixture.JobFixtures.jobCreationRequest;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import admin.gpuserver.application.GpuServerService;
 import admin.job.application.JobService;
 import admin.lab.application.LabService;
 import admin.lab.dto.LabRequest;
-import admin.lab.exception.LabException;
 import admin.member.domain.MemberType;
-import admin.member.dto.request.ChangeLabRequest;
 import admin.member.dto.request.MemberInfoRequest;
 import admin.member.dto.request.MemberRequest;
-import admin.member.dto.request.MemberTypeRequest;
 import admin.member.dto.response.MemberResponse;
 import admin.member.exception.MemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -21,12 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static admin.gpuserver.fixture.GpuServerFixtures.gpuServerCreationRequest;
-import static admin.job.fixture.JobFixtures.jobCreationRequest;
-import static admin.member.fixture.MemberFixtures.managerCreationRequest;
-import static admin.member.fixture.MemberFixtures.userCreationRequest;
-import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -48,8 +47,8 @@ class MemberServiceTest {
     @BeforeEach
     void setUp() {
         labId = labService.save(new LabRequest("lab"));
-        gpuServerId = gpuServerService.save(gpuServerCreationRequest(), labId);
         memberRequest = new MemberRequest("email@email.com", "password", "name", "MANAGER", labId);
+        gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerCreationRequest());
     }
 
     @Test
@@ -132,6 +131,45 @@ class MemberServiceTest {
     private AbstractThrowableAssert<?, ? extends Throwable> 존재하지_않는_회원_요청_에러_발생(Throwable throwable) {
         return assertThat(throwable)
                 .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
+    }
+
+    @Nested
+    @DisplayName("사용자의 Lab 접근 권한을 확인한다.")
+    class CheckPermissionOnLab {
+
+        private Long user;
+        private Long manager;
+        private Long otherLabId;
+
+        @BeforeEach
+        void setUp() {
+            user = memberService.save(userCreationRequest(labId));
+            manager = memberService.save(managerCreationRequest(labId));
+            otherLabId = labService.save(new LabRequest("otherLab"));
+        }
+
+        @DisplayName("사용자가 Lab에 매니저인지 확인한다.")
+        @Test
+        void validateManager() {
+            memberService.checkManagerOfLab(manager, labId);
+        }
+
+        @DisplayName("사용자가 Lab에 일반 유저인 경우 예외를 발생한다.")
+        @Test
+        void validateManagerWithUser() {
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(user, labId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+        }
+
+        @DisplayName("사용자가 해당 랩의 멤버가 아닌 경우 예외를 발생한다.")
+        @Test
+        void validateManagerWithOtherLab() {
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(manager, otherLabId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+
+            assertThatThrownBy(() -> memberService.checkManagerOfLab(user, otherLabId))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+        }
     }
 
     @Nested

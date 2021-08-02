@@ -1,5 +1,8 @@
 package admin.gpuserver.dto.request;
 
+import admin.gpuserver.domain.GpuBoard;
+import admin.gpuserver.domain.GpuServer;
+
 public class GpuBoardRequest {
     private String modelName;
     private Long performance;
@@ -18,5 +21,9 @@ public class GpuBoardRequest {
 
     public Long getPerformance() {
         return performance;
+    }
+
+    public GpuBoard toEntity(GpuServer gpuServer) {
+        return new GpuBoard(performance, modelName, gpuServer);
     }
 }
