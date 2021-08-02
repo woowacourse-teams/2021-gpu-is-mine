@@ -1,11 +1,8 @@
 import { ChangeEvent, FocusEvent, FormEvent, useEffect, useState } from "react";
 
-type Value = string | number;
-export type Values = Record<string, Value>;
-type IsValid = Record<string, boolean>;
-export type SubmitAction<T = void, U extends Error = Error> = (
-  values: Values
-) => T | Promise<T | U>;
+export type Values<T extends string = string> = { [key in T]: string };
+type IsValid<T extends string = string> = { [key in T]: boolean };
+export type SubmitAction<T = void> = (values: Values) => T | Promise<T>;
 
 export interface InputOptions {
   name: string;
@@ -32,17 +29,12 @@ const useForm = <T>(submitAction: SubmitAction<T>) => {
 
     if (!isFormValid) return;
 
-    const ret = submitAction(values);
-
-    if (ret instanceof Promise) {
-      ret.then(reset).catch(() => {});
-    } else {
-      reset();
-    }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    submitAction(values);
   };
 
   const useInput = (
-    initialValue: Value,
+    initialValue: string,
     {
       name,
       label,

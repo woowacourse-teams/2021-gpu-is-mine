@@ -1,20 +1,22 @@
 import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import JobInfoItemDetail from "./JobInfoItemDetail";
+import JobDetail from "./JobDetail";
 import { JobResponseMock } from "../../__fixtures__";
 
 const mockGoBack = jest.fn();
 
-const mockUseJobInfoItemDetail = jest.fn();
+const mockUseJobDetail = jest.fn();
 
-jest.mock("./useJobInfoItemDetail", () => ({
+jest.mock("./useJobDetail", () => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  useJobInfoItemDetail: () => mockUseJobInfoItemDetail(),
+  useJobDetail: () => mockUseJobDetail(),
+  useJobId: () => 1,
+  useGoToPage: () => mockGoBack,
 }));
 
-describe("JobInfoItemDetail", () => {
+describe("JobDetail", () => {
   const setup = async () => {
-    render(<JobInfoItemDetail />);
+    render(<JobDetail labId={1} />);
 
     const jobNameHeading = await screen.findByRole("heading", { level: 4, name: /job 이름/i });
     const jobName = screen.getByText(JobResponseMock.name);
@@ -39,15 +41,10 @@ describe("JobInfoItemDetail", () => {
     };
   };
 
-  const mock = ({
-    detail = JobResponseMock,
-    status = "succeed",
-    goToPreviousPage = mockGoBack,
-  } = {}) => {
-    mockUseJobInfoItemDetail.mockImplementationOnce(() => ({
+  const mock = ({ detail = JobResponseMock, status = "succeed" } = {}) => {
+    mockUseJobDetail.mockImplementationOnce(() => ({
       detail,
       status,
-      goToPreviousPage,
     }));
   };
 
@@ -97,7 +94,7 @@ describe("JobInfoItemDetail", () => {
   test("status가 loading 일 때 Loading 스피너가 표시된다", () => {
     mock({ status: "loading" });
 
-    render(<JobInfoItemDetail />);
+    render(<JobDetail labId={1} />);
 
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
@@ -105,7 +102,7 @@ describe("JobInfoItemDetail", () => {
   test("status가 failed 일 때 Alert가 표시된다. 확인 버튼을 클릭하면 이전 페이지로 이동한다", () => {
     mock({ status: "failed" });
 
-    render(<JobInfoItemDetail />);
+    render(<JobDetail labId={1} />);
 
     expect(screen.getByRole("alertdialog")).toBeInTheDocument();
 

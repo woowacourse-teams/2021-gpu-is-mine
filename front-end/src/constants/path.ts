@@ -1,3 +1,10 @@
+import { ValuesType } from "../types";
+
+export type Route =
+  | ValuesType<typeof PATH["MANAGER"]["GPU_SERVER"]>
+  | ValuesType<typeof PATH["MANAGER"]["JOB"]>
+  | ValuesType<typeof PATH["MEMBER"]>;
+
 const PATH = {
   MANAGER: {
     GPU_SERVER: {

@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 
-const cache = new Map<string, { lastFetchedTime: number; data: unknown }>();
+// const cache = new Map<string, { lastFetchedTime: number; data: unknown }>();
 
 type RequestConfig<U> = {
   method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
   body?: U;
 };
 
-const REFRESH_PERIOD_IN_MS = 60_000;
+// const REFRESH_PERIOD_IN_MS = 60_000;
 
 const httpClient = axios.create();
 
@@ -29,19 +29,21 @@ export const getData = async <T = void, U = never>(
 ): Promise<T> => {
   const { method = "get", body } = config ?? {};
 
-  const cached = cache.get(url);
+  // const cached = cache.get(url);
 
-  if (method === "get" && cached && Date.now() - cached.lastFetchedTime <= REFRESH_PERIOD_IN_MS) {
-    return cached.data as T;
-  }
+  // if (method === "get" && cached && Date.now() - cached.lastFetchedTime <= REFRESH_PERIOD_IN_MS) {
+  //   return cached.data as T;
+  // }
+
+  // const response = (await httpClient(url, { method, data: body })) as AxiosResponse<T>;
+
+  // if (method === "get") {
+  //   cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
+  // } else {
+  //   cache.delete(url);
+  // }
 
   const response = (await httpClient(url, { method, data: body })) as AxiosResponse<T>;
-
-  if (method === "get") {
-    cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
-  } else {
-    cache.delete(url);
-  }
 
   return response.data;
 };

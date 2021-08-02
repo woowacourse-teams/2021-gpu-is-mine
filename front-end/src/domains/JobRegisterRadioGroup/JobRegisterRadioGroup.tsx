@@ -3,7 +3,7 @@ import {
   FocusEventHandler,
   ComponentProps,
   useEffect,
-  FocusEvent,
+  // FocusEvent,
 } from "react";
 import { useFetch } from "../../hooks";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
@@ -47,7 +47,7 @@ const JobRegisterRadioGroup = ({
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event);
-    onBlur(event as FocusEvent<HTMLInputElement>);
+    // onBlur(event as FocusEvent<HTMLInputElement>);
   };
 
   return (
