@@ -1,4 +1,4 @@
-import { FormHTMLAttributes } from "react";
+import { FormHTMLAttributes, useState } from "react";
 import { usePostJobRegister } from "../../hooks";
 import useJobRegisterForm from "./useJobRegisterForm";
 import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
@@ -11,6 +11,7 @@ interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
 
 const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   const { status, makeRequest, done } = usePostJobRegister({ labId });
+  const [key, setKey] = useState(0);
 
   const {
     form,
@@ -24,6 +25,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   const handleConfirm = () => {
     reset();
+    setKey((k) => k + 1);
     done();
   };
 
@@ -51,7 +53,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         </Dimmer>
       )}
 
-      <StyledForm {...rest} {...form}>
+      <StyledForm key={key} {...rest} {...form}>
         <Input size="sm" {...jobNameInputProps} />
         <Input size="sm" {...expectedTimeInputProps} />
         <Input size="sm" {...minPerformanceInputProps} />
