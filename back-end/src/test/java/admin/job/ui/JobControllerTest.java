@@ -92,6 +92,8 @@ public class JobControllerTest {
             jobController.cancel(job.getId(), userInLab);
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
+
+            Mockito.verify(mailService).sendJobCancelMail(Mockito.any());
         }
 
         @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")
@@ -104,6 +106,8 @@ public class JobControllerTest {
             jobController.cancel(jobFromOther.getId(), managerInLab);
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
+
+            Mockito.verify(mailService).sendJobCancelMail(Mockito.any());
         }
 
         @DisplayName("일반 사용자는 같은 랩의 다른 사용자의 Job 예약을 취소할 수 없다.")
