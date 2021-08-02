@@ -114,6 +114,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
           aria-label="manager"
           onChange={handleRadioChange}
           checked={radioGroupValue === "manager"}
+          disabled
         >
           관리자
         </Radio>
