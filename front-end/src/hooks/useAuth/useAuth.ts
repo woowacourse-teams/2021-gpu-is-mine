@@ -12,6 +12,7 @@ interface AuthContext {
   done: () => void;
   isLoading: boolean;
   isError: boolean;
+  isSucceed: boolean;
   myInfo: MyInfoResponse | null;
 }
 
@@ -37,11 +38,21 @@ export const useRequest = () => {
     done: myInfoDone,
   } = useGetMyInfo();
 
-  const { makeRequest: requestSignup, status: sigupStatus, done: signupDone } = usePostSignup();
+  const { makeRequest: requestSignup, status: signupStatus, done: signupDone } = usePostSignup();
 
-  const isLoading = [loginStatus, myInfoStatus, sigupStatus].some((status) => status === "loading");
+  const isLoading = [loginStatus, myInfoStatus, signupStatus].some(
+    (status) => status === "loading"
+  );
 
-  const isError = [loginStatus, myInfoStatus, sigupStatus].some((status) => status === "failed");
+  const isError = [loginStatus, myInfoStatus, signupStatus].some((status) => status === "failed");
+
+  const isSucceed =
+    [loginStatus, myInfoStatus, signupStatus].every(
+      (status) => status === "succeed" || status === "idle"
+    ) &&
+    [loginStatus, myInfoStatus, signupStatus].find((status) => status === "succeed") !== undefined;
+
+  console.log(loginStatus, myInfoStatus, signupStatus);
 
   const done = () => {
     loginDone();
@@ -49,13 +60,13 @@ export const useRequest = () => {
     signupDone();
   };
 
-  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isError, done };
+  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isError, done, isSucceed };
 };
 
 export const useAuthProvider = () => {
   const [isAuthenticated, authenticate, unauthenticate] = useBoolean(false);
 
-  const { isLoading, isError, requestLogin, requestSignup, fetchMyInfo, myInfo, done } =
+  const { isLoading, isError, requestLogin, requestSignup, fetchMyInfo, myInfo, done, isSucceed } =
     useRequest();
 
   const signup = useCallback(
@@ -96,5 +107,5 @@ export const useAuthProvider = () => {
     }
   }, [authenticate, fetchMyInfo, logout]);
 
-  return { isAuthenticated, isLoading, isError, signup, login, logout, myInfo, done };
+  return { isAuthenticated, isLoading, isError, signup, login, logout, myInfo, done, isSucceed };
 };

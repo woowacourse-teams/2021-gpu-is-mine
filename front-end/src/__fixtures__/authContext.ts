@@ -6,6 +6,7 @@ export const authContextValue = {
   isAuthenticated: false,
   isLoading: false,
   isError: false,
+  isSucceed: true,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   signup: () => Promise.resolve(),
