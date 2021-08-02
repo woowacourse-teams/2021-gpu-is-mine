@@ -1,5 +1,5 @@
 import { jobNameValidator, expectedTimeValidator, minPerformanceValidator } from "./validator";
-import useForm from "../../hooks/useFormNew/useFormNew";
+import useForm, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
 import { APIFunctions, JobRegisterRequest } from "../../types";
 
 type Values = {
@@ -11,7 +11,7 @@ type Values = {
 };
 
 const useJobRegisterForm = (onSubmit: APIFunctions<void, JobRegisterRequest>["makeRequest"]) => {
-  const { state, dispatch, getInputProps, getFormProps, reset } = useForm<Values>({
+  const { state, dispatch, reset } = useForm<Values>({
     jobName: "",
     expectedTime: "" as unknown as number,
     minPerformance: "" as unknown as number,

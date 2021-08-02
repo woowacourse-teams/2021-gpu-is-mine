@@ -5,7 +5,7 @@ import {
   performanceValidator,
   modelNameValidator,
 } from "./validator";
-import useForm from "../../hooks/useFormNew/useFormNew";
+import useForm, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
 import { APIFunctions, GpuServerRegisterRequest } from "../../types";
 
 type Values = {
@@ -19,7 +19,7 @@ type Values = {
 const useGpuServerRegisterForm = (
   onSubmit: APIFunctions<void, GpuServerRegisterRequest>["makeRequest"]
 ) => {
-  const { state, dispatch, getInputProps, getFormProps } = useForm<Values>({
+  const { state, dispatch } = useForm<Values>({
     memorySize: "" as unknown as number,
     diskSize: "" as unknown as number,
     serverName: "",
