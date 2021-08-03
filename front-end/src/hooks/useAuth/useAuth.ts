@@ -3,6 +3,7 @@ import useBoolean from "../useBoolean/useBoolean";
 import { usePostLogin, useGetMyInfo, usePostSignup } from "../useApi/useApi";
 import { MemberLoginRequest, MyInfoResponse, MemberSignupRequest } from "../../types";
 import { unwrapResult } from "../useFetch/useFetch";
+import { SESSION_STORAGE_KEY } from "../../constants";
 
 interface AuthContext {
   isAuthenticated: boolean;
@@ -83,7 +84,7 @@ export const useAuthProvider = () => {
       }
       const { accessToken } = data;
 
-      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
       authenticate();
 
@@ -96,11 +97,11 @@ export const useAuthProvider = () => {
   const logout = useCallback(async () => {
     unauthenticate();
 
-    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
   }, [unauthenticate]);
 
   useEffect(() => {
-    if (sessionStorage.getItem("accessToken")) {
+    if (sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)) {
       fetchMyInfo().then(unwrapResult).then(authenticate).catch(logout);
     }
   }, [authenticate, fetchMyInfo, logout]);
