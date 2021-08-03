@@ -1,11 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { SESSION_STORAGE_KEY } from "../constants";
-
-export type RequestConfig<U> = {
-  method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
-  body?: U;
-  relatedKey?: (string | symbol)[];
-};
+import { RequestConfig } from "../types";
 
 const httpClient = axios.create();
 
