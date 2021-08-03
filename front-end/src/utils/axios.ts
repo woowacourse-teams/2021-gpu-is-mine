@@ -4,7 +4,6 @@ import { SESSION_STORAGE_KEY } from "../constants";
 export type RequestConfig<U> = {
   method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
   body?: U;
-  key?: string | symbol;
   relatedKey?: (string | symbol)[];
 };
 
@@ -34,14 +33,10 @@ export const getData = async <T = void, U = never>(
   url: string,
   config?: RequestConfig<U>
 ): Promise<T> => {
-  const { method = "get", body, key, relatedKey } = config ?? {};
-
-  if (!key) {
-    return fetch(url, { method, data: body });
-  }
+  const { method = "get", body, relatedKey } = config ?? {};
 
   if (method === "get") {
-    const cached = cache.get(key);
+    const cached = cache.get(url);
 
     if (cached && Date.now() - cached.lastFetchedTime <= REFRESH_PERIOD_IN_MS) {
       return cached.data as T;
@@ -49,14 +44,16 @@ export const getData = async <T = void, U = never>(
 
     const data = await fetch<T>(url, { method, data: body });
 
-    cache.set(key, { lastFetchedTime: Date.now(), data });
+    cache.set(url, { lastFetchedTime: Date.now(), data });
 
     return data;
   }
 
   const data = await fetch<T>(url, { method, data: body });
 
-  [key, ...(relatedKey ?? [])].forEach((rKey) => cache.delete(rKey));
+  if (relatedKey) {
+    relatedKey.forEach((rKey) => cache.delete(rKey));
+  }
 
   return data;
 };

@@ -1,5 +1,5 @@
 import useFetch from "../useFetch/useFetch";
-import { API_ENDPOINT, CACHE_KEY } from "../../constants";
+import { API_ENDPOINT } from "../../constants";
 import {
   JobViewResponses,
   JobRegisterRequest,
@@ -16,34 +16,30 @@ import {
 export const useGetJobAll = ({ labId }: { labId: number }) =>
   useFetch<JobViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
     method: "get",
-    key: CACHE_KEY.JOB,
   });
 
 export const usePostJobRegister = ({ labId }: { labId: number }) =>
   useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(labId).JOBS, {
     method: "post",
-    key: CACHE_KEY.JOB,
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "get",
-    key: CACHE_KEY.JOB_DETAIL,
-    relatedKey: [CACHE_KEY.JOB],
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailLogResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs`, {
     method: "get",
-    key: CACHE_KEY.JOB_DETAIL,
-    relatedKey: [CACHE_KEY.JOB],
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const usePutJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "put",
-    key: CACHE_KEY.JOB_DETAIL,
-    relatedKey: [CACHE_KEY.JOB],
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetMyInfo = () =>
@@ -64,17 +60,16 @@ export const usePostSignup = () =>
 export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
   useFetch<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
     method: "get",
-    key: CACHE_KEY.GPU_SERVER,
   });
 
-export const usePostGpuServer = () =>
-  useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(1).GPUS, {
+export const usePostGpuServer = ({ labId }: { labId: number }) =>
+  useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(labId).GPUS, {
     method: "post",
-    key: CACHE_KEY.GPU_SERVER,
+    relatedKey: [`${API_ENDPOINT.LABS(labId).GPUS}`],
   });
 
 export const useDeleteGpuServer = ({ labId, serverId }: { labId: number; serverId: number }) =>
   useFetch<void>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
     method: "delete",
-    key: CACHE_KEY.GPU_SERVER,
+    relatedKey: [`${API_ENDPOINT.LABS(labId).GPUS}`],
   });
