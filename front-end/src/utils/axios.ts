@@ -1,10 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { SESSION_STORAGE_KEY } from "../constants";
 
-type RequestConfig<U> = {
+export type RequestConfig<U> = {
   method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
   body?: U;
-  key?: string;
+  key?: string | symbol;
+  relatedKey?: (string | symbol)[];
 };
 
 const httpClient = axios.create();
@@ -22,7 +23,7 @@ httpClient.interceptors.request.use((config) => {
 
 const REFRESH_PERIOD_IN_MS = 60_000;
 
-const cache = new Map<string, { lastFetchedTime: number; data: unknown }>();
+const cache = new Map<string | symbol, { lastFetchedTime: number; data: unknown }>();
 
 const fetch = async <T>(url: string, { method, data }: AxiosRequestConfig) =>
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,7 +34,7 @@ export const getData = async <T = void, U = never>(
   url: string,
   config?: RequestConfig<U>
 ): Promise<T> => {
-  const { method = "get", body, key } = config ?? {};
+  const { method = "get", body, key, relatedKey } = config ?? {};
 
   if (!key) {
     return fetch(url, { method, data: body });
@@ -55,7 +56,7 @@ export const getData = async <T = void, U = never>(
 
   const data = await fetch<T>(url, { method, data: body });
 
-  cache.delete(key);
+  [key, ...(relatedKey ?? [])].forEach((rKey) => cache.delete(rKey));
 
   return data;
 };

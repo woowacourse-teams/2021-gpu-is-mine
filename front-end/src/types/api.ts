@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { RequestConfig } from "../utils/axios";
 
 export type APICallStatus = "idle" | "loading" | "succeed" | "failed";
 
@@ -27,8 +28,6 @@ interface APICallStatusBoolean {
   isFailed: boolean;
 }
 
-export interface UseFetchOptionParameter {
-  method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
-}
+export type UseFetchOptionParameter = Omit<RequestConfig<never>, "body">;
 
 export type UseFetchReturnType<T, U> = APICallState<T> & APIFunctions<T, U> & APICallStatusBoolean;
