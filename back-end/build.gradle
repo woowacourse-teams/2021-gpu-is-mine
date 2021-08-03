@@ -34,15 +34,19 @@ dependencies {
     compile 'io.springfox:springfox-swagger2:2.9.2'
     compile 'io.springfox:springfox-swagger-ui:2.9.2'
 
+    testRuntimeOnly 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 }
 
 processResources.dependsOn('copyPrivate')
 
 task copyPrivate(type: Copy) {
-    from '../private-configuration'
-    include "**/*.properties"
-    into 'src/main/resources'
+    copy{
+        from '../private-configuration'
+        include "*.properties"
+        into 'src/main/resources'
+    }
 }
 
 test {
@@ -50,7 +54,7 @@ test {
 }
 
 checkstyle {
-    maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail
+    maxWarnings = 0
     configFile = file("${rootDir}/config/gpu-im-checkstyle.xml")
     toolVersion = "8.39"
 }
