@@ -14,7 +14,7 @@ import {
 } from "../../types";
 
 export const useGetJobAll = ({ labId }: { labId: number }) =>
-  useFetch<JobViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
+  useFetch<JobViewResponses>(API_ENDPOINT.LABS(labId).JOBS, {
     method: "get",
   });
 
