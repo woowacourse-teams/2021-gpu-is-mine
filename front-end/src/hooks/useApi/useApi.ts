@@ -48,3 +48,8 @@ export const usePostSignup = () =>
 
 export const usePostGpuServer = () =>
   useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(1).GPUS, { method: "post" });
+
+export const useDeleteGpuServer = ({ labId, serverId }: { labId: number; serverId: number }) =>
+  useFetch<void>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
+    method: "delete",
+  });
