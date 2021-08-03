@@ -47,12 +47,6 @@ task copyPrivate(type: Copy) {
         include "*.properties"
         into 'src/main/resources'
     }
-
-    copy{
-        from '../private-configuration'
-        include "docker-compose.yml"
-        into './docker'
-    }
 }
 
 test {
