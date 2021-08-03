@@ -53,11 +53,11 @@ export const useRequest = () => {
     ) &&
     [loginStatus, myInfoStatus, signupStatus].find((status) => status === "succeed") !== undefined;
 
-  const done = () => {
+  const done = useCallback(() => {
     loginDone();
     myInfoDone();
     signupDone();
-  };
+  }, [loginDone, myInfoDone, signupDone]);
 
   return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isError, done, isSucceed };
 };
