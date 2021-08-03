@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { formatDate, addHours } from "../../utils";
-import { useBoolean, useAuth, usePutJobDetail } from "../../hooks";
+import { useBoolean, useAuth, useCancelJob } from "../../hooks";
 import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
@@ -21,14 +21,14 @@ const startTimeLabel = {
   WAITING: "예상 시작 시간",
   RUNNING: "시작 시간",
   COMPLETED: "시작 시간",
-  CANCELED: "시작 시간",
+  CANCELED: "예상 시작 시간",
 } as const;
 
 const endTimeLabel = {
   WAITING: "예상 완료 시간",
   RUNNING: "예상 완료 시간",
   COMPLETED: "완료 시간",
-  CANCELED: "완료 시간",
+  CANCELED: "취소 시간",
 } as const;
 
 const JobInfoItem = ({
@@ -39,14 +39,15 @@ const JobInfoItem = ({
   memberName,
   refresh,
 }: JobInfoItemProps) => {
-  // TODO: 실제 예상 시간으로 교체
-  // TODO: 서버별 job의 현재 실행 중인 job의 예상 종료 시간 + 나머지 jobs들의 expected time을 전부 더함
-
   const history = useHistory();
 
   const { myInfo } = useAuth() as { myInfo: MyInfoResponse };
 
-  const { status, makeRequest, done } = usePutJobDetail({ labId: myInfo.labResponse.id, jobId });
+  const {
+    status,
+    makeRequest: cancelJob,
+    done,
+  } = useCancelJob({ labId: myInfo.labResponse.id, jobId });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
@@ -54,6 +55,7 @@ const JobInfoItem = ({
     history.push(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
   };
 
+  // TODO: 실제 작업의 시작 시간 교체
   const startTime = formatDate(new Date());
   const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
 
@@ -63,6 +65,8 @@ const JobInfoItem = ({
     { label: endTimeLabel[jobStatus], content: endTime },
     { label: "예약자", content: memberName },
   ];
+
+  const isCancelable = jobStatus === "WAITING";
 
   return (
     <>
@@ -82,7 +86,7 @@ const JobInfoItem = ({
         </Alert>
       )}
 
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
+      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => cancelJob()}>
         <Text size="md" weight="regular">
           {jobName}을(를) 정말 취소하시겠습니까?
         </Text>
@@ -121,7 +125,7 @@ const JobInfoItem = ({
           <Button
             className="job-info-button-wrapper__button"
             color="error"
-            disabled={jobStatus === "CANCELED" || jobStatus === "COMPLETED" || status === "loading"}
+            disabled={!isCancelable || status === "loading"}
             onClick={openConfirm}
           >
             취소

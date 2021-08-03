@@ -26,7 +26,7 @@ export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: num
     method: "get",
   });
 
-export const usePutJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
+export const useCancelJob = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "put",
   });
