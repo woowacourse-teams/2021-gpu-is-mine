@@ -33,7 +33,7 @@ const GpuServerInfoList = () => {
             </Text>
           ) : (
             data.gpuServers.map((res) => (
-              <GpuServerInfoItem refresh={makeRequest} key={res.id} {...res} />
+              <GpuServerInfoItem refresh={() => makeRequest()} key={res.id} {...res} />
             ))
           )}
         </StyledInfoList>
