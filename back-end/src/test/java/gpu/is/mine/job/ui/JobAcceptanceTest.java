@@ -99,7 +99,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         managerToken = AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급(
                 MemberFixtures.managerCreationRequest(labId, "managerTemp@email.com", "password"));
 
-        serverId = GpuServerAcceptanceTest.GpuServer_생성후아이디찾기(managerToken, labId, GpuServerFixtures.gpuServerCreationRequest());
+        serverId = GpuServerAcceptanceTest
+                .GpuServer_생성후아이디찾기(managerToken, labId, GpuServerFixtures.gpuServerCreationRequest());
     }
 
     @DisplayName("소속되지 않는 lab에 job을 예약할 수 없다.")
@@ -108,7 +109,8 @@ public class JobAcceptanceTest extends AcceptanceTest {
         Long otherLabId = LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴(new LabRequest("otherLabId"));
         String otherLabUserToken = AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급(
                 MemberFixtures.managerCreationRequest(otherLabId, "other@other.com", "password"));
-        Long otherLabServerId = GpuServerAcceptanceTest.GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerCreationRequest());
+        Long otherLabServerId = GpuServerAcceptanceTest
+                .GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerCreationRequest());
 
         ExtractableResponse<Response> response =
                 Job_예약(otherLabId, JobFixtures.jobCreationRequest(otherLabServerId), userToken);

@@ -85,10 +85,12 @@ class GpuServerControllerTest {
         @DisplayName("일반 사용자 또는 외부 랩 관리자가 서버를 생성할 수 없다.")
         @Test
         void saveWithUnAuthorizedMember() {
-            assertThatThrownBy(() -> gpuServerController.save(lab.getId(), user, GpuServerFixtures.gpuServerCreationRequest()))
+            assertThatThrownBy(() ->
+                    gpuServerController.save(lab.getId(), user, GpuServerFixtures.gpuServerCreationRequest()))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
-            assertThatThrownBy(() -> gpuServerController.save(otherLab.getId(), manager, GpuServerFixtures.gpuServerCreationRequest()))
+            assertThatThrownBy(() ->
+                    gpuServerController.save(otherLab.getId(), manager, GpuServerFixtures.gpuServerCreationRequest()))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
@@ -101,7 +103,8 @@ class GpuServerControllerTest {
             gpuServerRepository.save(serverInOtherLab);
             gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));
 
-            assertThatThrownBy(() -> gpuServerController.save(otherLab.getId(), manager, GpuServerFixtures.gpuServerCreationRequest()))
+            assertThatThrownBy(() -> 
+                    gpuServerController.save(otherLab.getId(), manager, GpuServerFixtures.gpuServerCreationRequest()))
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
 
             assertThatThrownBy(() -> gpuServerController

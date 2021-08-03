@@ -63,7 +63,8 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> Job_상태변경(Long jobId, WorkerJobRequest workerJobRequest) {
+    private static ExtractableResponse<Response> Job_상태변경(Long jobId,
+            WorkerJobRequest workerJobRequest) {
         return RestAssured.given()
                 .body(workerJobRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +74,8 @@ class WorkerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private static ExtractableResponse<Response> GpuServer_상태변경(Long gpuServerId, WorkerRequest workerRequest) {
+    private static ExtractableResponse<Response> GpuServer_상태변경(Long gpuServerId,
+            WorkerRequest workerRequest) {
         return RestAssured.given()
                 .body(workerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -92,7 +94,8 @@ class WorkerAcceptanceTest extends AcceptanceTest {
         userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
         managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));
 
-        serverId = GpuServerAcceptanceTest.GpuServer_생성후아이디찾기(managerToken, labId, GpuServerFixtures.gpuServerCreationRequest());
+        serverId = GpuServerAcceptanceTest.GpuServer_생성후아이디찾기(managerToken, labId,
+                GpuServerFixtures.gpuServerCreationRequest());
 
         jobId = Job_예약_후_id_반환(labId, jobCreationRequest(serverId), userToken);
     }
@@ -113,26 +116,31 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     @Test
     void updateJobStatus() {
         ExtractableResponse<Response> jobResponse = Job_Id로_검색(labId, jobId, userToken);
-        assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(jobResponse.body().as(JobResponse.class).getStatus()).isEqualTo(
+                JobStatus.WAITING);
 
-        ExtractableResponse<Response> response = Job_상태변경(jobId, new WorkerJobRequest(JobStatus.RUNNING));
+        ExtractableResponse<Response> response = Job_상태변경(jobId,
+                new WorkerJobRequest(JobStatus.RUNNING));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         ExtractableResponse<Response> afterResponse = Job_Id로_검색(labId, jobId, userToken);
-        assertThat(afterResponse.body().as(JobResponse.class).getStatus()).isEqualTo(JobStatus.RUNNING);
+        assertThat(afterResponse.body().as(JobResponse.class).getStatus()).isEqualTo(
+                JobStatus.RUNNING);
     }
 
     @DisplayName("GpuServer 의 상태를 변경한다.")
     @Test
     void updateWorkerStatus() {
-        ExtractableResponse<Response> gpuServerResponse = GpuServerAcceptanceTest.GpuServer_아이디조회(managerToken, labId, serverId);
+        ExtractableResponse<Response> gpuServerResponse = GpuServerAcceptanceTest.GpuServer_아이디조회(
+                managerToken, labId, serverId);
         assertThat(gpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isFalse();
 
         ExtractableResponse<Response> response =
                 GpuServer_상태변경(serverId, new WorkerRequest(true, LocalDateTime.now()));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        ExtractableResponse<Response> actualGpuServerResponse = GpuServerAcceptanceTest.GpuServer_아이디조회(managerToken, labId, serverId);
+        ExtractableResponse<Response> actualGpuServerResponse = GpuServerAcceptanceTest.GpuServer_아이디조회(
+                managerToken, labId, serverId);
         assertThat(actualGpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isTrue();
     }
 }

@@ -243,8 +243,9 @@ public class JobControllerTest {
         @Test
         void addJobWithoutPermission() {
             assertThatThrownBy(
-                    () -> jobController.save(lab.getId(), userInLab, JobFixtures.jobCreationRequest(serverInOtherLab.getId())))
-                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+                    () -> jobController.save(
+                            lab.getId(), userInLab, JobFixtures.jobCreationRequest(serverInOtherLab.getId())
+                    )).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @DisplayName("소속되지 않은 랩의 Job을 예약 취소할 수 없다.")
