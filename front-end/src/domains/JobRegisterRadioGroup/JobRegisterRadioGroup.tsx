@@ -5,12 +5,11 @@ import {
   useEffect,
   // FocusEvent,
 } from "react";
-import { useFetch } from "../../hooks";
+import { useGetGpuServerAll } from "../../hooks";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
 import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
 import { StyledRadioGroup } from "./JobRegisterRadioGroup.styled";
-import { API_ENDPOINT } from "../../constants";
-import { GpuServerViewResponses, GpuServerViewResponse } from "../../types";
+import { GpuServerViewResponse } from "../../types";
 
 interface JobRegisterRadioGroupProps extends Omit<ComponentProps<typeof RadioGroup>, "children"> {
   minPerformance: number;
@@ -35,10 +34,7 @@ const JobRegisterRadioGroup = ({
   onBlur,
   ...rest
 }: JobRegisterRadioGroupProps) => {
-  const { data, status, makeRequest } = useFetch<GpuServerViewResponses>(
-    API_ENDPOINT.LABS(1).GPUS,
-    { method: "get" }
-  );
+  const { data, status, makeRequest } = useGetGpuServerAll({ labId: 1 });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
