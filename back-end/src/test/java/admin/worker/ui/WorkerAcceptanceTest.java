@@ -93,7 +93,7 @@ class WorkerAcceptanceTest extends AcceptanceTest {
         userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
         managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));
 
-        serverId = GpuServer_생성후아이디찾기(labId, gpuServerCreationRequest());
+        serverId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerCreationRequest());
 
         jobId = Job_예약_후_id_반환(labId, jobCreationRequest(serverId), userToken);
     }
@@ -126,14 +126,14 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     @DisplayName("GpuServer 의 상태를 변경한다.")
     @Test
     void updateWorkerStatus() {
-        ExtractableResponse<Response> gpuServerResponse = GpuServer_아이디조회(labId, serverId);
+        ExtractableResponse<Response> gpuServerResponse = GpuServer_아이디조회(managerToken, labId, serverId);
         assertThat(gpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isFalse();
 
         ExtractableResponse<Response> response =
                 GpuServer_상태변경(serverId, new WorkerRequest(true, LocalDateTime.now()));
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        ExtractableResponse<Response> actualGpuServerResponse = GpuServer_아이디조회(labId, serverId);
+        ExtractableResponse<Response> actualGpuServerResponse = GpuServer_아이디조회(managerToken, labId, serverId);
         assertThat(actualGpuServerResponse.body().as(GpuServerResponse.class).getIsOn()).isTrue();
     }
 }

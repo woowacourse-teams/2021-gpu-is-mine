@@ -137,8 +137,8 @@ class JobServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 Job Id로 조회")
-    void findByNotExistingId() {
+    @DisplayName("존재하지 않는 Job Id로 예약을 취소할 수 없다.")
+    void cancelWithNotExistingId() {
         Long notExistingJobId = Long.MAX_VALUE;
 
         assertThatThrownBy(() -> jobService.cancel(notExistingJobId))

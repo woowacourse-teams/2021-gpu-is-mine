@@ -171,7 +171,7 @@ describe("Member/SignupForm", () => {
       expect(userRadio).toBeInTheDocument();
     });
 
-    test("관리자 라디오 버튼을 클릭하면 관리자 라디오 버튼의 checked가 true가 된다", () => {
+    test.skip("관리자 라디오 버튼을 클릭하면 관리자 라디오 버튼의 checked가 true가 된다", () => {
       const { managerRadio } = setup();
 
       userEvent.click(managerRadio, { button: 0 });

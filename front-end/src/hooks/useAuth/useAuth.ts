@@ -2,13 +2,17 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import useBoolean from "../useBoolean/useBoolean";
 import { usePostLogin, useGetMyInfo, usePostSignup } from "../useApi/useApi";
 import { MemberLoginRequest, MyInfoResponse, MemberSignupRequest } from "../../types";
+import { unwrapResult } from "../useFetch/useFetch";
 
 interface AuthContext {
   isAuthenticated: boolean;
   signup: ({ email, password, name, memberType }: MemberSignupRequest) => Promise<void>;
   login: ({ email, password }: MemberLoginRequest) => Promise<void>;
   logout: (arg: never) => Promise<unknown>;
+  done: () => void;
   isLoading: boolean;
+  isError: boolean;
+  isSucceed: boolean;
   myInfo: MyInfoResponse | null;
 }
 
@@ -25,31 +29,59 @@ export const useAuth = () => {
 };
 
 export const useRequest = () => {
-  const { makeRequest: requestLogin, status: loginStatus } = usePostLogin();
+  const { makeRequest: requestLogin, status: loginStatus, done: loginDone } = usePostLogin();
 
-  const { makeRequest: fetchMyInfo, status: myInfoStatus, data: myInfo } = useGetMyInfo();
+  const {
+    makeRequest: fetchMyInfo,
+    status: myInfoStatus,
+    data: myInfo,
+    done: myInfoDone,
+  } = useGetMyInfo();
 
-  const { makeRequest: requestSignup, status: sigupStatus } = usePostSignup();
+  const { makeRequest: requestSignup, status: signupStatus, done: signupDone } = usePostSignup();
 
-  const isLoading = [loginStatus, myInfoStatus, sigupStatus].some((status) => status === "loading");
+  const isLoading = [loginStatus, myInfoStatus, signupStatus].some(
+    (status) => status === "loading"
+  );
 
-  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading };
+  const isError = [loginStatus, myInfoStatus, signupStatus].some((status) => status === "failed");
+
+  const isSucceed =
+    [loginStatus, myInfoStatus, signupStatus].every(
+      (status) => status === "succeed" || status === "idle"
+    ) &&
+    [loginStatus, myInfoStatus, signupStatus].find((status) => status === "succeed") !== undefined;
+
+  const done = () => {
+    loginDone();
+    myInfoDone();
+    signupDone();
+  };
+
+  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isError, done, isSucceed };
 };
 
 export const useAuthProvider = () => {
   const [isAuthenticated, authenticate, unauthenticate] = useBoolean(false);
 
-  const { isLoading, requestLogin, requestSignup, fetchMyInfo, myInfo } = useRequest();
+  const { isLoading, isError, requestLogin, requestSignup, fetchMyInfo, myInfo, done, isSucceed } =
+    useRequest();
 
   const signup = useCallback(
-    async ({ email, labId, password, name, memberType }: MemberSignupRequest) =>
-      (await requestSignup({ email, labId, password, name, memberType })).unwrap(),
+    async ({ email, labId, password, name, memberType }: MemberSignupRequest) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      requestSignup({ email, labId, password, name, memberType });
+    },
     [requestSignup]
   );
 
   const login = useCallback(
     async ({ email, password }: MemberLoginRequest) => {
-      const { accessToken } = await (await requestLogin({ email, password })).unwrap();
+      const { data } = await requestLogin({ email, password });
+      if (!data) {
+        return;
+      }
+      const { accessToken } = data;
 
       sessionStorage.setItem("accessToken", accessToken);
 
@@ -69,9 +101,9 @@ export const useAuthProvider = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem("accessToken")) {
-      fetchMyInfo().then(authenticate).catch(logout);
+      fetchMyInfo().then(unwrapResult).then(authenticate).catch(logout);
     }
   }, [authenticate, fetchMyInfo, logout]);
 
-  return { isAuthenticated, isLoading, signup, login, logout, myInfo };
+  return { isAuthenticated, isLoading, isError, signup, login, logout, myInfo, done, isSucceed };
 };

@@ -25,7 +25,7 @@ public class MemberFixtures {
     }
 
     public static MemberRequest managerCreationRequest(Long labId, String email, String password) {
-        return new MemberRequest(MANAGER_EMAIL, PASSWORD, NAME, MANAGER.name(), labId);
+        return new MemberRequest(email, password, NAME, MANAGER.name(), labId);
     }
 
     public static MemberRequest memberCreationRequest(MemberType memberType, Long labId) {

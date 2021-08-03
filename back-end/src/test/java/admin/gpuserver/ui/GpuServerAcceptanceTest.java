@@ -1,5 +1,8 @@
 package admin.gpuserver.ui;
 
+import static admin.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
+import static admin.member.fixture.MemberFixtures.managerCreationRequest;
+import static admin.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import admin.AcceptanceTest;
@@ -28,32 +31,39 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     static Long labId;
     static List<Long> GpuServerIds;
 
-    public static ExtractableResponse<Response> GpuServer_아이디조회(Long labId, Long gpuServerId) {
+    public static ExtractableResponse<Response> GpuServer_아이디조회(String token, Long labId, Long gpuServerId) {
         return RestAssured
                 .given().log().all()
+                .auth()
+                .oauth2(token)
                 .when().get("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> GpuServer_전체조회(Long labId) {
+    public static ExtractableResponse<Response> GpuServer_전체조회(String token, Long labId) {
         return RestAssured
                 .given().log().all()
+                .auth()
+                .oauth2(token)
                 .when().get("/api/labs/" + labId + "/gpus/")
                 .then().log().all()
                 .extract();
     }
 
-    public static int GpuServer_전체조회갯수(Long labId) {
-        ExtractableResponse<Response> response = GpuServer_전체조회(labId);
+    public static int GpuServer_전체조회갯수(String token, Long labId) {
+        ExtractableResponse<Response> response = GpuServer_전체조회(token, labId);
         List<GpuServerResponse> gpus = response.jsonPath()
                 .getList("gpuServers", GpuServerResponse.class);
         return gpus.size();
     }
 
-    public static ExtractableResponse<Response> GpuServer_생성(Long labId, GpuServerRequest gpuServerRequest) {
+    public static ExtractableResponse<Response> GpuServer_생성(String token, Long labId,
+            GpuServerRequest gpuServerRequest) {
         return RestAssured
                 .given().log().all()
+                .auth()
+                .oauth2(token)
                 .body(gpuServerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/labs/" + labId + "/gpus")
@@ -61,17 +71,20 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static Long GpuServer_생성후아이디찾기(Long labId, GpuServerRequest gpuServerRequest) {
-        ExtractableResponse<Response> response = GpuServer_생성(labId, gpuServerRequest);
+    public static Long GpuServer_생성후아이디찾기(String token, Long labId, GpuServerRequest gpuServerRequest) {
+        ExtractableResponse<Response> response = GpuServer_생성(token, labId, gpuServerRequest);
 
         String[] locationPaths = response.header("Location").split("/");
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 
-    public static ExtractableResponse<Response> GpuServer_이름변경(GpuServerUpdateRequest gpuServerNameUpdateRequest,
+    public static ExtractableResponse<Response> GpuServer_이름변경(String token,
+            GpuServerUpdateRequest gpuServerNameUpdateRequest,
             Long gpuServerId) {
         return RestAssured
                 .given().log().all()
+                .auth()
+                .oauth2(token)
                 .body(gpuServerNameUpdateRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().put("/api/labs/1/gpus/" + gpuServerId)
@@ -79,9 +92,11 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> GpuServer_삭제(Long gpuServerId) {
+    public static ExtractableResponse<Response> GpuServer_삭제(String token, Long gpuServerId) {
         return RestAssured
                 .given().log().all()
+                .auth()
+                .oauth2(token)
                 .when().delete("/api/labs/1/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
@@ -100,11 +115,17 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
 
+    private String userToken;
+    private String managerToken;
+
     @BeforeEach
     public void setUp() {
         super.setUp();
 
         labId = lab_생성(new LabRequest("testLab"));
+
+        userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
+        managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));
 
         List<GpuServerRequest> gpuServerRequests = Arrays.asList(
                 new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L)),
@@ -112,14 +133,14 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         );
 
         GpuServerIds = gpuServerRequests.stream().map(
-                request -> GpuServer_생성후아이디찾기(labId, request)
+                request -> GpuServer_생성후아이디찾기(managerToken, labId, request)
         ).collect(Collectors.toList());
     }
 
     @DisplayName("GpuServer 개별조회")
     @Test
     void findGpuServer() {
-        ExtractableResponse<Response> response = GpuServer_아이디조회(labId, 1L);
+        ExtractableResponse<Response> response = GpuServer_아이디조회(managerToken, labId, 1L);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         Assertions.assertThat(response.jsonPath().getObject("gpuBoard", GpuBoardResponse.class))
@@ -129,7 +150,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @DisplayName("GpuServer 전체조회")
     @Test
     void findGpuServers() {
-        ExtractableResponse<Response> response = GpuServer_전체조회(labId);
+        ExtractableResponse<Response> response = GpuServer_전체조회(managerToken, labId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
@@ -144,7 +165,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L, gpuBoardRequest);
 
         // when
-        ExtractableResponse<Response> response = GpuServer_생성(labId, gpuServerRequest);
+        ExtractableResponse<Response> response = GpuServer_생성(managerToken, labId, gpuServerRequest);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -158,11 +179,11 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
         GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L,
                 gpuBoardRequest);
-        Long gpuServerId = GpuServer_생성후아이디찾기(labId, gpuServerRequest);
+        Long gpuServerId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerRequest);
 
         // when
         GpuServerUpdateRequest gpuServerNameUpdateRequest = new GpuServerUpdateRequest("서버이름변경");
-        ExtractableResponse<Response> response = GpuServer_이름변경(gpuServerNameUpdateRequest,
+        ExtractableResponse<Response> response = GpuServer_이름변경(managerToken, gpuServerNameUpdateRequest,
                 gpuServerId);
 
         // then
@@ -173,20 +194,20 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteGpuServer() {
         // given
-        int previousCount = GpuServer_전체조회갯수(labId);
+        int previousCount = GpuServer_전체조회갯수(managerToken, labId);
         GpuServerRequest gpuServerRequest =
                 new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
-        Long gpuServerId = GpuServer_생성후아이디찾기(labId, gpuServerRequest);
+        Long gpuServerId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerRequest);
 
-        int addedCount = GpuServer_전체조회갯수(labId);
+        int addedCount = GpuServer_전체조회갯수(managerToken, labId);
         assertThat(addedCount).isEqualTo(previousCount + 1);
 
         // when
-        ExtractableResponse<Response> response = GpuServer_삭제(gpuServerId);
+        ExtractableResponse<Response> response = GpuServer_삭제(managerToken, gpuServerId);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        int afterDeletedCount = GpuServer_전체조회갯수(labId);
+        int afterDeletedCount = GpuServer_전체조회갯수(managerToken, labId);
         assertThat(afterDeletedCount).isEqualTo(previousCount);
     }
 }

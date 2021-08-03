@@ -4,8 +4,11 @@ import { membersMeResponse } from "./memberResponses";
 export const authContextValue = {
   myInfo: membersMeResponse,
   isAuthenticated: false,
+  isLoading: false,
+  isError: false,
+  isSucceed: true,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   signup: () => Promise.resolve(),
-  isLoading: false,
+  done: () => {},
 };
