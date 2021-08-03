@@ -1,6 +1,7 @@
 import useFetch from "../useFetch/useFetch";
 import { API_ENDPOINT } from "../../constants";
 import {
+  JobViewResponses,
   JobRegisterRequest,
   JobDetailResponse,
   MyInfoResponse,
@@ -57,5 +58,10 @@ export const useDeleteGpuServer = ({ labId, serverId }: { labId: number; serverI
 
 export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
   useFetch<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
+    method: "get",
+  });
+
+export const useGetJobAll = ({ labId }: { labId: number }) =>
+  useFetch<JobViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
     method: "get",
   });
