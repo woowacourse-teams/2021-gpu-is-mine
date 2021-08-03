@@ -9,6 +9,7 @@ import {
   MemberSignupRequest,
   GpuServerRegisterRequest,
   JobDetailLogResponse,
+  GpuServerViewResponses,
 } from "../../types";
 
 export const usePostJobRegister = ({ labId }: { labId: number }) =>
@@ -52,4 +53,9 @@ export const usePostGpuServer = () =>
 export const useDeleteGpuServer = ({ labId, serverId }: { labId: number; serverId: number }) =>
   useFetch<void>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
     method: "delete",
+  });
+
+export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
+  useFetch<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
+    method: "get",
   });
