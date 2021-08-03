@@ -11,12 +11,6 @@ import {
 export const unwrapResult = <T>({ data, error }: APIResponse<T>) =>
   error ? Promise.reject(error) : Promise.resolve(data as T);
 
-const addUnwrap = <T>({ data, error }: APIResponse<T>) => ({
-  data,
-  error,
-  unwrap: () => unwrapResult({ data, error }),
-});
-
 const useFetch = <T = never, U = void>(
   url: string,
   option?: UseFetchOptionParameter
@@ -27,27 +21,27 @@ const useFetch = <T = never, U = void>(
     status: "idle",
   });
 
-  const { method = "get" } = option ?? {};
+  const { method = "get", key, relatedKey } = option ?? {};
 
   const makeRequest = useCallback(
     async (body: U) => {
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
 
-        const data = await getData<T, U>(url, { body, method });
+        const data = await getData<T, U>(url, { body, method, key, relatedKey });
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
-        return addUnwrap({ data, error: null });
+        return { data, error: null };
       } catch (err) {
         const error = err as AxiosError;
 
         setState((prev) => ({ ...prev, status: "failed", error, data: null }));
 
-        return addUnwrap({ data: null, error });
+        return { data: null, error };
       }
     },
-    [method, url]
+    [key, method, relatedKey, url]
   );
 
   const done = useCallback(() => setState((prev) => ({ ...prev, status: "idle" })), []);
