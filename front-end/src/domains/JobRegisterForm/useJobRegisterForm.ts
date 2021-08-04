@@ -57,7 +57,7 @@ const useJobRegisterForm = (onSubmit: APIFunctions<void, JobRegisterRequest>["ma
     label: "Docker Hub Url",
   });
 
-  const gpuServerSelectProps = getInputProps({
+  const { onMount, ...gpuServerSelectProps } = getInputProps({
     state,
     dispatch,
     name: "gpuServerId",

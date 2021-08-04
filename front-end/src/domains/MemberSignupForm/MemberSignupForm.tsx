@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   useAuth,
@@ -31,6 +32,8 @@ type Values = {
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
   const { signup, isLoading, isSucceed, isFailed, done } = useAuth();
+
+  useEffect(() => done, [done]);
 
   const handleSubmit = ({ email, password, name, memberType }: Values) =>
     signup({
