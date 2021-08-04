@@ -1,14 +1,15 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { AxiosError } from "axios";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
-  MakeRequestReturnType,
+  APIResponse,
   UseFetchOptionParameter,
   UseFetchReturnType,
 } from "../../types";
 
-export const unwrapResult = <T>(ret: MakeRequestReturnType<T>) => ret.unwrap.call(ret);
+export const unwrapResult = <T>({ data, error }: APIResponse<T>) =>
+  error ? Promise.reject(error) : Promise.resolve(data as T);
 
 const useFetch = <T = never, U = void>(
   url: string,
@@ -20,28 +21,30 @@ const useFetch = <T = never, U = void>(
     status: "idle",
   });
 
-  const { method = "get" } = option ?? {};
+  const { method = "get", relatedKey = [] } = option ?? {};
+
+  const rKey = useRef(relatedKey);
 
   const makeRequest = useCallback(
     async (body: U) => {
-      const unwrap = function unwrap(this: MakeRequestReturnType<T>) {
-        return this.error ? Promise.reject(this.error) : Promise.resolve(this.data as T);
-      };
-
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
 
-        const data = await getData<T, U>(url, { body, method });
+        const data = await getData<T, U>(url, {
+          body,
+          method,
+          relatedKey: rKey.current,
+        });
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
-        return { data, error: null, unwrap };
+        return { data, error: null };
       } catch (err) {
         const error = err as AxiosError;
 
         setState((prev) => ({ ...prev, status: "failed", error, data: null }));
 
-        return { data: null, error, unwrap };
+        return { data: null, error };
       }
     },
     [method, url]
@@ -49,7 +52,15 @@ const useFetch = <T = never, U = void>(
 
   const done = useCallback(() => setState((prev) => ({ ...prev, status: "idle" })), []);
 
-  return { ...state, makeRequest, done };
+  return {
+    ...state,
+    makeRequest,
+    done,
+    isSucceed: state.status === "succeed",
+    isLoading: state.status === "loading",
+    isFailed: state.status === "failed",
+    isIdle: state.status === "idle",
+  };
 };
 
 export default useFetch;

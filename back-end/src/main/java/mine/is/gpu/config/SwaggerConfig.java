@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("mine/is/gpu"))
+                .apis(RequestHandlerSelectors.basePackage("mine.is.gpu"))
                 .paths(PathSelectors.any())
                 .build();
     }

@@ -1,15 +1,13 @@
 import { AxiosError } from "axios";
 
-export type APICallStatus = "idle" | "loading" | "succeed" | "failed" | "cached" | "cancelled";
+export type APICallStatus = "idle" | "loading" | "succeed" | "failed";
 
 export interface APIResponse<T> {
   data: T | null;
   error: AxiosError | null;
 }
 
-export interface MakeRequestReturnType<T> extends APIResponse<T> {
-  unwrap: () => Promise<T>;
-}
+export type MakeRequestReturnType<T> = APIResponse<T>;
 
 export interface APIFunctions<T, U = void> {
   makeRequest: (body: U) => Promise<MakeRequestReturnType<T>>;
@@ -20,8 +18,19 @@ export interface APICallState<T> extends APIResponse<T> {
   status: APICallStatus;
 }
 
-export interface UseFetchOptionParameter {
-  method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
+interface APICallStatusBoolean {
+  isIdle: boolean;
+  isLoading: boolean;
+  isSucceed: boolean;
+  isFailed: boolean;
 }
 
-export type UseFetchReturnType<T, U> = APICallState<T> & APIFunctions<T, U>;
+export type RequestConfig<U> = {
+  method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
+  body?: U;
+  relatedKey?: (string | symbol)[];
+};
+
+export type UseFetchOptionParameter = Omit<RequestConfig<never>, "body">;
+
+export type UseFetchReturnType<T, U> = APICallState<T> & APIFunctions<T, U> & APICallStatusBoolean;
