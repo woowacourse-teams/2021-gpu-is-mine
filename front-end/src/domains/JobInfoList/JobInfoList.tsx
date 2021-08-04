@@ -43,7 +43,7 @@ const JobInfoList = () => {
             data.jobResponses
               .slice()
               .sort(sorbByResponse)
-              .map((res) => <JobInfoItem key={res.id} refresh={makeRequest} {...res} />)
+              .map((res) => <JobInfoItem key={res.id} refresh={() => makeRequest()} {...res} />)
           )}
         </StyledJobInfoList>
       )}
