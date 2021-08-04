@@ -6,13 +6,21 @@ type InputAttributes = "name" | "value" | "onChange" | "checked";
 
 type RadioProps = Require<InputHTMLAttributes<HTMLInputElement>, InputAttributes> & {
   label: string;
+  isValid?: boolean;
 };
 
-const Radio = ({ label, children, disabled = false, checked = false, ...rest }: RadioProps) => (
+const Radio = ({
+  label,
+  children,
+  disabled = false,
+  checked = false,
+  isValid = true,
+  ...rest
+}: RadioProps) => (
   <StyledRadio disabled={disabled}>
     <SrOnlyLabel>{label}</SrOnlyLabel>
     <SrOnlyInput type="radio" disabled={disabled} checked={checked} {...rest} />
-    <RadioButton checked={checked} disabled={disabled} />
+    <RadioButton checked={checked} disabled={disabled} isValid={isValid} />
     <Content>{children}</Content>
   </StyledRadio>
 );

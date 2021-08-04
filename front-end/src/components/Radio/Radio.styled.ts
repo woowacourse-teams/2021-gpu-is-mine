@@ -9,7 +9,7 @@ export const SrOnlyLabel = styled.span`
   ${srOnly}
 `;
 
-export const RadioButton = styled.span<{ checked: boolean; disabled: boolean }>`
+export const RadioButton = styled.span<{ checked: boolean; disabled: boolean; isValid: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,6 +41,12 @@ export const RadioButton = styled.span<{ checked: boolean; disabled: boolean }>`
     input:focus + & {
     border-color: var(--primary-700);
   }
+
+  ${({ isValid }) =>
+    !isValid &&
+    css`
+      border-color: var(--error);
+    `}
 `;
 
 export const StyledRadio = styled.label<{ disabled: boolean }>`
