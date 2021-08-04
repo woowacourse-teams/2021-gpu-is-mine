@@ -1,12 +1,12 @@
-import { useHistory } from "react-router-dom";
 import { formatDate, addHours } from "../../utils";
-import { useBoolean, useAuth, useCancelJob } from "../../hooks";
+import { useBoolean, useCancelJob, useMoveToPage } from "../../hooks";
 import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
-import { JobViewResponse, MyInfoResponse } from "../../types";
+import { JobViewResponse } from "../../types";
 
 interface JobInfoItemProps extends JobViewResponse {
+  labId: number;
   refresh: () => Promise<unknown>;
 }
 
@@ -33,27 +33,18 @@ const endTimeLabel = {
 
 const JobInfoItem = ({
   id: jobId,
+  labId,
   name: jobName,
   status: jobStatus,
   gpuServerName,
   memberName,
   refresh,
 }: JobInfoItemProps) => {
-  const history = useHistory();
-
-  const { myInfo } = useAuth() as { myInfo: MyInfoResponse };
-
-  const {
-    status,
-    makeRequest: cancelJob,
-    done,
-  } = useCancelJob({ labId: myInfo.labResponse.id, jobId });
+  const { status, makeRequest: cancelJob, done } = useCancelJob({ labId, jobId });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const handleDetailClick = () => {
-    history.push(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
-  };
+  const handleDetailClick = useMoveToPage(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
 
   // TODO: 실제 작업의 시작 시간 교체
   const startTime = formatDate(new Date());

@@ -17,7 +17,10 @@ const sorbByResponse = (a: JobViewResponse, b: JobViewResponse) =>
   priority[a.status] - priority[b.status];
 
 const JobInfoList = () => {
-  const { data, status, makeRequest } = useGetJobAll({ labId: 1 });
+  // TODO: useLabId 커스텀 훅 에러 바운더리 처리 => labId 상수값 대체하기
+  const labId = 1;
+
+  const { data, status, makeRequest } = useGetJobAll({ labId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -43,7 +46,9 @@ const JobInfoList = () => {
             data.jobResponses
               .slice()
               .sort(sorbByResponse)
-              .map((res) => <JobInfoItem key={res.id} refresh={() => makeRequest()} {...res} />)
+              .map((res) => (
+                <JobInfoItem key={res.id} refresh={() => makeRequest()} labId={labId} {...res} />
+              ))
           )}
         </StyledJobInfoList>
       )}
