@@ -1,50 +1,60 @@
 import styled, { css } from "styled-components";
 import { srOnly } from "../../styles";
 
-export const StyledLabel = styled.label<{ disabled: boolean }>`
+export const SrOnlyInput = styled.input`
+  ${srOnly}
+`;
+
+export const SrOnlyLabel = styled.span`
+  ${srOnly}
+`;
+
+export const RadioButton = styled.span<{ checked: boolean; disabled: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--primary-100);
+  border-radius: 0.5rem;
+
+  ${({ checked }) =>
+    checked &&
+    css`
+      background-color: var(--primary-100);
+      color: var(--on-primary-100);
+
+      &::after {
+        content: "✔";
+        font-size: 1.25rem;
+      }
+    `}
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      background-color: var(--disabled);
+      color: var(--on-disabled);
+      border: none;
+    `}
+`;
+
+export const StyledRadio = styled.label<{ disabled: boolean }>`
   display: flex;
   align-items: center;
   column-gap: 0.75rem;
 
-  ${({ disabled }) => css`
-    &:hover {
-      cursor: ${disabled ? "not-allowed" : "pointer"};
-    }
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.5;
+    `}
 
-    ${disabled && "opacity: 0.5;"}
-  `}
-
-  .radio__input {
-    ${srOnly}
+  &:hover {
+    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   }
+`;
 
-  .radio__button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 2px solid var(--primary-100);
-    border-radius: 0.5rem;
-  }
-
-  .radio__input:checked + .radio__button {
-    background-color: var(--primary-100);
-    color: var(--on-primary-100);
-  }
-
-  .radio__input:disabled + .radio__button {
-    background-color: var(--disabled);
-    color: var(--on-disabled);
-    border: none;
-  }
-
-  .radio__input:checked + .radio__button::after {
-    content: "✔";
-    font-size: 1.25rem;
-  }
-
-  .radio__content {
-    width: 100%;
-  }
+export const Content = styled.div`
+  width: 100%;
 `;
