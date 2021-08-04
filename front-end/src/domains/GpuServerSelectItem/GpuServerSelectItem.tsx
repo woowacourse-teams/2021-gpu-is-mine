@@ -8,7 +8,11 @@ type GpuServerSelectItemProps = Pick<GpuServer, "serverName" | "isOn" | "jobs"> 
 const GpuServerSelectItem = ({ serverName, isOn, performance, jobs }: GpuServerSelectItemProps) => {
   const jobCount = jobs.filter((job) => job.status === "WAITING").length;
 
-  const remainingTime = jobs.reduce((total, job) => total + Number(job.expectedTime), 0);
+  const remainingTime = jobs.reduce((total, job) => {
+    const currentExpectedTime = Number(job.expectedTime) || 0;
+
+    return total + currentExpectedTime;
+  }, 0);
 
   return (
     <StyledItem>
