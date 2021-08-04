@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useFetch } from "../../hooks";
+import { useGetJobAll } from "../../hooks";
 import { Text, Loading } from "../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
-import { API_ENDPOINT, MESSAGE } from "../../constants";
-import { JobViewResponse, JobViewResponses } from "../../types";
+import { MESSAGE } from "../../constants";
+import { JobViewResponse } from "../../types";
 
 const priority = {
   RUNNING: 0, // highest
@@ -17,9 +17,7 @@ const sorbByResponse = (a: JobViewResponse, b: JobViewResponse) =>
   priority[a.status] - priority[b.status];
 
 const JobInfoList = () => {
-  const { data, status, makeRequest } = useFetch<JobViewResponses>(API_ENDPOINT.LABS(1).JOBS, {
-    method: "get",
-  });
+  const { data, status, makeRequest } = useGetJobAll({ labId: 1 });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -45,7 +43,7 @@ const JobInfoList = () => {
             data.jobResponses
               .slice()
               .sort(sorbByResponse)
-              .map((res) => <JobInfoItem refresh={makeRequest} key={res.id} {...res} />)
+              .map((res) => <JobInfoItem key={res.id} refresh={makeRequest} {...res} />)
           )}
         </StyledJobInfoList>
       )}
