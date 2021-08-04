@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks";
-import useFormNew, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
+import { useAuth, useForm, getInputProps, getFormProps } from "../../hooks";
 import { Alert, Input, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 import { PATH } from "../../constants";
@@ -17,7 +16,7 @@ type Values = {
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const { login, isLoading, isError, done } = useAuth();
 
-  const { state, dispatch } = useFormNew<Values>({ email: "", password: "" });
+  const { state, dispatch } = useForm<Values>({ email: "", password: "" });
 
   const handleSubmit = ({ email, password }: Values) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

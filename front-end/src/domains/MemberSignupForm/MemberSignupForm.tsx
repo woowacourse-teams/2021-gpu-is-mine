@@ -1,7 +1,6 @@
 import { ChangeEventHandler, FocusEvent } from "react";
 import { Link } from "react-router-dom";
-import { useAuth, useMoveToPage } from "../../hooks";
-import useFormNew, { getFormProps, getInputProps } from "../../hooks/useFormNew/useFormNew";
+import { useAuth, useMoveToPage, useForm, getFormProps, getInputProps } from "../../hooks";
 import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH } from "../../constants";
@@ -36,7 +35,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
     });
 
-  const { state, dispatch } = useFormNew<Values>({
+  const { state, dispatch } = useForm<Values>({
     email: "",
     password: "",
     passwordConfirm: "",

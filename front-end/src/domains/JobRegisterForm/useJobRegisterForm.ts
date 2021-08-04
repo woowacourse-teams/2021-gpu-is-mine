@@ -1,5 +1,5 @@
 import { jobNameValidator, expectedTimeValidator, minPerformanceValidator } from "./validator";
-import useForm, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
+import { useForm, getInputProps, getFormProps } from "../../hooks";
 import { APIFunctions, JobRegisterRequest } from "../../types";
 
 type Values = {
