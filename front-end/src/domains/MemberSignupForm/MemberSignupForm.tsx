@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FocusEvent } from "react";
+import { ChangeEventHandler, FocusEvent, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth, useMoveToPage } from "../../hooks";
 import useFormNew, { getFormProps, getInputProps } from "../../hooks/useFormNew/useFormNew";
@@ -25,7 +25,9 @@ type Values = {
 };
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { signup, isLoading, isSucceed } = useAuth();
+  const { signup, isLoading, isSucceed, done } = useAuth();
+
+  useEffect(() => done, [done]);
 
   const handleSubmit = ({ email, password, name, memberType }: Values) =>
     signup({
@@ -84,6 +86,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     value: radioGroupValue,
     onChange,
     onBlur,
+    onMount,
     ...memberTypeProps
   } = getInputProps({ state, dispatch, name: "memberType", label: "멤버타입" });
 
@@ -114,7 +117,6 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
           aria-label="manager"
           onChange={handleRadioChange}
           checked={radioGroupValue === "manager"}
-          disabled
         >
           관리자
         </Radio>

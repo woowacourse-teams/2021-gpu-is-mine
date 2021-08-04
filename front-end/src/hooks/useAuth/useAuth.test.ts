@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react-hooks/dom";
 import { useAuthProvider } from "./useAuth";
+import { SESSION_STORAGE_KEY } from "../../constants";
 
 describe("useAuthProvider", () => {
   test("login을 실행하면 isAuthenticated가 true가 되고 accessToken이 sessionStorage에 저장된다", async () => {
@@ -16,15 +17,15 @@ describe("useAuthProvider", () => {
     await waitForNextUpdate();
 
     expect(result.current.isAuthenticated).toBe(true);
-    expect(sessionStorage.getItem("accessToken")).not.toBeNull();
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).not.toBeNull();
   });
 
   test("logout을 실행하면 isAuthenticated가 false가 되고, accessToken이 sessionStorage에서 삭제된다", async () => {
     const { result } = renderHook(() => useAuthProvider());
 
-    sessionStorage.setItem("accessToken", "mock-access-token");
+    sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, "mock-access-token");
 
-    expect(sessionStorage.getItem("accessToken")).not.toBeNull();
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).not.toBeNull();
 
     act(() => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -33,6 +34,6 @@ describe("useAuthProvider", () => {
 
     expect(result.current.isAuthenticated).toBe(false);
 
-    expect(sessionStorage.getItem("accessToken")).toBeNull();
+    expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).toBeNull();
   });
 });
