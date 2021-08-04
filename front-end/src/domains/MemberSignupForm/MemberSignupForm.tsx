@@ -30,7 +30,7 @@ type Values = {
 };
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { signup, isLoading, isSucceed, isError, done } = useAuth();
+  const { signup, isLoading, isSucceed, isFailed, done } = useAuth();
 
   const handleSubmit = ({ email, password, name, memberType }: Values) =>
     signup({
@@ -114,7 +114,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
         </Alert>
       )}
 
-      {isError && (
+      {isFailed && (
         <Alert aria-label="회원가입 실패 알림창" onConfirm={done}>
           <Text>회원가입에 실패하였습니다.</Text>
         </Alert>

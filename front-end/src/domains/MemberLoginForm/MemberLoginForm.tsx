@@ -14,7 +14,7 @@ type Values = {
 };
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
-  const { login, isLoading, isError, done } = useAuth();
+  const { login, isLoading, isFailed, done } = useAuth();
 
   const { state, dispatch } = useForm<Values>({ email: "", password: "" });
 
@@ -42,7 +42,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   return (
     <StyledForm {...formProps} aria-label="로그인" className={className}>
       {isLoading && <Loading size="lg" />}
-      {isError && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
+      {isFailed && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
       <SubmitButton color="secondary">로그인</SubmitButton>
