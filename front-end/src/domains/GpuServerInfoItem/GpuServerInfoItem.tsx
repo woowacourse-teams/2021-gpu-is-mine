@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { useBoolean, useFetch } from "../../hooks";
+import { useBoolean, useDeleteGpuServer } from "../../hooks";
 import {
   Flicker,
   Text,
@@ -12,7 +12,6 @@ import {
   Dimmer,
 } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { API_ENDPOINT } from "../../constants";
 import { GpuServerViewResponse } from "../../types";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
@@ -30,37 +29,33 @@ const GpuServerInfoItem = ({
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
-  const { status, makeRequest, done } = useFetch<void>(`${API_ENDPOINT.LABS(1).GPUS}/${id}`, {
-    method: "delete",
+  const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
+    labId: 1,
+    serverId: id,
   });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const alertMessages: { [key in "succeed" | "failed"]: string } = {
-    succeed: `${serverName}을(를) 삭제하였습니다.`,
-    failed: `${serverName} 삭제에 실패하였습니다.`,
-  };
-
-  const handleAlertConfirm = async () => {
-    if (status === "succeed") {
-      await refresh();
-    }
-
-    done();
-  };
-
   return (
     <>
-      {status === "loading" && (
+      {isLoading && (
         <Dimmer>
           <Loading size="lg" />
         </Dimmer>
       )}
 
-      {(status === "succeed" || status === "failed") && (
-        <Alert onConfirm={handleAlertConfirm}>
+      {isSucceed && (
+        <Alert onConfirm={refresh}>
           <Text size="md" weight="regular">
-            {alertMessages[status] ?? ""}
+            {`${serverName}을(를) 삭제하였습니다.`}
+          </Text>
+        </Alert>
+      )}
+
+      {isFailed && (
+        <Alert onConfirm={done}>
+          <Text size="md" weight="regular">
+            {`${serverName} 삭제에 실패하였습니다.`}
           </Text>
         </Alert>
       )}
@@ -77,11 +72,7 @@ const GpuServerInfoItem = ({
           <Text className="gpu-server-title" size="md" weight="bold">
             {serverName}
           </Text>
-          {isOn ? (
-            <Flicker className="status-mark" status="ON" size="sm" />
-          ) : (
-            <Flicker className="status-mark" status="OFF" size="sm" />
-          )}
+          <Flicker className="status-mark" status={isOn ? "ON" : "OFF"} size="sm" />
         </div>
         <VerticalBox className="gpu-server-details-wrapper">
           <div className="detail">
@@ -113,12 +104,7 @@ const GpuServerInfoItem = ({
           <Button className="button" color="primary-dark">
             수정
           </Button>
-          <Button
-            className="button"
-            color="primary"
-            disabled={status === "loading"}
-            onClick={openConfirm}
-          >
+          <Button className="button" color="primary" disabled={isLoading} onClick={openConfirm}>
             삭제
           </Button>
         </div>
