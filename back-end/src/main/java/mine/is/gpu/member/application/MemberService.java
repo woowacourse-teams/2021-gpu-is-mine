@@ -1,5 +1,6 @@
 package mine.is.gpu.member.application;
 
+import java.util.List;
 import mine.is.gpu.encryption.Encrypt;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
@@ -17,7 +18,6 @@ import mine.is.gpu.member.dto.request.MemberInfoRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +31,8 @@ public class MemberService {
     private final Encrypt encrypt;
 
     public MemberService(MemberRepository memberRepository, LabRepository labRepository,
-            GpuServerRepository gpuServerRepository, JobRepository jobRepository,
-            Encrypt encrypt) {
+                         GpuServerRepository gpuServerRepository, JobRepository jobRepository,
+                         Encrypt encrypt) {
         this.memberRepository = memberRepository;
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
@@ -61,9 +61,8 @@ public class MemberService {
     @Transactional
     public void updateMemberInfo(Long memberId, MemberInfoRequest request) {
         Member member = findMemberById(memberId);
-        String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
+        String password = encrypt.hashedPassword(request.getPassword(), member.getEmail());
 
-        member.setEmail(request.getEmail());
         member.setPassword(password);
         member.setName(request.getName());
     }

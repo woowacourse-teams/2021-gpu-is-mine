@@ -1,31 +1,22 @@
 package mine.is.gpu.member.dto.request;
 
-import javax.validation.constraints.Email;
-
 public class MemberInfoRequest {
-    @Email
-    private String email;
-    private String password;
     private String name;
+    private String password;
 
     public MemberInfoRequest() {
     }
 
-    public MemberInfoRequest(String email, String password, String name) {
-        this.email = email;
-        this.password = password;
+    public MemberInfoRequest(String name, String password) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+        this.password = password;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

@@ -3,15 +3,15 @@ package mine.is.gpu.member.ui;
 import static mine.is.gpu.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.dto.request.MemberInfoRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -117,13 +117,12 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void updateMemberInfo() {
         ExtractableResponse<Response> createResponse = MEMBER_생성_요청(memberRequest);
         Long id = extractCreatedId(createResponse);
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
+        MemberInfoRequest memberInfoRequest = new MemberInfoRequest("newName", "newPassword");
 
         ExtractableResponse<Response> response = MEMBER_정보_수정_요청(id, memberInfoRequest);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
         MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-        assertThat(searchResponse.getEmail()).isEqualTo(memberInfoRequest.getEmail());
         assertThat(searchResponse.getName()).isEqualTo(memberInfoRequest.getName());
     }
 
