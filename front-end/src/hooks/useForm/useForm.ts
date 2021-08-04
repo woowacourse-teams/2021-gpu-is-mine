@@ -23,6 +23,13 @@ type FormAction<T> =
         validationMessage: string;
       };
     }
+  | {
+      type: "updateRadioValue";
+      payload: {
+        name: keyof T;
+        value: string;
+      };
+    }
   | { type: "showValidationMessage"; payload: { name: keyof T } }
   | { type: "showAllValidationMessage" }
   | { type: "reset" };
@@ -188,23 +195,49 @@ export const getInputProps = <T>({
   };
 };
 
-// FIXME: T type 지정 필요
-export const getRadioProps = (...args: Parameters<typeof getInputProps>) => {
-  const [{ name, validator, dispatch }] = args;
-  const { onChange, onBlur, ...rest } = getInputProps(...args);
+export const getRadioProps = <T extends { [U in keyof T]: string }>({
+  value,
+  state,
+  dispatch,
+  label,
+  name,
+  ...rest
+}: {
+  value: T[keyof T];
+  label: string;
+  name: keyof T;
+  state: FormState<T>;
+  dispatch: Dispatch<FormAction<T>>;
+  rest?: unknown[];
+}) => {
+  const {
+    onChange,
+    onBlur,
+    onMount,
+    value: checkedValue,
+    ...args
+  } = getInputProps({
+    state,
+    dispatch,
+    label,
+    name,
+    ...rest,
+  });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     dispatch(
       updateValue({
         name,
         value: event.target.value,
-        validationMessage: validator?.(event.target.value) ?? "",
+        validationMessage: "",
       })
     );
     dispatch(showValidationMessage({ name }));
   };
 
-  return { onChange: handleChange, ...rest };
+  const checked = value === checkedValue;
+
+  return { onChange: handleChange, checked, value, ...args };
 };
 
 const useForm = <T extends Record<string, string | number>>(initialValues: T) => {
