@@ -37,6 +37,10 @@ export const RadioButton = styled.span<{ checked: boolean; disabled: boolean }>`
       color: var(--on-disabled);
       border: none;
     `}
+
+    input:focus + & {
+    border-color: var(--primary-700);
+  }
 `;
 
 export const StyledRadio = styled.label<{ disabled: boolean }>`
