@@ -21,7 +21,7 @@ export const useGetJobAll = ({ labId }: { labId: number }) =>
 export const usePostJobRegister = ({ labId }: { labId: number }) =>
   useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(labId).JOBS, {
     method: "post",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS, API_ENDPOINT.LABS(labId).GPUS],
   });
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
