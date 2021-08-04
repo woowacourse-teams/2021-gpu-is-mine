@@ -1,4 +1,4 @@
-import { Job } from "./jobs";
+import { JobViewResponse } from "./jobs";
 
 export interface GpuBoard {
   id: number;
@@ -14,7 +14,7 @@ export interface GpuServer {
   memorySize: number;
   diskSize: number;
   gpuBoard: GpuBoard;
-  jobs: Readonly<Job[]>;
+  jobs: Readonly<JobViewResponse[]>;
 }
 
 export type GpuServerViewRequest = Pick<
