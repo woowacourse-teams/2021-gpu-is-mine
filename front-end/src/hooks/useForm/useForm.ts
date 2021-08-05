@@ -7,14 +7,14 @@ import {
   FocusEventHandler,
 } from "react";
 
-type FormState<T> = {
+export type FormState<T> = {
   values: T;
   validationMessages: Record<keyof T, string>;
   areValidationMessagesVisible: Record<keyof T, boolean>;
   isFormValid: boolean;
 };
 
-type FormAction<T> =
+export type FormAction<T> =
   | {
       type: "updateValue";
       payload: {
@@ -195,7 +195,7 @@ export const getInputProps = <T>({
   };
 };
 
-export const getRadioProps = <T extends { [U in keyof T]: string }>({
+export const getRadioProps = <T extends { [U in keyof T]: string | number }>({
   value,
   state,
   dispatch,
