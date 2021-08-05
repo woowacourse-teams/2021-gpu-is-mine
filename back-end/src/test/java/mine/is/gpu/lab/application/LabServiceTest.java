@@ -59,6 +59,15 @@ class LabServiceTest {
     }
 
     @Test
+    @DisplayName("중복 이름 생성")
+    void duplicateNameSave() {
+        labService.save(LAB_REQUEST);
+
+        assertThatThrownBy(() -> labService.save(LAB_REQUEST))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
+    }
+
+    @Test
     @DisplayName("생성한 id 조회")
     void findById() {
         Long createdId = labService.save(LAB_REQUEST);
