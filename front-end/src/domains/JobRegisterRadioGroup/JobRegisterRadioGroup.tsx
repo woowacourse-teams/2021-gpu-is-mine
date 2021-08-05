@@ -19,12 +19,15 @@ interface JobRegisterRadioGroupProps extends Omit<ComponentProps<typeof RadioGro
   onBlur: FocusEventHandler;
 }
 
-const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): number => {
+export const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): number => {
   if (a.isOn && !b.isOn) return -1;
   if (!a.isOn && b.isOn) return 1;
 
   return 0;
 };
+
+export const sortByPerformanceDesc = (a: GpuServerViewResponse, b: GpuServerViewResponse): number =>
+  b.gpuBoard.performance - a.gpuBoard.performance;
 
 const JobRegisterRadioGroup = ({
   minPerformance,
@@ -65,6 +68,7 @@ const JobRegisterRadioGroup = ({
           {data?.gpuServers
             .slice()
             .sort(sortByIsOn)
+            .sort(sortByPerformanceDesc)
             .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
               <li key={id}>
                 <Radio
@@ -73,7 +77,7 @@ const JobRegisterRadioGroup = ({
                   checked={selectedValue === String(id)}
                   name={name}
                   onChange={handleChange}
-                  disabled={!isOn}
+                  disabled={!isOn || performance < minPerformance}
                 >
                   <GpuServerSelectItem
                     serverName={serverName}
