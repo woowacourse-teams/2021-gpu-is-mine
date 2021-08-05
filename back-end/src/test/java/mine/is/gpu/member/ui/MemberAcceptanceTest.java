@@ -9,7 +9,7 @@ import io.restassured.response.Response;
 import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
-import mine.is.gpu.member.dto.request.MemberInfoRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import org.assertj.core.api.Assertions;
@@ -45,7 +45,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> MEMBER_정보_수정_요청(Long id, MemberInfoRequest memberInfo) {
+    public static ExtractableResponse<Response> MEMBER_정보_수정_요청(Long id, MemberUpdateRequest memberInfo) {
         return RestAssured.given()
                 .body(memberInfo)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -117,13 +117,13 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void updateMemberInfo() {
         ExtractableResponse<Response> createResponse = MEMBER_생성_요청(memberRequest);
         Long id = extractCreatedId(createResponse);
-        MemberInfoRequest memberInfoRequest = new MemberInfoRequest("newName", "newPassword");
+        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("newName", "newPassword");
 
-        ExtractableResponse<Response> response = MEMBER_정보_수정_요청(id, memberInfoRequest);
+        ExtractableResponse<Response> response = MEMBER_정보_수정_요청(id, memberUpdateRequest);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
         MemberResponse searchResponse = MEMBER_조회_요청(id).body().as(MemberResponse.class);
-        assertThat(searchResponse.getName()).isEqualTo(memberInfoRequest.getName());
+        assertThat(searchResponse.getName()).isEqualTo(memberUpdateRequest.getName());
     }
 
     @Test

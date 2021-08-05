@@ -14,7 +14,7 @@ import mine.is.gpu.lab.exception.LabException;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
-import mine.is.gpu.member.dto.request.MemberInfoRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
@@ -59,7 +59,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMemberInfo(Long memberId, MemberInfoRequest request) {
+    public void updateMemberInfo(Long memberId, MemberUpdateRequest request) {
         Member member = findMemberById(memberId);
         String password = encrypt.hashedPassword(request.getPassword(), member.getEmail());
 

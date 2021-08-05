@@ -1,13 +1,13 @@
 package mine.is.gpu.member.dto.request;
 
-public class MemberInfoRequest {
+public class MemberUpdateRequest {
     private String name;
     private String password;
 
-    public MemberInfoRequest() {
+    public MemberUpdateRequest() {
     }
 
-    public MemberInfoRequest(String name, String password) {
+    public MemberUpdateRequest(String name, String password) {
         this.name = name;
         this.password = password;
     }
