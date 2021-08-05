@@ -62,7 +62,7 @@ class WorkerServiceTest {
         gpuServerRepository.save(gpuServer1);
         gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
         gpuBoardRepository.save(gpuBoard1);
-        member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
+        member1 = new Member("email1@email.com", "password1", "name1", MemberType.MANAGER, lab1);
         memberRepository.save(member1);
         job1 = new Job("job1", JobStatus.RUNNING, gpuBoard1, member1, "metaData1", "10");
         jobRepository.save(job1);

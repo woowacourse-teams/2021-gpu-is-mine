@@ -42,7 +42,7 @@ class GpuServerControllerTest {
 
     private Lab lab = new Lab("lab1");
     private GpuServer serverInLab = new GpuServer("server1", false, 600L, 1024L, lab);
-    private Member member = new Member("email@email.com", "password", "name", MemberType.USER, lab);
+    private Member member = new Member("email2@email.com", "password", "name", MemberType.USER, lab);
 
     @BeforeEach
     private void setUp() {
@@ -72,8 +72,8 @@ class GpuServerControllerTest {
     @DisplayName("관리자 권한을 확인한다.")
     class ManagerAuthorization {
         private Lab otherLab = new Lab("otherLab");
-        private Member manager = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);
-        private Member user = new Member("user@email.com", "password", "name", MemberType.USER, lab);
+        private Member manager = new Member("manager1@email.com", "password1", "name1", MemberType.MANAGER, lab);
+        private Member user = new Member("user1@email.com", "password1", "name1", MemberType.USER, lab);
 
         @BeforeEach
         private void setUp() {
