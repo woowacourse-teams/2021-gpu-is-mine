@@ -15,6 +15,7 @@ describe("useAuthProvider", () => {
     });
 
     await waitForNextUpdate();
+    await waitForNextUpdate();
 
     expect(result.current.isAuthenticated).toBe(true);
     expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).not.toBeNull();
