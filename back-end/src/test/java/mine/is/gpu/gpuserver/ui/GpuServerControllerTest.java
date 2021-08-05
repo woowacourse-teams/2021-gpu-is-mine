@@ -19,12 +19,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class GpuServerControllerTest {
 
     @Autowired
@@ -70,6 +68,7 @@ class GpuServerControllerTest {
                 .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
+    @Transactional
     @DisplayName("관리자 권한을 확인한다.")
     @Nested
     class ManagerAuthorization {

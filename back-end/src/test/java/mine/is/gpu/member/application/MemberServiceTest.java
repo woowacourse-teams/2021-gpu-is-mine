@@ -25,12 +25,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MemberServiceTest {
 
     @Autowired
@@ -145,6 +143,7 @@ class MemberServiceTest {
                 .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
+    @Transactional
     @Nested
     @DisplayName("사용자의 Lab 접근 권한을 확인한다.")
     class CheckPermissionOnLab {
@@ -184,6 +183,7 @@ class MemberServiceTest {
         }
     }
 
+    @Transactional
     @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
     class CheckPermissionOnJob {

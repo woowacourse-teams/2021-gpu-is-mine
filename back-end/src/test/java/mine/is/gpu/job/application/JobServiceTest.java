@@ -34,12 +34,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class JobServiceTest {
 
     @Autowired
@@ -204,6 +202,7 @@ class JobServiceTest {
         Assertions.assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 
+    @Transactional
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
     class FindAll {
