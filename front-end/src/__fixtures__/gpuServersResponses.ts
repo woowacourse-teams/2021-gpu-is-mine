@@ -172,6 +172,32 @@ const gpuServersResponses: GpuServerViewResponses = {
         },
       ],
     },
+    {
+      id: 5,
+      serverName: "serverC",
+      memorySize: 104,
+      diskSize: 124,
+      isOn: true,
+      gpuBoard: {
+        id: 3,
+        modelName: "RTX 6000",
+        performance: 8400,
+        isWorking: true,
+      },
+      jobs: [
+        {
+          id: 8,
+          name: "자연어 처리 : 문자-단위 RNN으로 이름 생성하기",
+          status: "RUNNING",
+          memberId: 1,
+          memberName: "name",
+          gpuServerId: 3,
+          gpuServerName: "serverC",
+          metaData: "danny/natural_language",
+          expectedTime: "100",
+        },
+      ],
+    },
   ],
 } as const;
 

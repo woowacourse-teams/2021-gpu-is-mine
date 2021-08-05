@@ -15,18 +15,18 @@ describe("sort", () => {
   });
 
   test("sortByIsOn: On-Server comes earlier than Off-Server", () => {
-    gpuServersResponses.gpuServers
+    const sorted = gpuServersResponses.gpuServers
       .slice()
       .sort(sortByIsOn)
-      .map(({ isOn }) => isOn)
-      .reduce((prev, curr) => {
-        if (prev) {
-          expect(curr).not.toBe(false);
-        } else {
-          expect(curr).toBe(false);
-        }
+      .map(({ isOn }) => isOn);
 
-        return curr;
-      });
+    const lastTrue = sorted.lastIndexOf(true);
+    const firstFalse = sorted.indexOf(false);
+
+    if (lastTrue === -1 || firstFalse === -1) {
+      return;
+    }
+
+    expect(lastTrue).toBeLessThan(firstFalse);
   });
 });
