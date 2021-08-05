@@ -21,7 +21,7 @@ export const useGetJobAll = ({ labId }: { labId: number }) =>
 export const usePostJobRegister = ({ labId }: { labId: number }) =>
   useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(labId).JOBS, {
     method: "post",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
+    relatedKey: [API_ENDPOINT.LABS(labId).JOBS, API_ENDPOINT.LABS(labId).GPUS],
   });
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
@@ -36,7 +36,7 @@ export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: num
     relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
-export const usePutJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
+export const useCancelJob = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "put",
     relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
