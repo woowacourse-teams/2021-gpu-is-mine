@@ -73,7 +73,7 @@ public class JobController {
     @PutMapping("/jobs/{jobId}")
     public ResponseEntity<Void> update(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member,
-                                       JobUpdateRequest jobUpdateRequest) {
+                                       @RequestBody JobUpdateRequest jobUpdateRequest) {
         memberService.checkEditableJob(member.getId(), jobId);
         jobService.update(jobId, jobUpdateRequest);
         return ResponseEntity.noContent().build();

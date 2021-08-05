@@ -95,7 +95,6 @@ public class JobService {
     @Transactional
     public void update(Long jobId, JobUpdateRequest jobUpdateRequest) {
         Job job = findJobById(jobId);
-        System.out.println(job.getId() + " " + job.getName() + "!!!!!!!!!!!!!!!!!!!");
         job.setName(jobUpdateRequest.getName());
     }
 
