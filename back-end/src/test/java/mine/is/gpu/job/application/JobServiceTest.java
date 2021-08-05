@@ -59,7 +59,7 @@ class JobServiceTest {
 
     @BeforeEach
     void setUp() {
-        Lab lab = new Lab("lab");
+        Lab lab = new Lab("lab1");
         labRepository.save(lab);
 
         serverId = saveGpuServerInLab(lab);

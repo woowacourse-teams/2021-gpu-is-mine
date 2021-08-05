@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class LabServiceTest {
-    private static final LabRequest LAB_REQUEST = new LabRequest("labName");
+    private static final LabRequest LAB_REQUEST = new LabRequest("labName1");
 
     @Autowired
     private LabService labService;
