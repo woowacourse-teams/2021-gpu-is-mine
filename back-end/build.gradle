@@ -102,7 +102,7 @@ file("src/main/resources/sonarqube.properties").withInputStream { sonarqubePrope
 
 sonarqube {
     properties {
-        property 'sonar.host.url', sonarqubeProperties.getProperty("host.url")
+        property 'sonar.host.url', sonarqubeProperties.getProperty("url")
         property 'sonar.projectKey', sonarqubeProperties.getProperty("projectKey")
         property 'sonar.login', sonarqubeProperties.getProperty("login")
         property 'sonar.sources', sonarqubeProperties.getProperty("sources")
