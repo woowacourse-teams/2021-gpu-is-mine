@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button } from "../../components";
+import { Button, Text } from "../../components";
 
 export const StyledJobDetailLog = styled.div`
   display: flex;
@@ -22,6 +22,17 @@ export const LogHeader = styled.div`
   justify-content: space-between;
 `;
 
+export const LogRefreshPanel = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 1.5rem;
+`;
+
+export const ErrorText = styled(Text)`
+  color: var(--error);
+`;
+
 export const RefreshButton = styled(Button)`
+  position: relative;
   width: fit-content;
 `;
