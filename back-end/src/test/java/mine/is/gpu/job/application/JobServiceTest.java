@@ -4,6 +4,8 @@ import static mine.is.gpu.job.fixture.JobFixtures.jobCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -13,6 +15,7 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.request.JobRequest;
+import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.exception.JobException;
@@ -24,8 +27,6 @@ import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
 import mine.is.gpu.worker.domain.Log;
 import mine.is.gpu.worker.domain.repository.LogRepository;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -239,5 +240,18 @@ class JobServiceTest {
                             .collect(Collectors.toList())
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
         }
+    }
+
+    @Test
+    @DisplayName("예약을 수정한다.")
+    void update() {
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
+        Long jobId = jobService.save(memberId, jobRequest);
+
+        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
+        jobService.update(jobId, jobUpdateRequest);
+
+        JobResponse jobResponse = jobService.findById(jobId);
+        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
     }
 }
