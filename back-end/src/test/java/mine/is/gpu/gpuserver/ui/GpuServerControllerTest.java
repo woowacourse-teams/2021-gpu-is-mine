@@ -68,9 +68,8 @@ class GpuServerControllerTest {
                 .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
-    @Transactional
-    @DisplayName("관리자 권한을 확인한다.")
     @Nested
+    @DisplayName("관리자 권한을 확인한다.")
     class ManagerAuthorization {
         private Lab otherLab = new Lab("otherLab");
         private Member manager = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);

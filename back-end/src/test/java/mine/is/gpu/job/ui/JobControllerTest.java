@@ -78,7 +78,6 @@ public class JobControllerTest {
         Mockito.doNothing().when(mailService).sendJobReserveMail(Mockito.any());
     }
 
-    @Transactional
     @Nested
     @DisplayName("Job을 예약 취소한다.")
     class CancelJob {
@@ -129,7 +128,6 @@ public class JobControllerTest {
         }
     }
 
-    @Transactional
     @Nested
     @DisplayName("자신이 속한 lab의 작업 목록을 확인한다. (member별, server별, lab별)")
     class FindJobs {
@@ -222,7 +220,6 @@ public class JobControllerTest {
         }
     }
 
-    @Transactional
     @Nested
     @DisplayName("자신이 속하지 않은 lab의 작업에 권한이 없다. (member별, server별, lab별)")
     class FindJobsInOtherLab {

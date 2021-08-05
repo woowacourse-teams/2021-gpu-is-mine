@@ -202,7 +202,6 @@ class JobServiceTest {
         Assertions.assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 
-    @Transactional
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
     class FindAll {

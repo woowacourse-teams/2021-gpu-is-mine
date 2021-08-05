@@ -143,7 +143,6 @@ class MemberServiceTest {
                 .isEqualTo(MemberException.MEMBER_NOT_FOUND.getException());
     }
 
-    @Transactional
     @Nested
     @DisplayName("사용자의 Lab 접근 권한을 확인한다.")
     class CheckPermissionOnLab {
@@ -183,7 +182,6 @@ class MemberServiceTest {
         }
     }
 
-    @Transactional
     @Nested
     @DisplayName("사용자의 Job 접근 권한을 확인한다.")
     class CheckPermissionOnJob {
