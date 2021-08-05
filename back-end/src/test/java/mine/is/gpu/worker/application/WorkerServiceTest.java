@@ -2,6 +2,7 @@ package mine.is.gpu.worker.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -19,18 +20,19 @@ import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
 @DisplayName("[WorkerService]")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class WorkerServiceTest {
 
     @Autowired
@@ -144,7 +146,7 @@ class WorkerServiceTest {
         Long notExistJobId = Long.MAX_VALUE;
         // then
         Assertions.assertThrows(JobException.JOB_NOT_FOUND.getException().getClass(), () ->
-            workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
+                workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
     }
 }
 

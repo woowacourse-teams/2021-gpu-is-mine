@@ -6,23 +6,25 @@ import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
+import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class GpuServerControllerTest {
 
     @Autowired
@@ -56,7 +58,7 @@ class GpuServerControllerTest {
     @Test
     void searchWithOtherLabServer() {
         Lab otherLab = labRepository.save(new Lab("lab2"));
-        GpuServer serverInOtherLab = new GpuServer("server1", true, 800L, 1024L, otherLab);
+        GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
         gpuServerRepository.save(serverInOtherLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));
@@ -98,7 +100,7 @@ class GpuServerControllerTest {
         @Test
         void handleWithOtherLabServer() {
             Lab otherLab = labRepository.save(new Lab("lab2"));
-            GpuServer serverInOtherLab = new GpuServer("server1", true, 800L, 1024L, otherLab);
+            GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
             gpuServerRepository.save(serverInOtherLab);
             gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));

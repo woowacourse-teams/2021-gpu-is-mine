@@ -122,7 +122,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
         String otherLabUserToken = AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급(
                 MemberFixtures.managerCreationRequest(otherLabId, "other@other.com", "password"));
         Long otherLabServerId = GpuServerAcceptanceTest
-                .GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerCreationRequest());
+                .GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerNewCreationRequest());
 
         ExtractableResponse<Response> response =
                 Job_예약(otherLabId, JobFixtures.jobCreationRequest(otherLabServerId), userToken);

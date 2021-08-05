@@ -160,8 +160,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @Test
     void saveGpuServer() {
         // given
-        GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
-        GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L, gpuBoardRequest);
+        GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드3", 800L);
+        GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버3", 1024L, 1024L, gpuBoardRequest);
 
         // when
         ExtractableResponse<Response> response = GpuServer_생성(managerToken, labId, gpuServerRequest);
@@ -175,8 +175,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     @Test
     void modifyGpuServer() {
         // given
-        GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드1", 800L);
-        GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버1", 1024L, 1024L,
+        GpuBoardRequest gpuBoardRequest = new GpuBoardRequest("추가보드3", 800L);
+        GpuServerRequest gpuServerRequest = new GpuServerRequest("추가서버3", 1024L, 1024L,
                 gpuBoardRequest);
         Long gpuServerId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerRequest);
 
@@ -201,7 +201,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         // given
         int previousCount = GpuServer_전체조회갯수(managerToken, labId);
         GpuServerRequest gpuServerRequest =
-                new GpuServerRequest("추가서버1", 1024L, 1024L, new GpuBoardRequest("추가보드1", 800L));
+                new GpuServerRequest("추가서버3", 1024L, 1024L, new GpuBoardRequest("추가보드3", 800L));
         Long gpuServerId = GpuServer_생성후아이디찾기(managerToken, labId, gpuServerRequest);
 
         int addedCount = GpuServer_전체조회갯수(managerToken, labId);
