@@ -86,10 +86,10 @@ export const useAuthProvider = () => {
 
       sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
-      authenticate();
-
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      fetchMyInfo();
+      await fetchMyInfo();
+
+      authenticate();
     },
     [authenticate, fetchMyInfo, requestLogin]
   );
