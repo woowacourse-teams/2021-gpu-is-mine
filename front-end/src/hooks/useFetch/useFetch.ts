@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
+  APICallStatus,
   APIResponse,
   UseFetchOptionParameter,
   UseFetchReturnType,
@@ -10,6 +11,13 @@ import {
 
 export const unwrapResult = <T>({ data, error }: APIResponse<T>) =>
   error ? Promise.reject(error) : Promise.resolve(data as T);
+
+export const generateStatusBoolean = (status: APICallStatus) => ({
+  isSucceed: status === "succeed",
+  isLoading: status === "loading",
+  isFailed: status === "failed",
+  isIdle: status === "idle",
+});
 
 const useFetch = <T = never, U = void>(
   url: string,
@@ -56,10 +64,7 @@ const useFetch = <T = never, U = void>(
     ...state,
     makeRequest,
     done,
-    isSucceed: state.status === "succeed",
-    isLoading: state.status === "loading",
-    isFailed: state.status === "failed",
-    isIdle: state.status === "idle",
+    ...generateStatusBoolean(state.status),
   };
 };
 
