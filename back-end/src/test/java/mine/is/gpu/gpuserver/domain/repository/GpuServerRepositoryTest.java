@@ -1,18 +1,20 @@
 package mine.is.gpu.gpuserver.domain.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
+import javax.persistence.EntityManager;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
-import java.util.Optional;
-import javax.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
 public class GpuServerRepositoryTest {
@@ -69,5 +71,21 @@ public class GpuServerRepositoryTest {
 
         Optional<GpuServer> actual = gpuServerRepository.findById(gpuServer.getId());
         assertThat(actual.isPresent()).isFalse();
+    }
+
+    @DisplayName("중복 이름 생성 테스트")
+    @Test
+    void duplicateName() {
+        String name = "GpuServer";
+
+        Lab lab1 = new Lab("lab1");
+        labRepository.save(lab1);
+
+        GpuServer gpuServer = new GpuServer(name, false, 500L, 1024L, lab1);
+        gpuServerRepository.save(gpuServer);
+
+        Lab lab2 = new Lab("lab2");
+        GpuServer gpuServerSameName = new GpuServer(name, true, 1000L, 2000L, lab2);
+        assertThrows(DataIntegrityViolationException.class, () -> gpuServerRepository.save(gpuServerSameName));
     }
 }

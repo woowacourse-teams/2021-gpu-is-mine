@@ -91,6 +91,7 @@ public class GpuServerService {
 
     @Transactional
     public Long saveServerInLab(Long labId, GpuServerRequest gpuServerRequest) {
+        checkDuplicate(gpuServerRequest.getServerName());
         Lab lab = findLabById(labId);
 
         GpuServer gpuServer = gpuServerRequest.toEntity(lab);
@@ -100,6 +101,12 @@ public class GpuServerService {
         gpuBoardRepository.save(gpuBoardRequest.toEntity(gpuServer));
 
         return gpuServer.getId();
+    }
+
+    private void checkDuplicate(String name) {
+        if (gpuServerRepository.existsByName(name)) {
+            throw GpuServerException.DUPLICATE_NAME_EXCEPTION.getException();
+        }
     }
 
     @Transactional(readOnly = true)
