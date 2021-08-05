@@ -183,14 +183,14 @@ class JobServiceTest {
     @DisplayName("로그 정보 모두 조회")
     void findAllLogsByJob() {
         //given
-        Lab lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
+        Lab lab2 = new Lab("lab2");
+        labRepository.save(lab2);
+        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab2);
         gpuServerRepository.save(gpuServer1);
         GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
         gpuBoardRepository.save(gpuBoard1);
         Member member1 = new Member("email2@email.com", "password", "name1", MemberType.MANAGER,
-                lab1);
+                lab2);
         memberRepository.save(member1);
         Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
         jobRepository.save(job1);
