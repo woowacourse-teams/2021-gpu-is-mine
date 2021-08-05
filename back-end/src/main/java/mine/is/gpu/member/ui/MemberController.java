@@ -3,7 +3,7 @@ package mine.is.gpu.member.ui;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.dto.request.MemberInfoRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import java.net.URI;
@@ -41,7 +41,7 @@ public class MemberController {
 
     @PutMapping("/me")
     public ResponseEntity<Void> updateMemberInfoOfMine(@AuthenticationPrincipal Member member,
-            @RequestBody MemberInfoRequest request) {
+            @RequestBody MemberUpdateRequest request) {
         memberService.updateMemberInfo(member.getId(), request);
         return ResponseEntity.noContent().build();
     }
@@ -59,7 +59,7 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id, @RequestBody MemberInfoRequest request) {
+    public ResponseEntity<Void> updateMemberInfo(@PathVariable Long id, @RequestBody MemberUpdateRequest request) {
         memberService.updateMemberInfo(id, request);
         return ResponseEntity.noContent().build();
     }
