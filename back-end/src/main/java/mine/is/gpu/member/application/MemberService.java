@@ -14,8 +14,8 @@ import mine.is.gpu.lab.exception.LabException;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
-import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
 import org.springframework.stereotype.Service;
@@ -42,6 +42,7 @@ public class MemberService {
 
     @Transactional
     public Long save(MemberRequest request) {
+        checkDuplicate(request.getEmail());
         Lab lab = findLabById(request.getLabId());
         MemberType memberType = MemberType.ignoreCaseValueOf(request.getMemberType());
         String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
@@ -50,6 +51,12 @@ public class MemberService {
         memberRepository.save(member);
 
         return member.getId();
+    }
+
+    private void checkDuplicate(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw MemberException.DUPLICATE_EMAIL_EXCEPTION.getException();
+        }
     }
 
     @Transactional(readOnly = true)

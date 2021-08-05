@@ -13,8 +13,8 @@ import mine.is.gpu.job.application.JobService;
 import mine.is.gpu.lab.application.LabService;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
-import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -57,6 +57,17 @@ class MemberServiceTest {
         Long createdId = memberService.save(memberRequest);
 
         assertThat(createdId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("중복 이메일 생성")
+    void duplicateEmailCreate() {
+        memberService.save(memberRequest);
+
+        MemberRequest memberRequestSameEmail = new MemberRequest(
+                memberRequest.getEmail(), "password2", "name2", "USER", 2L);
+        assertThatThrownBy(() -> memberService.save(memberRequestSameEmail))
+                .isEqualTo(MemberException.DUPLICATE_EMAIL_EXCEPTION.getException());
     }
 
     @Test
@@ -194,9 +205,8 @@ class MemberServiceTest {
         void checkEditableJobByUser() {
             memberService.checkEditableJob(user, jobByUser);
 
-            assertThatThrownBy(() -> {
-                memberService.checkEditableJob(user, jobByOtherUser);
-            }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+            assertThatThrownBy(() -> memberService.checkEditableJob(user, jobByOtherUser))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @Test

@@ -1,8 +1,8 @@
-package mine.is.gpu.lab.domain;
+package mine.is.gpu.lab.domain.repository;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import mine.is.gpu.lab.domain.repository.LabRepository;
+import mine.is.gpu.lab.domain.Lab;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
