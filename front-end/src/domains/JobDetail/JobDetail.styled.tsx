@@ -12,6 +12,7 @@ export const StyledJobDetail = styled.section`
     "log       log  ";
 
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: max-content;
   column-gap: 1rem;
   row-gap: 2rem;
 `;

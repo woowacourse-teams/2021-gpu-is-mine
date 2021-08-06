@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
+  APICallStatus,
   APIResponse,
   UseFetchOptionParameter,
   UseFetchReturnType,
@@ -9,6 +10,13 @@ import {
 
 export const unwrapResult = <T>({ data, error }: APIResponse<T>) =>
   error ? Promise.reject(error) : Promise.resolve(data as T);
+
+export const generateStatusBoolean = (status: APICallStatus) => ({
+  isSucceed: status === "succeed",
+  isLoading: status === "loading",
+  isFailed: status === "failed",
+  isIdle: status === "idle",
+});
 
 const useFetch = <T = never, U = void>(
   url: string,
@@ -35,7 +43,7 @@ const useFetch = <T = never, U = void>(
       } catch (err) {
         const error = err as Error;
 
-        setState((prev) => ({ ...prev, status: "failed", error, data: null }));
+        setState((prev) => ({ ...prev, status: "failed", error }));
 
         return { data: null, error };
       }
@@ -49,10 +57,7 @@ const useFetch = <T = never, U = void>(
     ...state,
     makeRequest,
     done,
-    isSucceed: state.status === "succeed",
-    isLoading: state.status === "loading",
-    isFailed: state.status === "failed",
-    isIdle: state.status === "idle",
+    ...generateStatusBoolean(state.status),
   };
 };
 
