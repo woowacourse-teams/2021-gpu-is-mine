@@ -54,6 +54,7 @@ public class LabService {
 
     @Transactional
     public void update(Long labId, LabRequest labRequest) {
+        checkDuplicate(labRequest.getName());
         Lab lab = findLabById(labId);
         lab.setName(labRequest.getName());
     }

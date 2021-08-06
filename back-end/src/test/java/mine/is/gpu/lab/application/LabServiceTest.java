@@ -63,6 +63,18 @@ class LabServiceTest {
     }
 
     @Test
+    @DisplayName("중복 이름 수정")
+    void duplicateNameUpdate() {
+        labService.save(LAB_REQUEST);
+
+        LabRequest labRequest = new LabRequest("LabName2");
+        Long labId = labService.save(labRequest);
+
+        assertThatThrownBy(() -> labService.update(labId, labRequest))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
+    }
+
+    @Test
     @DisplayName("생성한 id 조회")
     void findById() {
         Long createdId = labService.save(LAB_REQUEST);
