@@ -23,13 +23,6 @@ export type FormAction<T> =
         validationMessage: string;
       };
     }
-  | {
-      type: "updateRadioValue";
-      payload: {
-        name: keyof T;
-        value: string;
-      };
-    }
   | { type: "showValidationMessage"; payload: { name: keyof T } }
   | { type: "showAllValidationMessage" }
   | { type: "reset" };
