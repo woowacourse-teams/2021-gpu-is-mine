@@ -24,28 +24,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 class GpuServerControllerTest {
-
     @Autowired
     private GpuServerController gpuServerController;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
-    private Lab lab = new Lab("lab1");
-    private GpuServer serverInLab = new GpuServer("server1", false, 600L, 1024L, lab);
-    private Member member = new Member("email2@email.com", "password", "name", MemberType.USER, lab);
+    private Lab lab = new Lab("lab");
+    private GpuServer serverInLab = new GpuServer("server", false, 600L, 1024L, lab);
+    private Member member = new Member("email@email.com", "password", "name", MemberType.USER, lab);
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         labRepository.save(lab);
         gpuServerRepository.save(serverInLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", serverInLab));
@@ -55,7 +50,7 @@ class GpuServerControllerTest {
     @DisplayName("lab에 속하지 않은 server에는 조회 권한이 없다.")
     @Test
     void searchWithOtherLabServer() {
-        Lab otherLab = labRepository.save(new Lab("lab2"));
+        Lab otherLab = labRepository.save(new Lab("otherLab"));
         GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
         gpuServerRepository.save(serverInOtherLab);
@@ -72,8 +67,8 @@ class GpuServerControllerTest {
     @DisplayName("관리자 권한을 확인한다.")
     class ManagerAuthorization {
         private Lab otherLab = new Lab("otherLab");
-        private Member manager = new Member("manager1@email.com", "password1", "name1", MemberType.MANAGER, lab);
-        private Member user = new Member("user1@email.com", "password1", "name1", MemberType.USER, lab);
+        private Member manager = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);
+        private Member user = new Member("user@email.com", "password", "name", MemberType.USER, lab);
 
         @BeforeEach
         private void setUp() {
@@ -97,7 +92,7 @@ class GpuServerControllerTest {
         @DisplayName("lab에 속하지 않은 server에 조회, 생성, 수정, 삭제할 수 없다.")
         @Test
         void handleWithOtherLabServer() {
-            Lab otherLab = labRepository.save(new Lab("lab2"));
+            Lab otherLab = labRepository.save(new Lab("anotherOtherLab"));
             GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
             gpuServerRepository.save(serverInOtherLab);

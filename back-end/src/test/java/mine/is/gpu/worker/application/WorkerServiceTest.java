@@ -17,6 +17,7 @@ import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
+import mine.is.gpu.worker.domain.repository.LogRepository;
 import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
@@ -32,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @DisplayName("[WorkerService]")
 class WorkerServiceTest {
-
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -43,37 +43,38 @@ class WorkerServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private JobRepository jobRepository;
-
+    @Autowired
+    private LogRepository logRepository;
     @Autowired
     private WorkerService workerService;
 
-    private Lab lab1;
-    private GpuServer gpuServer1;
-    private GpuBoard gpuBoard1;
-    private Member member1;
+    private Lab lab;
+    private GpuServer gpuServer;
+    private GpuBoard gpuBoard;
+    private Member member;
     private Job job1;
     private Job job2;
 
     @BeforeEach
     void setUp() {
-        lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
-        gpuServerRepository.save(gpuServer1);
-        gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        member1 = new Member("email1@email.com", "password1", "name1", MemberType.MANAGER, lab1);
-        memberRepository.save(member1);
-        job1 = new Job("job1", JobStatus.RUNNING, gpuBoard1, member1, "metaData1", "10");
+        lab = new Lab("lab");
+        labRepository.save(lab);
+        gpuServer = new GpuServer("server", true, 1024L, 1024L, lab);
+        gpuServerRepository.save(gpuServer);
+        gpuBoard = new GpuBoard(true, 600L, "NVIDIA42", gpuServer);
+        gpuBoardRepository.save(gpuBoard);
+        member = new Member("email@email.com", "password", "name", MemberType.MANAGER, lab);
+        memberRepository.save(member);
+        job1 = new Job("job1", JobStatus.RUNNING, gpuBoard, member, "metaData1", "10");
         jobRepository.save(job1);
-        job2 = new Job("job2", JobStatus.WAITING, gpuBoard1, member1, "metaData2", "10");
+        job2 = new Job("job2", JobStatus.WAITING, gpuBoard, member, "metaData2", "10");
         jobRepository.save(job2);
     }
 
     @DisplayName("해당 서버에 대기중인 job 중 가장 처음에 들어온 job 을 가져온다.")
     @Test
     void popJobByServerId() {
-        JobResponse jobResponse = workerService.popJobByServerId(gpuServer1.getId());
+        JobResponse jobResponse = workerService.popJobByServerId(gpuServer.getId());
 
         assertThat(jobResponse).isNotNull();
         assertThat(jobResponse.getId()).isEqualTo(job2.getId());
@@ -106,25 +107,25 @@ class WorkerServiceTest {
     @Test
     void updateWorkerStatus() throws InterruptedException {
         // given
-        assertThat(gpuServer1.getOn()).isTrue();
+        assertThat(gpuServer.getOn()).isTrue();
 
         // when
         LocalDateTime now1 = LocalDateTime.now();
-        workerService.updateWorkerStatus(gpuServer1.getId(), new WorkerRequest(false, now1));
+        workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(false, now1));
 
         // then
-        assertThat(gpuServer1.getOn()).isFalse();
-        assertThat(gpuServer1.getLastResponse()).isEqualTo(now1);
+        assertThat(gpuServer.getOn()).isFalse();
+        assertThat(gpuServer.getLastResponse()).isEqualTo(now1);
 
         // when
         Thread.sleep(10);
         LocalDateTime now2 = LocalDateTime.now();
-        workerService.updateWorkerStatus(gpuServer1.getId(), new WorkerRequest(true, now2));
+        workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(true, now2));
 
         // then
-        assertThat(gpuServer1.getOn()).isTrue();
+        assertThat(gpuServer.getOn()).isTrue();
         assertThat(now1).isNotEqualTo(now2);
-        assertThat(gpuServer1.getLastResponse()).isEqualTo(now2);
+        assertThat(gpuServer.getLastResponse()).isEqualTo(now2);
     }
 
     @DisplayName("로그를 저장하는 경우")
@@ -147,4 +148,3 @@ class WorkerServiceTest {
                 workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
     }
 }
-

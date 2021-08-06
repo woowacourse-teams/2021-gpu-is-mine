@@ -37,22 +37,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 public class JobControllerTest {
-
     @Autowired
     private JobController jobController;
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -227,7 +221,7 @@ public class JobControllerTest {
         private Lab otherLab = new Lab("otherLab");
         private GpuServer serverInOtherLab = new GpuServer("serverInOtherLab", false, 6L, 2L, otherLab);
         private GpuBoard boardInOtherLab = new GpuBoard(true, 8L, "aaa", serverInOtherLab);
-        private Member userInOtherLab = new Member("user2@email.com", "password", "name", MemberType.USER, otherLab);
+        private Member userInOtherLab = new Member("userInOtherLab@email.com", "password", "name", MemberType.USER, otherLab);
         private Job jobInOtherLab = new Job("jobInOtherName", boardInOtherLab, userInOtherLab, "data", "time");
 
         @BeforeEach

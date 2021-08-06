@@ -9,10 +9,16 @@ import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
 import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
+import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
+import mine.is.gpu.gpuserver.ui.GpuServerAcceptanceTest;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
@@ -21,12 +27,6 @@ import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
-import mine.is.gpu.gpuserver.ui.GpuServerAcceptanceTest;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +64,7 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     }
 
     private static ExtractableResponse<Response> Job_상태변경(Long jobId,
-            WorkerJobRequest workerJobRequest) {
+                                                          WorkerJobRequest workerJobRequest) {
         return RestAssured.given()
                 .body(workerJobRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -75,7 +75,7 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     }
 
     private static ExtractableResponse<Response> GpuServer_상태변경(Long gpuServerId,
-            WorkerRequest workerRequest) {
+                                                                WorkerRequest workerRequest) {
         return RestAssured.given()
                 .body(workerRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

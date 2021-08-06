@@ -4,7 +4,6 @@ import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 
 public class GpuServerFixtures {
-
     private static final String GPU_BOARD_NAME = "BOARD_NAME";
     private static final String NEW_GPU_BOARD_NAME = "NEW_BOARD_NAME";
 

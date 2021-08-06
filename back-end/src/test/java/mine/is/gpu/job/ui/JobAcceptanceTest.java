@@ -25,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class JobAcceptanceTest extends AcceptanceTest {
-
     private Long labId;
     private Long serverId;
     private String userToken;

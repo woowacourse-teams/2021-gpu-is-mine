@@ -18,18 +18,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
 public class GpuServerRepositoryTest {
-
     @Autowired
     EntityManager em;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
-    private GpuBoardRepository gpuBoards;
+    private GpuBoardRepository gpuBoardRepository;
 
     @DisplayName("Gpu를 DB에 저장한다.")
     @Test
@@ -41,7 +37,7 @@ public class GpuServerRepositoryTest {
         GpuBoard gpuBoard = new GpuBoard(true, 1000L, "aab", gpuServer);
 
         gpuServerRepository.save(gpuServer);
-        gpuBoards.save(gpuBoard);
+        gpuBoardRepository.save(gpuBoard);
 
         assertThat(lab.getId()).isNotNull();
         assertThat(gpuServer.getId()).isNotNull();

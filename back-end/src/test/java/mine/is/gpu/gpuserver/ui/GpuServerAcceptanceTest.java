@@ -26,9 +26,8 @@ import org.springframework.http.MediaType;
 
 @DisplayName("GpuServer 관련 API 테스트")
 public class GpuServerAcceptanceTest extends AcceptanceTest {
-
-    static Long labId;
-    static List<Long> GpuServerIds;
+    private static Long labId;
+    private static List<Long> GpuServerIds;
 
     public static ExtractableResponse<Response> GpuServer_아이디조회(String token, Long labId, Long gpuServerId) {
         return RestAssured

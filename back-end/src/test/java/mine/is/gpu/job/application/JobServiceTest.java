@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class JobServiceTest {
-
     @Autowired
     private JobService jobService;
     @Autowired
@@ -54,12 +53,13 @@ class JobServiceTest {
     private GpuServerRepository gpuServerRepository;
     @Autowired
     private LogRepository logRepository;
+
     private Long serverId;
     private Long memberId;
 
     @BeforeEach
     void setUp() {
-        Lab lab = new Lab("lab1");
+        Lab lab = new Lab("lab");
         labRepository.save(lab);
 
         serverId = saveGpuServerInLab(lab);

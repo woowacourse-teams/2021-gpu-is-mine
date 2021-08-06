@@ -31,32 +31,25 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 public class GpuServerServiceTest {
-
     @Autowired
     private GpuServerService gpuServerService;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private LabRepository labRepository;
 
     private Lab lab;
-
     private GpuServer gpuServer1;
     private GpuServer gpuServer2;
-
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         lab = labRepository.save(new Lab("랩1"));
 
         gpuServer1 = gpuServerRepository.save(new GpuServer("GPU서버1", false, 600L, 1024L, lab));
