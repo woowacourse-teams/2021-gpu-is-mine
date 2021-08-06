@@ -10,7 +10,7 @@ export const authContextValue = {
   myInfo: membersMeResponse,
   isAuthenticated: false,
   isLoading: false,
-  isError: false,
+  isFailed: false,
   isSucceed: true,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),

@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks";
-import useFormNew, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
+import { useAuth, useForm, getInputProps, getFormProps } from "../../hooks";
 import { Alert, Input, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 import { PATH } from "../../constants";
@@ -15,9 +15,11 @@ type Values = {
 };
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
-  const { login, isLoading, isError, done } = useAuth();
+  const { login, isLoading, isFailed, done } = useAuth();
 
-  const { state, dispatch } = useFormNew<Values>({ email: "", password: "" });
+  useEffect(() => done, [done]);
+
+  const { state, dispatch } = useForm<Values>({ email: "", password: "" });
 
   const handleSubmit = ({ email, password }: Values) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -43,7 +45,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   return (
     <StyledForm {...formProps} aria-label="로그인" className={className}>
       {isLoading && <Loading size="lg" />}
-      {isError && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
+      {isFailed && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
       <SubmitButton color="secondary">로그인</SubmitButton>
