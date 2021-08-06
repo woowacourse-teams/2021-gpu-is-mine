@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth, useForm, getInputProps, getFormProps } from "../../hooks";
 import { Alert, Input, Text, Loading } from "../../components";
@@ -15,6 +16,8 @@ type Values = {
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const { login, isLoading, isFailed, done } = useAuth();
+
+  useEffect(() => done, [done]);
 
   const { state, dispatch } = useForm<Values>({ email: "", password: "" });
 
