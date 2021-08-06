@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'checkstyle'
     id 'jacoco'
+    id 'org.sonarqube' version '3.0'
 }
 
 group = 'com.example'
@@ -43,7 +44,7 @@ dependencies {
 processResources.dependsOn('copyPrivate')
 
 task copyPrivate(type: Copy) {
-    copy{
+    copy {
         from '../private-configuration'
         include "*.properties"
         into 'src/main/resources'
@@ -71,7 +72,7 @@ jacoco {
 jacocoTestReport {
     reports {
         html.enabled true
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
     }
     finalizedBy 'jacocoTestCoverageVerification'
@@ -89,5 +90,26 @@ jacocoTestCoverageVerification {
                 maximum = 200
             }
         }
+    }
+}
+
+apply plugin: 'org.sonarqube'
+
+def sonarqubeProperties = new Properties()
+file("src/main/resources/sonarqube.properties").withInputStream { sonarqubeProperties.load(it) }
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', sonarqubeProperties.getProperty("url")
+        property 'sonar.projectKey', sonarqubeProperties.getProperty("projectKey")
+        property 'sonar.login', sonarqubeProperties.getProperty("login")
+        property 'sonar.sources', sonarqubeProperties.getProperty("sources")
+        property 'sonar.language', sonarqubeProperties.getProperty("language")
+        property 'sonar.projectVersion', sonarqubeProperties.getProperty("projectVersion")
+        property 'sonar.sourceEncoding', sonarqubeProperties.getProperty("sourceEncoding")
+        property 'sonar.coverage.jacoco.xmlReportPaths', sonarqubeProperties.getProperty("coverage.jacoco.xmlReportPaths")
+        property 'sonar.java.binaries', sonarqubeProperties.getProperty("java.binaries")
+        property 'sonar.test.inclusions', sonarqubeProperties.getProperty("test.inclusions")
+        property 'sonar.exclusions', sonarqubeProperties.getProperty("exclusions")
     }
 }

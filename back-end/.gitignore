@@ -41,3 +41,4 @@ logs
 /src/main/resources/application-encryption.properties
 /src/main/resources/application-db.properties
 /docker/docker-compose.yml
+/src/main/resources/sonarqube.properties
