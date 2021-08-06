@@ -42,13 +42,13 @@ public class AcceptanceTest {
         RestAssured.port = port;
     }
 
-    @AfterEach
-    void cleanUp() {
-        logRepository.deleteAllInBatch();
-        jobRepository.deleteAllInBatch();
-        gpuBoardRepository.deleteAllInBatch();
-        gpuServerRepository.deleteAllInBatch();
-        memberRepository.deleteAllInBatch();
-        labRepository.deleteAllInBatch();
-    }
+//    @AfterEach
+//    void cleanUp() {
+//        logRepository.deleteAllInBatch();
+//        jobRepository.deleteAllInBatch();
+//        gpuBoardRepository.deleteAllInBatch();
+//        gpuServerRepository.deleteAllInBatch();
+//        memberRepository.deleteAllInBatch();
+//        labRepository.deleteAllInBatch();
+//    }
 }
