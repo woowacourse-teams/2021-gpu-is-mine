@@ -91,8 +91,6 @@ jacocoTestCoverageVerification {
             }
         }
     }
-
-    finalizedBy 'sonarqube'
 }
 
 apply plugin: 'org.sonarqube'
