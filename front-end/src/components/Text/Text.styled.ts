@@ -4,9 +4,12 @@ type Size = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 type FontWeight = "thin" | "light" | "regular" | "medium" | "bold" | "black";
 
+type Color = "dark" | "light" | "error";
+
 export interface StyledTextProps {
   size: Size;
   weight: FontWeight;
+  color: Color;
 }
 
 const getSizeStyle = (size: Size) => {
@@ -65,8 +68,26 @@ const getFontWeightStyle = (fontWeight: FontWeight) => {
   return style[fontWeight];
 };
 
-export const StyledText = styled.p`
-  ${({ size }: StyledTextProps) => getSizeStyle(size)}
+const getColorStyle = (color: Color) => {
+  const style = {
+    dark: css`
+      color: var(--text-dark);
+    `,
+    light: css`
+      color: var(--text-light);
+    `,
+    error: css`
+      color: var(--error);
+    `,
+  } as const;
 
-  ${({ weight }: StyledTextProps) => getFontWeightStyle(weight)}
+  return style[color];
+};
+
+export const StyledText = styled.p<StyledTextProps>`
+  ${({ size }) => getSizeStyle(size)}
+
+  ${({ weight }) => getFontWeightStyle(weight)}
+
+  ${({ color }) => getColorStyle(color)}
 `;
