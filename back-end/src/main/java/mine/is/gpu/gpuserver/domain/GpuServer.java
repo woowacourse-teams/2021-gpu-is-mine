@@ -1,7 +1,5 @@
 package mine.is.gpu.gpuserver.domain;
 
-import mine.is.gpu.gpuserver.exception.GpuServerException;
-import mine.is.gpu.lab.domain.Lab;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -11,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import mine.is.gpu.gpuserver.exception.GpuServerException;
+import mine.is.gpu.lab.domain.Lab;
 
 @Entity
 public class GpuServer extends BaseEntity {
@@ -96,8 +96,20 @@ public class GpuServer extends BaseEntity {
         return isOn;
     }
 
-    public void update(String name) {
+    public LocalDateTime getLastResponse() {
+        return lastResponse;
+    }
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMemorySize(Long memorySize) {
+        this.memorySize = memorySize;
+    }
+
+    public void setDiskSize(Long diskSize) {
+        this.diskSize = diskSize;
     }
 
     public void changeStatus(Boolean isOn) {
@@ -106,9 +118,5 @@ public class GpuServer extends BaseEntity {
 
     public void updateLastResponse(LocalDateTime lastResponse) {
         this.lastResponse = lastResponse;
-    }
-
-    public LocalDateTime getLastResponse() {
-        return lastResponse;
     }
 }

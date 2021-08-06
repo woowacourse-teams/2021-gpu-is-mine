@@ -1,18 +1,9 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+import { SESSION_STORAGE_KEY } from "../constants";
+import { RequestConfig } from "../types";
 
-// const cache = new Map<string, { lastFetchedTime: number; data: unknown }>();
-
-type RequestConfig<U> = {
-  method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
-  body?: U;
-};
-
-// const REFRESH_PERIOD_IN_MS = 60_000;
-
-const httpClient = axios.create();
-
-httpClient.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("accessToken");
+axios.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
 
   if (token) {
     // eslint-disable-next-line
@@ -23,27 +14,10 @@ httpClient.interceptors.request.use((config) => {
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const getData = async <T = void, U = never>(
-  url: string,
-  config?: RequestConfig<U>
-): Promise<T> => {
+export const getData = async <T = void, U = never>(url: string, config?: RequestConfig<U>) => {
   const { method = "get", body } = config ?? {};
 
-  // const cached = cache.get(url);
+  const response = await axios(url, { method, data: body });
 
-  // if (method === "get" && cached && Date.now() - cached.lastFetchedTime <= REFRESH_PERIOD_IN_MS) {
-  //   return cached.data as T;
-  // }
-
-  // const response = (await httpClient(url, { method, data: body })) as AxiosResponse<T>;
-
-  // if (method === "get") {
-  //   cache.set(url, { lastFetchedTime: Date.now(), data: response.data });
-  // } else {
-  //   cache.delete(url);
-  // }
-
-  const response = (await httpClient(url, { method, data: body })) as AxiosResponse<T>;
-
-  return response.data;
+  return response.data as T;
 };

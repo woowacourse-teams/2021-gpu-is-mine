@@ -1,7 +1,13 @@
-import { ChangeEventHandler, FocusEvent } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth, useMoveToPage } from "../../hooks";
-import useFormNew, { getFormProps, getInputProps } from "../../hooks/useFormNew/useFormNew";
+import {
+  useAuth,
+  useMoveToPage,
+  useForm,
+  getFormProps,
+  getInputProps,
+  getRadioProps,
+} from "../../hooks";
 import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH } from "../../constants";
@@ -25,7 +31,9 @@ type Values = {
 };
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { signup, isLoading, isSucceed } = useAuth();
+  const { signup, isLoading, isSucceed, isFailed, done } = useAuth();
+
+  useEffect(() => done, [done]);
 
   const handleSubmit = ({ email, password, name, memberType }: Values) =>
     signup({
@@ -36,7 +44,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
     });
 
-  const { state, dispatch } = useFormNew<Values>({
+  const { state, dispatch } = useForm<Values>({
     email: "",
     password: "",
     passwordConfirm: "",
@@ -78,28 +86,40 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     validator: nameValidator,
   });
 
-  const {
-    validationMessage,
-    label,
-    value: radioGroupValue,
-    onChange,
-    onBlur,
-    ...memberTypeProps
-  } = getInputProps({ state, dispatch, name: "memberType", label: "멤버타입" });
+  const memberTypeManagerProps = getRadioProps({
+    state,
+    dispatch,
+    name: "memberType",
+    label: "manager",
+    value: "manager",
+  });
 
-  const handleRadioChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onChange(event);
-    onBlur(event as FocusEvent<HTMLInputElement>);
-  };
+  const memberTypeUserProps = getRadioProps({
+    state,
+    dispatch,
+    name: "memberType",
+    label: "user",
+    value: "user",
+  });
+
+  const isRadioValidationMessageVisible =
+    state.areValidationMessagesVisible.memberType && state.values.memberType === "";
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
   return (
     <StyledForm {...form} {...props} aria-label="signup-form">
       {isLoading && <Loading size="lg" />}
+
       {isSucceed && (
         <Alert aria-label="succeed-alert" onConfirm={moveToLoginPage}>
           <Text>회원가입에 성공하였습니다.</Text>
+        </Alert>
+      )}
+
+      {isFailed && (
+        <Alert aria-label="회원가입 실패 알림창" onConfirm={done}>
+          <Text>회원가입에 실패하였습니다.</Text>
         </Alert>
       )}
 
@@ -108,23 +128,10 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
       <RadioGroup label="멤버타입">
-        <Radio
-          {...memberTypeProps}
-          value="manager"
-          aria-label="manager"
-          onChange={handleRadioChange}
-          checked={radioGroupValue === "manager"}
-          disabled
-        >
+        <Radio {...memberTypeManagerProps} isValid={!isRadioValidationMessageVisible}>
           관리자
         </Radio>
-        <Radio
-          {...memberTypeProps}
-          value="user"
-          aria-label="user"
-          onChange={handleRadioChange}
-          checked={radioGroupValue === "user"}
-        >
+        <Radio {...memberTypeUserProps} isValid={!isRadioValidationMessageVisible}>
           사용자
         </Radio>
       </RadioGroup>

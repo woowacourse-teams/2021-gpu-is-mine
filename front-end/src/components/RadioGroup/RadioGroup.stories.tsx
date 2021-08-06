@@ -18,19 +18,19 @@ Default.args = {
   label: "LABEL",
   children: (
     <>
-      <Radio name={defaultName} onChange={defaultOnChange} checked value={1}>
+      <Radio label="label1" name={defaultName} onChange={defaultOnChange} checked value={1}>
         radio 1
       </Radio>
-      <Radio checked={false} name={defaultName} onChange={defaultOnChange} value={2}>
+      <Radio label="label2" checked={false} name={defaultName} onChange={defaultOnChange} value={2}>
         radio 2
       </Radio>
-      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={3}>
+      <Radio label="label3" name={defaultName} checked={false} onChange={defaultOnChange} value={3}>
         radio 3
       </Radio>
-      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={4}>
+      <Radio label="label4" name={defaultName} checked={false} onChange={defaultOnChange} value={4}>
         radio 4
       </Radio>
-      <Radio name={defaultName} checked={false} onChange={defaultOnChange} value={5}>
+      <Radio label="label5" name={defaultName} checked={false} onChange={defaultOnChange} value={5}>
         radio 5
       </Radio>
     </>

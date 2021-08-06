@@ -1,14 +1,22 @@
 import { useCallback, useState } from "react";
-import { AxiosError } from "axios";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
-  MakeRequestReturnType,
+  APICallStatus,
+  APIResponse,
   UseFetchOptionParameter,
   UseFetchReturnType,
 } from "../../types";
 
-export const unwrapResult = <T>(ret: MakeRequestReturnType<T>) => ret.unwrap.call(ret);
+export const unwrapResult = <T>({ data, error }: APIResponse<T>) =>
+  error ? Promise.reject(error) : Promise.resolve(data as T);
+
+export const generateStatusBoolean = (status: APICallStatus) => ({
+  isSucceed: status === "succeed",
+  isLoading: status === "loading",
+  isFailed: status === "failed",
+  isIdle: status === "idle",
+});
 
 const useFetch = <T = never, U = void>(
   url: string,
@@ -24,10 +32,6 @@ const useFetch = <T = never, U = void>(
 
   const makeRequest = useCallback(
     async (body: U) => {
-      const unwrap = function unwrap(this: MakeRequestReturnType<T>) {
-        return this.error ? Promise.reject(this.error) : Promise.resolve(this.data as T);
-      };
-
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
 
@@ -35,13 +39,13 @@ const useFetch = <T = never, U = void>(
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
-        return { data, error: null, unwrap };
+        return { data, error: null };
       } catch (err) {
-        const error = err as AxiosError;
+        const error = err as Error;
 
-        setState((prev) => ({ ...prev, status: "failed", error, data: null }));
+        setState((prev) => ({ ...prev, status: "failed", error }));
 
-        return { data: null, error, unwrap };
+        return { data: null, error };
       }
     },
     [method, url]
@@ -49,7 +53,12 @@ const useFetch = <T = never, U = void>(
 
   const done = useCallback(() => setState((prev) => ({ ...prev, status: "idle" })), []);
 
-  return { ...state, makeRequest, done };
+  return {
+    ...state,
+    makeRequest,
+    done,
+    ...generateStatusBoolean(state.status),
+  };
 };
 
 export default useFetch;

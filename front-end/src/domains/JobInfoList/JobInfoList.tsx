@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useFetch } from "../../hooks";
+import { useGetJobAll } from "../../hooks";
 import { Text, Loading } from "../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
-import { API_ENDPOINT, MESSAGE } from "../../constants";
-import { JobViewResponse, JobViewResponses } from "../../types";
+import { MESSAGE } from "../../constants";
+import { JobViewResponse } from "../../types";
 
 const priority = {
   RUNNING: 0, // highest
@@ -17,9 +17,10 @@ const sorbByResponse = (a: JobViewResponse, b: JobViewResponse) =>
   priority[a.status] - priority[b.status];
 
 const JobInfoList = () => {
-  const { data, status, makeRequest } = useFetch<JobViewResponses>(API_ENDPOINT.LABS(1).JOBS, {
-    method: "get",
-  });
+  // TODO: useLabId 커스텀 훅 에러 바운더리 처리 => labId 상수값 대체하기
+  const labId = 1;
+
+  const { data, status, makeRequest } = useGetJobAll({ labId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -45,7 +46,9 @@ const JobInfoList = () => {
             data.jobResponses
               .slice()
               .sort(sorbByResponse)
-              .map((res) => <JobInfoItem refresh={makeRequest} key={res.id} {...res} />)
+              .map((res) => (
+                <JobInfoItem key={res.id} refresh={() => makeRequest()} labId={labId} {...res} />
+              ))
           )}
         </StyledJobInfoList>
       )}

@@ -8,15 +8,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import mine.is.gpu.gpuserver.application.GpuServerService;
+import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import mine.is.gpu.job.application.JobService;
 import mine.is.gpu.lab.application.LabService;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
-import mine.is.gpu.member.dto.request.MemberInfoRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,11 +89,10 @@ class MemberServiceTest {
     void updateMemberInfo() {
         Long createdId = memberService.save(memberRequest);
 
-        MemberInfoRequest updateRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newPassword");
         memberService.updateMemberInfo(createdId, updateRequest);
 
         MemberResponse response = memberService.findById(createdId);
-        assertThat(response.getEmail()).isEqualTo(updateRequest.getEmail());
         assertThat(response.getName()).isEqualTo(updateRequest.getName());
     }
 
@@ -101,7 +100,7 @@ class MemberServiceTest {
     @DisplayName("UPDATE - 존재하지 멤버, 개인정보 수정시 에러 발생")
     void updateNotExistingMemberInfo() {
         Long notExistingMemberId = Long.MAX_VALUE;
-        MemberInfoRequest updateRequest = new MemberInfoRequest("update@update.com", "newPassword", "newName");
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newPassword");
 
         Throwable throwable = catchThrowable(() -> memberService.updateMemberInfo(notExistingMemberId, updateRequest));
         존재하지_않는_회원_요청_에러_발생(throwable);

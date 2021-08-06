@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "test-utils";
-import { PATH } from "../../constants";
+import { PATH, SESSION_STORAGE_KEY } from "../../constants";
 import MemberLoginForm from "./MemberLoginForm";
 
 const mockHistoryPush = jest.fn();
@@ -170,7 +170,7 @@ describe("Member/LoginForm", () => {
 
       expect(sessionStorageSetItemSpy).toBeCalled();
 
-      expect(sessionStorage.getItem("accessToken")).toBe("access-token");
+      expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).toBe("access-token");
     });
   });
 });

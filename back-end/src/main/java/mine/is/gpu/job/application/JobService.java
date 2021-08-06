@@ -1,5 +1,8 @@
 package mine.is.gpu.job.application;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -10,6 +13,7 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.request.JobRequest;
+import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.exception.JobException;
@@ -19,9 +23,6 @@ import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
 import mine.is.gpu.worker.domain.repository.LogRepository;
 import mine.is.gpu.worker.dto.LogsResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -36,9 +37,9 @@ public class JobService {
     private final LogRepository logRepository;
 
     public JobService(JobRepository jobRepository,
-            GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository,
-            MemberRepository memberRepository, LogRepository logRepository) {
+                      GpuServerRepository gpuServerRepository,
+                      GpuBoardRepository gpuBoardRepository,
+                      MemberRepository memberRepository, LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -83,6 +84,20 @@ public class JobService {
         return findAllJobsOfServer(serverId);
     }
 
+    @Transactional(readOnly = true)
+    public JobResponses findJobsOfMember(Long memberId, String status) {
+        if (StringUtils.hasText(status)) {
+            return findJobsOfMemberByStatus(memberId, status);
+        }
+        return findAllJobsOfMember(memberId);
+    }
+
+    @Transactional
+    public void update(Long jobId, JobUpdateRequest jobUpdateRequest) {
+        Job job = findJobById(jobId);
+        job.setName(jobUpdateRequest.getName());
+    }
+
     private JobResponses findJobsOfLabByStatus(Long labId, String status) {
         List<Job> jobs = new ArrayList<>();
 
@@ -115,14 +130,6 @@ public class JobService {
     private JobResponses findAllJobsOfServer(Long serverId) {
         GpuBoard gpuBoard = findBoardByServerId(serverId);
         return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
-    }
-
-    @Transactional(readOnly = true)
-    public JobResponses findJobsOfMember(Long memberId, String status) {
-        if (StringUtils.hasText(status)) {
-            return findJobsOfMemberByStatus(memberId, status);
-        }
-        return findAllJobsOfMember(memberId);
     }
 
     private JobResponses findAllJobsOfMember(Long memberId) {
