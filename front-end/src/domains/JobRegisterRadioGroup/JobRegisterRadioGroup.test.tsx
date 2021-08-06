@@ -28,5 +28,8 @@ describe("sort", () => {
     }
 
     expect(lastTrue).toBeLessThan(firstFalse);
+
+    sorted.slice(0, lastTrue + 1).forEach((el) => expect(el).toBe(true));
+    sorted.slice(firstFalse).forEach((el) => expect(el).toBe(false));
   });
 });
