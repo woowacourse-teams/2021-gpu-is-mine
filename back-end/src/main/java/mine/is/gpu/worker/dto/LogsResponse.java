@@ -1,12 +1,14 @@
 package mine.is.gpu.worker.dto;
 
-import mine.is.gpu.worker.domain.Log;
 import java.util.List;
 import java.util.stream.Collectors;
+import mine.is.gpu.worker.domain.Log;
 
 public class LogsResponse {
-
     private List<String> logs;
+
+    public LogsResponse() {
+    }
 
     private LogsResponse(List<String> logs) {
         this.logs = logs;
