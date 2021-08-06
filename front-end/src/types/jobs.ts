@@ -8,7 +8,7 @@ export interface Job {
 
 export interface JobRegisterRequest {
   name: string;
-  expectedTime: number;
+  expectedTime: string;
   gpuServerId: number;
   metaData: string;
 }

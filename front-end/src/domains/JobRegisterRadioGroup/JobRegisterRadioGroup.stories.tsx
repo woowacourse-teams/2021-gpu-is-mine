@@ -14,8 +14,8 @@ const Template: ComponentStory<typeof JobRegisterRadioGroup> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  name: "gpuServer",
+  minPerformance: 800,
+  labId: 1,
+  name: "jobName",
   label: "GPU 서버",
-  value: 0,
-  onChange: () => {},
 };
