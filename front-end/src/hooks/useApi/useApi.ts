@@ -11,6 +11,7 @@ import {
   GpuServerRegisterRequest,
   JobDetailLogResponse,
   GpuServerViewResponses,
+  GpuServerViewResponse,
 } from "../../types";
 
 export const useGetJobAll = ({ labId }: { labId: number }) =>
@@ -55,6 +56,11 @@ export const usePostSignup = () =>
 
 export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
   useFetch<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
+    method: "get",
+  });
+
+export const useGetGpuServerById = ({ labId, serverId }: { labId: number; serverId: number }) =>
+  useFetch<GpuServerViewResponse>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
     method: "get",
   });
 
