@@ -43,7 +43,7 @@ const useFetch = <T = never, U = void>(
       } catch (err) {
         const error = err as Error;
 
-        setState((prev) => ({ ...prev, status: "failed", error, data: null }));
+        setState((prev) => ({ ...prev, status: "failed", error }));
 
         return { data: null, error };
       }
