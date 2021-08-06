@@ -41,4 +41,14 @@ public class AcceptanceTest {
     public void setUp() {
         RestAssured.port = port;
     }
+
+    @AfterEach
+    void cleanUp() {
+        logRepository.deleteAllInBatch();
+        jobRepository.deleteAllInBatch();
+        gpuBoardRepository.deleteAllInBatch();
+        gpuServerRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        labRepository.deleteAllInBatch();
+    }
 }
