@@ -13,7 +13,7 @@ const JobDetailLogContent = ({ logs, ...rest }: JobDetailLogContentProps) => {
   return (
     <ol {...rest}>
       {logs.map((line) => (
-        <Text size="sm" key={line}>
+        <Text as="li" size="sm" key={line}>
           {line}
         </Text>
       ))}
