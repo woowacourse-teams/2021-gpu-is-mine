@@ -38,13 +38,13 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
           Log
         </Text>
         <LogRefreshPanel>
-          {isLoading && <Loading />}
           {isFailed && (
             <Text size="sm" weight="medium" color="error">
               Log 데이터를 불러오는데 실패했습니다.
             </Text>
           )}
           <RefreshButton color="secondary" disabled={isLoading} onClick={refreshLog}>
+            {isLoading && <Loading />}
             새로고침
           </RefreshButton>
         </LogRefreshPanel>

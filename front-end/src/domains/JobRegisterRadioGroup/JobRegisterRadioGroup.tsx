@@ -1,50 +1,46 @@
-import {
-  ChangeEventHandler,
-  FocusEventHandler,
-  ComponentProps,
-  useEffect,
-  // FocusEvent,
-} from "react";
-import { useGetGpuServerAll } from "../../hooks";
+import { ComponentProps, useEffect, Dispatch } from "react";
+import { useGetGpuServerAll, getRadioProps } from "../../hooks";
+import { FormAction, FormState } from "../../hooks/useForm/useForm";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
 import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
 import { StyledRadioGroup } from "./JobRegisterRadioGroup.styled";
 import { GpuServerViewResponse } from "../../types";
+import { Values } from "../JobRegisterForm/JobRegisterForm.type";
 
 interface JobRegisterRadioGroupProps extends Omit<ComponentProps<typeof RadioGroup>, "children"> {
   minPerformance: number;
-  value: string | number;
-  name: string;
-  onChange: ChangeEventHandler;
-  onBlur: FocusEventHandler;
+  labId: number;
+  state: FormState<Values>;
+  dispatch: Dispatch<FormAction<Values>>;
+  name: keyof Values;
 }
 
-const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): number => {
+export const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): number => {
   if (a.isOn && !b.isOn) return -1;
   if (!a.isOn && b.isOn) return 1;
 
   return 0;
 };
 
+export const sortByPerformanceDesc = (a: GpuServerViewResponse, b: GpuServerViewResponse): number =>
+  b.gpuBoard.performance - a.gpuBoard.performance;
+
 const JobRegisterRadioGroup = ({
   minPerformance,
-  value: selectedValue,
+  labId,
+  state,
+  dispatch,
   name,
-  onChange,
-  onBlur,
   ...rest
 }: JobRegisterRadioGroupProps) => {
-  const { data, status, makeRequest } = useGetGpuServerAll({ labId: 1 });
+  const { data, status, makeRequest, done } = useGetGpuServerAll({ labId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
-  }, [makeRequest]);
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onChange(event);
-    // onBlur(event as FocusEvent<HTMLInputElement>);
-  };
+    return done;
+  }, [makeRequest, done]);
 
   return (
     <StyledRadioGroup {...rest}>
@@ -65,14 +61,18 @@ const JobRegisterRadioGroup = ({
           {data?.gpuServers
             .slice()
             .sort(sortByIsOn)
+            .sort(sortByPerformanceDesc)
             .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
               <li key={id}>
                 <Radio
-                  value={id}
-                  checked={selectedValue === String(id)}
-                  name={name}
-                  onChange={handleChange}
-                  disabled={!isOn}
+                  {...getRadioProps({
+                    state,
+                    dispatch,
+                    name,
+                    label: serverName,
+                    value: String(id),
+                  })}
+                  disabled={!isOn || performance < minPerformance}
                 >
                   <GpuServerSelectItem
                     serverName={serverName}

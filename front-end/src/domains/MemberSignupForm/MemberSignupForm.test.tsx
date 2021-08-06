@@ -11,8 +11,8 @@ describe("Member/SignupForm", () => {
     const passwordInput = screen.getByLabelText("비밀번호");
     const passwordConfirmInput = screen.getByLabelText("비밀번호 확인");
     const nameInput = screen.getByLabelText("이름");
-    const managerRadio = screen.getByRole("radio", { name: "manager" });
-    const userRadio = screen.getByRole("radio", { name: "user" });
+    const managerRadio = screen.getByRole("radio", { name: /관리자/ });
+    const userRadio = screen.getByRole("radio", { name: /사용자/ });
     const submitButton = screen.getByRole("button", { name: "submit" });
 
     return {

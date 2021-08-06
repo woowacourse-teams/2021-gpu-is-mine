@@ -9,7 +9,7 @@ type Color = "dark" | "light" | "error";
 export interface StyledTextProps {
   size: Size;
   weight: FontWeight;
-  color: Color;
+  color?: Color;
 }
 
 const getSizeStyle = (size: Size) => {
@@ -89,5 +89,5 @@ export const StyledText = styled.p<StyledTextProps>`
 
   ${({ weight }) => getFontWeightStyle(weight)}
 
-  ${({ color }) => getColorStyle(color)}
+  ${({ color }) => color && getColorStyle(color)}
 `;
