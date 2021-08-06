@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { AxiosError } from "axios";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
@@ -34,7 +33,7 @@ const useFetch = <T = never, U = void>(
 
         return { data, error: null };
       } catch (err) {
-        const error = err as AxiosError;
+        const error = err as Error;
 
         setState((prev) => ({ ...prev, status: "failed", error }));
 

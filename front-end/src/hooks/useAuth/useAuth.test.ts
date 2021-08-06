@@ -3,6 +3,10 @@ import { useAuthProvider } from "./useAuth";
 import { SESSION_STORAGE_KEY } from "../../constants";
 
 describe("useAuthProvider", () => {
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
   test("login을 실행하면 isAuthenticated가 true가 되고 accessToken이 sessionStorage에 저장된다", async () => {
     const { result, waitForNextUpdate } = renderHook(() => useAuthProvider());
 

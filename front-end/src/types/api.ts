@@ -1,10 +1,8 @@
-import { AxiosError } from "axios";
-
 export type APICallStatus = "idle" | "loading" | "succeed" | "failed";
 
 export interface APIResponse<T> {
   data: T | null;
-  error: AxiosError | null;
+  error: Error | null;
 }
 
 export type MakeRequestReturnType<T> = APIResponse<T>;
