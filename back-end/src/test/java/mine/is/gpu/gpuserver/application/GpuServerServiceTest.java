@@ -199,9 +199,24 @@ public class GpuServerServiceTest {
         assertThat(gpuServerRepository.findById(gpuServerId)).isNotEmpty();
     }
 
-    @DisplayName("중복된 이름으로 서버 생성")
+    @DisplayName("중복된 이름으로 서버 생성 - 같은 랩")
     @Test
-    void saveServerDuplicateName() {
+    void saveServerDuplicateNameSameLab() {
+        String name = "serverName";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        assertThatThrownBy(() -> gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest2))
+                .isEqualTo(GpuServerException.DUPLICATE_NAME_EXCEPTION.getException());
+    }
+
+    @DisplayName("중복된 이름으로 서버 생성 - 다른 랩")
+    @Test
+    void saveServerDuplicateNameNotSameLab() {
         String name = "serverName";
 
         GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
@@ -211,8 +226,46 @@ public class GpuServerServiceTest {
         GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
         GpuServerRequest gpuServerRequest2 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
         Lab lab2 = labRepository.save(new Lab("lab2"));
-        assertThatThrownBy(() -> gpuServerService.saveServerInLab(lab2.getId(), gpuServerRequest2))
+        Long gpuServerId = gpuServerService.saveServerInLab(lab2.getId(), gpuServerRequest2);
+        assertThat(gpuServerId).isNotNull();
+    }
+
+    @DisplayName("중복된 이름으로 서버 수정 - 같은 랩")
+    @Test
+    void updateServerDuplicateNameSameLab() {
+        String name = "serverName1";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest("serverName2", 2L, 2L, boardRequest2);
+        Long gpuServerId = gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest2);
+
+        GpuServerRequest gpuServerRequest3 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        assertThatThrownBy(() -> gpuServerService.updateById(gpuServerId, gpuServerRequest3))
                 .isEqualTo(GpuServerException.DUPLICATE_NAME_EXCEPTION.getException());
+    }
+
+    @DisplayName("중복된 이름으로 서버 수정 - 다른 랩")
+    @Test
+    void updateServerDuplicateNameNotSameLab() {
+        String name = "serverName1";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest("serverName2", 2L, 2L, boardRequest2);
+        Lab lab2 = labRepository.save(new Lab("lab2"));
+        Long gpuServerId = gpuServerService.saveServerInLab(lab2.getId(), gpuServerRequest2);
+
+        GpuServerRequest gpuServerRequest3 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        gpuServerService.updateById(gpuServerId, gpuServerRequest3);
+        GpuServerResponse gpuServer = gpuServerService.findById(gpuServerId);
+        assertThat(gpuServer.getServerName()).isEqualTo(name);
     }
 
     @DisplayName("gpuServer 저장 과정에서 labId가 없는 경우")

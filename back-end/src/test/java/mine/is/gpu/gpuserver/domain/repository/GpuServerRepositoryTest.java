@@ -69,19 +69,34 @@ public class GpuServerRepositoryTest {
         assertThat(actual.isPresent()).isFalse();
     }
 
-    @DisplayName("중복 이름 생성 테스트")
+    @DisplayName("중복 이름 생성 테스트 - 같은 랩")
     @Test
-    void duplicateName() {
+    void duplicateNameSameLab() {
+        String name = "GpuServer";
+        Lab lab = new Lab("lab");
+        labRepository.save(lab);
+
+        GpuServer gpuServer = new GpuServer(name, false, 500L, 1024L, lab);
+        gpuServerRepository.save(gpuServer);
+
+        GpuServer gpuServerSameNameSameLab = new GpuServer(name, true, 1000L, 2000L, lab);
+        assertThrows(DataIntegrityViolationException.class, () -> gpuServerRepository.save(gpuServerSameNameSameLab));
+    }
+
+    @DisplayName("중복 이름 생성 테스트 - 다른 랩")
+    @Test
+    void duplicateNameNotSameLab() {
         String name = "GpuServer";
 
         Lab lab1 = new Lab("lab1");
         labRepository.save(lab1);
-
         GpuServer gpuServer = new GpuServer(name, false, 500L, 1024L, lab1);
         gpuServerRepository.save(gpuServer);
 
         Lab lab2 = new Lab("lab2");
-        GpuServer gpuServerSameName = new GpuServer(name, true, 1000L, 2000L, lab2);
-        assertThrows(DataIntegrityViolationException.class, () -> gpuServerRepository.save(gpuServerSameName));
+        labRepository.save(lab2);
+        GpuServer gpuServerSameNameNotSameLab = new GpuServer(name, true, 1000L, 2000L, lab2);
+        gpuServerRepository.save(gpuServerSameNameNotSameLab);
+        assertThat(gpuServerSameNameNotSameLab.getId()).isNotNull();
     }
 }

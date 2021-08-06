@@ -10,5 +10,5 @@ public interface GpuServerRepository extends JpaRepository<GpuServer, Long> {
 
     List<GpuServer> findAllByLabId(Long labId);
 
-    boolean existsByName(String name);
+    boolean existsByLabIdAndName(Long labId, String name);
 }
