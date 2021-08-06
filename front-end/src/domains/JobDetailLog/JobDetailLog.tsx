@@ -8,7 +8,6 @@ import {
   LogHeader,
   RefreshButton,
   LogRefreshPanel,
-  ErrorText,
 } from "./JobDetailLog.styled";
 
 interface JobDetailLogProps {
@@ -41,9 +40,9 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
         <LogRefreshPanel>
           {isLoading && <Loading />}
           {isFailed && (
-            <ErrorText size="sm" weight="medium">
+            <Text size="sm" weight="medium" color="error">
               Log 데이터를 불러오는데 실패했습니다.
-            </ErrorText>
+            </Text>
           )}
           <RefreshButton color="secondary" disabled={isLoading} onClick={refreshLog}>
             새로고침
