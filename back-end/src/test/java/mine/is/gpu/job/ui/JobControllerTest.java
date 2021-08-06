@@ -221,7 +221,8 @@ public class JobControllerTest {
         private Lab otherLab = new Lab("otherLab");
         private GpuServer serverInOtherLab = new GpuServer("serverInOtherLab", false, 6L, 2L, otherLab);
         private GpuBoard boardInOtherLab = new GpuBoard(true, 8L, "aaa", serverInOtherLab);
-        private Member userInOtherLab = new Member("userInOtherLab@email.com", "password", "name", MemberType.USER, otherLab);
+        private Member userInOtherLab = new Member(
+                "userInOtherLab@email.com", "password", "name", MemberType.USER, otherLab);
         private Job jobInOtherLab = new Job("jobInOtherName", boardInOtherLab, userInOtherLab, "data", "time");
 
         @BeforeEach
