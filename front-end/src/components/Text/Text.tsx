@@ -6,8 +6,15 @@ type TextProps = HTMLAttributes<HTMLElement> &
     as?: keyof HTMLElementTagNameMap;
   };
 
-const Text = ({ size = "md", weight = "regular", as = "p", children, ...rest }: TextProps) => (
-  <StyledText as={as} size={size} weight={weight} {...rest}>
+const Text = ({
+  size = "md",
+  weight = "regular",
+  as = "p",
+  color = "dark",
+  children,
+  ...rest
+}: TextProps) => (
+  <StyledText as={as} size={size} weight={weight} color={color} {...rest}>
     {children}
   </StyledText>
 );
