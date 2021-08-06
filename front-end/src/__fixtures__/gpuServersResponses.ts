@@ -1,4 +1,4 @@
-import { GpuServerViewResponses } from "../types";
+import { GpuServerViewResponse, GpuServerViewResponses } from "../types";
 
 const gpuServersResponses: GpuServerViewResponses = {
   gpuServers: [
@@ -200,5 +200,7 @@ const gpuServersResponses: GpuServerViewResponses = {
     },
   ],
 } as const;
+
+export const gpuServerResponse: GpuServerViewResponse = gpuServersResponses.gpuServers[0];
 
 export default gpuServersResponses;

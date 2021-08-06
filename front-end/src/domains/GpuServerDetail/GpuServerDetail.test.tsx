@@ -1,24 +1,17 @@
-import { ReactNode } from "react";
-import { MemoryRouter, Route } from "react-router-dom";
-import { renderHook } from "@testing-library/react-hooks/dom";
-import { useServerId } from "./GpuServerDetail";
+import { render, screen } from "@testing-library/react";
 
-const Wrapper = ({ path, children }: { path: string; children?: ReactNode }) => (
-  <MemoryRouter initialEntries={[path]}>
-    <Route exact path="/:serverId">
-      {children}
-    </Route>
-  </MemoryRouter>
-);
+import GpuServerDetail from "./GpuServerDetail";
+import { gpuServerResponse } from "../../__fixtures__/gpuServersResponses";
 
-describe("useServerId", () => {
-  test("serverId Params가 path와 일치하는 경우, number로 변환하여 반환한다. ", () => {
-    const serverId = 35;
-    const { result } = renderHook(() => useServerId(), {
-      initialProps: { path: `/${serverId}` },
-      wrapper: Wrapper,
-    });
+jest.mock("../../hooks", () => ({ useGetGpuServerById: () => ({ data: gpuServerResponse }) }));
 
-    expect(result.current).toBe(serverId);
+describe("GpuServerDetail", () => {
+  test("data", () => {
+    render(<GpuServerDetail labId={1} />);
+
+    expect(screen.getByText(/GPU 연산량/)).toBeInTheDocument();
+    expect(screen.getByText(gpuServerResponse.gpuBoard.performance)).toBeInTheDocument();
+    expect(screen.getByText(/현재 실행중인 Job/)).toBeInTheDocument();
+    expect(screen.getByText(/대기 중인 Job/)).toBeInTheDocument();
   });
 });
