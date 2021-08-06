@@ -52,7 +52,6 @@ class WorkerAcceptanceTest extends AcceptanceTest {
     private String userToken;
     private String managerToken;
     private Long jobId;
-    private Long jobBId;
 
     private static ExtractableResponse<Response> 진행할_job_요청(Long gpuServerId) {
         return RestAssured.given()
