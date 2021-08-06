@@ -1,5 +1,4 @@
-import { useCallback, useRef, useState } from "react";
-import { AxiosError } from "axios";
+import { useCallback, useState } from "react";
 import { getData } from "../../utils/axios";
 import {
   APICallState,
@@ -29,26 +28,20 @@ const useFetch = <T = never, U = void>(
     status: "idle",
   });
 
-  const { method = "get", relatedKey = [] } = option ?? {};
-
-  const rKey = useRef(relatedKey);
+  const { method = "get" } = option ?? {};
 
   const makeRequest = useCallback(
     async (body: U) => {
       try {
         setState((prev) => ({ ...prev, status: "loading" }));
 
-        const data = await getData<T, U>(url, {
-          body,
-          method,
-          relatedKey: rKey.current,
-        });
+        const data = await getData<T, U>(url, { body, method });
 
         setState((prev) => ({ ...prev, status: "succeed", data, error: null }));
 
         return { data, error: null };
       } catch (err) {
-        const error = err as AxiosError;
+        const error = err as Error;
 
         setState((prev) => ({ ...prev, status: "failed", error, data: null }));
 
