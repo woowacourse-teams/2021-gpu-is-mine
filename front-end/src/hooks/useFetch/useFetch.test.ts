@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable no-plusplus */
 import { renderHook, act } from "@testing-library/react-hooks/dom";
 import { AxiosError } from "axios";
 import useFetch, { generateStatusBoolean, unwrapResult } from "./useFetch";
@@ -7,7 +6,6 @@ import useFetch, { generateStatusBoolean, unwrapResult } from "./useFetch";
 const mockGetData = jest.fn<unknown, unknown[]>();
 
 jest.mock("../../utils/axios", () => ({ getData: (...args: unknown[]) => mockGetData(...args) }));
-let callTimes = 0;
 
 describe("generateStatusBoolean", () => {
   test("when status is idle", () => {
@@ -64,6 +62,10 @@ describe("unwrapResult", () => {
 });
 
 describe("useFetch", () => {
+  afterEach(() => {
+    mockGetData.mockClear();
+  });
+
   test("initial return value", () => {
     const { result } = renderHook(() => useFetch("url"));
 
@@ -93,7 +95,7 @@ describe("useFetch", () => {
 
     await waitForNextUpdate();
 
-    expect(mockGetData).toBeCalledTimes(++callTimes);
+    expect(mockGetData).toBeCalledTimes(1);
 
     expect(result.current.status).toBe("succeed");
     expect(result.current.data).toBe(returnedData);
@@ -121,7 +123,7 @@ describe("useFetch", () => {
 
     await waitForNextUpdate();
 
-    expect(mockGetData).toBeCalledTimes(++callTimes);
+    expect(mockGetData).toBeCalledTimes(1);
 
     expect(result.current.status).toBe("failed");
     expect(result.current.data).toBe(null);
@@ -143,7 +145,7 @@ describe("useFetch", () => {
 
     await waitForNextUpdate();
 
-    expect(mockGetData).toBeCalledTimes(++callTimes);
+    expect(mockGetData).toBeCalledTimes(1);
 
     expect(result.current.status).toBe("succeed");
     expect(result.current.data).toBe(returnedData);
