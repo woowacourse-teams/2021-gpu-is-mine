@@ -1,4 +1,4 @@
-import { useHistory, matchPath } from "react-router-dom";
+import { useHistory, matchPath, useParams } from "react-router-dom";
 import { PATH } from "../../constants";
 
 const pathList = [
@@ -21,4 +21,18 @@ export const useMoveToPage = (route: string) => {
   }
 
   return () => history.push(route);
+};
+
+export const useParseParams = <T extends string | number>(param: T) => {
+  const parsed = useParams() as unknown;
+
+  if (typeof parsed !== "object" || parsed == null || !(param in parsed)) {
+    throw Error(`Invalid ${param} in params: ${String(param)}`);
+  }
+
+  if (typeof param === "number" && Number.isNaN(Number(param))) {
+    throw Error(`Invalid ${param} in params: ${String(param)} is NaN`);
+  }
+
+  return typeof param === "number" ? Number(param) : param;
 };
