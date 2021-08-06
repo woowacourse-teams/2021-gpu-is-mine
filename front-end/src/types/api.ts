@@ -1,10 +1,8 @@
-import { AxiosError } from "axios";
-
 export type APICallStatus = "idle" | "loading" | "succeed" | "failed";
 
 export interface APIResponse<T> {
   data: T | null;
-  error: AxiosError | null;
+  error: Error | null;
 }
 
 export type MakeRequestReturnType<T> = APIResponse<T>;
@@ -28,7 +26,6 @@ interface APICallStatusBoolean {
 export type RequestConfig<U> = {
   method: "get" | "post" | "head" | "delete" | "options" | "post" | "put" | "patch";
   body?: U;
-  relatedKey?: (string | symbol)[];
 };
 
 export type UseFetchOptionParameter = Omit<RequestConfig<never>, "body">;
