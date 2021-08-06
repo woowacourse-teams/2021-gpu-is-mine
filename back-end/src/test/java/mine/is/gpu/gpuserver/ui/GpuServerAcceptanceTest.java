@@ -69,7 +69,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_생성(String token, Long labId,
-            GpuServerRequest gpuServerRequest) {
+                                                             GpuServerRequest gpuServerRequest) {
         return RestAssured
                 .given().log().all()
                 .auth()
@@ -89,8 +89,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_수정(String token,
-            GpuServerRequest gpuServerUpdateRequest,
-            Long gpuServerId) {
+                                                             GpuServerRequest gpuServerUpdateRequest,
+                                                             Long gpuServerId) {
         return RestAssured
                 .given().log().all()
                 .auth()

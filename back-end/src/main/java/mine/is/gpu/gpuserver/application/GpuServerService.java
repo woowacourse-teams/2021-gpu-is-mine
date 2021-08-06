@@ -32,8 +32,8 @@ public class GpuServerService {
     private JobRepository jobRepository;
 
     public GpuServerService(LabRepository labRepository,
-            GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
+                            GpuServerRepository gpuServerRepository,
+                            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
