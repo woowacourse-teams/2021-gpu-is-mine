@@ -1,6 +1,7 @@
 package mine.is.gpu.gpuserver.application;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
@@ -18,6 +19,7 @@ import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.exception.LabException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +32,8 @@ public class GpuServerService {
     private JobRepository jobRepository;
 
     public GpuServerService(LabRepository labRepository,
-                            GpuServerRepository gpuServerRepository,
-                            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
+            GpuServerRepository gpuServerRepository,
+            GpuBoardRepository gpuBoardRepository, JobRepository jobRepository) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -49,18 +51,18 @@ public class GpuServerService {
 
     @Transactional(readOnly = true)
     public GpuServerResponses findAllInLab(Long labId) {
+        return findAllInLab(labId, null);
+    }
+
+    @Transactional(readOnly = true)
+    public GpuServerResponses findAllInLab(Long labId, Pageable pageable) {
         validateLab(labId);
 
-        List<GpuServer> gpuServers = gpuServerRepository.findAllByLabId(labId);
+        List<GpuServer> gpuServers = findAllByLabId(labId, pageable);
         List<GpuServerResponse> gpuServerResponses = gpuServers.stream()
                 .map(server -> findById(server.getId()))
                 .collect(Collectors.toList());
         return GpuServerResponses.of(gpuServerResponses);
-    }
-
-    @Transactional(readOnly = true)
-    public List<GpuServer> findAllByLabId(Long labId) {
-        return gpuServerRepository.findAllByLabId(labId);
     }
 
     @Transactional
@@ -128,5 +130,17 @@ public class GpuServerService {
     private GpuServer findGpuServerById(Long gpuServerId) {
         return gpuServerRepository.findById(gpuServerId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GpuServer> findAllByLabId(Long labId) {
+        return findAllByLabId(labId, null);
+    }
+
+    private List<GpuServer> findAllByLabId(Long labId, Pageable pageable) {
+        if (Objects.isNull(pageable)) {
+            gpuServerRepository.findAllByLabId(labId);
+        }
+        return gpuServerRepository.findAllByLabId(labId, pageable);
     }
 }

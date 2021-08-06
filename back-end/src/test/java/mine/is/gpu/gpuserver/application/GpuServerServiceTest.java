@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -54,6 +55,8 @@ public class GpuServerServiceTest {
 
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
+
+    private Pageable pageable = null;
 
     @BeforeEach
     private void setUp() {
