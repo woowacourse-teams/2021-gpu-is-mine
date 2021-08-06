@@ -10,7 +10,7 @@ const Text = ({
   size = "md",
   weight = "regular",
   as = "p",
-  color = "dark",
+  color,
   children,
   ...rest
 }: TextProps) => (
