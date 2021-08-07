@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "test-utils";
+import { render, screen, fireEvent, waitFor } from "../../__test__/test-utils";
 import { PATH, SESSION_STORAGE_KEY } from "../../constants";
 import MemberLoginForm from "./MemberLoginForm";
 
