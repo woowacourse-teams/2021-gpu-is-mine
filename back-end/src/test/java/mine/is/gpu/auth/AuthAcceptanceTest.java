@@ -2,15 +2,15 @@ package mine.is.gpu.auth;
 
 import static mine.is.gpu.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
 
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.ui.MemberAcceptanceTest;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class AuthAcceptanceTest extends AcceptanceTest {
-
     private static final String EMAIL = "email@email.com";
     private static final String PASSWORD = "password";
+
     private MemberRequest memberRequest;
 
     public static String 회원_등록_및_로그인_후_토큰_발급(MemberRequest memberRequest) {
@@ -168,7 +168,6 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .get("/api/labs/" + memberRequest.getLabId())
                 .then()
                 .statusCode(HttpStatus.OK.value());
-
     }
 
     @DisplayName("GET /api/labs/{id} 에 권한이 없는 사용자가 접근한다.")
@@ -186,6 +185,5 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .get("/api/labs/" + Long.MAX_VALUE)
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
-
     }
 }

@@ -4,7 +4,6 @@ import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.dto.request.MemberRequest;
 
 public class MemberFixtures {
-
     private static final String USER_EMAIL = "email@email.com";
     private static final String MANAGER_EMAIL = "manager@email.com";
     private static final String PASSWORD = "password";
