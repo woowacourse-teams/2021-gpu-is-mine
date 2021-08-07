@@ -8,13 +8,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import mine.is.gpu.gpuserver.application.GpuServerService;
+import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
+import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import mine.is.gpu.job.application.JobService;
+import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.application.LabService;
+import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
-import mine.is.gpu.member.dto.request.MemberUpdateRequest;
+import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.dto.request.MemberRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
 import mine.is.gpu.member.exception.MemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -30,11 +35,20 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
-
     @Autowired
-    private MemberService memberService;
+    private LabRepository labRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private GpuServerRepository gpuServerRepository;
+    @Autowired
+    private GpuBoardRepository gpuBoardRepository;
+    @Autowired
+    private JobRepository jobRepository;
     @Autowired
     private LabService labService;
+    @Autowired
+    private MemberService memberService;
     @Autowired
     private GpuServerService gpuServerService;
     @Autowired
@@ -57,6 +71,17 @@ class MemberServiceTest {
         Long createdId = memberService.save(memberRequest);
 
         assertThat(createdId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("중복 이메일 생성")
+    void duplicateEmailCreate() {
+        memberService.save(memberRequest);
+
+        MemberRequest memberRequestSameEmail = new MemberRequest(
+                memberRequest.getEmail(), "password2", "name2", "USER", 2L);
+        assertThatThrownBy(() -> memberService.save(memberRequestSameEmail))
+                .isEqualTo(MemberException.DUPLICATE_EMAIL_EXCEPTION.getException());
     }
 
     @Test
@@ -183,7 +208,7 @@ class MemberServiceTest {
         @BeforeEach
         void setUp() {
             user = memberService.save(userCreationRequest(labId));
-            otherUser = memberService.save(userCreationRequest(labId));
+            otherUser = memberService.save(userCreationRequest(labId, "user@email.com", "12345"));
 
             jobByUser = jobService.save(user, jobCreationRequest(gpuServerId));
             jobByOtherUser = jobService.save(otherUser, jobCreationRequest(gpuServerId));
@@ -194,9 +219,8 @@ class MemberServiceTest {
         void checkEditableJobByUser() {
             memberService.checkEditableJob(user, jobByUser);
 
-            assertThatThrownBy(() -> {
-                memberService.checkEditableJob(user, jobByOtherUser);
-            }).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+            assertThatThrownBy(() -> memberService.checkEditableJob(user, jobByOtherUser))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @Test

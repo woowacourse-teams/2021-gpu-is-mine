@@ -3,6 +3,9 @@ package mine.is.gpu.job.ui;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -12,6 +15,7 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
+import mine.is.gpu.job.fixture.JobFixtures;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.mail.MailService;
@@ -19,10 +23,6 @@ import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.job.fixture.JobFixtures;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,22 +37,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 public class JobControllerTest {
-
     @Autowired
     private JobController jobController;
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -227,7 +221,8 @@ public class JobControllerTest {
         private Lab otherLab = new Lab("otherLab");
         private GpuServer serverInOtherLab = new GpuServer("serverInOtherLab", false, 6L, 2L, otherLab);
         private GpuBoard boardInOtherLab = new GpuBoard(true, 8L, "aaa", serverInOtherLab);
-        private Member userInOtherLab = new Member("user@email.com", "password", "name", MemberType.USER, otherLab);
+        private Member userInOtherLab = new Member(
+                "userInOtherLab@email.com", "password", "name", MemberType.USER, otherLab);
         private Job jobInOtherLab = new Job("jobInOtherName", boardInOtherLab, userInOtherLab, "data", "time");
 
         @BeforeEach

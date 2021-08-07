@@ -6,15 +6,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JobResponse {
-    private final Long id;
-    private final String name;
-    private final JobStatus status;
-    private final Long memberId;
-    private final String memberName;
-    private final Long gpuServerId;
-    private final String gpuServerName;
-    private final String metaData;
-    private final String expectedTime;
+    private Long id;
+    private String name;
+    private JobStatus status;
+    private Long memberId;
+    private String memberName;
+    private Long gpuServerId;
+    private String gpuServerName;
+    private String metaData;
+    private String expectedTime;
+
+    public JobResponse() {
+    }
 
     public JobResponse(Long id, String name, JobStatus status, Long memberId,
                        String memberName, Long gpuServerId, String gpuServerName,

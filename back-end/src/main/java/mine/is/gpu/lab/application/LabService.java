@@ -1,5 +1,6 @@
 package mine.is.gpu.lab.application;
 
+import java.util.List;
 import mine.is.gpu.gpuserver.application.GpuServerService;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.lab.domain.Lab;
@@ -10,7 +11,6 @@ import mine.is.gpu.lab.dto.LabResponses;
 import mine.is.gpu.lab.exception.LabException;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +28,16 @@ public class LabService {
 
     @Transactional
     public Long save(LabRequest labRequest) {
+        checkDuplicate(labRequest.getName());
         Lab lab = new Lab(labRequest.getName());
         labRepository.save(lab);
         return lab.getId();
+    }
+
+    private void checkDuplicate(String name) {
+        if (labRepository.existsByName(name)) {
+            throw LabException.DUPLICATE_LAB_NAME.getException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -47,6 +54,7 @@ public class LabService {
 
     @Transactional
     public void update(Long labId, LabRequest labRequest) {
+        checkDuplicate(labRequest.getName());
         Lab lab = findLabById(labId);
         lab.setName(labRequest.getName());
     }

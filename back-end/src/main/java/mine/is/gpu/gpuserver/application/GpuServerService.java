@@ -66,6 +66,8 @@ public class GpuServerService {
     @Transactional
     public void updateById(Long gpuServerId, GpuServerRequest gpuServerRequest) {
         GpuServer gpuServer = findGpuServerById(gpuServerId);
+        Lab lab = gpuServer.getLab();
+        checkDuplicate(lab.getId(), gpuServerRequest.getServerName());
 
         gpuServer.setName(gpuServerRequest.getServerName());
         gpuServer.setMemorySize(gpuServerRequest.getMemorySize());
@@ -91,6 +93,7 @@ public class GpuServerService {
 
     @Transactional
     public Long saveServerInLab(Long labId, GpuServerRequest gpuServerRequest) {
+        checkDuplicate(labId, gpuServerRequest.getServerName());
         Lab lab = findLabById(labId);
 
         GpuServer gpuServer = gpuServerRequest.toEntity(lab);
@@ -100,6 +103,12 @@ public class GpuServerService {
         gpuBoardRepository.save(gpuBoardRequest.toEntity(gpuServer));
 
         return gpuServer.getId();
+    }
+
+    private void checkDuplicate(Long labId, String name) {
+        if (gpuServerRepository.existsByLabIdAndName(labId, name)) {
+            throw GpuServerException.DUPLICATE_NAME_EXCEPTION.getException();
+        }
     }
 
     @Transactional(readOnly = true)
