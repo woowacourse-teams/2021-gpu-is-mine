@@ -3,6 +3,7 @@ package mine.is.gpu.gpuserver.domain.repository;
 import java.util.List;
 import java.util.Optional;
 import mine.is.gpu.gpuserver.domain.GpuServer;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GpuServerRepository extends JpaRepository<GpuServer, Long> {
