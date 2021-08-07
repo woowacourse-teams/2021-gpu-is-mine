@@ -97,7 +97,7 @@ public class GpuServerRepositoryTest {
                 .mapToObj(i -> baseName + (pageable.getPageSize() * pageable.getPageNumber() + i))
                 .collect(Collectors.toList());
 
-        assertThat(expectedNames).usingRecursiveComparison().isEqualTo(searchedNames);
+        assertThat(expectedNames).isEqualTo(searchedNames);
     }
 
     @DisplayName("Pageable이 null인 경우 모든 결과를 반환한다.")
@@ -118,6 +118,6 @@ public class GpuServerRepositoryTest {
                 .map(GpuServer::getName)
                 .collect(Collectors.toList());
 
-        assertThat(names).usingRecursiveComparison().isEqualTo(searchedNames);
+        assertThat(names).isEqualTo(searchedNames);
     }
 }
