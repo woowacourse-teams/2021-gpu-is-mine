@@ -12,7 +12,7 @@ interface AuthContext {
   logout: (arg: never) => Promise<unknown>;
   done: () => void;
   isLoading: boolean;
-  isError: boolean;
+  isFailed: boolean;
   isSucceed: boolean;
   myInfo: MyInfoResponse | null;
 }
@@ -45,7 +45,7 @@ export const useRequest = () => {
     (status) => status === "loading"
   );
 
-  const isError = [loginStatus, myInfoStatus, signupStatus].some((status) => status === "failed");
+  const isFailed = [loginStatus, myInfoStatus, signupStatus].some((status) => status === "failed");
 
   const isSucceed =
     [loginStatus, myInfoStatus, signupStatus].every(
@@ -59,13 +59,13 @@ export const useRequest = () => {
     signupDone();
   }, [loginDone, myInfoDone, signupDone]);
 
-  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isError, done, isSucceed };
+  return { requestLogin, requestSignup, fetchMyInfo, myInfo, isLoading, isFailed, done, isSucceed };
 };
 
 export const useAuthProvider = () => {
   const [isAuthenticated, authenticate, unauthenticate] = useBoolean(false);
 
-  const { isLoading, isError, requestLogin, requestSignup, fetchMyInfo, myInfo, done, isSucceed } =
+  const { isLoading, isFailed, requestLogin, requestSignup, fetchMyInfo, myInfo, done, isSucceed } =
     useRequest();
 
   const signup = useCallback(
@@ -86,10 +86,10 @@ export const useAuthProvider = () => {
 
       sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
-      authenticate();
-
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      fetchMyInfo();
+      await fetchMyInfo();
+
+      authenticate();
     },
     [authenticate, fetchMyInfo, requestLogin]
   );
@@ -106,5 +106,5 @@ export const useAuthProvider = () => {
     }
   }, [authenticate, fetchMyInfo, logout]);
 
-  return { isAuthenticated, isLoading, isError, signup, login, logout, myInfo, done, isSucceed };
+  return { isAuthenticated, isLoading, isFailed, signup, login, logout, myInfo, done, isSucceed };
 };

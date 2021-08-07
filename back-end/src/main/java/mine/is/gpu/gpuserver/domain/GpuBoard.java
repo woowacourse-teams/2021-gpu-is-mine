@@ -1,7 +1,5 @@
 package mine.is.gpu.gpuserver.domain;
 
-import mine.is.gpu.gpuserver.exception.GpuBoardException;
-import mine.is.gpu.lab.domain.Lab;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import mine.is.gpu.gpuserver.exception.GpuBoardException;
+import mine.is.gpu.lab.domain.Lab;
 
 @Entity
 public class GpuBoard extends BaseEntity {
@@ -78,5 +78,13 @@ public class GpuBoard extends BaseEntity {
 
     public Lab getLab() {
         return gpuServer.getLab();
+    }
+
+    public void setPerformance(Long performance) {
+        this.performance = performance;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 }

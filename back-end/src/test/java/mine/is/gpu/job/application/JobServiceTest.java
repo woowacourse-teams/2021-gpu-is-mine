@@ -4,6 +4,8 @@ import static mine.is.gpu.job.fixture.JobFixtures.jobCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -13,6 +15,7 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.request.JobRequest;
+import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.exception.JobException;
@@ -24,8 +27,6 @@ import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
 import mine.is.gpu.worker.domain.Log;
 import mine.is.gpu.worker.domain.repository.LogRepository;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class JobServiceTest {
-
     @Autowired
     private JobService jobService;
     @Autowired
@@ -53,6 +53,7 @@ class JobServiceTest {
     private GpuServerRepository gpuServerRepository;
     @Autowired
     private LogRepository logRepository;
+
     private Long serverId;
     private Long memberId;
 
@@ -156,8 +157,24 @@ class JobServiceTest {
         return server.getId();
     }
 
+    private Long saveGpuServerInLab(Lab lab, String name) {
+        GpuServer server = new GpuServer(name, true, 1024L, 1024L, lab);
+        gpuServerRepository.save(server);
+
+        GpuBoard board = new GpuBoard(false, 600L, "nvdia", server);
+        gpuBoardRepository.save(board);
+
+        return server.getId();
+    }
+
     private Long saveMember(Lab lab) {
         Member member = new Member("email", "password", "name", MemberType.USER, lab);
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    private Long saveMember(Lab lab, String email) {
+        Member member = new Member(email, "password", "name", MemberType.USER, lab);
         memberRepository.save(member);
         return member.getId();
     }
@@ -166,14 +183,14 @@ class JobServiceTest {
     @DisplayName("로그 정보 모두 조회")
     void findAllLogsByJob() {
         //given
-        Lab lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
+        Lab lab2 = new Lab("lab2");
+        labRepository.save(lab2);
+        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab2);
         gpuServerRepository.save(gpuServer1);
         GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
         gpuBoardRepository.save(gpuBoard1);
-        Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER,
-                lab1);
+        Member member1 = new Member("email2@email.com", "password", "name1", MemberType.MANAGER,
+                lab2);
         memberRepository.save(member1);
         Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
         jobRepository.save(job1);
@@ -196,15 +213,15 @@ class JobServiceTest {
         @BeforeEach
         void setUp() {
             labRepository.save(lab);
-            memberId = saveMember(lab);
-            serverId = saveGpuServerInLab(lab);
+            memberId = saveMember(lab, "email2");
+            serverId = saveGpuServerInLab(lab, "server2");
         }
 
         @Test
         @DisplayName("멤버를 기준으로 작성한 Job을 조회한다.")
         void findAllByMemberId() {
-            Long jobId1 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
-            Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab)));
+            Long jobId1 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server3")));
+            Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server4")));
 
             assertJobIdsFromJobResponses(jobService.findJobsOfMember(memberId, null), jobId1,
                     jobId2);
@@ -213,8 +230,8 @@ class JobServiceTest {
         @Test
         @DisplayName("서버를 기준으로 포함된 Job을 조회한다.")
         void findAllByServer() {
-            Long jobId1 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
-            Long jobId2 = jobService.save(saveMember(lab), jobCreationRequest(serverId));
+            Long jobId1 = jobService.save(saveMember(lab, "email3"), jobCreationRequest(serverId));
+            Long jobId2 = jobService.save(saveMember(lab, "email4"), jobCreationRequest(serverId));
 
             assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null), jobId1,
                     jobId2);
@@ -224,9 +241,9 @@ class JobServiceTest {
         @DisplayName("랩을 기준으로 포함된 Job을 조회한다.")
         void findAllByLab() {
             Long jobId1 = jobService
-                    .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+                    .save(saveMember(lab, "email3"), jobCreationRequest(saveGpuServerInLab(lab, "server3")));
             Long jobId2 = jobService
-                    .save(saveMember(lab), jobCreationRequest(saveGpuServerInLab(lab)));
+                    .save(saveMember(lab, "email4"), jobCreationRequest(saveGpuServerInLab(lab, "server4")));
 
             assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null), jobId1,
                     jobId2);
@@ -239,5 +256,18 @@ class JobServiceTest {
                             .collect(Collectors.toList())
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
         }
+    }
+
+    @Test
+    @DisplayName("예약을 수정한다.")
+    void update() {
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
+        Long jobId = jobService.save(memberId, jobRequest);
+
+        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
+        jobService.update(jobId, jobUpdateRequest);
+
+        JobResponse jobResponse = jobService.findById(jobId);
+        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
     }
 }

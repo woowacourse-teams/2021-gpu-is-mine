@@ -21,25 +21,21 @@ export const useGetJobAll = ({ labId }: { labId: number }) =>
 export const usePostJobRegister = ({ labId }: { labId: number }) =>
   useFetch<void, JobRegisterRequest>(API_ENDPOINT.LABS(labId).JOBS, {
     method: "post",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "get",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailLogResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs`, {
     method: "get",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
-export const usePutJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) =>
+export const useCancelJob = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
     method: "put",
-    relatedKey: [API_ENDPOINT.LABS(labId).JOBS],
   });
 
 export const useGetMyInfo = () =>
@@ -65,11 +61,9 @@ export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
 export const usePostGpuServer = ({ labId }: { labId: number }) =>
   useFetch<void, GpuServerRegisterRequest>(API_ENDPOINT.LABS(labId).GPUS, {
     method: "post",
-    relatedKey: [`${API_ENDPOINT.LABS(labId).GPUS}`],
   });
 
 export const useDeleteGpuServer = ({ labId, serverId }: { labId: number; serverId: number }) =>
   useFetch<void>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
     method: "delete",
-    relatedKey: [`${API_ENDPOINT.LABS(labId).GPUS}`],
   });

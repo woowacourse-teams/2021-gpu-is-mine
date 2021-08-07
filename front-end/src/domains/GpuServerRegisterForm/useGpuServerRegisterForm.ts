@@ -5,7 +5,7 @@ import {
   performanceValidator,
   modelNameValidator,
 } from "./validator";
-import useForm, { getInputProps, getFormProps } from "../../hooks/useFormNew/useFormNew";
+import { useForm, getInputProps, getFormProps } from "../../hooks";
 import { APIFunctions, GpuServerRegisterRequest } from "../../types";
 
 type Values = {

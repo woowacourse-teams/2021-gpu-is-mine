@@ -3,6 +3,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'checkstyle'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.0'
 }
 
 group = 'com.example'
@@ -43,7 +45,7 @@ dependencies {
 processResources.dependsOn('copyPrivate')
 
 task copyPrivate(type: Copy) {
-    copy{
+    copy {
         from '../private-configuration'
         include "*.properties"
         into 'src/main/resources'
@@ -52,10 +54,63 @@ task copyPrivate(type: Copy) {
 
 test {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+    jacoco {
+        enabled = true
+    }
 }
 
 checkstyle {
     maxWarnings = 0
     configFile = file("${rootDir}/config/gpu-im-checkstyle.xml")
     toolVersion = "8.39"
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = false
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+        }
+    }
+}
+
+apply plugin: 'org.sonarqube'
+
+def sonarqubeProperties = new Properties()
+file("src/main/resources/sonarqube.properties").withInputStream { sonarqubeProperties.load(it) }
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', sonarqubeProperties.getProperty("url")
+        property 'sonar.projectKey', sonarqubeProperties.getProperty("projectKey")
+        property 'sonar.login', sonarqubeProperties.getProperty("login")
+        property 'sonar.sources', sonarqubeProperties.getProperty("sources")
+        property 'sonar.language', sonarqubeProperties.getProperty("language")
+        property 'sonar.projectVersion', sonarqubeProperties.getProperty("projectVersion")
+        property 'sonar.sourceEncoding', sonarqubeProperties.getProperty("sourceEncoding")
+        property 'sonar.coverage.jacoco.xmlReportPaths', sonarqubeProperties.getProperty("coverage.jacoco.xmlReportPaths")
+        property 'sonar.java.binaries', sonarqubeProperties.getProperty("java.binaries")
+        property 'sonar.test.inclusions', sonarqubeProperties.getProperty("test.inclusions")
+        property 'sonar.exclusions', sonarqubeProperties.getProperty("exclusions")
+    }
 }

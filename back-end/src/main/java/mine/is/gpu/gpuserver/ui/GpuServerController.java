@@ -1,15 +1,15 @@
 package mine.is.gpu.gpuserver.ui;
 
+import java.net.URI;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.gpuserver.application.GpuServerService;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
-import mine.is.gpu.gpuserver.dto.request.GpuServerUpdateRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
-import java.net.URI;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,7 @@ public class GpuServerController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
-            @RequestBody GpuServerRequest gpuServerRequest) {
+                                     @RequestBody GpuServerRequest gpuServerRequest) {
         memberService.checkManagerOfLab(member.getId(), labId);
 
         Long gpuServerId = gpuServerService.saveServerInLab(labId, gpuServerRequest);
@@ -44,7 +44,7 @@ public class GpuServerController {
 
     @GetMapping("/{gpuServerId}")
     public ResponseEntity<GpuServerResponse> findById(@PathVariable Long gpuServerId,
-            @AuthenticationPrincipal Member member) {
+                                                      @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfServer(member.getId(), gpuServerId);
 
         GpuServerResponse gpuServerResponse = gpuServerService.findById(gpuServerId);
@@ -53,19 +53,20 @@ public class GpuServerController {
 
     @GetMapping
     public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId,
-            @AuthenticationPrincipal Member member) {
+                                                           Pageable pageable,
+                                                           @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfLab(member.getId(), labId);
 
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId);
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId, pageable);
         return ResponseEntity.ok(gpuServerResponses);
     }
 
     @PutMapping("/{gpuServerId}")
     public ResponseEntity<Void> update(@PathVariable Long gpuServerId, @AuthenticationPrincipal Member member,
-            @RequestBody GpuServerUpdateRequest gpuServerUpdateRequest) {
+                                       @RequestBody GpuServerRequest gpuServerRequest) {
         memberService.checkManagerOfServer(member.getId(), gpuServerId);
 
-        gpuServerService.updateById(gpuServerId, gpuServerUpdateRequest);
+        gpuServerService.updateById(gpuServerId, gpuServerRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -79,7 +80,7 @@ public class GpuServerController {
 
     @GetMapping("/{gpuServerId}/status")
     public ResponseEntity<GpuServerStatusResponse> status(@PathVariable Long gpuServerId,
-            @AuthenticationPrincipal Member member) {
+                                                          @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfServer(member.getId(), gpuServerId);
 
         GpuServerStatusResponse response = gpuServerService.findStatusById(gpuServerId);

@@ -3,8 +3,12 @@ import { useAuthProvider } from "./useAuth";
 import { SESSION_STORAGE_KEY } from "../../constants";
 
 describe("useAuthProvider", () => {
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
   test("login을 실행하면 isAuthenticated가 true가 되고 accessToken이 sessionStorage에 저장된다", async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useAuthProvider());
+    const { result, waitFor } = renderHook(() => useAuthProvider());
 
     const validEmail = "test@gg.com";
     const validPassword = "abcd123!@#";
@@ -14,10 +18,10 @@ describe("useAuthProvider", () => {
       result.current.login({ email: validEmail, password: validPassword });
     });
 
-    await waitForNextUpdate();
+    await waitFor(() => !result.current.isLoading);
 
-    expect(result.current.isAuthenticated).toBe(true);
     expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).not.toBeNull();
+    expect(result.current.isAuthenticated).toBe(true);
   });
 
   test("logout을 실행하면 isAuthenticated가 false가 되고, accessToken이 sessionStorage에서 삭제된다", async () => {

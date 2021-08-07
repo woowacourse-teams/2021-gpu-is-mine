@@ -3,8 +3,11 @@ package mine.is.gpu.lab.dto;
 import mine.is.gpu.lab.domain.Lab;
 
 public class LabResponse {
-    private final Long id;
-    private final String name;
+    private Long id;
+    private String name;
+
+    public LabResponse() {
+    }
 
     private LabResponse(Long id, String name) {
         this.id = id;

@@ -3,6 +3,7 @@ package mine.is.gpu.gpuserver.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import mine.is.gpu.exception.http.NotFoundException;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
@@ -10,7 +11,7 @@ import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
-import mine.is.gpu.gpuserver.dto.request.GpuServerUpdateRequest;
+import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
@@ -20,7 +21,6 @@ import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.exception.LabException;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,32 +31,25 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 public class GpuServerServiceTest {
-
     @Autowired
     private GpuServerService gpuServerService;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private LabRepository labRepository;
 
     private Lab lab;
-
     private GpuServer gpuServer1;
     private GpuServer gpuServer2;
-
     private GpuBoard gpuBoard1;
     private GpuBoard gpuBoard2;
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         lab = labRepository.save(new Lab("랩1"));
 
         gpuServer1 = gpuServerRepository.save(new GpuServer("GPU서버1", false, 600L, 1024L, lab));
@@ -113,36 +106,51 @@ public class GpuServerServiceTest {
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
-    @DisplayName("GPU 서버의 이름을 수정한다.")
+    @DisplayName("GPU 서버를 수정한다.")
     @Test
-    void 이름_수정() {
-        assertThat(gpuServer1.getName()).isNotEqualTo("newGPU서버1");
+    void 서버_수정() {
+        assertThat(gpuServer1.getName()).isNotEqualTo("newServerName");
 
-        GpuServerUpdateRequest gpuServerName = new GpuServerUpdateRequest("newGPU서버1");
-        gpuServerService.updateById(gpuServer1.getId(), gpuServerName);
+        GpuServerRequest gpuServerUpdateRequest = gpuServerUpdateRequest();
+        gpuServerService.updateById(gpuServer1.getId(), gpuServerUpdateRequest);
 
         GpuServerResponse gpuServer = gpuServerService.findById(gpuServer1.getId());
-        assertThat(gpuServer.getServerName()).isEqualTo("newGPU서버1");
+        GpuBoardResponse gpuBoard = gpuServer.getGpuBoard();
+        assertThat(gpuServer.getServerName()).isEqualTo("newServerName");
+        assertThat(gpuServer.getMemorySize()).isEqualTo(2000L);
+        assertThat(gpuServer.getDiskSize()).isEqualTo(2000L);
+        assertThat(gpuBoard.getModelName()).isEqualTo("newModelName");
+        assertThat(gpuBoard.getPerformance()).isEqualTo(2000L);
     }
 
-    @DisplayName("존재하지 않는 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
+    @DisplayName("존재하지 않는 GPU_Server_ID로 GPU 서버를 수정한다.")
     @Test
-    void 존재하지_않는_GPU_ID로_GPU_서버의_이름을_수정() {
+    void 존재하지_않는_GPU_ID로_GPU_서버를_수정() {
         final Long nonexistentServerId = Long.MAX_VALUE;
 
-        GpuServerUpdateRequest gpuServerName = new GpuServerUpdateRequest("newGPU서버1");
-        assertThatThrownBy(() -> gpuServerService.updateById(nonexistentServerId, gpuServerName))
+        GpuServerRequest gpuServerUpdateRequest = gpuServerUpdateRequest();
+        assertThatThrownBy(() -> gpuServerService.updateById(nonexistentServerId, gpuServerUpdateRequest))
                 .isEqualTo(GpuServerException.GPU_SERVER_NOT_FOUND.getException());
     }
 
-    @DisplayName("삭제된 GPU_Server_ID로 GPU 서버의 이름을 수정한다.")
+    @DisplayName("삭제된 GPU_Server_ID로 GPU 서버를 수정한다.")
     @Test
-    void 삭제된_GPU_ID로_GPU_서버의_이름을_수정() {
+    void 삭제된_GPU_ID로_GPU_서버를_수정() {
         gpuServerService.deleteById(gpuServer1.getId());
-        GpuServerUpdateRequest gpuServerName = new GpuServerUpdateRequest("newGPU서버1");
-        assertThatThrownBy(() -> gpuServerService.updateById(gpuServer1.getId(), gpuServerName))
+        GpuServerRequest gpuServerUpdateRequest = gpuServerUpdateRequest();
+        assertThatThrownBy(() -> gpuServerService.updateById(gpuServer1.getId(), gpuServerUpdateRequest))
                 .isEqualTo(GpuServerException.GPU_SERVER_NOT_FOUND.getException());
 
+    }
+
+    private GpuServerRequest gpuServerUpdateRequest() {
+        GpuBoardRequest gpuBoardUpdateRequest = new GpuBoardRequest("newModelName", 2000L);
+        return new GpuServerRequest(
+                "newServerName",
+                2000L,
+                2000L,
+                gpuBoardUpdateRequest
+        );
     }
 
     @DisplayName("GPU 서버를 삭제하는 경우 GPU 보드, Job 도 같이 삭제된다.")
@@ -189,6 +197,75 @@ public class GpuServerServiceTest {
 
         Long gpuServerId = gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest);
         assertThat(gpuServerRepository.findById(gpuServerId)).isNotEmpty();
+    }
+
+    @DisplayName("중복된 이름으로 서버 생성 - 같은 랩")
+    @Test
+    void saveServerDuplicateNameSameLab() {
+        String name = "serverName";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        assertThatThrownBy(() -> gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest2))
+                .isEqualTo(GpuServerException.DUPLICATE_NAME_EXCEPTION.getException());
+    }
+
+    @DisplayName("중복된 이름으로 서버 생성 - 다른 랩")
+    @Test
+    void saveServerDuplicateNameNotSameLab() {
+        String name = "serverName";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        Lab lab2 = labRepository.save(new Lab("lab2"));
+        Long gpuServerId = gpuServerService.saveServerInLab(lab2.getId(), gpuServerRequest2);
+        assertThat(gpuServerId).isNotNull();
+    }
+
+    @DisplayName("중복된 이름으로 서버 수정 - 같은 랩")
+    @Test
+    void updateServerDuplicateNameSameLab() {
+        String name = "serverName1";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest("serverName2", 2L, 2L, boardRequest2);
+        Long gpuServerId = gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest2);
+
+        GpuServerRequest gpuServerRequest3 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        assertThatThrownBy(() -> gpuServerService.updateById(gpuServerId, gpuServerRequest3))
+                .isEqualTo(GpuServerException.DUPLICATE_NAME_EXCEPTION.getException());
+    }
+
+    @DisplayName("중복된 이름으로 서버 수정 - 다른 랩")
+    @Test
+    void updateServerDuplicateNameNotSameLab() {
+        String name = "serverName1";
+
+        GpuBoardRequest boardRequest1 = new GpuBoardRequest("nvdia", 10L);
+        GpuServerRequest gpuServerRequest1 = new GpuServerRequest(name, 1L, 1L, boardRequest1);
+        gpuServerService.saveServerInLab(lab.getId(), gpuServerRequest1);
+
+        GpuBoardRequest boardRequest2 = new GpuBoardRequest("nvdia2", 20L);
+        GpuServerRequest gpuServerRequest2 = new GpuServerRequest("serverName2", 2L, 2L, boardRequest2);
+        Lab lab2 = labRepository.save(new Lab("lab2"));
+        Long gpuServerId = gpuServerService.saveServerInLab(lab2.getId(), gpuServerRequest2);
+
+        GpuServerRequest gpuServerRequest3 = new GpuServerRequest(name, 2L, 2L, boardRequest2);
+        gpuServerService.updateById(gpuServerId, gpuServerRequest3);
+        GpuServerResponse gpuServer = gpuServerService.findById(gpuServerId);
+        assertThat(gpuServer.getServerName()).isEqualTo(name);
     }
 
     @DisplayName("gpuServer 저장 과정에서 labId가 없는 경우")

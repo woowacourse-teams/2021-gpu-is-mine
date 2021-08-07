@@ -11,6 +11,9 @@ public class MemberResponse {
     private MemberType memberType;
     private LabResponse labResponse;
 
+    public MemberResponse() {
+    }
+
     private MemberResponse(Long id, String email, String name, MemberType memberType, LabResponse labResponse) {
         this.id = id;
         this.email = email;

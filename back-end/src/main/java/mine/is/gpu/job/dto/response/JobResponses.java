@@ -1,18 +1,17 @@
 package mine.is.gpu.job.dto.response;
 
-import mine.is.gpu.job.domain.Job;
 import java.util.List;
 import java.util.stream.Collectors;
+import mine.is.gpu.job.domain.Job;
 
 public class JobResponses {
-
     private List<JobResponse> jobResponses;
+
+    public JobResponses() {
+    }
 
     private JobResponses(List<JobResponse> jobResponses) {
         this.jobResponses = jobResponses;
-    }
-
-    public JobResponses() {
     }
 
     public static JobResponses of(List<Job> jobs) {

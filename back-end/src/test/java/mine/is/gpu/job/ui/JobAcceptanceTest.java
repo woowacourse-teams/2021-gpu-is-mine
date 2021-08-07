@@ -1,23 +1,22 @@
 package mine.is.gpu.job.ui;
 
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
-import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import mine.is.gpu.AcceptanceTest;
-import mine.is.gpu.job.domain.JobStatus;
-import mine.is.gpu.job.dto.request.JobRequest;
-import mine.is.gpu.job.dto.response.JobResponse;
-import mine.is.gpu.lab.dto.LabRequest;
-import mine.is.gpu.auth.AuthAcceptanceTest;
-import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
-import mine.is.gpu.gpuserver.ui.GpuServerAcceptanceTest;
-import mine.is.gpu.job.fixture.JobFixtures;
-import mine.is.gpu.lab.ui.LabAcceptanceTest;
-import mine.is.gpu.member.fixture.MemberFixtures;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import mine.is.gpu.AcceptanceTest;
+import mine.is.gpu.auth.AuthAcceptanceTest;
+import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
+import mine.is.gpu.gpuserver.ui.GpuServerAcceptanceTest;
+import mine.is.gpu.job.domain.JobStatus;
+import mine.is.gpu.job.dto.request.JobRequest;
+import mine.is.gpu.job.dto.request.JobUpdateRequest;
+import mine.is.gpu.job.dto.response.JobResponse;
+import mine.is.gpu.job.fixture.JobFixtures;
+import mine.is.gpu.lab.dto.LabRequest;
+import mine.is.gpu.lab.ui.LabAcceptanceTest;
+import mine.is.gpu.member.fixture.MemberFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class JobAcceptanceTest extends AcceptanceTest {
-
     private Long labId;
     private Long serverId;
     private String userToken;
@@ -60,7 +58,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
                 .oauth2(accessToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .put("/api/labs/" + labId + "/jobs/" + jobId)
+                .put("/api/labs/" + labId + "/jobs/" + jobId + "/cancel")
                 .then()
                 .extract();
     }
@@ -73,6 +71,19 @@ public class JobAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/labs/" + labId + "/jobs")
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> Job_수정(Long labId, Long jobId, JobUpdateRequest jobUpdateRequest,
+                                                       String accessToken) {
+        return RestAssured.given()
+                .auth()
+                .oauth2(accessToken)
+                .body(jobUpdateRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/labs/" + labId + "/jobs/" + jobId)
                 .then()
                 .extract();
     }
@@ -110,7 +121,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
         String otherLabUserToken = AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급(
                 MemberFixtures.managerCreationRequest(otherLabId, "other@other.com", "password"));
         Long otherLabServerId = GpuServerAcceptanceTest
-                .GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerCreationRequest());
+                .GpuServer_생성후아이디찾기(otherLabUserToken, otherLabId, GpuServerFixtures.gpuServerNewCreationRequest());
 
         ExtractableResponse<Response> response =
                 Job_예약(otherLabId, JobFixtures.jobCreationRequest(otherLabServerId), userToken);
@@ -152,5 +163,17 @@ public class JobAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = Job_목록_serverId로_검색(meaninglessId, serverId, userToken);
         assertThat(response.statusCode()).isNotEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("Job을 수정한다.")
+    @Test
+    void updateJob() {
+        Long jobIdOfUser = Job_예약_후_id_반환(labId, JobFixtures.jobCreationRequest(serverId), userToken);
+
+        JobUpdateRequest jobUpdateRequest = JobFixtures.jobUpdateRequest();
+        Job_수정(labId, jobIdOfUser, jobUpdateRequest, managerToken);
+
+        JobResponse job = Job_Id로_검색(labId, jobIdOfUser, userToken).body().as(JobResponse.class);
+        Assertions.assertThat(job.getName()).isEqualTo(jobUpdateRequest.getName());
     }
 }
