@@ -10,6 +10,9 @@ public class JobRequest {
     private String metaData;
     private String expectedTime;
 
+    public JobRequest() {
+    }
+
     public JobRequest(Long gpuServerId, String name, String metaData, String expectedTime) {
         this.gpuServerId = gpuServerId;
         this.name = name;

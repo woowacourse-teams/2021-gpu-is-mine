@@ -9,10 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.lab.domain.Lab;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "lab_id"})})
 public class GpuServer extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,10 +8,9 @@ import mine.is.gpu.exception.http.UnauthorizedException;
 public enum MemberException {
 
     MEMBER_NOT_FOUND(new NotFoundException("해당 id의 회원이 존재하지 않습니다.")),
-
     INVALID_MEMBER_TYPE(new BadRequestException("존재하지 않는 MemberType 입니다.")),
-
-    UNAUTHORIZED_MEMBER(new UnauthorizedException("접근 권한이 없는 회원입니다."));
+    UNAUTHORIZED_MEMBER(new UnauthorizedException("접근 권한이 없는 회원입니다.")),
+    DUPLICATE_EMAIL_EXCEPTION(new BadRequestException("이미 존재하는 이메일입니다."));
 
     private CustomException customException;
 

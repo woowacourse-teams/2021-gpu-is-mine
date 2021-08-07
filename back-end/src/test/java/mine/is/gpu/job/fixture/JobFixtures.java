@@ -4,7 +4,6 @@ import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 
 public class JobFixtures {
-
     private static final String NAME = "job";
     private static final String NEW_NAME = "newJob";
     private static final String META_DATA = "meta_dat";

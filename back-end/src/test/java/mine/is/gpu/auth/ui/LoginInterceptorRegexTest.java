@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("URI path Regex 테스트")
 class LoginInterceptorRegexTest {
-
     private static final Pattern pattern = Pattern.compile("(?<=labs\\/)\\d+");
 
     @DisplayName("URI 에서 labId 정보를 가져온다.")

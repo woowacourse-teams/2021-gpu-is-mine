@@ -34,19 +34,14 @@ class LabServiceTest {
 
     @Autowired
     private LabService labService;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private JobRepository jobRepository;
 
@@ -56,6 +51,27 @@ class LabServiceTest {
         Long createdId = labService.save(LAB_REQUEST);
 
         assertThat(createdId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("중복 이름 생성")
+    void duplicateNameSave() {
+        labService.save(LAB_REQUEST);
+
+        assertThatThrownBy(() -> labService.save(LAB_REQUEST))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
+    }
+
+    @Test
+    @DisplayName("중복 이름 수정")
+    void duplicateNameUpdate() {
+        labService.save(LAB_REQUEST);
+
+        LabRequest labRequest = new LabRequest("LabName2");
+        Long labId = labService.save(labRequest);
+
+        assertThatThrownBy(() -> labService.update(labId, labRequest))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
     }
 
     @Test
