@@ -1,7 +1,10 @@
 package mine.is.gpu.exception.dto;
 
 public class ExceptionResponse {
-    private final String message;
+    private String message;
+
+    public ExceptionResponse() {
+    }
 
     private ExceptionResponse(String message) {
         this.message = message;

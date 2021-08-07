@@ -1,11 +1,14 @@
 package mine.is.gpu.lab.dto;
 
-import mine.is.gpu.lab.domain.Lab;
 import java.util.List;
 import java.util.stream.Collectors;
+import mine.is.gpu.lab.domain.Lab;
 
 public class LabResponses {
-    private final List<LabResponse> labResponses;
+    private List<LabResponse> labResponses;
+
+    public LabResponses() {
+    }
 
     private LabResponses(List<LabResponse> labResponses) {
         this.labResponses = labResponses;

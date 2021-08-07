@@ -1,19 +1,18 @@
 package mine.is.gpu.lab.ui;
 
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import mine.is.gpu.AcceptanceTest;
-import mine.is.gpu.lab.dto.LabRequest;
-import mine.is.gpu.lab.dto.LabResponse;
-import mine.is.gpu.auth.AuthAcceptanceTest;
-import mine.is.gpu.member.fixture.MemberFixtures;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import mine.is.gpu.AcceptanceTest;
+import mine.is.gpu.auth.AuthAcceptanceTest;
+import mine.is.gpu.lab.dto.LabRequest;
+import mine.is.gpu.lab.dto.LabResponse;
+import mine.is.gpu.member.fixture.MemberFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
