@@ -77,3 +77,12 @@ alter table log
     add constraint FKcsomb9ys7ebgc77sx8a9jip2f foreign key (job_id) references job (id);
 alter table member
     add constraint FKbxh2eojsjc94cmeo0fn5uvnwu foreign key (lab_id) references lab (id);
+
+alter table gpu_server
+    add constraint UKixn8qpho3d70myk9flqim3ugv unique key (name,lab_id);
+
+alter table lab
+    add constraint UK_j9qsyhoxrgtbt56xq53bvggjw unique key (name);
+
+alter table member
+    add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique key (email);
