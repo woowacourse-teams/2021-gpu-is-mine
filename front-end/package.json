@@ -35,6 +35,7 @@
     "@types/styled-components": "^5.1.11",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
+    "cross-env": "^7.0.3",
     "eslint": "^7.30.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -69,9 +70,9 @@
     "styled-components": "^5.3.0"
   },
   "scripts": {
-    "start": "NODE_ENV=production webpack serve ",
-    "dev": "NODE_ENV=development webpack serve",
-    "build": "NODE_ENV=production webpack",
+    "start": "cross-env NODE_ENV=production webpack serve ",
+    "dev": "cross-env NODE_ENV=development webpack serve",
+    "build": "cross-env NODE_ENV=production webpack",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "lint": "eslint --cache --fix .",
