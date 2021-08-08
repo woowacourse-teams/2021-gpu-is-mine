@@ -10,31 +10,26 @@ interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   rows: Row[];
 }
 
-// TODO: <HELP> lint 에러 고치느라 타입가드를 해줬는데도 적용이 안돼서 as 사용
-// 해당 sort 함수의 위치? 여기 or util로 분리
 const sortRowsByField = (rows: Row[], field: string, order: Order) =>
   rows.slice().sort((a, b) => {
-    if (!a[field]) {
+    const valueA = a[field];
+    const valueB = b[field];
+
+    if (valueA === null || valueA === undefined || valueA === "") {
       return 1;
     }
 
-    if (!b[field]) {
+    if (valueB === null || valueB === undefined || valueB === "") {
       return -1;
     }
 
-    if (typeof a[field] === "string" && typeof b[field] === "string") {
-      const value1 = a[field] as string;
-      const value2 = b[field] as string;
-
-      const value = value1.localeCompare(value2, navigator.language, { numeric: true });
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      const value = valueA.localeCompare(valueB, navigator.language, { numeric: true });
       return order === "asc" ? value : value * -1;
     }
 
-    if (typeof a[field] === "number" && typeof b[field] === "number") {
-      const value1 = a[field] as number;
-      const value2 = b[field] as number;
-
-      return order === "asc" ? value1 - value2 : value2 - value1;
+    if (typeof valueA === "number" && typeof valueB === "number") {
+      return order === "asc" ? valueA - valueB : valueB - valueA;
     }
 
     return 0;
