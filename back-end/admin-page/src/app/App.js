@@ -1,12 +1,15 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Login from "../components/login/login";
+import { Login, Lab } from "../components";
 
-function App() {
+function App({ apiService }) {
   return (
     <div>
       <BrowserRouter>
         <Switch>
+          <Route path="/lab">
+            <Lab apiService={apiService} />
+          </Route>
           <Route path="/">
             <Login />
           </Route>
