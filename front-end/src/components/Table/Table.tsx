@@ -12,8 +12,8 @@ interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
 
 const sortRowsByField = (rows: Row[], field: string, order: Order) =>
   rows.slice().sort((a, b) => {
-    const valueA = a[field];
-    const valueB = b[field];
+    const valueA = a.data[field];
+    const valueB = b.data[field];
 
     if (valueA === null || valueA === undefined || valueA === "") {
       return 1;
@@ -50,10 +50,10 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
       />
 
       <StyledBody>
-        {sortedRows.map((row, rowIndex) => (
+        {sortedRows.map(({ id, data }) => (
           // eslint-disable-next-line react/no-array-index-key
-          <StyledRow key={rowIndex}>
-            {Object.values(row).map((value, cellIndex) => (
+          <StyledRow key={id}>
+            {Object.values(data).map((value, cellIndex) => (
               // eslint-disable-next-line react/no-array-index-key
               <StyledCell key={cellIndex}>
                 <Text size="md" weight="regular">
