@@ -4,6 +4,7 @@
   <property name="LOG_PATH" value="logs"/>
   <property name="LOG_FILE_NAME" value="log"/>
   <property name="ERR_LOG_FILE_NAME" value="err_log"/>
+  <logger name="org.flywaydb" level="DEBUG"/>
 
   <property name="LOG_PATTERN_HIGHLIGHTED"
     value="%highlight(%-5level) %d{yy-MM-dd HH:mm:ss} [%logger{0}:%line] - %msg%n"/>
