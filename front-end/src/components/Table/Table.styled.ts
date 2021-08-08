@@ -1,20 +1,16 @@
 import styled, { css } from "styled-components";
 
-interface CellSortMarkProp {
-  sortActive: boolean;
+interface StyledHeadCellProps {
   isSortable: boolean;
 }
 
-interface StyledHeadCellProps {
-  isSortable: boolean;
+interface CellSortMarkProp {
+  sortActive: boolean;
 }
 
 const sortableFieldStyle = css`
   cursor: pointer;
   :hover {
-    filter: contrast(200%);
-    transition: text-decoration 0.5s ease-in-out;
-
     * {
       opacity: 1;
     }
