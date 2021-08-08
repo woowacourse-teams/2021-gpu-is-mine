@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-type Order = "asc" | "desc";
+import { Order } from "../../types";
 
 const useTable = () => {
   const [order, setOrder] = useState<Order>("asc");

@@ -3,7 +3,7 @@ import { useTable } from "../../hooks";
 import Text from "../Text/Text";
 import TableHeader from "./TableHeader";
 import { StyledTable, StyledBody, StyledRow, StyledCell } from "./Table.styled";
-import { Field, Row, Order } from "./type";
+import { Field, Row, Order } from "../../types";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   fields: Field[];
