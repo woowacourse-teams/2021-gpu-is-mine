@@ -49,6 +49,17 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> GpuServer_전체조회_페이지네이션(String token, Long labId, Integer page,
+            Integer size) {
+        return RestAssured
+                .given().log().all()
+                .auth()
+                .oauth2(token)
+                .when().get("/api/labs/" + labId + "/gpus?page=" + page + "&size=" + size)
+                .then().log().all()
+                .extract();
+    }
+
     public static int GpuServer_전체조회갯수(String token, Long labId) {
         ExtractableResponse<Response> response = GpuServer_전체조회(token, labId);
         List<GpuServerResponse> gpus = response.jsonPath()
@@ -153,6 +164,20 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
                 .hasSize(GpuServerIds.size());
+    }
+
+    @DisplayName("GpuServer 전체조회 with pagination")
+    @Test
+    void findGpuServersWithPagination() {
+        int page = 0;
+        ExtractableResponse<Response> response = GpuServer_전체조회_페이지네이션(managerToken, labId, page, GpuServerIds.size());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        List<Long> searchedIds = response.jsonPath().getList("gpuServers", GpuServerResponse.class)
+                .stream()
+                .map(GpuServerResponse::getId)
+                .collect(Collectors.toList());
+        assertThat(searchedIds).usingRecursiveComparison().isEqualTo(GpuServerIds);
     }
 
     @DisplayName("GpuServer 생성")
