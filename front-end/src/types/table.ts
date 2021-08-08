@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export type Row = Record<string, string | number | null | ReactNode>;
+export type Row = Record<string, ReactNode>;
 
 export type Order = "asc" | "desc";
 
