@@ -11,13 +11,9 @@ const Lab = ({ apiService }) => {
   }, [apiService]);
 
   const onAdd = (lab) => {
-    apiService.saveLab(lab);
-    // todo: id 어떻게 db에서 다시 가져오는지 모르겠음..ㅠ
-    setLabs((labs) => {
-      const updated = [...labs];
-      updated.push(lab);
-      return updated;
-    });
+    apiService
+      .saveLab(lab) //
+      .then((newLabs) => setLabs(newLabs));
   };
 
   const onDelete = (id) => {

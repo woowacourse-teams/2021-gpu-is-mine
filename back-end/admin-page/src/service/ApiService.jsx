@@ -22,6 +22,7 @@ class ApiService {
       headers: this.headers,
       body: JSON.stringify({ name }),
     });
+    return this.getLabs();
   }
   async deleteLab(id) {
     await fetch(`${this.base}labs/${id}`, {
