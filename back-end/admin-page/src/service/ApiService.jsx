@@ -23,6 +23,12 @@ class ApiService {
       body: JSON.stringify({ name }),
     });
   }
+  async deleteLab(id) {
+    await fetch(`${this.base}labs/${id}`, {
+      method: "DELETE",
+      headers: this.headers,
+    });
+  }
 }
 
 export default ApiService;

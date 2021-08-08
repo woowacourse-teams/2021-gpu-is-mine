@@ -20,12 +20,16 @@ const Lab = ({ apiService }) => {
     });
   };
 
+  const onDelete = (id) => {
+    apiService.deleteLab(id);
+  };
+
   return (
     <section>
       <section>
         <h2>랩 관리</h2>
         <LabAddForm onAdd={onAdd} />
-        <LabList labs={labs} />
+        <LabList labs={labs} onDelete={onDelete} />
       </section>
     </section>
   );
