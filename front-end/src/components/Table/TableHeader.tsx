@@ -23,7 +23,7 @@ const TableHeader = ({ fields, selectedField, order, onFieldClick }: TableHeader
             {name}
           </Text>
           <Text size="sm" weight="bold" as="span">
-            <CellSortMark sortActive={selector === selectedField} isSortable={isSortable}>
+            <CellSortMark sortActive={selector === selectedField}>
               {order === "asc" ? "▲" : "▼"}
             </CellSortMark>
           </Text>
