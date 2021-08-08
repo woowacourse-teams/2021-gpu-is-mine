@@ -2,7 +2,7 @@
   <property name="LOG_PATH" value="logs"/>
   <property name="LOG_FILE_NAME" value="log"/>
   <property name="LOG_PATTERN"
-    value="%n###### HTTP Request ######%n%fullRequest%n%n###### HTTP Response ######%n%fullResponse%n%n"/>
+    value="%nHTTP Request : %fullRequest%nHTTP Response : %fullResponse%n"/>
 
   <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
