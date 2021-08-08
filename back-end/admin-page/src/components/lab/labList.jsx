@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-const LabList = ({ apiService }) => {
-  const [labs, setLabs] = useState([]);
-  useEffect(() => {
-    apiService
-      .getLabs() //
-      .then((labs) => setLabs(labs));
-  }, [apiService]);
-
+const LabList = ({ labs }) => {
   return (
     <ul>
       {labs.map((lab) => (
-        <li>{lab.name}</li>
+        <li key={lab.id}>{lab.name}</li>
       ))}
     </ul>
   );
