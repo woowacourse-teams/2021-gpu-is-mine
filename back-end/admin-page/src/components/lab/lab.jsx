@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { default as LabList } from "./labList";
 import { default as LabAddForm } from "./labAddForm";
+import { StyledSection } from "./lab.styled";
 
 const Lab = ({ apiService }) => {
   const [labs, setLabs] = useState([]);
@@ -22,11 +23,11 @@ const Lab = ({ apiService }) => {
 
   return (
     <section>
-      <section>
+      <StyledSection>
         <h2>랩 관리</h2>
         <LabAddForm onAdd={onAdd} />
         <LabList labs={labs} onDelete={onDelete} />
-      </section>
+      </StyledSection>
     </section>
   );
 };

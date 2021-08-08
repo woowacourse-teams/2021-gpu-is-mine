@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { StyledLi, StyledSpan, StyledButton } from "./labItem.styled";
 
 const LabItem = memo(({ lab, onDelete }) => {
   const { id, name } = lab;
@@ -7,11 +8,13 @@ const LabItem = memo(({ lab, onDelete }) => {
     onDelete(id);
   };
   return (
-    <li key={name} id={id}>
-      <span>{id}:</span>
-      <span>{name}</span>
-      <button onClick={deletion}>삭제하기</button>
-    </li>
+    <StyledLi key={name} id={id}>
+      <div>
+        <StyledSpan>{id}</StyledSpan>
+        <StyledSpan>{name}</StyledSpan>
+      </div>
+      <StyledButton onClick={deletion}>삭제</StyledButton>
+    </StyledLi>
   );
 });
 

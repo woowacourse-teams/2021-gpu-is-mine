@@ -1,4 +1,6 @@
 import React, { useRef } from "react";
+import { default as Button } from "../button/button";
+import { StyledForm, StyledLabel, StyledInput } from "./labAddForm.styled";
 
 const LabAddForm = ({ onAdd }) => {
   const formRef = useRef();
@@ -13,15 +15,13 @@ const LabAddForm = ({ onAdd }) => {
   };
 
   return (
-    <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
-      <label>
-        lab name
-        <input ref={nameRef} type="text" name="name" />
-      </label>
-      <button name="saveLab" onClick={onSubmit}>
-        등록하기
-      </button>
-    </form>
+    <StyledForm ref={formRef} onSubmit={(e) => e.preventDefault()}>
+      <StyledLabel>
+        NAME
+        <StyledInput ref={nameRef} type="text" name="name" />
+      </StyledLabel>
+      <Button text="등록하기" onSubmit={onSubmit} />
+    </StyledForm>
   );
 };
 

@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useRef } from "react";
+import { StyledSection, StyledForm, StyledLabel } from "./login.styled";
+
+import { default as Button } from "../button/button";
 
 const Login = () => {
+  const formRef = useRef();
+  const idRef = useRef();
+  const passwordRef = useRef();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const login = {
+      id: idRef.current.value || "",
+      password: passwordRef.current.value || "",
+    };
+    formRef.current.reset();
+    console.log(login);
+  };
   return (
     <section>
-      <section>
-        <h2>LOGIN</h2>
-        <form >
-          <label>
+      <StyledSection>
+        <h2>ADMIN LOGIN</h2>
+        <StyledForm ref={formRef} onSubmit={(e) => e.preventDefault()}>
+          <StyledLabel>
             ID
-            <input type="text" name="id"/>
-          </label>
-          <label>
+            <input ref={idRef} type="text" name="id" />
+          </StyledLabel>
+          <StyledLabel>
             PASSWORD
-            <input type="password" name="password"/>
-          </label>
-          <input type="submit" value="로그인"/>
-        </form>
-      </section>
+            <input ref={passwordRef} type="password" name="password" />
+          </StyledLabel>
+          <Button text="로그인" onSubmit={onSubmit} />
+        </StyledForm>
+      </StyledSection>
     </section>
   );
 };
