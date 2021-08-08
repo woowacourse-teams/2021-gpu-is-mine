@@ -3,36 +3,41 @@ import { useTable } from "../../hooks";
 import Text from "../Text/Text";
 import TableHeader from "./TableHeader";
 import { StyledTable, StyledBody, StyledRow, StyledCell } from "./Table.styled";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Row = Record<string, any>;
-
-type Order = "asc" | "desc";
-
-interface Field {
-  name: string;
-  selector: string;
-  isSortable: boolean;
-}
+import { Field, Row, Order } from "./type";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   fields: Field[];
   rows: Row[];
 }
 
+// TODO: <HELP> lint 에러 고치느라 타입가드를 해줬는데도 적용이 안돼서 as 사용
+// 해당 sort 함수의 위치? 여기 or util로 분리
 const sortRowsByField = (rows: Row[], field: string, order: Order) =>
   rows.slice().sort((a, b) => {
     if (!a[field]) {
       return 1;
     }
 
-    if (!a[field]) {
+    if (!b[field]) {
       return -1;
     }
 
-    const value = a[field].localeCompare(b[field], navigator.language, { numeric: true });
+    if (typeof a[field] === "string" && typeof b[field] === "string") {
+      const value1 = a[field] as string;
+      const value2 = b[field] as string;
 
-    return order === "asc" ? value : value * -1;
+      const value = value1.localeCompare(value2, navigator.language, { numeric: true });
+      return order === "asc" ? value : value * -1;
+    }
+
+    if (typeof a[field] === "number" && typeof b[field] === "number") {
+      const value1 = a[field] as number;
+      const value2 = b[field] as number;
+
+      return order === "asc" ? value1 - value2 : value2 - value1;
+    }
+
+    return 0;
   });
 
 const Table = ({ fields, rows, ...rest }: TableProps) => {
@@ -50,10 +55,12 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
       />
 
       <StyledBody>
-        {sortedRows.map((row, idx) => (
-          <StyledRow key={idx}>
-            {Object.values(row).map((value, cell_idx) => (
-              <StyledCell key={cell_idx}>
+        {sortedRows.map((row, rowIndex) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <StyledRow key={rowIndex}>
+            {Object.values(row).map((value, cellIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <StyledCell key={cellIndex}>
                 <Text size="md" weight="regular">
                   {value}
                 </Text>

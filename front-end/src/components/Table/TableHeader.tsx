@@ -1,14 +1,7 @@
 import { TableHTMLAttributes } from "react";
 import Text from "../Text/Text";
 import { StyledHeader, StyledRow, StyledHeadCell, CellSortMark } from "./Table.styled";
-
-export type Order = "asc" | "desc";
-
-export interface Field {
-  name: string;
-  selector: string;
-  isSortable: boolean;
-}
+import { Field, Order } from "./type";
 
 interface TableHeaderProps extends TableHTMLAttributes<HTMLTableSectionElement> {
   fields: Field[];
