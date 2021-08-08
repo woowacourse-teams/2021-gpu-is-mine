@@ -1,10 +1,11 @@
 import React from "react";
+import { default as LabItem } from "./labItem";
 
 const LabList = ({ labs }) => {
   return (
     <ul>
       {labs.map((lab) => (
-        <li key={lab.id}>{lab.name}</li>
+        <LabItem key={lab.name} lab={lab} />
       ))}
     </ul>
   );

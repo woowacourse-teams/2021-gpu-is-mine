@@ -16,7 +16,6 @@ class ApiService {
     return result.labResponses;
   }
   async saveLab(lab) {
-    console.log(lab);
     const name = lab.name;
     await fetch(`${this.base}labs`, {
       method: "POST",
