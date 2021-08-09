@@ -6,8 +6,20 @@ export default {
   component: JobInfoList,
 } as ComponentMeta<typeof JobInfoList>;
 
-const Template: ComponentStory<typeof JobInfoList> = () => <JobInfoList />;
+const Template: ComponentStory<typeof JobInfoList> = (args) => <JobInfoList {...args} />;
 
-export const Default = Template.bind({});
+export const Manager = Template.bind({});
 
-Default.args = {};
+Manager.args = {
+  labId: 1,
+  memberId: 2,
+  memberType: "MANAGER",
+};
+
+export const User = Template.bind({});
+
+User.args = {
+  labId: 1,
+  memberId: 2,
+  memberType: "USER",
+};
