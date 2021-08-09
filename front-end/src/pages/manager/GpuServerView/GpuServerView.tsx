@@ -4,14 +4,17 @@ import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../../dom
 import { GpuServerInfoList } from "../../../domains/GpuServer";
 
 const GpuServerView = () => {
-  const myInfo = useMyInfo();
+  const {
+    labResponse: { id: labId },
+    memberType,
+  } = useMyInfo();
 
   return (
     <Layout
       Header={<ManagerHeader />}
       SubHeader={<ManagerSubHeader />}
       Navigation={<ManagerNavigation />}
-      Content={<GpuServerInfoList />}
+      Content={<GpuServerInfoList labId={labId} memberType={memberType} />}
     />
   );
 };
