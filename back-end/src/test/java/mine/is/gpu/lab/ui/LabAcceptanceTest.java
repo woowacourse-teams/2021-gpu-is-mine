@@ -62,7 +62,7 @@ public class LabAcceptanceTest extends AcceptanceTest {
     public static ExtractableResponse<Response> LAB_목록_조회_요청() {
         return RestAssured.given()
                 .when()
-                .get("/api/labs/")
+                .get("/api/labs")
                 .then()
                 .extract();
     }

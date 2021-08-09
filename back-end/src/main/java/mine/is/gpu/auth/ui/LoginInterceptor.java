@@ -1,5 +1,6 @@
 package mine.is.gpu.auth.ui;
 
+import mine.is.gpu.admin.Administrator;
 import mine.is.gpu.auth.application.AuthService;
 import mine.is.gpu.auth.exception.AuthorizationException;
 import mine.is.gpu.auth.infrastructure.AuthorizationExtractor;
@@ -31,6 +32,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         String credentials = AuthorizationExtractor.extract(request);
         if (credentials == null) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
+        }
+
+        if (authService.existAdministratorByToken(credentials)) {
+            return true;
         }
 
         Member member = authService.findMemberByToken(credentials);
