@@ -18,8 +18,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-//@Profile("dev")
-//@Component
+@Profile("local")
+@Component
 public class DataLoader implements CommandLineRunner {
     private final LabRepository labRepository;
     private final GpuServerRepository gpuServerRepository;
@@ -30,9 +30,9 @@ public class DataLoader implements CommandLineRunner {
     private final MemberService memberService;
 
     public DataLoader(LabRepository labRepository,
-            GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository,
-            JobRepository jobRepository, MemberService memberService) {
+                      GpuServerRepository gpuServerRepository,
+                      GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository,
+                      JobRepository jobRepository, MemberService memberService) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
