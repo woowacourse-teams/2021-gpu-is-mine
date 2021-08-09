@@ -39,8 +39,6 @@ public class WorkerController {
 
     @GetMapping("gpus/{serverId}/job")
     public ResponseEntity<JobResponse> takeJob(@PathVariable Long serverId) {
-        logger.info("server #" + serverId + " takes job");
-
         JobResponse jobResponse = workerService.popJobByServerId(serverId);
         return ResponseEntity.ok(jobResponse);
     }
@@ -48,8 +46,6 @@ public class WorkerController {
     @PutMapping("jobs/{jobId}/status")
     public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId,
             @RequestBody WorkerJobRequest workerJobRequest) {
-        logger.info("job #" + jobId + " is now " + workerJobRequest.getJobStatus().name());
-
         workerService.updateJobStatus(jobId, workerJobRequest);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
@@ -63,34 +59,25 @@ public class WorkerController {
 
     @PutMapping("jobs/{jobId}/start")
     public ResponseEntity<Void> start(@PathVariable Long jobId) {
-        logger.info("job #" + jobId + " is started");
-
         workerService.start(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
+        logger.info("job #" + jobId + " is started");
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("jobs/{jobId}/end")
     public ResponseEntity<Void> end(@PathVariable Long jobId) {
-        logger.info("job #" + jobId + " is completed");
-
         workerService.end(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
+        logger.info("job #" + jobId + " is completed");
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
             @RequestBody WorkerRequest workerRequest) {
-        if (workerRequest.getIsOn()) {
-            logger.info("worker server #" + serverId + " is on");
-        }
-        if (!workerRequest.getIsOn()) {
-            logger.info("worker server #" + serverId + " is off ");
-        }
-
         workerService.updateWorkerStatus(serverId, workerRequest);
         return ResponseEntity.ok().build();
     }
