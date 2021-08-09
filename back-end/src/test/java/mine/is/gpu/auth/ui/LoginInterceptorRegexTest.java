@@ -26,4 +26,18 @@ class LoginInterceptorRegexTest {
         Matcher matcher = pattern.matcher("/api/labs");
         assertThat(matcher.find()).isFalse();
     }
+
+    @DisplayName("URI 에서 /api/labs/{id} 경우 일치여부를 테스트한다.")
+    @Test
+    void parseURI_matches() {
+        final String pattern = ".*labs/\\d+";
+
+        boolean matchesSuccess = "/api/labs/1".matches(pattern);
+        assertThat(matchesSuccess).isTrue();
+
+        boolean matchesFail1 = "/api/labs/".matches(pattern);
+        assertThat(matchesFail1).isFalse();
+        boolean matchesFail2 = "/api/labs".matches(pattern);
+        assertThat(matchesFail2).isFalse();
+    }
 }

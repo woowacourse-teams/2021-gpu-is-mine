@@ -44,6 +44,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (includeLabId(labIdMatcher) && !isMemberOfLab(member, labIdMatcher)) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
         }
+
         return true;
     }
 

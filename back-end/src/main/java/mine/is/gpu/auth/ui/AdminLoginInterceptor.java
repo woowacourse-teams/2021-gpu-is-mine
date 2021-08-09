@@ -15,13 +15,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AdminLoginInterceptor implements HandlerInterceptor {
 
-    private static final Pattern pattern = Pattern.compile("(?<=labs\\/)\\d+");
     private final AuthService authService;
 
     public AdminLoginInterceptor(AuthService authService) {
         this.authService = authService;
     }
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -37,9 +35,14 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         if (isManagerAvailableMethods(request) && authService.existMemberByToken(credentials)) {
             Member member = authService.findMemberByToken(credentials);
             checkManager(member);
+            return true;
         }
 
-        return authService.existAdministratorByToken(credentials);
+        if (!authService.existAdministratorByToken(credentials)) {
+            throw AuthorizationException.UNAUTHORIZED_USER.getException();
+        }
+
+        return true;
     }
 
     private void checkManager(Member member) {
@@ -52,7 +55,7 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         if (HttpMethod.DELETE.matches(request.getMethod()) || HttpMethod.PUT.matches(request.getMethod())) {
             return true;
         }
-        Matcher matcher = pattern.matcher(request.getRequestURI());
-        return HttpMethod.GET.matches(request.getMethod()) && matcher.matches();
+        return HttpMethod.GET.matches(request.getMethod())
+                && request.getRequestURI().matches(".*labs/\\d+");
     }
 }

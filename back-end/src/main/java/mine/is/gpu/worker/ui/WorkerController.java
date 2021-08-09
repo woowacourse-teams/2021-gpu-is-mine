@@ -27,7 +27,7 @@ public class WorkerController {
     private final JobService jobService;
 
     public WorkerController(WorkerService workerService, MailService mailService,
-            JobService jobService) {
+                            JobService jobService) {
         this.workerService = workerService;
         this.mailService = mailService;
         this.jobService = jobService;
@@ -41,7 +41,7 @@ public class WorkerController {
 
     @PutMapping("jobs/{jobId}/status")
     public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId,
-            @RequestBody WorkerJobRequest workerJobRequest) {
+                                                @RequestBody WorkerJobRequest workerJobRequest) {
         workerService.updateJobStatus(jobId, workerJobRequest);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
@@ -71,14 +71,14 @@ public class WorkerController {
 
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
-            @RequestBody WorkerRequest workerRequest) {
+                                                   @RequestBody WorkerRequest workerRequest) {
         workerService.updateWorkerStatus(serverId, workerRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("jobs/{jobId}/log")
     public ResponseEntity<Void> saveLog(@PathVariable Long jobId,
-            @RequestBody WorkerJobLogRequest workerJobLogRequest) {
+                                        @RequestBody WorkerJobLogRequest workerJobLogRequest) {
         Long logId = workerService.saveLog(jobId, workerJobLogRequest);
         URI uri = URI.create("/api/workers/jobs/" + jobId + "/log/" + logId);
         return ResponseEntity.created(uri).build();

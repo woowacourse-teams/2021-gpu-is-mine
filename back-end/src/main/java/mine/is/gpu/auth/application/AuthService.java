@@ -1,6 +1,5 @@
 package mine.is.gpu.auth.application;
 
-import mine.is.gpu.admin.Administrator;
 import mine.is.gpu.admin.AdministratorRepository;
 import mine.is.gpu.admin.User;
 import mine.is.gpu.auth.dto.LoginRequest;
@@ -31,8 +30,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        User user = memberRepository.findByEmail(request.getEmail())
-                .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
+        User user = findUser(request);
         String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
 
         if (!user.hasSamePassword(password)) {
@@ -41,6 +39,15 @@ public class AuthService {
 
         String token = jwtTokenProvider.createToken(request.getEmail());
         return new LoginResponse(token);
+    }
+
+    private User findUser(LoginRequest request) {
+        if (administratorRepository.existsByEmail(request.getEmail())) {
+            return administratorRepository.findByEmail(request.getEmail())
+                    .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
+        }
+        return memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
     }
 
     @Transactional(readOnly = true)
