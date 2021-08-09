@@ -95,10 +95,6 @@ public class GpuServer extends BaseEntity {
         return diskSize;
     }
 
-    public Boolean getOn() {
-        return isOn;
-    }
-
     public LocalDateTime getLastResponse() {
         return lastResponse;
     }
