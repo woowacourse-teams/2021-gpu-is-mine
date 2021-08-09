@@ -10,6 +10,8 @@ import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
 import java.net.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,8 @@ public class WorkerController {
     private final MailService mailService;
     private final JobService jobService;
 
+    private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
+
     public WorkerController(WorkerService workerService, MailService mailService,
             JobService jobService) {
         this.workerService = workerService;
@@ -35,6 +39,8 @@ public class WorkerController {
 
     @GetMapping("gpus/{serverId}/job")
     public ResponseEntity<JobResponse> takeJob(@PathVariable Long serverId) {
+        logger.info("server #" + serverId + " takes job");
+
         JobResponse jobResponse = workerService.popJobByServerId(serverId);
         return ResponseEntity.ok(jobResponse);
     }
@@ -42,6 +48,8 @@ public class WorkerController {
     @PutMapping("jobs/{jobId}/status")
     public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId,
             @RequestBody WorkerJobRequest workerJobRequest) {
+        logger.info("job #" + jobId + " is now " + workerJobRequest.getJobStatus().name());
+
         workerService.updateJobStatus(jobId, workerJobRequest);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
@@ -55,6 +63,8 @@ public class WorkerController {
 
     @PutMapping("jobs/{jobId}/start")
     public ResponseEntity<Void> start(@PathVariable Long jobId) {
+        logger.info("job #" + jobId + " is started");
+
         workerService.start(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
@@ -63,6 +73,8 @@ public class WorkerController {
 
     @PutMapping("jobs/{jobId}/end")
     public ResponseEntity<Void> end(@PathVariable Long jobId) {
+        logger.info("job #" + jobId + " is completed");
+
         workerService.end(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
@@ -72,6 +84,13 @@ public class WorkerController {
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
             @RequestBody WorkerRequest workerRequest) {
+        if (workerRequest.getIsOn()) {
+            logger.info("worker server #" + serverId + " is on");
+        }
+        if (!workerRequest.getIsOn()) {
+            logger.info("worker server #" + serverId + " is off ");
+        }
+
         workerService.updateWorkerStatus(serverId, workerRequest);
         return ResponseEntity.ok().build();
     }
