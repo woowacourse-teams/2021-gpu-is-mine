@@ -13,5 +13,5 @@ echo "> new app deploy"
 JAR_NAME=$(ls |grep 'back-end' | tail -n 1)
 echo "> JAR Name: $JAR_NAME"
 
-nohup java -jar -Dspring.profiles.active=dev $JAR_NAME &
+nohup java -jar -Dspring.profiles.active=dev -Duser.timezone=Asia/Seoul $JAR_NAME &
 sleep 3
