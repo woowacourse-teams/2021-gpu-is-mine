@@ -1,4 +1,4 @@
-import { render, screen } from "../../__test__/test-utils";
+import { render, screen } from "test-utils";
 import Input from "./Input";
 
 describe("Input", () => {

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, userEvent } from "../../__test__/test-utils";
+import { fireEvent, render, screen, userEvent } from "test-utils";
 import { emailValidator, nameValidator, passwordValidator, VALIDATION_MESSAGE } from "./validator";
 import MemberSignupForm from "./MemberSignupForm";
 
