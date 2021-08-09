@@ -9,6 +9,7 @@ import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,10 +53,11 @@ public class GpuServerController {
 
     @GetMapping
     public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId,
+                                                           Pageable pageable,
                                                            @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfLab(member.getId(), labId);
 
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId);
+        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId, pageable);
         return ResponseEntity.ok(gpuServerResponses);
     }
 
