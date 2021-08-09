@@ -18,6 +18,17 @@ const PATH = {
       REGISTER: "/manager/job/register",
     },
   },
+  USER: {
+    GPU_SERVER: {
+      VIEW: "/user/gpu-server/view",
+      VIEW_DETAIL: "/user/gpu-server/view/:serverId",
+    },
+    JOB: {
+      VIEW: "/user/job/view",
+      VIEW_DETAIL: "/user/job/view/:jobId",
+      REGISTER: "/user/job/register",
+    },
+  },
   MEMBER: {
     SIGNUP: "/member/signup",
     LOGIN: "/member/login",
