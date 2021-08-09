@@ -1,5 +1,5 @@
 export * from "./useApi/useApi";
-export { useAuth } from "./useAuth/useAuth";
+export { useAuth, useMyInfo } from "./useAuth/useAuth";
 export { default as useBoolean } from "./useBoolean/useBoolean";
 export { default as useBreakpoints } from "./useBreakpoints/useBreakpoints";
 export { default as useFetch } from "./useFetch/useFetch";

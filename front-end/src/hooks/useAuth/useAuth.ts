@@ -29,6 +29,16 @@ export const useAuth = () => {
   return cxt;
 };
 
+export const useMyInfo = () => {
+  const { myInfo } = useAuth();
+
+  if (!myInfo) {
+    throw new Error("myInfo가 로드되지 않았습니다.");
+  }
+
+  return myInfo;
+};
+
 export const useRequest = () => {
   const { makeRequest: requestLogin, status: loginStatus, done: loginDone } = usePostLogin();
 
