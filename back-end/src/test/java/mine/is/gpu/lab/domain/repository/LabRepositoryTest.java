@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class LabRepositoryTest {
+class LabRepositoryTest {
     @Autowired
     private LabRepository labRepository;
 

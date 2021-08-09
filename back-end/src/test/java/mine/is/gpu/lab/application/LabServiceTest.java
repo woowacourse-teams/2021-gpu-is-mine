@@ -185,10 +185,10 @@ class LabServiceTest {
 
         // then
         assertThatThrownBy(() -> labService.findById(labId)).isInstanceOf(NotFoundException.class);
-        assertThat(gpuServerRepository.findAllByLabId(labId)).hasSize(0);
-        assertThat(gpuBoardRepository.findById(gpuBoardId).isPresent()).isFalse();
-        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId).isPresent()).isFalse();
-        Assertions.assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).hasSize(0);
-        assertThat(memberRepository.findById(memberId).isPresent()).isFalse();
+        assertThat(gpuServerRepository.findAllByLabId(labId)).isEmpty();
+        assertThat(gpuBoardRepository.findById(gpuBoardId)).isNotPresent();
+        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId)).isNotPresent();
+        Assertions.assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).isEmpty();
+        assertThat(memberRepository.findById(memberId)).isNotPresent();
     }
 }

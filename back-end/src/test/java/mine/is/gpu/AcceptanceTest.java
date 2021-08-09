@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class AcceptanceTest {
+public abstract class AcceptanceTest {
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -38,6 +38,9 @@ public class AcceptanceTest {
     int port;
     @MockBean
     JavaMailSender javaMailSender;
+
+    protected AcceptanceTest() {
+    }
 
     @BeforeEach
     public void setUp() {
