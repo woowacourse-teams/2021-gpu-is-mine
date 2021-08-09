@@ -36,16 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class MemberServiceTest {
     @Autowired
-    private LabRepository labRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private GpuServerRepository gpuServerRepository;
-    @Autowired
-    private GpuBoardRepository gpuBoardRepository;
-    @Autowired
-    private JobRepository jobRepository;
-    @Autowired
     private LabService labService;
     @Autowired
     private MemberService memberService;

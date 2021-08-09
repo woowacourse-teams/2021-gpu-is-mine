@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
-public class GpuServerRepositoryTest {
+class GpuServerRepositoryTest {
     @Autowired
     EntityManager em;
     @Autowired
@@ -66,12 +66,12 @@ public class GpuServerRepositoryTest {
         gpuServerRepository.save(gpuServer);
 
         Optional<GpuServer> persistGpu = gpuServerRepository.findById(gpuServer.getId());
-        assertThat(persistGpu.isPresent()).isTrue();
+        assertThat(persistGpu).isPresent();
 
         gpuServerRepository.delete(gpuServer);
 
         Optional<GpuServer> actual = gpuServerRepository.findById(gpuServer.getId());
-        assertThat(actual.isPresent()).isFalse();
+        assertThat(actual).isNotPresent();
     }
 
     @DisplayName("중복 이름 생성 테스트 - 같은 랩")

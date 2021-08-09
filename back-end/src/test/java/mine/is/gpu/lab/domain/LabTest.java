@@ -7,7 +7,7 @@ import mine.is.gpu.lab.exception.LabException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class LabTest {
+class LabTest {
     @DisplayName("생성 테스트 - 정상")
     @Test
     void 생성() {

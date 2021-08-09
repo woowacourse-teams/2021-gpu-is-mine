@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
-public class MemberRepositoryTest {
+class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
