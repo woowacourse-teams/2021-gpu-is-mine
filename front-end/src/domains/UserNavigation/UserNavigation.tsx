@@ -21,7 +21,7 @@ const UserNavigation = (props: NavigationProps) => {
         <MenuTitle as="div" weight="medium">
           GPU 서버 관리
         </MenuTitle>
-        <NavLink to={PATH.USER.GPU_SERVER.VIEW}>
+        <NavLink to={PATH.GPU_SERVER.VIEW}>
           <MenuItem as="div" aria-label="gpu-server-view">
             조회
           </MenuItem>
@@ -29,14 +29,14 @@ const UserNavigation = (props: NavigationProps) => {
       </Menu>
       <Menu>
         <MenuTitle as="div" weight="medium">
-          Job 관리
+          나의 Job
         </MenuTitle>
-        <NavLink to={PATH.USER.JOB.VIEW}>
+        <NavLink to={PATH.JOB.VIEW}>
           <MenuItem as="div" aria-label="job-view">
             조회
           </MenuItem>
         </NavLink>
-        <NavLink to={PATH.USER.JOB.REGISTER}>
+        <NavLink to={PATH.JOB.REGISTER}>
           <MenuItem as="div" aria-label="job-register">
             등록
           </MenuItem>

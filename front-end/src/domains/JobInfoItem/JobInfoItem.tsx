@@ -44,7 +44,7 @@ const JobInfoItem = ({
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const handleDetailClick = useMoveToPage(`${PATH.MANAGER.JOB.VIEW}/${jobId}`);
+  const handleDetailClick = useMoveToPage(`${PATH.JOB.VIEW}/${jobId}`);
 
   // TODO: 실제 작업의 시작 시간 교체
   const startTime = formatDate(new Date());
