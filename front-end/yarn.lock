@@ -2270,6 +2270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.1.9":
+  version: 0.1.9
+  resolution: "@kurkle/color@npm:0.1.9"
+  checksum: 511822c35a2e576b1df9d07e779284c7f62ecad0c60d7d07cb52fabe69feb9a8c528f424d07f65d89669fdec79155784f26f7d1aca398730d816201f516c9d49
+  languageName: node
+  linkType: hard
+
 "@mdx-js/loader@npm:^1.6.22":
   version: 1.6.22
   resolution: "@mdx-js/loader@npm:1.6.22"
@@ -9661,6 +9668,7 @@ fsevents@^1.2.7:
   resolution: "gpu-is-mine-client@workspace:."
   dependencies:
     "@babel/core": ^7.15.0
+    "@kurkle/color": ^0.1.9
     "@pmmmwh/react-refresh-webpack-plugin": ^0.4.3
     "@storybook/addon-actions": ^6.3.2
     "@storybook/addon-essentials": ^6.3.2

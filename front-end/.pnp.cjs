@@ -36,6 +36,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@babel/core", "npm:7.15.0"],
+            ["@kurkle/color", "npm:0.1.9"],
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:0.4.3"],
             ["@storybook/addon-actions", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.3.2"],
             ["@storybook/addon-essentials", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.3.2"],
@@ -5151,6 +5152,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.0.0"],
             ["@types/yargs", "npm:16.0.4"],
             ["chalk", "npm:4.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@kurkle/color", [
+        ["npm:0.1.9", {
+          "packageLocation": "./.yarn/cache/@kurkle-color-npm-0.1.9-f688f703ac-511822c35a.zip/node_modules/@kurkle/color/",
+          "packageDependencies": [
+            ["@kurkle/color", "npm:0.1.9"]
           ],
           "linkType": "HARD",
         }]
@@ -14957,6 +14967,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["gpu-is-mine-client", "workspace:."],
             ["@babel/core", "npm:7.15.0"],
+            ["@kurkle/color", "npm:0.1.9"],
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:0.4.3"],
             ["@storybook/addon-actions", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.3.2"],
             ["@storybook/addon-essentials", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.3.2"],
