@@ -18,41 +18,41 @@ const UserNavigation = (props: NavigationProps) => {
   return (
     <StyledUserNavigation {...props}>
       <Menu>
-        <MenuTitle as="div" weight="medium">
+        <MenuTitle forwardedAs="div" weight="medium">
           GPU 서버 관리
         </MenuTitle>
         <NavLink to={PATH.GPU_SERVER.VIEW}>
-          <MenuItem as="div" aria-label="gpu-server-view">
+          <MenuItem forwardedAs="div" aria-label="gpu-server-view">
             조회
           </MenuItem>
         </NavLink>
       </Menu>
       <Menu>
-        <MenuTitle as="div" weight="medium">
+        <MenuTitle forwardedAs="div" weight="medium">
           나의 Job
         </MenuTitle>
         <NavLink to={PATH.JOB.VIEW}>
-          <MenuItem as="div" aria-label="job-view">
+          <MenuItem forwardedAs="div" aria-label="job-view">
             조회
           </MenuItem>
         </NavLink>
         <NavLink to={PATH.JOB.REGISTER}>
-          <MenuItem as="div" aria-label="job-register">
+          <MenuItem forwardedAs="div" aria-label="job-register">
             등록
           </MenuItem>
         </NavLink>
       </Menu>
       <Menu>
-        <MenuTitle as="div" weight="medium">
+        <MenuTitle forwardedAs="div" weight="medium">
           내 정보
         </MenuTitle>
-        <MenuItem as="div">조회</MenuItem>
-        <MenuItem as="div">수정</MenuItem>
+        <MenuItem forwardedAs="div">조회</MenuItem>
+        <MenuItem forwardedAs="div">수정</MenuItem>
       </Menu>
 
       <LogoutMenu>
         <button type="button" onClick={logout}>
-          <MenuItem as="div" weight="medium">
+          <MenuItem forwardedAs="div" weight="medium">
             로그아웃
           </MenuItem>
         </button>

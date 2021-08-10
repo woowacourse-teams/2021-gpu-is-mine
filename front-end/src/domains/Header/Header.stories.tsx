@@ -1,13 +1,15 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import ManagerHeader from "./Header";
+import Header from "./Header";
 
 export default {
   title: "Domains/Manager/Header",
-  component: ManagerHeader,
-} as ComponentMeta<typeof ManagerHeader>;
+  component: Header,
+} as ComponentMeta<typeof Header>;
 
-const Template: ComponentStory<typeof ManagerHeader> = (args) => <ManagerHeader {...args} />;
+const Template: ComponentStory<typeof Header> = (args) => <Header {...args} />;
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  labName: "GPU_IS_MINE",
+};

@@ -2,7 +2,7 @@ import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useAuth, useToggle } from "../../hooks";
 import { Text } from "../../components";
-import { StyledManagerSubHeader, StyledManagerNavigation } from "./SubHeader.styled";
+import { StyledSubHeader, StyledManagerNavigation } from "./SubHeader.styled";
 
 type SubHeaderProps = HTMLAttributes<HTMLElement>;
 
@@ -45,7 +45,7 @@ const useParsePathname = ({
   ].filter(({ name }) => Boolean(name));
 };
 
-const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
+const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
   const { myInfo } = useAuth();
   const { pathname } = useLocation();
   const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
@@ -59,7 +59,7 @@ const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
 
   return (
     <>
-      <StyledManagerSubHeader {...rest}>
+      <StyledSubHeader {...rest}>
         <div className="title">
           {list.map(({ path, name }, index) => (
             <Fragment key={name}>
@@ -79,10 +79,10 @@ const ManagerSubHeader = ({ children, ...rest }: SubHeaderProps) => {
         <button type="button" className="down-arrow" onClick={toggleIsNavVisible}>
           {isNavVisible ? "▲" : "▼"}
         </button>
-      </StyledManagerSubHeader>
+      </StyledSubHeader>
       {isNavVisible && <StyledManagerNavigation />}
     </>
   );
 };
 
-export default ManagerSubHeader;
+export default SubHeader;

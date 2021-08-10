@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { up } from "styled-breakpoints";
 import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
 
-export const StyledManagerSubHeader = styled.header`
+export const StyledSubHeader = styled.header`
   background-color: var(--primary-700);
   color: var(--on-primary-700);
 

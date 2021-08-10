@@ -1,21 +1,20 @@
 import { HTMLAttributes } from "react";
-import { useAuth } from "../../hooks";
 import { Logo, Text } from "../../components";
-import { StyledManagerHeader } from "./Header.styled";
+import { StyledHeader } from "./Header.styled";
 
-type HeaderProps = HTMLAttributes<HTMLElement>;
+interface HeaderProps extends HTMLAttributes<HTMLElement> {
+  labName: string;
+}
 
-const ManagerHeader = ({ children, ...rest }: HeaderProps) => {
-  const { myInfo } = useAuth();
-
+const Header = ({ labName, children, ...rest }: HeaderProps) => {
   return (
-    <StyledManagerHeader {...rest}>
+    <StyledHeader {...rest}>
       <Logo />
       <Text className="lab-name" size="md" weight="medium">
-        {myInfo?.labResponse.name}
+        {labName}
       </Text>
-    </StyledManagerHeader>
+    </StyledHeader>
   );
 };
 
-export default ManagerHeader;
+export default Header;

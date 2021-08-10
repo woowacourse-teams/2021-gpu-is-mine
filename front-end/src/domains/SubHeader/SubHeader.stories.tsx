@@ -1,12 +1,12 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import ManagerSubHeader from "./SubHeader";
+import SubHeader from "./SubHeader";
 
 export default {
   title: "Domains/Manager/SubHeader",
-  component: ManagerSubHeader,
-} as ComponentMeta<typeof ManagerSubHeader>;
+  component: SubHeader,
+} as ComponentMeta<typeof SubHeader>;
 
-const Template: ComponentStory<typeof ManagerSubHeader> = (args) => <ManagerSubHeader {...args} />;
+const Template: ComponentStory<typeof SubHeader> = (args) => <SubHeader {...args} />;
 
 export const Default = Template.bind({});
 

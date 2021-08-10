@@ -1,8 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
+import { Header, SubHeader } from "../../domains/Common";
+import { ManagerNavigation } from "../../domains/Manager";
 import { GpuServerRegisterForm } from "../../domains/GpuServer";
-import { ManagerHeader, ManagerNavigation, ManagerSubHeader } from "../../domains/Manager";
 import Layout from "./Layout";
 
 export default {
@@ -27,8 +28,8 @@ const StyledRegisterForm = styled(GpuServerRegisterForm)`
 `;
 
 Default.args = {
-  Header: <ManagerHeader />,
-  SubHeader: <ManagerSubHeader /* onClick={handleClick} */ />,
+  Header: <Header labName="GPU_IS_MINE" />,
+  SubHeader: <SubHeader />,
   Navigation: <ManagerNavigation />,
   Content: <StyledRegisterForm />,
 };

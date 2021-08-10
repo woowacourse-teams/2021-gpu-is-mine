@@ -1,16 +1,17 @@
 import { useMyInfo } from "../../hooks";
 import { Layout } from "../../components";
-import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../domains/Manager";
+import { Header, SubHeader } from "../../domains/Common";
+import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
 import { GpuServerInfoList } from "../../domains/GpuServer";
 
 const GpuServerView = () => {
-  const { labId, memberType } = useMyInfo();
+  const { labId, labName, memberType } = useMyInfo();
 
   return (
     <Layout
-      Header={<ManagerHeader />}
-      SubHeader={<ManagerSubHeader />}
+      Header={<Header labName={labName} />}
+      SubHeader={<SubHeader />}
       Navigation={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
       Content={<GpuServerInfoList labId={labId} memberType={memberType} />}
     />

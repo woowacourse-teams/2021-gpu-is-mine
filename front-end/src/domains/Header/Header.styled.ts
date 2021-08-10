@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
 
-export const StyledManagerHeader = styled.header`
+export const StyledHeader = styled.header`
   width: 100%;
   height: 100%;
 
