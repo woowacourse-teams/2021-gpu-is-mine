@@ -119,7 +119,7 @@ public class JobControllerTest {
 
         private int numberOfWaitingJobs() {
             ResponseEntity<JobResponses> beforeReponses = jobController
-                    .findAll(lab.getId(), serverInLab.getId(), "WAITING");
+                    .findAll(lab.getId(), serverInLab.getId(), "WAITING", null);
             return beforeReponses.getBody().getJobResponses().size();
         }
     }
@@ -168,7 +168,7 @@ public class JobControllerTest {
             jobRepository.save(myJob);
             jobRepository.save(jobFromOtherInLab);
 
-            compareSearchedAndExpected(jobController.findJobsOfMine(userInLab, null), myJob);
+            compareSearchedAndExpected(jobController.findJobsOfMine(userInLab, null, null), myJob);
         }
 
         @DisplayName("lab를 기준으로 Job을 조회한다.")
@@ -180,7 +180,7 @@ public class JobControllerTest {
             jobRepository.save(jobInLab);
             jobRepository.save(jobInOtherLab);
 
-            compareSearchedAndExpected(jobController.findAll(lab.getId(), null, null), jobInLab);
+            compareSearchedAndExpected(jobController.findAll(lab.getId(), null, null, null), jobInLab);
         }
 
         @DisplayName("서버를 기준으로 작업 목록을 확인할 수 있다.")
@@ -192,14 +192,14 @@ public class JobControllerTest {
             jobRepository.save(myJob);
             jobRepository.save(jobFromOtherServer);
 
-            compareSearchedAndExpected(jobController.findAll(lab.getId(), serverInLab.getId(), null), myJob);
+            compareSearchedAndExpected(jobController.findAll(lab.getId(), serverInLab.getId(), null, null), myJob);
         }
 
         @DisplayName("서버를 기준으로 작업 목록을 조회할 때 url path의 labId와 serverId를 검증한다.")
         @Test
         void findJobsByServerWithMeaninglessLabId() {
             assertThatThrownBy(() -> {
-                jobController.findAll(lab.getId(), serverInOtherLab.getId(), null);
+                jobController.findAll(lab.getId(), serverInOtherLab.getId(), null, null);
             }).isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
         }
 
@@ -262,7 +262,7 @@ public class JobControllerTest {
         @DisplayName("사용자의 랩이 아닌 다른 랩의 서버를 기준으로 작업 목록을 확인할 수 없다.")
         @Test
         void findJobsByServerWithoutPermission() {
-            assertThatThrownBy(() -> jobController.findAll(jobInOtherLab.getId(), serverInOtherLab.getId(), null))
+            assertThatThrownBy(() -> jobController.findAll(jobInOtherLab.getId(), serverInOtherLab.getId(), null, null))
                     .isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
         }
 

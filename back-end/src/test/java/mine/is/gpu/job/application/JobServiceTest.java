@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -32,6 +34,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -178,16 +182,26 @@ class JobServiceTest {
     }
 
     @Test
-    @DisplayName("예약을 수정한다.")
-    void update() {
-        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long jobId = jobService.save(memberId, jobRequest);
+    @DisplayName("로그 정보 모두 조회")
+    void findAllLogsByJob() {
+        //given
+        Lab lab2 = new Lab("lab2");
+        labRepository.save(lab2);
+        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab2);
+        gpuServerRepository.save(gpuServer1);
+        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
+        gpuBoardRepository.save(gpuBoard1);
+        Member member1 = new Member("email2@email.com", "password", "name1", MemberType.MANAGER,
+                lab2);
+        memberRepository.save(member1);
+        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
+        jobRepository.save(job1);
 
-        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
-        jobService.update(jobId, jobUpdateRequest);
+        logRepository.save(new Log("content1", job1));
+        logRepository.save(new Log("content1", job1));
+        logRepository.save(new Log("content1", job1));
 
-        JobResponse jobResponse = jobService.findById(jobId);
-        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
+        Assertions.assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 
     @Nested
@@ -211,7 +225,7 @@ class JobServiceTest {
             Long jobId1 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server3")));
             Long jobId2 = jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server4")));
 
-            assertJobIdsFromJobResponses(jobService.findJobsOfMember(memberId, null), jobId1,
+            assertJobIdsFromJobResponses(jobService.findJobsOfMember(memberId, null, null), jobId1,
                     jobId2);
         }
 
@@ -221,7 +235,7 @@ class JobServiceTest {
             Long jobId1 = jobService.save(saveMember(lab, "email3"), jobCreationRequest(serverId));
             Long jobId2 = jobService.save(saveMember(lab, "email4"), jobCreationRequest(serverId));
 
-            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null), jobId1,
+            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null, null), jobId1,
                     jobId2);
         }
 
@@ -233,23 +247,8 @@ class JobServiceTest {
             Long jobId2 = jobService
                     .save(saveMember(lab, "email4"), jobCreationRequest(saveGpuServerInLab(lab, "server4")));
 
-            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null), jobId1,
+            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null, null), jobId1,
                     jobId2);
-        }
-
-        @Test
-        @DisplayName("다음 Job의 예상 실행 시간이 이전 Job의 기대 시간의 합과 같다")
-        void findAllTimeByLab() {
-            Long jobId1 = jobService
-                    .save(saveMember(lab, "email3"), jobCreationRequest(saveGpuServerInLab(lab, "server3")));
-            Long jobId2 = jobService
-                    .save(saveMember(lab, "email4"), jobCreationRequest(saveGpuServerInLab(lab, "server4")));
-
-            JobResponses jobs = jobService.findJobs(lab.getId(), null, null);
-
-            assertThat(jobs.getJobResponses().get(1).getCalculatedTime().getExpectedStartedTime()).isEqualTo(
-                    jobs.getJobResponses().get(1).getCalculatedTime().getCreatedTime().plusHours(
-                            Long.parseLong(jobs.getJobResponses().get(0).getExpectedTime())));
         }
 
         private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {
@@ -258,6 +257,73 @@ class JobServiceTest {
                             .map(JobResponse::getId)
                             .collect(Collectors.toList())
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
+        }
+    }
+
+    @Test
+    @DisplayName("예약을 수정한다.")
+    void update() {
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
+        Long jobId = jobService.save(memberId, jobRequest);
+
+        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
+        jobService.update(jobId, jobUpdateRequest);
+
+        JobResponse jobResponse = jobService.findById(jobId);
+        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
+    }
+
+    @Nested
+    @DisplayName("다중 조회 시 페이지네이션을 적용한다.")
+    class FindAllWithPagination {
+
+        Lab lab = new Lab("labA");
+        Long memberId;
+        Long serverId;
+        String JOB_BASE_NAME = "job";
+        Pageable pageable = PageRequest.of(2, 3);
+
+        @BeforeEach
+        void setUp() {
+            labRepository.save(lab);
+            memberId = saveMember(lab, "email2");
+            serverId = saveGpuServerInLab(lab, "server2");
+            saveDummyJobs(30);
+        }
+
+        @Test
+        @DisplayName("랩별 잡 조회 시 페이지네이션 적용을 확인한다.")
+        void findJobs() {
+            JobResponses searched = jobService.findJobs(lab.getId(), null, null, pageable);
+            List<String> searchedNames = searched.getJobResponses().stream()
+                    .map(JobResponse::getName)
+                    .collect(Collectors.toList());
+
+            List<String> expectedNames = IntStream.range(0, pageable.getPageSize())
+                    .mapToObj(i -> JOB_BASE_NAME + (pageable.getPageSize() * pageable.getPageNumber() + i))
+                    .collect(Collectors.toList());
+
+            assertThat(expectedNames).isEqualTo(searchedNames);
+        }
+
+        @Test
+        void findJobsOfMember() {
+            JobResponses searched = jobService.findJobsOfMember(memberId, null, pageable);
+            List<String> searchedNames = searched.getJobResponses().stream()
+                    .map(JobResponse::getName)
+                    .collect(Collectors.toList());
+
+            List<String> expectedNames = IntStream.range(0, pageable.getPageSize())
+                    .mapToObj(i -> JOB_BASE_NAME + (pageable.getPageSize() * pageable.getPageNumber() + i))
+                    .collect(Collectors.toList());
+
+            assertThat(expectedNames).isEqualTo(searchedNames);
+        }
+
+        private void saveDummyJobs(int count){
+            IntStream.range(0, count)
+                    .mapToObj(i -> JOB_BASE_NAME + i)
+                    .forEach(name -> jobService.save(memberId, jobCreationRequest(name, saveGpuServerInLab(lab, name))));
         }
     }
 }

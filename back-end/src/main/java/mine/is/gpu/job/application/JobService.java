@@ -3,6 +3,7 @@ package mine.is.gpu.job.application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -25,6 +26,10 @@ import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
+import mine.is.gpu.worker.domain.repository.LogRepository;
+import mine.is.gpu.worker.dto.LogsResponse;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -73,28 +78,28 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findJobs(Long labId, Long serverId, String status) {
+    public JobResponses findJobs(Long labId, Long serverId, String status, Pageable pageable) {
         if (Objects.isNull(serverId)) {
 
             if (StringUtils.hasText(status)) {
-                return findJobsOfLabByStatus(labId, status);
+                return findJobsOfLabByStatus(labId, status, pageable);
             }
-            return findAllJobsOfLab(labId);
+            return findAllJobsOfLab(labId, pageable);
         }
 
         checkServerInLab(serverId, labId);
         if (StringUtils.hasText(status)) {
-            return findJobsOfServerByStatus(serverId, status);
+            return findJobsOfServerByStatus(serverId, status, pageable);
         }
-        return findAllJobsOfServer(serverId);
+        return findAllJobsOfServer(serverId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findJobsOfMember(Long memberId, String status) {
+    public JobResponses findJobsOfMember(Long memberId, String status, Pageable pageable) {
         if (StringUtils.hasText(status)) {
-            return findJobsOfMemberByStatus(memberId, status);
+            return findJobsOfMemberByStatus(memberId, status, pageable);
         }
-        return findAllJobsOfMember(memberId);
+        return findAllJobsOfMember(memberId, pageable);
     }
 
     @Transactional
@@ -103,7 +108,7 @@ public class JobService {
         job.setName(jobUpdateRequest.getName());
     }
 
-    private JobResponses findJobsOfLabByStatus(Long labId, String status) {
+    private JobResponses findJobsOfLabByStatus(Long labId, String status, Pageable pageable) {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
@@ -111,41 +116,51 @@ public class JobService {
             JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
             jobs.addAll(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
         }
-
-        return JobResponses.of(jobs);
+        return JobResponses.of(jobsOfPage(jobs, pageable));
     }
 
-    private JobResponses findAllJobsOfLab(Long labId) {
+    private JobResponses findAllJobsOfLab(Long labId, Pageable pageable) {
         List<Job> jobs = new ArrayList<>();
 
         for (GpuServer gpuServer : gpuServerRepository.findAllByLabId(labId)) {
             GpuBoard gpuBoard = findBoardByServerId(gpuServer.getId());
             jobs.addAll(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
         }
-        return JobResponses.of(jobs);
+        return JobResponses.of(jobsOfPage(jobs, pageable));
     }
 
-    private JobResponses findJobsOfServerByStatus(Long serverId, String status) {
+    private JobResponses findJobsOfServerByStatus(Long serverId, String status, Pageable pageable) {
         GpuBoard gpuBoard = findBoardByServerId(serverId);
         JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
-        return JobResponses
-                .of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
+
+        if (Objects.isNull(pageable)) {
+            return JobResponses.of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
+        }
+        return JobResponses.of(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus, pageable));
     }
 
-    private JobResponses findAllJobsOfServer(Long serverId) {
+    private JobResponses findAllJobsOfServer(Long serverId, Pageable pageable) {
         GpuBoard gpuBoard = findBoardByServerId(serverId);
-        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+
+        if (Objects.isNull(pageable)) {
+            return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId()));
+        }
+        return JobResponses.of(jobRepository.findAllByGpuBoardId(gpuBoard.getId(), pageable));
     }
 
-    private JobResponses findAllJobsOfMember(Long memberId) {
-        List<Job> jobs = jobRepository.findAllByMemberId(memberId);
-        return JobResponses.of(jobs);
+    private JobResponses findAllJobsOfMember(Long memberId, Pageable pageable) {
+        if (Objects.isNull(pageable)) {
+            return JobResponses.of(jobRepository.findAllByMemberId(memberId));
+        }
+        return JobResponses.of(jobRepository.findAllByMemberId(memberId, pageable));
     }
 
-    private JobResponses findJobsOfMemberByStatus(Long memberId, String status) {
-        List<Job> jobs = jobRepository
-                .findAllByMemberIdAndStatus(memberId, JobStatus.ignoreCaseValueOf(status));
-        return JobResponses.of(jobs);
+    private JobResponses findJobsOfMemberByStatus(Long memberId, String status, Pageable pageable) {
+        JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
+        if (Objects.isNull(pageable)) {
+            return JobResponses.of(jobRepository.findAllByMemberIdAndStatus(memberId, jobStatus));
+        }
+        return JobResponses.of(jobRepository.findAllByMemberIdAndStatus(memberId, jobStatus, pageable));
     }
 
     private GpuBoard findBoardByServerId(Long gpuServerId) {
@@ -181,5 +196,18 @@ public class JobService {
 
     public ParsedLogResponses findParsedLogById(Long jobId) {
         return ParsedLogResponses.of(parsedLogRepository.findByJobIdOrderByCurrentEpoch(jobId));
+    }
+
+    private List<Job> jobsOfPage(List<Job> jobs, Pageable pageable) {
+        if (Objects.isNull(pageable)) {
+            return jobs;
+        }
+
+        int totalCount = jobs.size();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), totalCount);
+
+        PageImpl<Job> jobsInPage = new PageImpl<>(jobs.subList(start, end), pageable, totalCount);
+        return jobsInPage.stream().collect(Collectors.toList());
     }
 }
