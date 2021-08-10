@@ -8,6 +8,9 @@ import mine.is.gpu.mail.MailService;
 import mine.is.gpu.worker.application.WorkerService;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
+import java.net.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +25,8 @@ public class WorkerController {
     private final WorkerService workerService;
     private final MailService mailService;
     private final JobService jobService;
+
+    private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
     public WorkerController(WorkerService workerService, MailService mailService,
                             JobService jobService) {
@@ -55,6 +60,7 @@ public class WorkerController {
         workerService.start(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
+        logger.info("job #" + jobId + " is started");
         return ResponseEntity.ok().build();
     }
 
@@ -63,6 +69,7 @@ public class WorkerController {
         workerService.end(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
+        logger.info("job #" + jobId + " is completed");
         return ResponseEntity.ok().build();
     }
 
