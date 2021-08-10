@@ -8,9 +8,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "job")
 public class JobLog {
     @Id
-    private Long id;
-    private Long currentEpoch;
-    private Long  totalEpoch;
+    private String id;
+    private Integer currentEpoch;
+    private Integer  totalEpoch;
     private Double accuracy;
     private Double loss;
     @Field(type = FieldType.Long, name = "jobId")
@@ -19,7 +19,8 @@ public class JobLog {
     public JobLog() {
     }
 
-    public JobLog(Long currentEpoch, Long totalEpoch, Double accuracy, Double loss, Long jobId) {
+    public JobLog(String id, Integer currentEpoch, Integer totalEpoch, Double accuracy, Double loss, Long jobId) {
+        this.id = id;
         this.currentEpoch = currentEpoch;
         this.totalEpoch = totalEpoch;
         this.accuracy = accuracy;
@@ -27,11 +28,15 @@ public class JobLog {
         this.jobId = jobId;
     }
 
-    public Long getCurrentEpoch() {
+    public String getId() {
+        return id;
+    }
+
+    public Integer getCurrentEpoch() {
         return currentEpoch;
     }
 
-    public Long getTotalEpoch() {
+    public Integer getTotalEpoch() {
         return totalEpoch;
     }
 
@@ -45,5 +50,17 @@ public class JobLog {
 
     public Long getJobId() {
         return jobId;
+    }
+
+    @Override
+    public String toString() {
+        return "JobLog{" +
+                "id='" + id + '\'' +
+                ", currentEpoch=" + currentEpoch +
+                ", totalEpoch=" + totalEpoch +
+                ", accuracy=" + accuracy +
+                ", loss=" + loss +
+                ", jobId=" + jobId +
+                '}';
     }
 }
