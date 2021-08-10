@@ -92,6 +92,16 @@ class WorkerServiceTest {
         assertThat(job2.getStatus()).isEqualTo(JobStatus.RUNNING);
     }
 
+    @DisplayName("job 의 상태 RUNNING 으로 변경시 시작 시간이 기록된다")
+    @Test
+    void checkStartedTimeJobStatusRunning() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
+
+        assertThat(job2.getStartedTime()).isNotNull();
+    }
+
     @DisplayName("job 의 상태 COMPLETED 으로 변경한다.")
     @Test
     void changeJobStatusCompleted() {
@@ -103,6 +113,29 @@ class WorkerServiceTest {
 
         // then
         assertThat(job2.getStatus()).isEqualTo(JobStatus.COMPLETED);
+    }
+
+    @DisplayName("job 의 상태 COMPLETED 으로 변경시 종료 시간이 기록된다")
+    @Test
+    void checkEndTimeJobStatusCompleted() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+
+        assertThat(job2.getCompletedTime()).isNotNull();
+    }
+
+    @DisplayName("job 이 완료되면 해당 job은 모든 시간값이 입력되어 있다")
+    @Test
+    void checkTime() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+
+        assertThat(job2.getCreatedAt()).isNotNull();
+        assertThat(job2.getStartedTime()).isNotNull();
+        assertThat(job2.getCompletedTime()).isNotNull();
     }
 
     @DisplayName("서버가 n 분마다 상태를 알려주면 상태와 마지막 응답시간이 수정된다.")
