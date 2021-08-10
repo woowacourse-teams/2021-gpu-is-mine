@@ -1,5 +1,5 @@
 package mine.is.gpu.admin;
 
-public interface ServiceUser {
+public interface Account {
     boolean hasSamePassword(String password);
 }

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 
 @Entity
-public class Administrator extends BaseEntity implements ServiceUser {
+public class Administrator extends BaseEntity implements Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

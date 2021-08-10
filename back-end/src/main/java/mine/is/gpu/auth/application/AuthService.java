@@ -1,9 +1,9 @@
 package mine.is.gpu.auth.application;
 
 import java.util.Optional;
+import mine.is.gpu.admin.Account;
 import mine.is.gpu.admin.Administrator;
 import mine.is.gpu.admin.AdministratorRepository;
-import mine.is.gpu.admin.ServiceUser;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.auth.exception.AuthorizationException;
@@ -32,10 +32,10 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        ServiceUser serviceUser = findUser(request);
+        Account account = findUser(request);
         String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
 
-        if (!serviceUser.hasSamePassword(password)) {
+        if (!account.hasSamePassword(password)) {
             throw AuthorizationException.NOT_CORRECT_PASSWORD.getException();
         }
 
@@ -43,7 +43,7 @@ public class AuthService {
         return new LoginResponse(token);
     }
 
-    private ServiceUser findUser(LoginRequest request) {
+    private Account findUser(LoginRequest request) {
         Optional<Administrator> optionalAdmin = administratorRepository.findByEmail(request.getEmail());
         if (optionalAdmin.isPresent()) {
             return optionalAdmin.get();

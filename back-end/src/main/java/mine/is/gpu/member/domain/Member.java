@@ -10,14 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import mine.is.gpu.admin.ServiceUser;
+import mine.is.gpu.admin.Account;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.member.exception.MemberException;
 
 @Entity
-public class Member extends BaseEntity implements ServiceUser {
+public class Member extends BaseEntity implements Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
