@@ -2,7 +2,6 @@ import { ComponentProps } from "react";
 import { ChartConfiguration } from "chart.js/auto";
 import { Chart } from "../../components";
 import { ParsedLog } from "../../__fixtures__";
-import * as Utils from "../../components/Chart/utils";
 
 interface JobDetailGraphChartProps extends Omit<ComponentProps<typeof Chart>, "config"> {
   data: ParsedLog[];
@@ -13,6 +12,11 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
   const accuracyList = data.map(({ accuracy }) => accuracy);
   const lossList = data.map(({ loss }) => loss);
 
+  const accuracyColor = "rgb(3, 105, 161)";
+  const accuracyBackgroundColor = "rgba(3, 105, 161, 0.5)";
+  const lossColor = "rgb(185, 28, 28)";
+  const lossBackgroundColor = "rgba(185, 28, 28, 0.5)";
+
   const config: ChartConfiguration<"line", number[], number> = {
     type: "line",
     data: {
@@ -21,15 +25,15 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
         {
           label: "Accuracy",
           data: accuracyList,
-          borderColor: Utils.CHART_COLORS.blue,
-          backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+          borderColor: accuracyColor,
+          backgroundColor: accuracyBackgroundColor,
           yAxisID: "accuracyY",
         },
         {
           label: "Loss",
           data: lossList,
-          borderColor: Utils.CHART_COLORS.red,
-          backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+          borderColor: lossColor,
+          backgroundColor: lossBackgroundColor,
           yAxisID: "lossY",
         },
       ],
@@ -55,7 +59,7 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
           max: 1,
           position: "left",
           ticks: {
-            color: Utils.CHART_COLORS.blue,
+            color: accuracyColor,
           },
         },
         lossY: {
@@ -66,7 +70,7 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
           min: 0,
           position: "right",
           ticks: {
-            color: Utils.CHART_COLORS.red,
+            color: lossColor,
           },
         },
       },
