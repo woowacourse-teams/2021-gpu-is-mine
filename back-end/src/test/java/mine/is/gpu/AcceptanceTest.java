@@ -20,6 +20,10 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class AcceptanceTest {
+    @LocalServerPort
+    int port;
+    @MockBean
+    JavaMailSender javaMailSender;
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -30,11 +34,6 @@ public abstract class AcceptanceTest {
     private GpuBoardRepository gpuBoardRepository;
     @Autowired
     private JobRepository jobRepository;
-
-    @LocalServerPort
-    int port;
-    @MockBean
-    JavaMailSender javaMailSender;
 
     protected AcceptanceTest() {
     }

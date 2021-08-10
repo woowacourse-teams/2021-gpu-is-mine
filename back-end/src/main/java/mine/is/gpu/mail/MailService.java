@@ -13,10 +13,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service
 @PropertySource(value = {"classpath:application-mail.properties"})
 public class MailService {
-    @Value("${spring.mail.from}")
-    private String fromEmail;
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+    @Value("${spring.mail.from}")
+    private String fromEmail;
 
     public MailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;

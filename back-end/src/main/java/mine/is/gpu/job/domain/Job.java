@@ -90,6 +90,10 @@ public class Job extends BaseEntity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public JobStatus getStatus() {
         return status;
     }
@@ -134,9 +138,5 @@ public class Job extends BaseEntity {
 
     public void changeStatus(JobStatus status) {
         this.status = status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

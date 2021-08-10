@@ -13,7 +13,6 @@ public class ParsedLog {
     private Long totalEpoch;
     private Float accuracy;
     private Float loss;
-    @Field(type = FieldType.Long, name = "jobId")
     private Long jobId;
 
     public ParsedLog() {
@@ -50,17 +49,4 @@ public class ParsedLog {
     public Long getJobId() {
         return jobId;
     }
-
-    @Override
-    public String toString() {
-        return "JobLog{" +
-                "id='" + id + '\'' +
-                ", currentEpoch=" + currentEpoch +
-                ", totalEpoch=" + totalEpoch +
-                ", accuracy=" + accuracy +
-                ", loss=" + loss +
-                ", jobId=" + jobId +
-                '}' + "\n";
-    }
-
 }

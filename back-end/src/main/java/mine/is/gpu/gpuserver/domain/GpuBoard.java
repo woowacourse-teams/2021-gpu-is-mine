@@ -68,8 +68,16 @@ public class GpuBoard extends BaseEntity {
         return performance;
     }
 
+    public void setPerformance(Long performance) {
+        this.performance = performance;
+    }
+
     public String getModelName() {
         return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public GpuServer getGpuServer() {
@@ -78,13 +86,5 @@ public class GpuBoard extends BaseEntity {
 
     public Lab getLab() {
         return gpuServer.getLab();
-    }
-
-    public void setPerformance(Long performance) {
-        this.performance = performance;
-    }
-
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
     }
 }

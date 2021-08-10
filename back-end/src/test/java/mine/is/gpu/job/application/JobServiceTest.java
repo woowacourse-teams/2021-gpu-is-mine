@@ -177,6 +177,19 @@ class JobServiceTest {
         return member.getId();
     }
 
+    @Test
+    @DisplayName("예약을 수정한다.")
+    void update() {
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
+        Long jobId = jobService.save(memberId, jobRequest);
+
+        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
+        jobService.update(jobId, jobUpdateRequest);
+
+        JobResponse jobResponse = jobService.findById(jobId);
+        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
+    }
+
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
     class FindAll {
@@ -231,18 +244,5 @@ class JobServiceTest {
                             .collect(Collectors.toList())
             ).usingRecursiveComparison().isEqualTo(Arrays.asList(jobIds));
         }
-    }
-
-    @Test
-    @DisplayName("예약을 수정한다.")
-    void update() {
-        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
-        Long jobId = jobService.save(memberId, jobRequest);
-
-        JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
-        jobService.update(jobId, jobUpdateRequest);
-
-        JobResponse jobResponse = jobService.findById(jobId);
-        Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
     }
 }

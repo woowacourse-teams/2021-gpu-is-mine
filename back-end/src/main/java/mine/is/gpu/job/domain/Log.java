@@ -12,11 +12,9 @@ public class Log {
     @Id
     private String id;
     private String log;
-    @Field(type = FieldType.Long)
     private Long jobId;
     @Field(type = FieldType.Date, format = DateFormat.date_time)
     private Instant time;
-
 
     public Log() {
     }
@@ -41,14 +39,5 @@ public class Log {
 
     public Instant getTime() {
         return time;
-    }
-
-    @Override
-    public String toString() {
-        return "\nPureLog{" +
-                "id='" + id + '\'' +
-                ", log='$$" + log + '\'' +
-                "$$, jobId=" + jobId +
-                '}';
     }
 }

@@ -1,20 +1,18 @@
 package mine.is.gpu.job.ui;
 
 import java.net.URI;
-import java.util.List;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.job.application.JobService;
-import mine.is.gpu.job.dto.response.ParsedLogResponse;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
+import mine.is.gpu.job.dto.response.LogsResponse;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
 import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.mail.MailService;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.job.dto.response.LogsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,7 +93,6 @@ public class JobController {
     @GetMapping("/jobs/{jobId}/logs")
     public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId,
                                                    @AuthenticationPrincipal Member member) {
-
         memberService.checkReadableJob(member.getId(), jobId);
         LogsResponse logsResponse = jobService.findLogAllById(jobId);
         return ResponseEntity.ok(logsResponse);
@@ -104,7 +101,6 @@ public class JobController {
     @GetMapping("/jobs/{jobId}/logs-graph")
     public ResponseEntity<ParsedLogResponses> findAllParsedLog(@PathVariable Long jobId,
                                                                @AuthenticationPrincipal Member member) {
-
         memberService.checkReadableJob(member.getId(), jobId);
         ParsedLogResponses parsedLogs = jobService.findParsedLogById(jobId);
         return ResponseEntity.ok(parsedLogs);

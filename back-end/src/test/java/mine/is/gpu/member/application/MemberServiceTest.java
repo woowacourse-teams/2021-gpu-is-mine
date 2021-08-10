@@ -8,16 +8,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import mine.is.gpu.gpuserver.application.GpuServerService;
-import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
-import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import mine.is.gpu.job.application.JobService;
-import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.application.LabService;
-import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.member.domain.MemberType;
-import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.dto.request.MemberRequest;
 import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
