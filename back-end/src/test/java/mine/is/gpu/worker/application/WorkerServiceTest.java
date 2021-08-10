@@ -27,8 +27,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 @DisplayName("[WorkerService]")
@@ -107,14 +109,14 @@ class WorkerServiceTest {
     @Test
     void updateWorkerStatus() throws InterruptedException {
         // given
-        assertThat(gpuServer.getOn()).isTrue();
+        assertThat(gpuServer.getIsOn()).isTrue();
 
         // when
         LocalDateTime now1 = LocalDateTime.now();
         workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(false, now1));
 
         // then
-        assertThat(gpuServer.getOn()).isFalse();
+        assertThat(gpuServer.getIsOn()).isFalse();
         assertThat(gpuServer.getLastResponse()).isEqualTo(now1);
 
         // when
@@ -123,7 +125,7 @@ class WorkerServiceTest {
         workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(true, now2));
 
         // then
-        assertThat(gpuServer.getOn()).isTrue();
+        assertThat(gpuServer.getIsOn()).isTrue();
         assertThat(now1).isNotEqualTo(now2);
         assertThat(gpuServer.getLastResponse()).isEqualTo(now2);
     }

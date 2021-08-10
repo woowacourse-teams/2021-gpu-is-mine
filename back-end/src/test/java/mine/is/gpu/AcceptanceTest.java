@@ -15,10 +15,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class AcceptanceTest {
+public abstract class AcceptanceTest {
     @Autowired
     private LabRepository labRepository;
     @Autowired
@@ -36,6 +38,9 @@ public class AcceptanceTest {
     int port;
     @MockBean
     JavaMailSender javaMailSender;
+
+    protected AcceptanceTest() {
+    }
 
     @BeforeEach
     public void setUp() {
