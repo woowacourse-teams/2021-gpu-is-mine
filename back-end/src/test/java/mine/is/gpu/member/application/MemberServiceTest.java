@@ -30,21 +30,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
-    @Autowired
-    private LabRepository labRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private GpuServerRepository gpuServerRepository;
-    @Autowired
-    private GpuBoardRepository gpuBoardRepository;
-    @Autowired
-    private JobRepository jobRepository;
     @Autowired
     private LabService labService;
     @Autowired

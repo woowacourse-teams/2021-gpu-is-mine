@@ -2,8 +2,8 @@ import { useHistory, matchPath } from "react-router-dom";
 import { PATH } from "../../constants";
 
 const pathList = [
-  Object.values(PATH.MANAGER.GPU_SERVER),
-  Object.values(PATH.MANAGER.JOB),
+  Object.values(PATH.GPU_SERVER),
+  Object.values(PATH.JOB),
   Object.values(PATH.MEMBER),
 ].flat();
 

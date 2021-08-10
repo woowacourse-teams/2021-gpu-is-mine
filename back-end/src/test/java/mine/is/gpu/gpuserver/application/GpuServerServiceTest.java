@@ -26,11 +26,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
-public class GpuServerServiceTest {
+class GpuServerServiceTest {
     @Autowired
     private GpuServerService gpuServerService;
     @Autowired
@@ -168,7 +170,7 @@ public class GpuServerServiceTest {
         assertThat(existenceOfGpuBoard).isFalse();
 
         List<Job> jobs = jobRepository.findAllByGpuBoardId(boardId);
-        assertThat(jobs).hasSize(0);
+        assertThat(jobs).isEmpty();
     }
 
     @DisplayName("GPU 서버 삭제 과정에서 GPU ID를 찾을 수 없는 경우")

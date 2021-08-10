@@ -15,15 +15,15 @@ const PublicRoute = ({ children, ...rest }: ComponentProps<typeof Route>) => {
     <Route
       {...rest}
       render={({ location }: { location: Location }) =>
-        !isAuthenticated ? (
-          children
-        ) : (
+        isAuthenticated ? (
           <Redirect
             to={{
-              pathname: location.state?.from?.pathname ?? PATH.MANAGER.GPU_SERVER.VIEW,
+              pathname: location.state?.from?.pathname ?? PATH.GPU_SERVER.VIEW,
               state: { from: location },
             }}
           />
+        ) : (
+          children
         )
       }
     />
