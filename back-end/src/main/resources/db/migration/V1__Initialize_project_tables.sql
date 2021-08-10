@@ -27,6 +27,8 @@ create table job (
     created_at datetime,
     updated_at datetime,
     expected_time varchar(255) not null,
+    started_time datetime,
+    updated_time datetime,
     meta_data varchar(255) not null,
     name varchar(255) not null,
     status varchar(255) not null,
