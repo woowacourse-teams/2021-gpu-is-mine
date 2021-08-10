@@ -36,7 +36,12 @@ export const useMyInfo = () => {
     throw new Error("myInfo가 로드되지 않았습니다.");
   }
 
-  return myInfo;
+  return {
+    ...myInfo,
+    memberId: myInfo.id,
+    labId: myInfo.labResponse.id,
+    labName: myInfo.labResponse.name,
+  };
 };
 
 export const useRequest = () => {

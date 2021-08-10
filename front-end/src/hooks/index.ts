@@ -5,6 +5,5 @@ export { default as useBreakpoints } from "./useBreakpoints/useBreakpoints";
 export { default as useFetch } from "./useFetch/useFetch";
 export { default as useForm, getFormProps, getInputProps, getRadioProps } from "./useForm/useForm";
 export * from "./useHistory/useHistory";
-export { default as useLabId } from "./useLabId/useLabId";
 export { default as useTable } from "./useTable/useTable";
 export { default as useToggle } from "./useToggle/useToggle";

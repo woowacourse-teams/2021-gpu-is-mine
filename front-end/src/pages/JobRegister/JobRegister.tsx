@@ -1,13 +1,11 @@
-import { useLabId, useMyInfo } from "../../hooks";
+import { useMyInfo } from "../../hooks";
 import { Layout } from "../../components";
 import { ManagerNavigation, ManagerHeader, ManagerSubHeader } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
-
 import { JobRegisterForm } from "../../domains/Job";
 
 const JobRegister = () => {
-  const labId = useLabId();
-  const { memberType } = useMyInfo();
+  const { labResponse: { id: labId }, memberType } = useMyInfo();
 
   return (
     <Layout
