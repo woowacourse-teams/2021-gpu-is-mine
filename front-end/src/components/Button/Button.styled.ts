@@ -61,4 +61,8 @@ export const StyledButton = styled.button`
     color: var(--on-disabled);
     cursor: not-allowed;
   }
+
+  &:hover {
+    filter: brightness(1.1);
+  }
 `;
