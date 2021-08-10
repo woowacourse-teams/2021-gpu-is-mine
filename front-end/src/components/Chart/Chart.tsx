@@ -1,9 +1,29 @@
 import { forwardRef, HTMLAttributes, useRef, ForwardedRef } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import ChartClass, { ChartConfiguration, ChartType } from "chart.js/auto";
+import {
+  Chart as ChartClass,
+  ChartConfiguration,
+  ChartType,
+  LineElement,
+  PointElement,
+  LineController,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Title,
+} from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 
-ChartClass.register(zoomPlugin);
+ChartClass.register(
+  LineElement,
+  PointElement,
+  LineController,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Title,
+  zoomPlugin
+);
 
 interface ChartProps<TType extends ChartType, TData, TLabel>
   extends HTMLAttributes<HTMLCanvasElement> {
