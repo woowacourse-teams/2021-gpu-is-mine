@@ -92,7 +92,7 @@ const JobTable = ({ jobs }: JobTableProps) => {
       },
     })) as Row[];
 
-  return <Table fields={jobFields} rows={rows} />;
+  return <Table fields={jobFields} rows={rows} rowCountPerPage={5} />;
 };
 
 export default JobTable;

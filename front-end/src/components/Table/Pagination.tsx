@@ -1,33 +1,18 @@
 import Text from "../Text/Text";
-import Button from "..//Button/Button";
 import { ButtonWrapper, StyledPageButton, StyledPagination } from "./Table.styled";
+import { usePagination } from "hooks";
 
-interface PaginationProps {
-  currentPage: number;
-  pageRowCount: number;
-  totalRowCount: number;
-  onPageClick: (num: number) => void;
-}
+type PaginationProps = Omit<ReturnType<typeof usePagination>, "contentsLengthPerPage">;
 
-const Pagination = ({ currentPage, pageRowCount, totalRowCount, onPageClick }: PaginationProps) => {
-  const lastPage = Math.ceil(totalRowCount / pageRowCount);
-
-  const isFirstPage = currentPage === 1;
-  const isLastPage = currentPage === lastPage;
-
-  const goFirstPage = () => onPageClick(-currentPage + 1);
-
-  const goPrevPage = () => {
-    if (isFirstPage) return;
-    onPageClick(-1);
-  };
-
-  const goNextPage = () => {
-    if (isLastPage) return;
-    onPageClick(1);
-  };
-
-  const goLastPage = () => onPageClick(Math.ceil(totalRowCount / pageRowCount) - currentPage);
+const Pagination = ({
+  currentPage,
+  pageInfo,
+  goFirstPage,
+  goLastPage,
+  goNextPage,
+  goPrevPage,
+}: PaginationProps) => {
+  const { isFirstPage, isLastPage, lastPage } = pageInfo;
 
   return (
     <StyledPagination>

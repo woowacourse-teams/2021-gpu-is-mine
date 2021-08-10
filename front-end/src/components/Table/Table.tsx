@@ -1,5 +1,5 @@
-import { TableHTMLAttributes, useState } from "react";
-import { useTable } from "../../hooks";
+import { TableHTMLAttributes } from "react";
+import { usePagination, useTable } from "../../hooks";
 import Text from "../Text/Text";
 import TableHeader from "./TableHeader";
 import Pagination from "./Pagination";
@@ -9,6 +9,7 @@ import { Field, Row, Order } from "../../types";
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   fields: Field[];
   rows: Row[];
+  rowCountPerPage: number;
 }
 
 const sortRowsByField = (rows: Row[], field: string, order: Order) =>
@@ -38,21 +39,22 @@ const sortRowsByField = (rows: Row[], field: string, order: Order) =>
 
 const isNumberOrString = (value: unknown) => typeof value === "string" || typeof value === "number";
 
-const Table = ({ fields, rows, ...rest }: TableProps) => {
+const Table = ({ fields, rows, rowCountPerPage, ...rest }: TableProps) => {
   const { order, selectedField, onFieldClick } = useTable();
 
-  const [page, setPage] = useState(1);
-
-  const [rowCount, setRowCount] = useState(4);
-
-  const onPageClick = (num: number) => {
-    setPage((prev) => prev + num);
-  };
+  const {
+    currentPage,
+    contentsLengthPerPage: rowCount,
+    ...paginationProps
+  } = usePagination({
+    count: rowCountPerPage,
+    totalContentsLength: rows.length,
+  });
 
   const sortedRows = sortRowsByField(rows, selectedField, order);
 
   const currentPageRows = sortedRows.filter(
-    (_, idx) => (page - 1) * rowCount <= idx && idx < page * rowCount
+    (_, idx) => (currentPage - 1) * rowCount <= idx && idx < currentPage * rowCount
   );
 
   return (
@@ -85,12 +87,7 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
         </StyledBody>
       </StyledTable>
 
-      <Pagination
-        currentPage={page}
-        onPageClick={onPageClick}
-        pageRowCount={rowCount}
-        totalRowCount={rows.length}
-      />
+      <Pagination currentPage={currentPage} {...paginationProps} />
     </StyledContainer>
   );
 };

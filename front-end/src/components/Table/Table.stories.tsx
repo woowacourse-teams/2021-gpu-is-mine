@@ -105,4 +105,5 @@ const data = [
 Default.args = {
   fields,
   rows: data,
+  rowCountPerPage: 3,
 };
