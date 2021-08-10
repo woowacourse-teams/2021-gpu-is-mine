@@ -12,8 +12,8 @@ interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
 
 const sortRowsByField = (rows: Row[], field: string, order: Order) =>
   rows.slice().sort((a, b) => {
-    const valueA = a.data[field];
-    const valueB = b.data[field];
+    const valueA = a.data[field]?.priority ?? a.data[field]?.value;
+    const valueB = b.data[field]?.priority ?? b.data[field]?.value;
 
     if (valueA === null || valueA === undefined || valueA === "") {
       return 1;
@@ -35,6 +35,8 @@ const sortRowsByField = (rows: Row[], field: string, order: Order) =>
     return 0;
   });
 
+const isNumberOrString = (value: unknown) => typeof value === "string" || typeof value === "number";
+
 const Table = ({ fields, rows, ...rest }: TableProps) => {
   const { order, selectedField, onFieldClick } = useTable();
 
@@ -51,14 +53,17 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
 
       <StyledBody>
         {sortedRows.map(({ id, data }) => (
-          // eslint-disable-next-line react/no-array-index-key
           <StyledRow key={id}>
-            {Object.values(data).map((value, cellIndex) => (
+            {Object.values(data).map(({ value }, cellIndex) => (
               // eslint-disable-next-line react/no-array-index-key
               <StyledCell key={cellIndex}>
-                <Text size="md" weight="regular">
-                  {value}
-                </Text>
+                {isNumberOrString(value) ? (
+                  <Text size="md" weight="regular">
+                    {value}
+                  </Text>
+                ) : (
+                  value
+                )}
               </StyledCell>
             ))}
           </StyledRow>
