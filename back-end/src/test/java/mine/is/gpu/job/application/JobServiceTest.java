@@ -287,6 +287,4 @@ class JobServiceTest {
         JobResponse jobResponse = jobService.findById(jobId);
         Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());
     }
-
-
 }
