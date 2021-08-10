@@ -1,6 +1,6 @@
+import { usePagination } from "../../hooks";
 import Text from "../Text/Text";
 import { ButtonWrapper, StyledPageButton, StyledPagination } from "./Table.styled";
-import { usePagination } from "hooks";
 
 type PaginationProps = Omit<ReturnType<typeof usePagination>, "contentsLengthPerPage">;
 

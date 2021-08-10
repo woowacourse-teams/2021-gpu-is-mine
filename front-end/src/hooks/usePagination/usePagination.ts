@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-interface usePaginationProps {
+interface UsePaginationProps {
   count: number;
   totalContentsLength: number;
 }
 
-const usePagination = ({ count = 10, totalContentsLength }: usePaginationProps) => {
+const usePagination = ({ count = 10, totalContentsLength }: UsePaginationProps) => {
   const [page, setPage] = useState(1);
   const [contentsLengthPerPage, setContentsLengthPerPage] = useState(count);
 
