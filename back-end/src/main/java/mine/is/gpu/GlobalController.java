@@ -17,4 +17,9 @@ public class GlobalController {
     public String profile() {
         return String.join(", ", environment.getActiveProfiles());
     }
+
+    @GetMapping("/healths")
+    public String health() {
+        return "UP";
+    }
 }
