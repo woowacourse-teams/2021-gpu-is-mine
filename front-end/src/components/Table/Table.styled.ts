@@ -1,3 +1,4 @@
+import Button from "../Button/Button";
 import styled, { css } from "styled-components";
 
 interface StyledHeadCellProps {
@@ -15,6 +16,12 @@ const sortableFieldStyle = css`
       opacity: 1;
     }
   }
+`;
+
+export const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 2.5rem;
 `;
 
 export const StyledTable = styled.table`
@@ -48,4 +55,21 @@ export const StyledHeadCell = styled.th<StyledHeadCellProps>`
 
 export const CellSortMark = styled.span<CellSortMarkProp>`
   ${({ sortActive }) => (sortActive ? "opacity: 1" : "opacity: 0")}
+`;
+
+export const StyledPagination = styled.div`
+  margin-top: auto;
+  align-self: flex-end;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 0.25rem;
+`;
+
+export const StyledPageButton = styled(Button)`
+  width: 2.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
 `;

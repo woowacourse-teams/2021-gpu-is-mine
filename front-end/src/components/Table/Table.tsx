@@ -3,7 +3,7 @@ import { useTable } from "../../hooks";
 import Text from "../Text/Text";
 import TableHeader from "./TableHeader";
 import Pagination from "./Pagination";
-import { StyledTable, StyledBody, StyledRow, StyledCell } from "./Table.styled";
+import { StyledContainer, StyledTable, StyledBody, StyledRow, StyledCell } from "./Table.styled";
 import { Field, Row, Order } from "../../types";
 
 interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
@@ -56,7 +56,7 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
   );
 
   return (
-    <>
+    <StyledContainer>
       <StyledTable {...rest}>
         <TableHeader
           fields={fields}
@@ -91,7 +91,7 @@ const Table = ({ fields, rows, ...rest }: TableProps) => {
         pageRowCount={rowCount}
         totalRowCount={rows.length}
       />
-    </>
+    </StyledContainer>
   );
 };
 

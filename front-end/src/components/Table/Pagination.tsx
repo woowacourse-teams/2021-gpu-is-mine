@@ -1,3 +1,7 @@
+import Text from "../Text/Text";
+import Button from "..//Button/Button";
+import { ButtonWrapper, StyledPageButton, StyledPagination } from "./Table.styled";
+
 interface PaginationProps {
   currentPage: number;
   pageRowCount: number;
@@ -6,84 +10,43 @@ interface PaginationProps {
 }
 
 const Pagination = ({ currentPage, pageRowCount, totalRowCount, onPageClick }: PaginationProps) => {
-  const firstPage = 1;
   const lastPage = Math.ceil(totalRowCount / pageRowCount);
 
-  const goNextPage = () => {
-    if (currentPage === lastPage) return;
-    onPageClick(1);
-  };
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage === lastPage;
+
+  const goFirstPage = () => onPageClick(-currentPage + 1);
+
   const goPrevPage = () => {
-    if (currentPage === firstPage) return;
+    if (isFirstPage) return;
     onPageClick(-1);
   };
-  const goFirstPage = () => onPageClick(-currentPage + 1);
+
+  const goNextPage = () => {
+    if (isLastPage) return;
+    onPageClick(1);
+  };
+
   const goLastPage = () => onPageClick(Math.ceil(totalRowCount / pageRowCount) - currentPage);
 
   return (
-    <div>
-      <button
-        style={{
-          width: "50px",
-          height: "25px",
-          backgroundColor: `var(--primary-50)`,
-          borderRadius: "16px",
-          fontWeight: "bold",
-        }}
-        onClick={goFirstPage}
-        disabled={currentPage === firstPage}
-      >
-        {"<<"}
-      </button>
-      <span>|</span>
-      <button
-        style={{
-          width: "50px",
-          height: "25px",
-          backgroundColor: `var(--primary-50)`,
-          borderRadius: "16px",
-          fontWeight: "bold",
-        }}
-        onClick={goPrevPage}
-        disabled={currentPage === firstPage}
-      >
-        {"<"}
-      </button>
-      <span style={{ fontWeight: "bold", fontSize: "1rem" }}>
-        {(currentPage - 1) * pageRowCount + 1}
-      </span>
-      <span style={{ fontWeight: "bold", fontSize: "1rem" }}>~</span>
-      <span style={{ fontWeight: "bold", fontSize: "1rem" }}>
-        {currentPage * pageRowCount > totalRowCount ? totalRowCount : currentPage * pageRowCount}
-      </span>
-      <button
-        style={{
-          width: "50px",
-          height: "25px",
-          backgroundColor: `var(--primary-50)`,
-          borderRadius: "16px",
-          fontWeight: "bold",
-        }}
-        onClick={goNextPage}
-        disabled={currentPage === lastPage}
-      >
-        {">"}
-      </button>
-      <span>|</span>
-      <button
-        style={{
-          width: "50px",
-          height: "25px",
-          backgroundColor: `var(--primary-50)`,
-          borderRadius: "16px",
-          fontWeight: "bold",
-        }}
-        onClick={goLastPage}
-        disabled={currentPage === lastPage}
-      >
-        {">>"}
-      </button>
-    </div>
+    <StyledPagination>
+      <ButtonWrapper>
+        <StyledPageButton color="primary" onClick={goFirstPage} disabled={isFirstPage}>
+          {"<<"}
+        </StyledPageButton>
+        <StyledPageButton color="primary-light" onClick={goPrevPage} disabled={isFirstPage}>
+          {"<"}
+        </StyledPageButton>
+        <Text size="md" weight="bold">{`${currentPage}/${lastPage}`}</Text>
+        <StyledPageButton color="primary-light" onClick={goNextPage} disabled={isLastPage}>
+          {">"}
+        </StyledPageButton>
+        <StyledPageButton color="primary" onClick={goLastPage} disabled={isLastPage}>
+          {">>"}
+        </StyledPageButton>
+      </ButtonWrapper>
+    </StyledPagination>
   );
 };
 
