@@ -6,8 +6,13 @@ export default {
   component: GpuServerInfoList,
 } as ComponentMeta<typeof GpuServerInfoList>;
 
-const Template: ComponentStory<typeof GpuServerInfoList> = () => <GpuServerInfoList />;
+const Template: ComponentStory<typeof GpuServerInfoList> = (args) => (
+  <GpuServerInfoList {...args} />
+);
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  labId: 1,
+  memberType: "MANAGER",
+};

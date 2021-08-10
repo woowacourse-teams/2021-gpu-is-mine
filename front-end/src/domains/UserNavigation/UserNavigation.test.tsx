@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { Location } from "history";
 import { MemoryRouter, Route } from "react-router-dom";
 import { AuthProvider } from "../../components";
-import ManagerNavigation from "./ManagerNavigation";
+import UserNavigation from "./UserNavigation";
 import { PATH } from "../../constants";
 
-describe("ManagerNavigation", () => {
+describe("UserNavigation", () => {
   const leftClick = { button: 0 };
 
   const renderWithRouter = () => {
@@ -15,7 +15,7 @@ describe("ManagerNavigation", () => {
     render(
       <AuthProvider>
         <MemoryRouter initialEntries={["/"]}>
-          <ManagerNavigation />
+          <UserNavigation />
           <Route
             path="*"
             render={({ location }: { location: Location }) => {
@@ -37,14 +37,6 @@ describe("ManagerNavigation", () => {
     userEvent.click(screen.getByRole("link", { name: "gpu-server-view" }), leftClick);
 
     expect(getLocation().pathname).toBe(PATH.GPU_SERVER.VIEW);
-  });
-
-  test("Gpu 서버 관리 등록 Route 테스트", () => {
-    const getLocation = renderWithRouter();
-
-    userEvent.click(screen.getByRole("link", { name: "gpu-server-register" }), leftClick);
-
-    expect(getLocation().pathname).toBe(PATH.GPU_SERVER.REGISTER);
   });
 
   test("Job 관리 조회  Route 테스트", () => {
