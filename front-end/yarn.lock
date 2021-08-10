@@ -6473,6 +6473,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartjs-plugin-zoom@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "chartjs-plugin-zoom@npm:1.1.1"
+  dependencies:
+    hammerjs: ^2.0.8
+  peerDependencies:
+    chart.js: ^3.2.0
+  checksum: effd03bac94ad0b19c4ef1862a6c4d42e51cd48e3c056e78f7975eb09d21e9ade9832a6a177d33a5fcc8255e64e16579884e7f11c35c73701f5e9d1d6e07be61
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^2.1.8":
   version: 2.1.8
   resolution: "chokidar@npm:2.1.8"
@@ -9691,6 +9702,7 @@ fsevents@^1.2.7:
     axios: ^0.21.1
     babel-loader: ^8.2.2
     chart.js: ^3.5.0
+    chartjs-plugin-zoom: ^1.1.1
     classnames: ^2.3.1
     cross-env: ^7.0.3
     eslint: ^7.30.0
@@ -9763,6 +9775,13 @@ fsevents@^1.2.7:
     duplexer: ^0.1.1
     pify: ^4.0.1
   checksum: 6451ba2210877368f6d9ee9b4dc0d14501671472801323bf81fbd38bdeb8525f40a78be45a59d0182895d51e6b60c6314b7d02bd6ed40e7225a01e8d038aac1b
+  languageName: node
+  linkType: hard
+
+"hammerjs@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "hammerjs@npm:2.0.8"
+  checksum: b092da7d1565a165d7edb53ef0ce212837a8b11f897aa3cf81a7818b66686b0ab3f4747fbce8fc8a41d1376594639ce3a054b0fd4889ca8b5b136a29ca500e27
   languageName: node
   linkType: hard
 

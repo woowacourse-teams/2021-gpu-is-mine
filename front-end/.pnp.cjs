@@ -59,6 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.21.1"],
             ["babel-loader", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:8.2.2"],
             ["chart.js", "npm:3.5.0"],
+            ["chartjs-plugin-zoom", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:1.1.1"],
             ["classnames", "npm:2.3.1"],
             ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.30.0"],
@@ -11001,6 +11002,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["chartjs-plugin-zoom", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/chartjs-plugin-zoom-npm-1.1.1-de179d890a-effd03bac9.zip/node_modules/chartjs-plugin-zoom/",
+          "packageDependencies": [
+            ["chartjs-plugin-zoom", "npm:1.1.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:1.1.1", {
+          "packageLocation": "./.yarn/__virtual__/chartjs-plugin-zoom-virtual-ad849f55fa/0/cache/chartjs-plugin-zoom-npm-1.1.1-de179d890a-effd03bac9.zip/node_modules/chartjs-plugin-zoom/",
+          "packageDependencies": [
+            ["chartjs-plugin-zoom", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:1.1.1"],
+            ["@types/chart.js", null],
+            ["chart.js", "npm:3.5.0"],
+            ["hammerjs", "npm:2.0.8"]
+          ],
+          "packagePeers": [
+            "@types/chart.js",
+            "chart.js"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["chokidar", [
         ["npm:2.1.8", {
           "packageLocation": "./.yarn/cache/chokidar-npm-2.1.8-32fdcd020e-0c43e89cbf.zip/node_modules/chokidar/",
@@ -14990,6 +15014,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["axios", "npm:0.21.1"],
             ["babel-loader", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:8.2.2"],
             ["chart.js", "npm:3.5.0"],
+            ["chartjs-plugin-zoom", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:1.1.1"],
             ["classnames", "npm:2.3.1"],
             ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.30.0"],
@@ -15069,6 +15094,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["gzip-size", "npm:5.1.1"],
             ["duplexer", "npm:0.1.2"],
             ["pify", "npm:4.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["hammerjs", [
+        ["npm:2.0.8", {
+          "packageLocation": "./.yarn/cache/hammerjs-npm-2.0.8-f656ba2573-b092da7d15.zip/node_modules/hammerjs/",
+          "packageDependencies": [
+            ["hammerjs", "npm:2.0.8"]
           ],
           "linkType": "HARD",
         }]
