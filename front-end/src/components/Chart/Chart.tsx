@@ -24,7 +24,7 @@ const Chart = <TType extends ChartType, TData, TLabel>({
 
     // eslint-disable-next-line consistent-return
     return () => {
-      chart.clear();
+      chart.destroy();
     };
   }, [config]);
 
