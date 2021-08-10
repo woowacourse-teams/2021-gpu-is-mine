@@ -1,26 +1,37 @@
-import { HTMLAttributes, useRef } from "react";
+import { forwardRef, HTMLAttributes, useRef, ForwardedRef } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import ChartClass, { ChartConfiguration, ChartType } from "chart.js/auto";
+import zoomPlugin from "chartjs-plugin-zoom";
+
+ChartClass.register(zoomPlugin);
 
 interface ChartProps<TType extends ChartType, TData, TLabel>
   extends HTMLAttributes<HTMLCanvasElement> {
   config: ChartConfiguration<TType, TData, TLabel>;
 }
 
-const Chart = <TType extends ChartType, TData, TLabel>({
-  config,
-  ...rest
-}: ChartProps<TType, TData, TLabel>) => {
-  const ref = useRef<HTMLCanvasElement>(null);
+const Chart = <TType extends ChartType, TData, TLabel>(
+  props: ChartProps<TType, TData, TLabel>,
+  ref: ForwardedRef<ChartClass<TType, TData, TLabel> | null>
+) => {
+  const { config, ...rest } = props;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useDeepCompareEffect(() => {
-    const ctx = ref.current;
+    const ctx = canvasRef.current;
 
-    if (!ctx) {
+    if (ctx == null) {
       return;
     }
 
     const chart = new ChartClass(ctx, config);
+
+    if (typeof ref === "function") {
+      ref(chart);
+    } else if (ref != null) {
+      // eslint-disable-next-line no-param-reassign
+      ref.current = chart;
+    }
 
     // eslint-disable-next-line consistent-return
     return () => {
@@ -28,7 +39,7 @@ const Chart = <TType extends ChartType, TData, TLabel>({
     };
   }, [config]);
 
-  return <canvas ref={ref} {...rest} />;
+  return <canvas ref={canvasRef} {...rest} />;
 };
 
-export default Chart;
+export default forwardRef(Chart);
