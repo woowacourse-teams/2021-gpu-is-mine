@@ -40,9 +40,9 @@ public class JobService {
     private final LogRepository logRepository;
 
     public JobService(JobRepository jobRepository,
-            GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository,
-            MemberRepository memberRepository, LogRepository logRepository) {
+                      GpuServerRepository gpuServerRepository,
+                      GpuBoardRepository gpuBoardRepository,
+                      MemberRepository memberRepository, LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -109,7 +109,8 @@ public class JobService {
             JobStatus jobStatus = JobStatus.ignoreCaseValueOf(status);
             jobs.addAll(jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), jobStatus));
         }
-        return JobResponses.of(jobsOfPage(jobs, pageable));
+
+        return JobResponses.of(jobs);
     }
 
     private JobResponses findAllJobsOfLab(Long labId, Pageable pageable) {
