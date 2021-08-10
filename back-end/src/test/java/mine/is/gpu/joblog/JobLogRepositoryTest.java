@@ -7,9 +7,7 @@ import org.elasticsearch.client.IndicesClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class JobLogRepositoryTest {
 
     @Autowired
@@ -20,7 +18,8 @@ class JobLogRepositoryTest {
 
     @Test
     void findJobId() {
-        List<JobLog> jobs = jobLogRepository.findByJobId(24L);
+        List<JobLog> jobs = jobLogRepository.findByJobId(29L);
+        jobs.stream().map(JobLog::toString).forEach(System.out::println);
         System.out.println(jobs.size());
     }
 

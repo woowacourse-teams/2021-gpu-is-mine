@@ -17,6 +17,7 @@ import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.exception.JobException;
+import mine.is.gpu.joblog.PureLogRepository;
 import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.repository.MemberRepository;
@@ -34,12 +35,12 @@ public class JobService {
     private final GpuServerRepository gpuServerRepository;
     private final GpuBoardRepository gpuBoardRepository;
     private final MemberRepository memberRepository;
-    private final LogRepository logRepository;
+    private final PureLogRepository logRepository;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
                       GpuBoardRepository gpuBoardRepository,
-                      MemberRepository memberRepository, LogRepository logRepository) {
+                      MemberRepository memberRepository, PureLogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
@@ -171,6 +172,6 @@ public class JobService {
     }
 
     public LogsResponse findLogAllById(Long jobId) {
-        return LogsResponse.of(logRepository.findAllByJobId(jobId));
+        return LogsResponse.of(logRepository.findByJobIdOrderByTime(jobId));
     }
 }
