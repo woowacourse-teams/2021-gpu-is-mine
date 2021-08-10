@@ -137,3 +137,24 @@ export const logs = {
     "313/313 - 0s - loss: 0.0695 - accuracy: 0.9786\n",
   ],
 };
+
+export type ParsedLog = {
+  [x in "currentEpoch" | "totalEpoch" | "loss" | "accuracy"]: number;
+};
+
+export const parsedLogs: ParsedLog[] = [
+  { currentEpoch: 1, totalEpoch: 100, loss: 0.9, accuracy: 0.59 },
+  { currentEpoch: 2, totalEpoch: 100, loss: 0.8, accuracy: 0.71 },
+  { currentEpoch: 3, totalEpoch: 100, loss: 0.7, accuracy: 0.82 },
+  { currentEpoch: 4, totalEpoch: 100, loss: 0.5, accuracy: 0.873 },
+  { currentEpoch: 5, totalEpoch: 100, loss: 0.35, accuracy: 0.8911 },
+  { currentEpoch: 6, totalEpoch: 100, loss: 0.2, accuracy: 0.903 },
+  { currentEpoch: 7, totalEpoch: 100, loss: 0.15, accuracy: 0.915 },
+  { currentEpoch: 8, totalEpoch: 100, loss: 0.125, accuracy: 0.927 },
+  { currentEpoch: 9, totalEpoch: 100, loss: 0.1, accuracy: 0.931 },
+  { currentEpoch: 10, totalEpoch: 100, loss: 0.08, accuracy: 0.9401 },
+  { currentEpoch: 11, totalEpoch: 100, loss: 0.07, accuracy: 0.9459 },
+  { currentEpoch: 12, totalEpoch: 100, loss: 0.065, accuracy: 0.9489998 },
+  { currentEpoch: 13, totalEpoch: 100, loss: 0.058, accuracy: 0.95222 },
+  { currentEpoch: 14, totalEpoch: 100, loss: 0.039, accuracy: 0.95634 },
+];
