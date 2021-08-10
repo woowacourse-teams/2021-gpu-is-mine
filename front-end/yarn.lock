@@ -6448,6 +6448,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "chart.js@npm:3.5.0"
+  checksum: 9ce5400b3e98000511a727968bbbbc06988e9b76e964f7fb22c078cd733756604a04692c255d4e91a8c7a0cb963f9e40190bee16bb2c9640bd34a255267aff5f
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^2.1.8":
   version: 2.1.8
   resolution: "chokidar@npm:2.1.8"
@@ -9657,6 +9664,7 @@ fsevents@^1.2.7:
     "@typescript-eslint/parser": ^4.28.1
     axios: ^0.21.1
     babel-loader: ^8.2.2
+    chart.js: ^3.5.0
     classnames: ^2.3.1
     cross-env: ^7.0.3
     eslint: ^7.30.0

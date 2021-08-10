@@ -57,6 +57,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:4.28.1"],
             ["axios", "npm:0.21.1"],
             ["babel-loader", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:8.2.2"],
+            ["chart.js", "npm:3.5.0"],
             ["classnames", "npm:2.3.1"],
             ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.30.0"],
@@ -10980,6 +10981,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["chart.js", [
+        ["npm:3.5.0", {
+          "packageLocation": "./.yarn/cache/chart.js-npm-3.5.0-66341440f6-9ce5400b3e.zip/node_modules/chart.js/",
+          "packageDependencies": [
+            ["chart.js", "npm:3.5.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["chokidar", [
         ["npm:2.1.8", {
           "packageLocation": "./.yarn/cache/chokidar-npm-2.1.8-32fdcd020e-0c43e89cbf.zip/node_modules/chokidar/",
@@ -14958,6 +14968,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:4.28.1"],
             ["axios", "npm:0.21.1"],
             ["babel-loader", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:8.2.2"],
+            ["chart.js", "npm:3.5.0"],
             ["classnames", "npm:2.3.1"],
             ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.30.0"],
