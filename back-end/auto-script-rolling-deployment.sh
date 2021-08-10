@@ -1,15 +1,14 @@
 #!/bin/bash
-
+  
 # find build file
 
 echo "> 빌드 파일(jar) 확인"
-#cd 2021-gpu-is-mine/back-end/build/libs
 JAR_NAME=$(ls |grep 'back-end' | tail -n 1)
 
 # find IDLE PROFILE
 
 echo "> 현재 구동중인 profile 확인"
-CURRENT_PROFILE=$(curl -s http://localhost/profiles)
+CURRENT_PROFILE=$(curl -k https://localhost/profiles)
 
 if [ $CURRENT_PROFILE == was1 ]; then
   IDLE_PROFILE=was2
@@ -73,7 +72,8 @@ done
 docker exec -it proxy sh /scripts/switch-serve.sh ${IDLE_PORT}
 docker exec -it proxy service nginx reload
 
-PROXY_PORT=$(curl -s http://localhost/profiles)
+curl -k https://localhost/profiles
+PROXY_PORT=$(curl -k https://localhost/profiles)
 echo "> Nginx Current Proxy Port: $PROXY_PORT"
 
 # kill orin process
