@@ -320,10 +320,11 @@ class JobServiceTest {
             assertThat(expectedNames).isEqualTo(searchedNames);
         }
 
-        private void saveDummyJobs(int count){
+        private void saveDummyJobs(int count) {
             IntStream.range(0, count)
                     .mapToObj(i -> JOB_BASE_NAME + i)
-                    .forEach(name -> jobService.save(memberId, jobCreationRequest(name, saveGpuServerInLab(lab, name))));
+                    .forEach(
+                            name -> jobService.save(memberId, jobCreationRequest(name, saveGpuServerInLab(lab, name))));
         }
     }
 }
