@@ -1,7 +1,10 @@
 import { ComponentProps } from "react";
-import { ChartConfiguration } from "chart.js/auto";
+import ChartClass, { ChartConfiguration } from "chart.js/auto";
+import zoomPlugin from "chartjs-plugin-zoom";
 import { Chart } from "../../components";
 import { ParsedLog } from "../../__fixtures__";
+
+ChartClass.register(zoomPlugin);
 
 interface JobDetailGraphChartProps extends Omit<ComponentProps<typeof Chart>, "config"> {
   data: ParsedLog[];
@@ -40,6 +43,7 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
     },
     options: {
       responsive: true,
+      spanGaps: true,
       interaction: {
         mode: "index",
         intersect: false,
@@ -48,6 +52,22 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
         title: {
           display: true,
           text: "Accuracy - Loss Chart",
+        },
+        zoom: {
+          limits: {
+            accuracyY: { min: 0, max: 1 },
+            lossY: { min: 0, max: 1 },
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+              speed: 0.2,
+            },
+            drag: {
+              enabled: true,
+            },
+            mode: "x",
+          },
         },
       },
       scales: {
