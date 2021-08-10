@@ -1,4 +1,4 @@
-package mine.is.gpu.joblog;
+package mine.is.gpu.job.domain;
 
 import java.time.Instant;
 import javax.persistence.Id;

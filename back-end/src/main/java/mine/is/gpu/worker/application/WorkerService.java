@@ -30,9 +30,9 @@ public class WorkerService {
     private final LogRepository logRepository;
 
     public WorkerService(JobRepository jobRepository,
-            GpuServerRepository serverRepository,
-            GpuBoardRepository gpuBoardRepository,
-            LogRepository logRepository) {
+                         GpuServerRepository serverRepository,
+                         GpuBoardRepository gpuBoardRepository,
+                         LogRepository logRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;

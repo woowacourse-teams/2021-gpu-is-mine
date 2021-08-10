@@ -1,4 +1,4 @@
-package mine.is.gpu.joblog;
+package mine.is.gpu.job.domain;
 
 import javax.persistence.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -9,18 +9,17 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class JobLog {
     @Id
     private String id;
-    private Integer currentEpoch;
-    private Integer  totalEpoch;
-    private Double accuracy;
-    private Double loss;
+    private Long currentEpoch;
+    private Long totalEpoch;
+    private Float accuracy;
+    private Float loss;
     @Field(type = FieldType.Long, name = "jobId")
     private Long jobId;
 
     public JobLog() {
     }
 
-    public JobLog(String id, Integer currentEpoch, Integer totalEpoch, Double accuracy, Double loss, Long jobId) {
-        this.id = id;
+    public JobLog(Long currentEpoch, Long totalEpoch, Float accuracy, Float loss, Long jobId) {
         this.currentEpoch = currentEpoch;
         this.totalEpoch = totalEpoch;
         this.accuracy = accuracy;
@@ -32,19 +31,19 @@ public class JobLog {
         return id;
     }
 
-    public Integer getCurrentEpoch() {
+    public Long getCurrentEpoch() {
         return currentEpoch;
     }
 
-    public Integer getTotalEpoch() {
+    public Long getTotalEpoch() {
         return totalEpoch;
     }
 
-    public Double getAccuracy() {
+    public Float getAccuracy() {
         return accuracy;
     }
 
-    public Double getLoss() {
+    public Float getLoss() {
         return loss;
     }
 
@@ -61,6 +60,7 @@ public class JobLog {
                 ", accuracy=" + accuracy +
                 ", loss=" + loss +
                 ", jobId=" + jobId +
-                '}';
+                '}' + "\n";
     }
+
 }

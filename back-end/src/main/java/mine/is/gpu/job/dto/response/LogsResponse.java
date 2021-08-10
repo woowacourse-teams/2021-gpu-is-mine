@@ -1,8 +1,8 @@
-package mine.is.gpu.worker.dto;
+package mine.is.gpu.job.dto.response;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import mine.is.gpu.joblog.PureLog;
+import mine.is.gpu.job.domain.PureLog;
 
 public class LogsResponse {
     private List<String> logs;

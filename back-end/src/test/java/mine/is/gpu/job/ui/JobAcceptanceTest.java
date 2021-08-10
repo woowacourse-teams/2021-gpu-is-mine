@@ -19,6 +19,7 @@ import mine.is.gpu.lab.ui.LabAcceptanceTest;
 import mine.is.gpu.member.fixture.MemberFixtures;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -176,4 +177,5 @@ public class JobAcceptanceTest extends AcceptanceTest {
         JobResponse job = Job_Id로_검색(labId, jobIdOfUser, userToken).body().as(JobResponse.class);
         Assertions.assertThat(job.getName()).isEqualTo(jobUpdateRequest.getName());
     }
+
 }

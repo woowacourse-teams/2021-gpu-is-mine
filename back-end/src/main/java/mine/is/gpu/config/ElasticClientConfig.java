@@ -1,4 +1,4 @@
-package mine.is.gpu.joblog;
+package mine.is.gpu.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 
 @Configuration
-public class RestClientConfig extends AbstractElasticsearchConfiguration {
+public class ElasticClientConfig extends AbstractElasticsearchConfiguration {
 
     @Override
     @Bean
