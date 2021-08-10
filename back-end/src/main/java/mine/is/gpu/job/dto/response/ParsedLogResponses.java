@@ -2,7 +2,7 @@ package mine.is.gpu.job.dto.response;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import mine.is.gpu.job.domain.JobLog;
+import mine.is.gpu.job.domain.ParsedLog;
 
 public class ParsedLogResponses {
     private List<ParsedLogResponse> parsedLogResponses;
@@ -14,8 +14,8 @@ public class ParsedLogResponses {
         this.parsedLogResponses = parsedLogResponses;
     }
 
-    public static ParsedLogResponses of(List<JobLog> jobLogs) {
-        List<ParsedLogResponse> responses = jobLogs.stream()
+    public static ParsedLogResponses of(List<ParsedLog> parsedLogs) {
+        List<ParsedLogResponse> responses = parsedLogs.stream()
                 .filter(log -> log.getCurrentEpoch() != null)
                 .map(ParsedLogResponse::new)
                 .collect(Collectors.toList());

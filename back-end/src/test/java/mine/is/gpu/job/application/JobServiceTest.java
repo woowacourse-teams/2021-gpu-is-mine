@@ -25,8 +25,6 @@ import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.worker.domain.Log;
-import mine.is.gpu.worker.domain.repository.LogRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +51,6 @@ class JobServiceTest {
     private LabRepository labRepository;
     @Autowired
     private GpuServerRepository gpuServerRepository;
-    @Autowired
-    private LogRepository logRepository;
 
     private Long serverId;
     private Long memberId;
@@ -179,29 +175,6 @@ class JobServiceTest {
         Member member = new Member(email, "password", "name", MemberType.USER, lab);
         memberRepository.save(member);
         return member.getId();
-    }
-
-    @Test
-    @DisplayName("로그 정보 모두 조회")
-    void findAllLogsByJob() {
-        //given
-        Lab lab2 = new Lab("lab2");
-        labRepository.save(lab2);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab2);
-        gpuServerRepository.save(gpuServer1);
-        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        Member member1 = new Member("email2@email.com", "password", "name1", MemberType.MANAGER,
-                lab2);
-        memberRepository.save(member1);
-        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
-        jobRepository.save(job1);
-
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-
-        Assertions.assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
     }
 
     @Nested

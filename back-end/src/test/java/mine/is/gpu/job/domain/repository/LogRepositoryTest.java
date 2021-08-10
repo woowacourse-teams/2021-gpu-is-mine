@@ -1,8 +1,7 @@
 package mine.is.gpu.job.domain.repository;
 
 import java.util.List;
-import mine.is.gpu.job.domain.PureLog;
-import mine.is.gpu.job.domain.repository.PureLogRepository;
+import mine.is.gpu.job.domain.Log;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Disabled
 @SpringBootTest
-class PureLogRepositoryTest {
+class LogRepositoryTest {
 
     @Autowired
-    PureLogRepository pureLogRepository;
+    LogRepository logRepository;
 
     @Test
     void findByJobIdOrderByTime() {
-        List<PureLog> jobs = pureLogRepository.findByJobIdOrderByTime(31L);
+        List<Log> jobs = logRepository.findByJobIdOrderByTime(31L);
 
-        jobs.stream().map(PureLog::getLog).forEach(System.out::println);
+        jobs.stream().map(Log::getLog).forEach(System.out::println);
     }
 }

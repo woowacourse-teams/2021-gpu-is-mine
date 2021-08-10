@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "job")
-public class PureLog {
+public class Log {
     @Id
     private String id;
     private String log;
@@ -18,10 +18,10 @@ public class PureLog {
     private Instant time;
 
 
-    public PureLog() {
+    public Log() {
     }
 
-    public PureLog(String id, String log, Long jobId) {
+    public Log(String id, String log, Long jobId) {
         this.id = id;
         this.log = log;
         this.jobId = jobId;

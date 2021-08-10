@@ -11,9 +11,6 @@ import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.exception.JobException;
-import mine.is.gpu.worker.domain.Log;
-import mine.is.gpu.worker.domain.repository.LogRepository;
-import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
 import java.util.List;
@@ -27,16 +24,13 @@ public class WorkerService {
     private final JobRepository jobRepository;
     private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
-    private final LogRepository logRepository;
 
     public WorkerService(JobRepository jobRepository,
                          GpuServerRepository serverRepository,
-                         GpuBoardRepository gpuBoardRepository,
-                         LogRepository logRepository) {
+                         GpuBoardRepository gpuBoardRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;
-        this.logRepository = logRepository;
     }
 
     @Transactional(readOnly = true)
@@ -80,15 +74,6 @@ public class WorkerService {
     private GpuServer findGpuServerById(Long serverId) {
         return serverRepository.findById(serverId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
-    }
-
-    @Transactional
-    public Long saveLog(Long jobId, WorkerJobLogRequest workerJobLogRequest) {
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
-        Log log = new Log(workerJobLogRequest.getContent(), job);
-        logRepository.save(log);
-        return log.getId();
     }
 
     @Transactional

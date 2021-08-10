@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "job")
-public class JobLog {
+public class ParsedLog {
     @Id
     private String id;
     private Long currentEpoch;
@@ -16,10 +16,10 @@ public class JobLog {
     @Field(type = FieldType.Long, name = "jobId")
     private Long jobId;
 
-    public JobLog() {
+    public ParsedLog() {
     }
 
-    public JobLog(Long currentEpoch, Long totalEpoch, Float accuracy, Float loss, Long jobId) {
+    public ParsedLog(Long currentEpoch, Long totalEpoch, Float accuracy, Float loss, Long jobId) {
         this.currentEpoch = currentEpoch;
         this.totalEpoch = totalEpoch;
         this.accuracy = accuracy;

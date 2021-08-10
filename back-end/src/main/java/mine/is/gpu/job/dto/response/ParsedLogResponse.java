@@ -1,8 +1,6 @@
 package mine.is.gpu.job.dto.response;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import mine.is.gpu.job.domain.JobLog;
+import mine.is.gpu.job.domain.ParsedLog;
 
 public class ParsedLogResponse {
 
@@ -21,8 +19,8 @@ public class ParsedLogResponse {
         this.loss = loss;
     }
 
-    public ParsedLogResponse(JobLog jobLog) {
-        this(jobLog.getCurrentEpoch(), jobLog.getTotalEpoch(), jobLog.getAccuracy(), jobLog.getLoss());
+    public ParsedLogResponse(ParsedLog parsedLog) {
+        this(parsedLog.getCurrentEpoch(), parsedLog.getTotalEpoch(), parsedLog.getAccuracy(), parsedLog.getLoss());
     }
 
     public Long getCurrentEpoch() {

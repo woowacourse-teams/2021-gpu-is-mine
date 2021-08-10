@@ -2,7 +2,7 @@ package mine.is.gpu.job.dto.response;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import mine.is.gpu.job.domain.PureLog;
+import mine.is.gpu.job.domain.Log;
 
 public class LogsResponse {
     private List<String> logs;
@@ -14,8 +14,8 @@ public class LogsResponse {
         this.logs = logs;
     }
 
-    public static LogsResponse of(List<PureLog> logs) {
-        return new LogsResponse(logs.stream().map(PureLog::getLog).collect(Collectors.toList()));
+    public static LogsResponse of(List<Log> logs) {
+        return new LogsResponse(logs.stream().map(Log::getLog).collect(Collectors.toList()));
     }
 
     public List<String> getLogs() {

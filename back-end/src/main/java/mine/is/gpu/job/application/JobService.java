@@ -12,7 +12,6 @@ import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
-import mine.is.gpu.job.dto.response.ParsedLogResponse;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
@@ -20,7 +19,7 @@ import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
 import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.job.domain.repository.ParsedLogRepository;
-import mine.is.gpu.job.domain.repository.PureLogRepository;
+import mine.is.gpu.job.domain.repository.LogRepository;
 import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.repository.MemberRepository;
@@ -37,13 +36,13 @@ public class JobService {
     private final GpuServerRepository gpuServerRepository;
     private final GpuBoardRepository gpuBoardRepository;
     private final MemberRepository memberRepository;
-    private final PureLogRepository logRepository;
+    private final LogRepository logRepository;
     private final ParsedLogRepository parsedLogRepository;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
                       GpuBoardRepository gpuBoardRepository,
-                      MemberRepository memberRepository, PureLogRepository logRepository,
+                      MemberRepository memberRepository, LogRepository logRepository,
                       ParsedLogRepository parsedLogRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
