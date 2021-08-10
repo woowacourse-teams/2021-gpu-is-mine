@@ -52,9 +52,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public Member findMemberByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
@@ -64,9 +62,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public Boolean existMemberByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
@@ -75,12 +71,16 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public Boolean existAdministratorByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
         return administratorRepository.existsByEmail(email);
+    }
+
+    private void validateToken(String credentials) {
+        if (!jwtTokenProvider.validateToken(credentials)) {
+            throw AuthorizationException.INVALID_TOKEN.getException();
+        }
     }
 }

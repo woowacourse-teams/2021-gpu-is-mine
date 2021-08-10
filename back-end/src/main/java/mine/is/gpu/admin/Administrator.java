@@ -17,7 +17,7 @@ public class Administrator extends BaseEntity implements User {
     private String email;
     private String password;
 
-    public Administrator() {
+    protected Administrator() {
     }
 
     public Administrator(String name, String password) {
