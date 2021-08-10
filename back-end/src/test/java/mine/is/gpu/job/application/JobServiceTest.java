@@ -284,7 +284,7 @@ class JobServiceTest {
         Lab lab = new Lab("labA");
         Long memberId;
         Long serverId;
-        String JOB_BASE_NAME = "job";
+        String jobBaseName = "job";
         Pageable pageable = PageRequest.of(2, 3);
 
         @BeforeEach
@@ -304,7 +304,7 @@ class JobServiceTest {
                     .collect(Collectors.toList());
 
             List<String> expectedNames = IntStream.range(0, pageable.getPageSize())
-                    .mapToObj(i -> JOB_BASE_NAME + (pageable.getPageSize() * pageable.getPageNumber() + i))
+                    .mapToObj(i -> jobBaseName + (pageable.getPageSize() * pageable.getPageNumber() + i))
                     .collect(Collectors.toList());
 
             assertThat(expectedNames).isEqualTo(searchedNames);
@@ -318,7 +318,7 @@ class JobServiceTest {
                     .collect(Collectors.toList());
 
             List<String> expectedNames = IntStream.range(0, pageable.getPageSize())
-                    .mapToObj(i -> JOB_BASE_NAME + (pageable.getPageSize() * pageable.getPageNumber() + i))
+                    .mapToObj(i -> jobBaseName + (pageable.getPageSize() * pageable.getPageNumber() + i))
                     .collect(Collectors.toList());
 
             assertThat(expectedNames).isEqualTo(searchedNames);
@@ -326,7 +326,7 @@ class JobServiceTest {
 
         private void saveDummyJobs(int count) {
             IntStream.range(0, count)
-                    .mapToObj(i -> JOB_BASE_NAME + i)
+                    .mapToObj(i -> jobBaseName + i)
                     .forEach(
                             name -> jobService.save(memberId, jobCreationRequest(name, saveGpuServerInLab(lab, name))));
         }
