@@ -12,7 +12,7 @@ interface JobTableProps {
 const jobFields: Field[] = [
   { name: "Job 상태", selector: "status", isSortable: true },
   { name: "Job 이름", selector: "name", isSortable: true },
-  { name: "예상 소요 시간", selector: "expectedTime", isSortable: true },
+  { name: "작업 소요 시간(h)", selector: "expectedTime", isSortable: true },
   { name: "(예상) 시작 시간", selector: "startTime", isSortable: true },
   { name: "(예상) 완료 시간", selector: "completedTime", isSortable: true },
   { name: "등록자", selector: "memberName", isSortable: true },
