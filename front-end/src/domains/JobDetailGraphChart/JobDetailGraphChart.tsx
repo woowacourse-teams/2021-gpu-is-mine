@@ -1,24 +1,24 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useRef } from "react";
 import ChartClass, { ChartConfiguration } from "chart.js/auto";
-import zoomPlugin from "chartjs-plugin-zoom";
-import { Chart } from "../../components";
+import { Chart, Button } from "../../components";
+import { ButtonPanel } from "./JobDetailGraphChart.styled";
 import { ParsedLog } from "../../__fixtures__";
-
-ChartClass.register(zoomPlugin);
 
 interface JobDetailGraphChartProps extends Omit<ComponentProps<typeof Chart>, "config"> {
   data: ParsedLog[];
 }
 
+const accuracyColor = "rgb(3, 105, 161)";
+const accuracyBackgroundColor = "rgba(3, 105, 161, 0.5)";
+const lossColor = "rgb(185, 28, 28)";
+const lossBackgroundColor = "rgba(185, 28, 28, 0.5)";
+
 const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
+  const chartRef = useRef<ChartClass<"line", number[], number> | null>(null);
+
   const labels = data.map(({ currentEpoch }) => currentEpoch);
   const accuracyList = data.map(({ accuracy }) => accuracy);
   const lossList = data.map(({ loss }) => loss);
-
-  const accuracyColor = "rgb(3, 105, 161)";
-  const accuracyBackgroundColor = "rgba(3, 105, 161, 0.5)";
-  const lossColor = "rgb(185, 28, 28)";
-  const lossBackgroundColor = "rgba(185, 28, 28, 0.5)";
 
   const config: ChartConfiguration<"line", number[], number> = {
     type: "line",
@@ -97,7 +97,18 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
     },
   };
 
-  return <Chart {...rest} config={config} />;
+  const resetZoom = () => chartRef.current?.resetZoom();
+
+  return (
+    <>
+      <Chart {...rest} config={config} ref={chartRef} />
+      <ButtonPanel>
+        <Button color="primary" onClick={resetZoom}>
+          Reset Zoom
+        </Button>
+      </ButtonPanel>
+    </>
+  );
 };
 
 export default JobDetailGraphChart;
