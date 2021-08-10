@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JobLogRepository extends ElasticsearchRepository<JobLog, String> {
-    @Query("{\"match\": {\"jobId\": {\"query\": \"?0\"}}}")
     List<JobLog> findByJobId(Long jobId);
 }

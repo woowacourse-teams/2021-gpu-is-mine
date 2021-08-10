@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Document(indexName = "job")
 public class JobLog {
     @Id
-    private Long id;
+    private String id;
     private Long currentEpoch;
     private Long  totalEpoch;
     private Double accuracy;

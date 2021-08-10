@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import io.restassured.RestAssured;
 import mine.is.gpu.AcceptanceTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 class JobLogControllerTest extends AcceptanceTest {
     @Test
