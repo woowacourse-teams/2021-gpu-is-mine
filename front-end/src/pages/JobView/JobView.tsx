@@ -6,11 +6,7 @@ import { UserNavigation } from "../../domains/User";
 import { JobInfoList } from "../../domains/Job";
 
 const JobView = () => {
-  const {
-    labResponse: { id: labId },
-    id: memberId,
-    memberType,
-  } = useMyInfo();
+  const { labId, memberType, memberId } = useMyInfo();
 
   return (
     <Layout

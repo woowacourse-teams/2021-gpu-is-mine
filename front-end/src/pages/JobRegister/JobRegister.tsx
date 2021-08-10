@@ -5,7 +5,7 @@ import { UserNavigation } from "../../domains/User";
 import { JobRegisterForm } from "../../domains/Job";
 
 const JobRegister = () => {
-  const { labResponse: { id: labId }, memberType } = useMyInfo();
+  const { labId, memberType } = useMyInfo();
 
   return (
     <Layout

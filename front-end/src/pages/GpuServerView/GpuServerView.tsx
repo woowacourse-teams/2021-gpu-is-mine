@@ -5,10 +5,7 @@ import { UserNavigation } from "../../domains/User";
 import { GpuServerInfoList } from "../../domains/GpuServer";
 
 const GpuServerView = () => {
-  const {
-    labResponse: { id: labId },
-    memberType,
-  } = useMyInfo();
+  const { labId, memberType } = useMyInfo();
 
   return (
     <Layout
