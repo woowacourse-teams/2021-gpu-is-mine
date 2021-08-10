@@ -32,15 +32,7 @@ public class LabAcceptanceTest extends AcceptanceTest {
 
     public static ExtractableResponse<Response> LAB_정상_생성_요청(LabRequest labRequest) {
         LoginResponse loginResponse = AuthAcceptanceTest.로그인되어_있음(AdminDataLoader.ADMIN_EMAIL, ADMIN_PASSWORD);
-        return RestAssured.given()
-                .auth()
-                .oauth2(loginResponse.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(labRequest)
-                .when()
-                .post("/api/labs/")
-                .then()
-                .extract();
+        return LAB_생성_요청(loginResponse.getAccessToken(), labRequest);
     }
 
     public static ExtractableResponse<Response> LAB_생성_요청(String accessToken, LabRequest labRequest) {

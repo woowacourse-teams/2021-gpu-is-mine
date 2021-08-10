@@ -1,7 +1,5 @@
 package mine.is.gpu.auth.ui;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mine.is.gpu.auth.application.AuthService;
@@ -28,9 +26,7 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         }
 
         String credentials = AuthorizationExtractor.extract(request);
-        if (credentials == null) {
-            throw AuthorizationException.UNAUTHORIZED_USER.getException();
-        }
+        checkCredentialsExistence(credentials);
 
         if (isManagerAvailableMethods(request) && authService.existMemberByToken(credentials)) {
             Member member = authService.findMemberByToken(credentials);
@@ -38,11 +34,20 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        checkAdministrator(credentials);
+        return true;
+    }
+
+    private void checkAdministrator(String credentials) {
         if (!authService.existAdministratorByToken(credentials)) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
         }
+    }
 
-        return true;
+    private void checkCredentialsExistence(String credentials) {
+        if (credentials == null) {
+            throw AuthorizationException.UNAUTHORIZED_USER.getException();
+        }
     }
 
     private void checkManager(Member member) {

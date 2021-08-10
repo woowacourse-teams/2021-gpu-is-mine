@@ -1,11 +1,11 @@
 package mine.is.gpu.auth;
 
 import java.util.Arrays;
+import java.util.List;
 import mine.is.gpu.auth.application.AuthService;
 import mine.is.gpu.auth.ui.AdminLoginInterceptor;
 import mine.is.gpu.auth.ui.AuthenticationPrincipalArgumentResolver;
 import mine.is.gpu.auth.ui.LoginInterceptor;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -41,8 +41,8 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/api/labs/{*id}/**");
 
-        List<String> adminOnlyUri = Arrays.asList("/api/labs", "/api/labs/", "/api/labs/{*id}");
+        List<String> adminPrivilegeRelatedUri = Arrays.asList("/api/labs", "/api/labs/", "/api/labs/{*id}");
         registry.addInterceptor(adminLoginInterceptor)
-                .addPathPatterns(adminOnlyUri);
+                .addPathPatterns(adminPrivilegeRelatedUri);
     }
 }

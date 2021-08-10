@@ -1,8 +1,8 @@
 package mine.is.gpu.job.domain.repository;
 
+import java.util.List;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

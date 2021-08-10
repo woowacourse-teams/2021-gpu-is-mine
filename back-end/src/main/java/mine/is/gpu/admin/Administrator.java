@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 
 @Entity
-public class Administrator extends BaseEntity implements User {
+public class Administrator extends BaseEntity implements ServiceUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Administrator extends BaseEntity implements User {
     private String email;
     private String password;
 
-    public Administrator() {
+    protected Administrator() {
     }
 
     public Administrator(String name, String password) {

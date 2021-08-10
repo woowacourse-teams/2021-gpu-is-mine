@@ -1,12 +1,12 @@
 package mine.is.gpu.member.ui;
 
+import java.net.URI;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.request.MemberRequest;
+import mine.is.gpu.member.dto.request.MemberUpdateRequest;
 import mine.is.gpu.member.dto.response.MemberResponse;
-import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

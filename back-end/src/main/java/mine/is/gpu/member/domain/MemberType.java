@@ -1,7 +1,7 @@
 package mine.is.gpu.member.domain;
 
-import mine.is.gpu.member.exception.MemberException;
 import java.util.Locale;
+import mine.is.gpu.member.exception.MemberException;
 
 public enum MemberType {
     MANAGER, USER;

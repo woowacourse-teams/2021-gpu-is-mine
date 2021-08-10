@@ -1,5 +1,6 @@
 package mine.is.gpu.worker.ui;
 
+import java.net.URI;
 import mine.is.gpu.job.application.JobService;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.dto.response.JobResponse;
@@ -9,7 +10,6 @@ import mine.is.gpu.worker.application.WorkerService;
 import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

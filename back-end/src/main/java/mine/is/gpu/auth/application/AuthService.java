@@ -1,7 +1,9 @@
 package mine.is.gpu.auth.application;
 
+import java.util.Optional;
+import mine.is.gpu.admin.Administrator;
 import mine.is.gpu.admin.AdministratorRepository;
-import mine.is.gpu.admin.User;
+import mine.is.gpu.admin.ServiceUser;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.auth.exception.AuthorizationException;
@@ -30,10 +32,10 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        User user = findUser(request);
+        ServiceUser serviceUser = findUser(request);
         String password = encrypt.hashedPassword(request.getPassword(), request.getEmail());
 
-        if (!user.hasSamePassword(password)) {
+        if (!serviceUser.hasSamePassword(password)) {
             throw AuthorizationException.NOT_CORRECT_PASSWORD.getException();
         }
 
@@ -41,20 +43,19 @@ public class AuthService {
         return new LoginResponse(token);
     }
 
-    private User findUser(LoginRequest request) {
-        if (administratorRepository.existsByEmail(request.getEmail())) {
-            return administratorRepository.findByEmail(request.getEmail())
-                    .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
+    private ServiceUser findUser(LoginRequest request) {
+        Optional<Administrator> optionalAdmin = administratorRepository.findByEmail(request.getEmail());
+        if (optionalAdmin.isPresent()) {
+            return optionalAdmin.get();
         }
+
         return memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(AuthorizationException.NOT_EXISTING_EMAIL::getException);
     }
 
     @Transactional(readOnly = true)
     public Member findMemberByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
@@ -64,9 +65,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public Boolean existMemberByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
@@ -75,12 +74,16 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public Boolean existAdministratorByToken(String credentials) {
-        if (!jwtTokenProvider.validateToken(credentials)) {
-            throw AuthorizationException.INVALID_TOKEN.getException();
-        }
+        validateToken(credentials);
 
         String email = jwtTokenProvider.getPayload(credentials);
 
         return administratorRepository.existsByEmail(email);
+    }
+
+    private void validateToken(String credentials) {
+        if (!jwtTokenProvider.validateToken(credentials)) {
+            throw AuthorizationException.INVALID_TOKEN.getException();
+        }
     }
 }
