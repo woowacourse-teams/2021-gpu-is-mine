@@ -29,8 +29,9 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         checkCredentialsExistence(credentials);
 
         if (isManagerAvailableMethods(request) && authService.existMemberByToken(credentials)) {
-            Member member = authService.findMemberByToken(credentials);
+            Member    member = authService.findMemberByToken(credentials);
             checkManager(member);
+
             return true;
         }
 

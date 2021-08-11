@@ -29,7 +29,7 @@ public class GpuBoard extends BaseEntity {
     public GpuBoard(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
         validate(isWorking, performance, modelName, gpuServer);
         this.isWorking = isWorking;
-        this.performance = performance;
+            this.performance = performance;
         this.modelName = modelName;
         this.gpuServer = gpuServer;
     }
@@ -37,6 +37,7 @@ public class GpuBoard extends BaseEntity {
     public GpuBoard(Long performance, String modelName, GpuServer gpuServer) {
         this(false, performance, modelName, gpuServer);
     }
+
 
     private void validate(Boolean isWorking, Long performance, String modelName, GpuServer gpuServer) {
         if (Objects.isNull(performance) || performance <= 0) {
