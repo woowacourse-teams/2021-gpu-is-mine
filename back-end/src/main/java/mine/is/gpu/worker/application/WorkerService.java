@@ -1,5 +1,7 @@
 package mine.is.gpu.worker.application;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -11,12 +13,8 @@ import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.exception.JobException;
-import mine.is.gpu.worker.domain.Log;
-import mine.is.gpu.worker.domain.repository.LogRepository;
-import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +25,13 @@ public class WorkerService {
     private final JobRepository jobRepository;
     private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
-    private final LogRepository logRepository;
 
     public WorkerService(JobRepository jobRepository,
-            GpuServerRepository serverRepository,
-            GpuBoardRepository gpuBoardRepository,
-            LogRepository logRepository) {
+                         GpuServerRepository serverRepository,
+                         GpuBoardRepository gpuBoardRepository) {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;
-        this.logRepository = logRepository;
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +45,12 @@ public class WorkerService {
     public void updateJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
         Job job = findJobById(jobId);
         job.changeStatus(workerJobRequest.getJobStatus());
+        if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
+            job.setStartedTime(LocalDateTime.now());
+        }
+        if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
+            job.setCompletedTime(LocalDateTime.now());
+        }
     }
 
     @Transactional
@@ -83,21 +84,13 @@ public class WorkerService {
     }
 
     @Transactional
-    public Long saveLog(Long jobId, WorkerJobLogRequest workerJobLogRequest) {
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(JobException.JOB_NOT_FOUND::getException);
-        Log log = new Log(workerJobLogRequest.getContent(), job);
-        logRepository.save(log);
-        return log.getId();
-    }
-
-    @Transactional
     public void start(Long jobId) {
         Job job = findJobById(jobId);
         if (job.getStatus() != JobStatus.WAITING) {
             throw new IllegalArgumentException();
         }
         job.changeStatus(JobStatus.RUNNING);
+        job.setStartedTime(LocalDateTime.now());
     }
 
     @Transactional
@@ -107,5 +100,6 @@ public class WorkerService {
             throw new IllegalArgumentException();
         }
         job.changeStatus(JobStatus.COMPLETED);
+        job.setCompletedTime(LocalDateTime.now());
     }
 }

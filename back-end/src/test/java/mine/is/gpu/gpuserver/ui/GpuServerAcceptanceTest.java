@@ -17,6 +17,7 @@ import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.lab.dto.LabRequest;
+import mine.is.gpu.lab.ui.LabAcceptanceTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +51,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_전체조회_페이지네이션(String token, Long labId, Integer page,
-            Integer size) {
+                                                                      Integer size) {
         return RestAssured
                 .given().log().all()
                 .auth()
@@ -111,19 +112,6 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    public static Long lab_생성(LabRequest labRequest) {
-        ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
-                .body(labRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/labs/")
-                .then().log().all()
-                .extract();
-
-        String[] locationPaths = response.header("Location").split("/");
-        return Long.parseLong(locationPaths[locationPaths.length - 1]);
-    }
-
     private String userToken;
     private String managerToken;
 
@@ -131,7 +119,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     public void setUp() {
         super.setUp();
 
-        labId = lab_생성(new LabRequest("testLab"));
+        labId = LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴(new LabRequest("testLab"));
 
         userToken = 회원_등록_및_로그인_후_토큰_발급(userCreationRequest(labId));
         managerToken = 회원_등록_및_로그인_후_토큰_발급(managerCreationRequest(labId));

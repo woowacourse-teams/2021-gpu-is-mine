@@ -6,7 +6,6 @@ import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.repository.MemberRepository;
-import mine.is.gpu.worker.domain.repository.LogRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,6 @@ public abstract class AcceptanceTest {
     private GpuBoardRepository gpuBoardRepository;
     @Autowired
     private JobRepository jobRepository;
-    @Autowired
-    private LogRepository logRepository;
 
     @LocalServerPort
     int port;
@@ -49,7 +46,6 @@ public abstract class AcceptanceTest {
 
     @AfterEach
     void cleanUp() {
-        logRepository.deleteAllInBatch();
         jobRepository.deleteAllInBatch();
         gpuBoardRepository.deleteAllInBatch();
         gpuServerRepository.deleteAllInBatch();
