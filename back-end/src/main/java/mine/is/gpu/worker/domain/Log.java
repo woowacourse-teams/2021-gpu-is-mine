@@ -1,13 +1,13 @@
 package mine.is.gpu.worker.domain;
 
+import mine.is.gpu.gpuserver.domain.BaseEntity;
+import mine.is.gpu.job.domain.Job;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import mine.is.gpu.gpuserver.domain.BaseEntity;
-import mine.is.gpu.job.domain.Job;
 
 @Entity
 public class Log extends BaseEntity {

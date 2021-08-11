@@ -1,10 +1,10 @@
 package mine.is.gpu.lab.ui;
 
-import java.net.URI;
 import mine.is.gpu.lab.application.LabService;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.lab.dto.LabResponse;
 import mine.is.gpu.lab.dto.LabResponses;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

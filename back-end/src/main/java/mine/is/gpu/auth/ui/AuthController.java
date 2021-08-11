@@ -1,9 +1,9 @@
 package mine.is.gpu.auth.ui;
 
-import javax.validation.Valid;
 import mine.is.gpu.auth.application.AuthService;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,4 +26,5 @@ public class AuthController {
 
         return ResponseEntity.ok(token);
     }
+
 }
