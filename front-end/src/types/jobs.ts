@@ -32,3 +32,9 @@ export interface JobViewResponses {
 export type JobDetailResponse = JobViewResponse;
 
 export type JobDetailLogResponse = { logs: string[] };
+
+export type ParsedLog = {
+  [x in "currentEpoch" | "totalEpoch" | "loss" | "accuracy"]: number;
+};
+
+export type ParsedLogResponse = { parsedLogResponses: Readonly<ParsedLog[]> };

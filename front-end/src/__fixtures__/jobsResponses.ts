@@ -1,4 +1,4 @@
-import { JobViewResponses } from "../types";
+import { JobViewResponses, ParsedLog, ParsedLogResponse } from "../types";
 
 export const jobsResponsesMock: JobViewResponses = {
   jobResponses: [
@@ -138,11 +138,7 @@ export const logs = {
   ],
 };
 
-export type ParsedLog = {
-  [x in "currentEpoch" | "totalEpoch" | "loss" | "accuracy"]: number;
-};
-
-export const parsedLogsResponse = {
+export const parsedLogsResponse: ParsedLogResponse = {
   parsedLogResponses: [
     { currentEpoch: 1, totalEpoch: 100, accuracy: 0.9162, loss: 0.2949 },
     { currentEpoch: 2, totalEpoch: 100, accuracy: 0.9581, loss: 0.1429 },
@@ -247,4 +243,4 @@ export const parsedLogsResponse = {
   ],
 };
 
-export const parsedLogs: ParsedLog[] = parsedLogsResponse.parsedLogResponses;
+export const parsedLogs: readonly ParsedLog[] = parsedLogsResponse.parsedLogResponses;

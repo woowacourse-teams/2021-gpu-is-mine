@@ -2,10 +2,10 @@ import { ComponentProps, useRef } from "react";
 import ChartClass, { ChartConfiguration } from "chart.js/auto";
 import { Chart, Button } from "../../components";
 import { ButtonPanel } from "./JobDetailGraphChart.styled";
-import { ParsedLog } from "../../__fixtures__";
+import { ParsedLog } from "../../types";
 
 interface JobDetailGraphChartProps extends Omit<ComponentProps<typeof Chart>, "config"> {
-  data: ParsedLog[];
+  data: Readonly<ParsedLog[]>;
 }
 
 const accuracyColor = "rgb(3, 105, 161)";
