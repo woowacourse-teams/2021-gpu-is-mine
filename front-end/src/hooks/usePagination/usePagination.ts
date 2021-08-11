@@ -34,14 +34,13 @@ const usePagination = ({ count = 10, totalContentsLength }: UsePaginationProps) 
 
   return {
     currentPage: page,
+    lastPage,
+
     contentsLengthPerPage,
     onChangeContentsLengthPerPage,
 
-    pageInfo: {
-      lastPage,
-      isFirstPage,
-      isLastPage,
-    },
+    isFirstPage,
+    isLastPage,
 
     goFirstPage,
     goPrevPage,

@@ -67,7 +67,7 @@ const getJobStatusCell = (status: JobStatus) => {
 const JobTable = ({ jobs }: JobTableProps) => {
   const history = useHistory();
 
-  const goToJobDetail = (id: number | string) => history.push(`${PATH.MANAGER.JOB.VIEW}/${id}`);
+  const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
 
   const fieldSelectors = ["id", "name", "status", "memberName", "expectedTime"];
 
