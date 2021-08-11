@@ -4,7 +4,14 @@ import { Text, Loading } from "../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
 import { MESSAGE } from "../../constants";
-import { JobViewResponse } from "../../types";
+import { JobViewResponse, MemberType } from "../../types";
+
+interface JobInfoListProps {
+  className?: string;
+  labId: number;
+  memberId: number;
+  memberType: MemberType;
+}
 
 const priority = {
   RUNNING: 0, // highest
@@ -13,19 +20,22 @@ const priority = {
   CANCELED: 3, // lowest
 } as const;
 
-const sorbByResponse = (a: JobViewResponse, b: JobViewResponse) =>
+const sortByResponse = (a: JobViewResponse, b: JobViewResponse) =>
   priority[a.status] - priority[b.status];
 
-const JobInfoList = () => {
-  // TODO: useLabId 커스텀 훅 에러 바운더리 처리 => labId 상수값 대체하기
-  const labId = 1;
+const filterByMember = (response: JobViewResponse, memberType: MemberType, memberId: number) =>
+  memberType === "MANAGER" || response.memberId === memberId;
 
+const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps) => {
   const { data, status, makeRequest } = useGetJobAll({ labId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
+
+  const filteredJobList =
+    data?.jobResponses.filter((res) => filterByMember(res, memberType, memberId)) ?? [];
 
   return (
     <>
@@ -37,15 +47,15 @@ const JobInfoList = () => {
       )}
 
       {status === "succeed" && data && (
-        <StyledJobInfoList>
-          {data.jobResponses.length === 0 ? (
+        <StyledJobInfoList {...rest}>
+          {filteredJobList.length === 0 ? (
             <Text size="lg" weight="bold">
               🚫 등록된 작업이 존재하지 않습니다.
             </Text>
           ) : (
-            data.jobResponses
+            filteredJobList
               .slice()
-              .sort(sorbByResponse)
+              .sort(sortByResponse)
               .map((res) => (
                 <JobInfoItem key={res.id} refresh={() => makeRequest()} labId={labId} {...res} />
               ))
