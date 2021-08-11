@@ -5,7 +5,6 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
 const CompressionPlugin = require("compression-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = () => {
   const isDevelopment = process.env.NODE_ENV !== "production";
@@ -46,7 +45,6 @@ module.exports = () => {
       ],
     },
     plugins: [
-      new BundleAnalyzerPlugin(),
       new HtmlWebpackPlugin({
         base: "/",
         template: "public/index.html",
