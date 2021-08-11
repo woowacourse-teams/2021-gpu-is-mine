@@ -13,6 +13,10 @@ public class JobFixtures {
         return new JobRequest(serverId, NAME, META_DATA, EXPECTED_TIME);
     }
 
+    public static JobRequest jobCreationRequest(String name, Long serverId) {
+        return new JobRequest(serverId, name, META_DATA, EXPECTED_TIME);
+    }
+
     public static JobUpdateRequest jobUpdateRequest() {
         return new JobUpdateRequest(NEW_NAME);
     }
