@@ -9,24 +9,24 @@ const Pagination = ({
   lastPage,
   isFirstPage,
   isLastPage,
-  goFirstPage,
-  goLastPage,
-  goNextPage,
-  goPrevPage,
+  goToFirstPage,
+  goToLastPage,
+  goToNextPage,
+  goToPrevPage,
 }: PaginationProps) => (
   <StyledPagination>
     <ButtonWrapper>
-      <StyledPageButton color="primary" onClick={goFirstPage} disabled={isFirstPage}>
+      <StyledPageButton color="primary" onClick={goToFirstPage} disabled={isFirstPage}>
         {"<<"}
       </StyledPageButton>
-      <StyledPageButton color="primary-light" onClick={goPrevPage} disabled={isFirstPage}>
+      <StyledPageButton color="primary-light" onClick={goToPrevPage} disabled={isFirstPage}>
         {"<"}
       </StyledPageButton>
       <Text size="md" weight="bold">{`${currentPage}/${lastPage}`}</Text>
-      <StyledPageButton color="primary-light" onClick={goNextPage} disabled={isLastPage}>
+      <StyledPageButton color="primary-light" onClick={goToNextPage} disabled={isLastPage}>
         {">"}
       </StyledPageButton>
-      <StyledPageButton color="primary" onClick={goLastPage} disabled={isLastPage}>
+      <StyledPageButton color="primary" onClick={goToLastPage} disabled={isLastPage}>
         {">>"}
       </StyledPageButton>
     </ButtonWrapper>

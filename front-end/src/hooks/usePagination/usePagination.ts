@@ -5,7 +5,7 @@ interface UsePaginationProps {
   totalContentsLength: number;
 }
 
-const usePagination = ({ count = 10, totalContentsLength }: UsePaginationProps) => {
+const usePagination = ({ count, totalContentsLength }: UsePaginationProps) => {
   const [page, setPage] = useState(1);
   const [contentsLengthPerPage, setContentsLengthPerPage] = useState(count);
 
@@ -18,19 +18,19 @@ const usePagination = ({ count = 10, totalContentsLength }: UsePaginationProps) 
     setContentsLengthPerPage(value);
   };
 
-  const goFirstPage = () => setPage(1);
-
-  const goPrevPage = () => {
-    if (isFirstPage) return;
-    setPage((prev) => prev - 1);
+  const goToPage = (n: number) => {
+    if (n > 0 && n <= lastPage) {
+      setPage(n);
+    }
   };
 
-  const goNextPage = () => {
-    if (isLastPage) return;
-    setPage((prev) => prev + 1);
-  };
+  const goToFirstPage = () => goToPage(1);
 
-  const goLastPage = () => setPage(lastPage);
+  const goToPrevPage = () => goToPage(page - 1);
+
+  const goToNextPage = () => goToPage(page + 1);
+
+  const goToLastPage = () => goToPage(lastPage);
 
   return {
     currentPage: page,
@@ -42,10 +42,10 @@ const usePagination = ({ count = 10, totalContentsLength }: UsePaginationProps) 
     isFirstPage,
     isLastPage,
 
-    goFirstPage,
-    goPrevPage,
-    goNextPage,
-    goLastPage,
+    goToFirstPage,
+    goToPrevPage,
+    goToNextPage,
+    goToLastPage,
   };
 };
 
