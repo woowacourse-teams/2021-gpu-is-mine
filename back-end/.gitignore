@@ -43,3 +43,4 @@ logs
 /src/main/resources/application-db.properties
 /docker/docker-compose.yml
 /src/main/resources/sonarqube.properties
+/src/main/resources/application-elk.properties
