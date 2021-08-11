@@ -1,5 +1,6 @@
 package mine.is.gpu.job.domain;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,6 +40,10 @@ public class Job extends BaseEntity {
 
     @Column(nullable = false)
     private String expectedTime;
+
+    private LocalDateTime startedTime = null;
+
+    private LocalDateTime completedTime = null;
 
     protected Job() {
     }
@@ -138,5 +143,21 @@ public class Job extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDateTime getStartedTime() {
+        return startedTime;
+    }
+
+    public LocalDateTime getCompletedTime() {
+        return completedTime;
+    }
+
+    public void setStartedTime(LocalDateTime startedTime) {
+        this.startedTime = startedTime;
+    }
+
+    public void setCompletedTime(LocalDateTime completedTime) {
+        this.completedTime = completedTime;
     }
 }
