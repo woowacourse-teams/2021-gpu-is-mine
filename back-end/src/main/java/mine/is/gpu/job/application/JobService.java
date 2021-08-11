@@ -206,7 +206,7 @@ public class JobService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), totalCount);
 
-        if(start > end) {
+        if (start > end) {
             return Collections.emptyList();
         }
 
