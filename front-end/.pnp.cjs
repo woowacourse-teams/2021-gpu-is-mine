@@ -48,6 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:7.0.1"],
             ["@testing-library/user-event", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:13.2.1"],
             ["@types/jest", "npm:26.0.24"],
+            ["@types/node", "npm:16.4.13"],
             ["@types/react", "npm:17.0.13"],
             ["@types/react-dom", "npm:17.0.8"],
             ["@types/react-router-dom", "npm:5.1.8"],
@@ -7914,6 +7915,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:16.4.13", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-16.4.13-3f9c176458-071e86a1d1.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:16.4.13"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/node-fetch", [
@@ -14949,6 +14957,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:7.0.1"],
             ["@testing-library/user-event", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:13.2.1"],
             ["@types/jest", "npm:26.0.24"],
+            ["@types/node", "npm:16.4.13"],
             ["@types/react", "npm:17.0.13"],
             ["@types/react-dom", "npm:17.0.8"],
             ["@types/react-router-dom", "npm:5.1.8"],

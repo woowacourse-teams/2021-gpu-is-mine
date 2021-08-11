@@ -1,4 +1,7 @@
-export const BASE_URL = "https://gpuismine.kro.kr/api";
+export const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://gpuismine.p-e.kr/api" // main server
+    : "https://gpuismine.kro.kr/api"; // dev server
 
 const API_ENDPOINT = {
   LABS(labId: number) {

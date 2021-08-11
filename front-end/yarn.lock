@@ -4030,6 +4030,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^16.4.13":
+  version: 16.4.13
+  resolution: "@types/node@npm:16.4.13"
+  checksum: 071e86a1d196cf72928a7109e99769dffed93db481032b9ca2f52e6f3ced432e2a179849c85e587e67409202e1ed37bffd0c7a31d38adf35a385d327dfe8bd72
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.0
   resolution: "@types/normalize-package-data@npm:2.4.0"
@@ -9648,6 +9655,7 @@ fsevents@^1.2.7:
     "@testing-library/react-hooks": ^7.0.1
     "@testing-library/user-event": ^13.2.1
     "@types/jest": ^26.0.24
+    "@types/node": ^16.4.13
     "@types/react": ^17.0.13
     "@types/react-dom": ^17.0.8
     "@types/react-router-dom": ^5.1.8
