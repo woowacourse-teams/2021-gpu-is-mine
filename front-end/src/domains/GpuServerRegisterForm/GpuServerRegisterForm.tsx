@@ -8,7 +8,7 @@ import { PATH } from "../../constants";
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const goToGpuServerView = useMoveToPage(PATH.MANAGER.GPU_SERVER.VIEW);
+  const goToGpuServerView = useMoveToPage(PATH.GPU_SERVER.VIEW);
 
   const { status, makeRequest, done } = usePostGpuServer({ labId: 1 });
 

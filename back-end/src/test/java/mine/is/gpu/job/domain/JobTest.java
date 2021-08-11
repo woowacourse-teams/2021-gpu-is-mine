@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class JobTest {
+class JobTest {
     private GpuBoard gpuBoard;
     private Member member;
 

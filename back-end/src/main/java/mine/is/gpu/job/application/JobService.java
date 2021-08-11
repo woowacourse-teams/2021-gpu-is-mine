@@ -12,17 +12,19 @@ import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
+import mine.is.gpu.job.domain.repository.LogRepository;
+import mine.is.gpu.job.domain.repository.ParsedLogRepository;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
+import mine.is.gpu.job.dto.response.LogsResponse;
+import mine.is.gpu.job.dto.response.ParsedLogResponses;
 import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.worker.domain.repository.LogRepository;
-import mine.is.gpu.worker.dto.LogsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -35,16 +37,19 @@ public class JobService {
     private final GpuBoardRepository gpuBoardRepository;
     private final MemberRepository memberRepository;
     private final LogRepository logRepository;
+    private final ParsedLogRepository parsedLogRepository;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
                       GpuBoardRepository gpuBoardRepository,
-                      MemberRepository memberRepository, LogRepository logRepository) {
+                      MemberRepository memberRepository, LogRepository logRepository,
+                      ParsedLogRepository parsedLogRepository) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
         this.logRepository = logRepository;
+        this.parsedLogRepository = parsedLogRepository;
     }
 
     @Transactional
@@ -171,6 +176,10 @@ public class JobService {
     }
 
     public LogsResponse findLogAllById(Long jobId) {
-        return LogsResponse.of(logRepository.findAllByJobId(jobId));
+        return LogsResponse.of(logRepository.findByJobIdOrderByTime(jobId));
+    }
+
+    public ParsedLogResponses findParsedLogById(Long jobId) {
+        return ParsedLogResponses.of(parsedLogRepository.findByJobIdOrderByCurrentEpoch(jobId));
     }
 }

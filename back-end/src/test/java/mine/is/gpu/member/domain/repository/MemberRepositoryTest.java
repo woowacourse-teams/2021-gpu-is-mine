@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class MemberRepositoryTest {
+class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
