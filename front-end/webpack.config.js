@@ -57,14 +57,31 @@ module.exports = () => {
       extensions: [".tsx", ".ts", ".js", "jsx"],
     },
     performance: {
-      maxEntrypointSize: 500_000,
-      maxAssetSize: 300_000,
-      hints: isDevelopment ? "warning" : "error",
+      maxEntrypointSize: 500 * 1_024,
+      maxAssetSize: 300 * 1_024,
+      hints: "warning",
     },
     optimization: {
       splitChunks: {
         chunks: "all",
-        maxSize: 70000,
+        minSize: 20000,
+        minRemainingSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        enforceSizeThreshold: 50000,
+        cacheGroups: {
+          defaultVendors: {
+            test: /[\\/].yarn[\\/]cache[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+        },
       },
     },
   };
