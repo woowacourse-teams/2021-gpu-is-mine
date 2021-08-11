@@ -12,30 +12,33 @@ interface TableProps extends TableHTMLAttributes<HTMLTableElement> {
   rowCountPerPage: number;
 }
 
-const sortRowsByField = (rows: Row[], field: string, order: Order) =>
-  rows.slice().sort((a, b) => {
-    const valueA = a.data[field]?.priority ?? a.data[field]?.value;
-    const valueB = b.data[field]?.priority ?? b.data[field]?.value;
-
-    if (valueA === null || valueA === undefined || valueA === "") {
-      return 1;
-    }
-
-    if (valueB === null || valueB === undefined || valueB === "") {
-      return -1;
-    }
-
-    if (typeof valueA === "string" && typeof valueB === "string") {
-      const value = valueA.localeCompare(valueB, navigator.language, { numeric: true });
-      return order === "asc" ? value : value * -1;
-    }
-
-    if (typeof valueA === "number" && typeof valueB === "number") {
-      return order === "asc" ? valueA - valueB : valueB - valueA;
-    }
-
+const sortByField = (a: Row, b: Row, field: string, order: Order): number => {
+  if (!(field in a.data)) {
     return 0;
-  });
+  }
+
+  const valueA = a.data[field]?.priority ?? a.data[field].value;
+  const valueB = b.data[field]?.priority ?? b.data[field].value;
+
+  if (valueA === null || valueA === undefined || valueA === "") {
+    return 1;
+  }
+
+  if (valueB === null || valueB === undefined || valueB === "") {
+    return -1;
+  }
+
+  if (typeof valueA === "string" && typeof valueB === "string") {
+    const value = valueA.localeCompare(valueB, navigator.language, { numeric: true });
+    return order === "asc" ? value : value * -1;
+  }
+
+  if (typeof valueA === "number" && typeof valueB === "number") {
+    return order === "asc" ? valueA - valueB : valueB - valueA;
+  }
+
+  return 0;
+};
 
 const isNumberOrString = (value: unknown) => typeof value === "string" || typeof value === "number";
 
@@ -51,11 +54,10 @@ const Table = ({ fields, rows, rowCountPerPage, ...rest }: TableProps) => {
     totalContentsLength: rows.length,
   });
 
-  const sortedRows = sortRowsByField(rows, selectedField, order);
-
-  const currentPageRows = sortedRows.filter(
-    (_, idx) => (currentPage - 1) * rowCount <= idx && idx < currentPage * rowCount
-  );
+  const currentPageRows = rows
+    .slice()
+    .sort((a, b) => sortByField(a, b, selectedField, order))
+    .slice((currentPage - 1) * rowCount, currentPage * rowCount);
 
   return (
     <StyledContainer>
