@@ -1,9 +1,9 @@
 package mine.is.gpu.job.dto.response;
 
-import mine.is.gpu.job.domain.Job;
-import mine.is.gpu.job.domain.JobStatus;
 import java.util.List;
 import java.util.stream.Collectors;
+import mine.is.gpu.job.domain.Job;
+import mine.is.gpu.job.domain.JobStatus;
 
 public class JobResponse {
     private Long id;
