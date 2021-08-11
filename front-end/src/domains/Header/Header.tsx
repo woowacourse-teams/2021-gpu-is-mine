@@ -6,15 +6,13 @@ interface HeaderProps extends HTMLAttributes<HTMLElement> {
   labName: string;
 }
 
-const Header = ({ labName, children, ...rest }: HeaderProps) => {
-  return (
-    <StyledHeader {...rest}>
-      <Logo />
-      <Text className="lab-name" size="md" weight="medium">
-        {labName}
-      </Text>
-    </StyledHeader>
-  );
-};
+const Header = ({ labName, ...rest }: HeaderProps) => (
+  <StyledHeader {...rest}>
+    <Logo />
+    <Text className="lab-name" size="md" weight="medium">
+      {labName}
+    </Text>
+  </StyledHeader>
+);
 
 export default Header;
