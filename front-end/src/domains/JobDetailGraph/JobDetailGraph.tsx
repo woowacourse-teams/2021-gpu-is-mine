@@ -28,7 +28,9 @@ const JobDetailGraph = ({ labId, jobId, detail, ...rest }: JobDetailGraphProps) 
         그래프
       </Text>
       {isLoading && <Loading />}
-      <JobDetailGraphChart data={data?.parsedLogResponses ?? []} />
+      {/* FIXME: parsedLogResponses 의 마지막 행은 제대로 parsing 된 로그가 아니어서,
+      임시방편으로 그래프 그릴 시에 해당 값을 제외하고 그리고 있음 */}
+      <JobDetailGraphChart data={data?.parsedLogResponses.slice(0, -1) ?? []} />
     </StyledJobDetailGraph>
   );
 };
