@@ -9,7 +9,7 @@
 
   <if condition='"${spring.profiles.active}".contains("prod")
   || "${spring.profiles.active}".contains("was1")
-  || "${spring.profiles.active}".contains("was1")'>
+  || "${spring.profiles.active}".contains("was2")'>
     <then>
       <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
 
