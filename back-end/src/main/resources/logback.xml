@@ -7,47 +7,57 @@
   <property name="LOG_PATH" value="logs"/>
   <property name="ERR_LOG_FILE_NAME" value="err_log"/>
 
-  <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
+  <if condition='"${spring.profiles.active}".contains("prod")
+  || "${spring.profiles.active}".contains("was1")
+  || "${spring.profiles.active}".contains("was2")'>
+    <then>
+      <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
 
-    <!-- Send only WARN and above -->
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
+        <!-- Send only WARN and above -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>INFO</level>
+        </filter>
 
-    <!-- Nice layout pattern -->
-    <layout>
-      <pattern>${LOG_PATTERN}</pattern>
-    </layout>
+        <!-- Nice layout pattern -->
+        <layout>
+          <pattern>${LOG_PATTERN}</pattern>
+        </layout>
 
-    <!-- Hardcoded Log Group Name -->
-    <logGroupName>GPU-IS-MINE-prod-spring-logs</logGroupName>
+        <!-- Hardcoded Log Group Name -->
+        <logGroupName>GPU-IS-MINE-prod-spring-logs</logGroupName>
 
-    <!-- Log Stream Name UUID Prefix -->
-    <logStreamUuidPrefix></logStreamUuidPrefix>
+        <!-- Log Stream Name UUID Prefix -->
+        <logStreamUuidPrefix></logStreamUuidPrefix>
 
-    <!-- Hardcoded AWS region -->
-    <!-- So even when running inside an AWS instance in us-west-1, logs will go to us-west-2 -->
-    <logRegion>ap-northeast-2</logRegion>
+        <!-- Hardcoded AWS region -->
+        <!-- So even when running inside an AWS instance in us-west-1, logs will go to us-west-2 -->
+        <logRegion>ap-northeast-2</logRegion>
 
-    <!-- Maximum number of events in each batch (50 is the default) -->
-    <!-- will flush when the event queue has 50 elements, even if still in quiet time (see maxFlushTimeMillis) -->
-    <maxBatchLogEvents>50</maxBatchLogEvents>
+        <!-- Maximum number of events in each batch (50 is the default) -->
+        <!-- will flush when the event queue has 50 elements, even if still in quiet time (see maxFlushTimeMillis) -->
+        <maxBatchLogEvents>50</maxBatchLogEvents>
 
-    <!-- Maximum quiet time in millisecond (0 is the default) -->
-    <!-- will flush when met, even if the batch size is not met (see maxBatchLogEvents) -->
-    <maxFlushTimeMillis>30000</maxFlushTimeMillis>
+        <!-- Maximum quiet time in millisecond (0 is the default) -->
+        <!-- will flush when met, even if the batch size is not met (see maxBatchLogEvents) -->
+        <maxFlushTimeMillis>30000</maxFlushTimeMillis>
 
-    <!-- Maximum block time in millisecond (5000 is the default) -->
-    <!-- when > 0: this is the maximum time the logging thread will wait for the logger, -->
-    <!-- when == 0: the logging thread will never wait for the logger, discarding events while the queue is full -->
-    <maxBlockTimeMillis>5000</maxBlockTimeMillis>
+        <!-- Maximum block time in millisecond (5000 is the default) -->
+        <!-- when > 0: this is the maximum time the logging thread will wait for the logger, -->
+        <!-- when == 0: the logging thread will never wait for the logger, discarding events while the queue is full -->
+        <maxBlockTimeMillis>5000</maxBlockTimeMillis>
 
-    <!-- Retention value for log groups, 0 for infinite see -->
-    <!-- https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutRetentionPolicy.html for other -->
-    <!-- possible values -->
+        <!-- Retention value for log groups, 0 for infinite see -->
+        <!-- https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutRetentionPolicy.html for other -->
+        <!-- possible values -->
 
-    <retentionTimeDays>0</retentionTimeDays>
-  </appender>
+        <retentionTimeDays>0</retentionTimeDays>
+      </appender>
+      <root level="INFO">
+        <appender-ref ref="ASYNC_AWS_LOGS"/>
+      </root>
+    </then>
+  </if>
+
   <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>error</level>
@@ -75,7 +85,6 @@
   </appender>
 
   <root level="INFO">
-    <appender-ref ref="ASYNC_AWS_LOGS"/>
     <appender-ref ref="ERROR"/>
     <appender-ref ref="STDOUT"/>
   </root>

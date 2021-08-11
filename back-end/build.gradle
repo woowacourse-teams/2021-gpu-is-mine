@@ -42,6 +42,7 @@ dependencies {
     
     // logging to cloudwatch
     implementation("ca.pjer:logback-awslogs-appender:1.4.0")
+    implementation("org.codehaus.janino:janino:3.0.7")
 
     testRuntimeOnly 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'
