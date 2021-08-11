@@ -13,13 +13,13 @@ const getStatusStyle = (status: JobStatus) => {
       color: var(--secondary-700);
     `,
     COMPLETED: css`
-      color: var(--primary-900);
+      color: var(--active);
     `,
     CANCELED: css`
       color: var(--error);
     `,
     RUNNING: css`
-      color: var(--active);
+      color: var(--primary-900);
     `,
   };
 

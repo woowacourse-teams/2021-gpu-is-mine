@@ -7,6 +7,7 @@ import { PATH } from "../../constants";
 
 interface JobTableProps {
   jobs: JobViewResponse[];
+  className?: string;
 }
 
 const jobFields: Field[] = [
@@ -64,7 +65,7 @@ const getJobStatusCell = (status: JobStatus) => {
   }
 };
 
-const JobTable = ({ jobs }: JobTableProps) => {
+const JobTable = ({ jobs, ...rest }: JobTableProps) => {
   const history = useHistory();
 
   const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
@@ -75,16 +76,23 @@ const JobTable = ({ jobs }: JobTableProps) => {
     .map((job) => pick(job, fieldSelectors))
     .map(({ id, name, status, memberName, expectedTime }) => ({
       id: Number(id),
+      name,
+      status: status as JobStatus,
+      memberName,
+      expectedTime: Number(expectedTime),
+    }))
+    .map(({ id, name, status, memberName, expectedTime }) => ({
+      id,
       data: {
-        status: getJobStatusCell(status as JobStatus),
+        status: getJobStatusCell(status),
         name: { value: name },
         expectedTime: { value: expectedTime },
         startTime: { value: formatDate(new Date()) },
-        completedTime: { value: formatDate(addHours(new Date(), Number(expectedTime))) },
+        completedTime: { value: formatDate(addHours(new Date(), expectedTime)) },
         memberName: { value: memberName },
         etc: {
           value: (
-            <Button color="primary" onClick={() => goToJobDetail(Number(id))}>
+            <Button color="primary" onClick={() => goToJobDetail(id)}>
               상세
             </Button>
           ),
@@ -92,7 +100,7 @@ const JobTable = ({ jobs }: JobTableProps) => {
       },
     })) as Row[];
 
-  return <Table fields={jobFields} rows={rows} rowCountPerPage={5} />;
+  return <Table fields={jobFields} rows={rows} rowCountPerPage={5} {...rest} />;
 };
 
 export default JobTable;
