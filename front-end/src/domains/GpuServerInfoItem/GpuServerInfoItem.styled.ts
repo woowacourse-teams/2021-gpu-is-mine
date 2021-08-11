@@ -83,6 +83,6 @@ export const StyledGpuServerInfoItem = styled(VerticalBox)`
   }
 
   .button:hover {
-    filter: brightness(1.5);
+    filter: brightness(1.2);
   }
 `;
