@@ -1,8 +1,10 @@
+import { HTMLAttributes } from "react";
 import { usePagination } from "../../hooks";
 import Text from "../Text/Text";
 import { ButtonWrapper, StyledPageButton, StyledPagination } from "./Table.styled";
 
-type PaginationProps = Omit<ReturnType<typeof usePagination>, "contentsLengthPerPage">;
+type PaginationProps = Omit<ReturnType<typeof usePagination>, "contentsLengthPerPage"> &
+  HTMLAttributes<HTMLDivElement>;
 
 const Pagination = ({
   currentPage,
@@ -13,8 +15,9 @@ const Pagination = ({
   goToLastPage,
   goToNextPage,
   goToPrevPage,
+  ...rest
 }: PaginationProps) => (
-  <StyledPagination>
+  <StyledPagination {...rest}>
     <ButtonWrapper>
       <StyledPageButton color="primary" onClick={goToFirstPage} disabled={isFirstPage}>
         {"<<"}
