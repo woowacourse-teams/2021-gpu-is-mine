@@ -105,24 +105,17 @@ const GpuServerInfoItem = ({
           </div>
         </VerticalBox>
 
-        {memberType === "MANAGER" && (
-          <div className="button-wrapper">
-            <Button className="button" color="primary" onClick={handleDetailClick}>
-              상세
-            </Button>
+        <div className="button-wrapper">
+          <Button className="button" color="primary" onClick={handleDetailClick}>
+            상세
+          </Button>
+
+          {memberType === "MANAGER" && (
             <Button className="button" color="error" disabled={isLoading} onClick={openConfirm}>
               삭제
             </Button>
-          </div>
-        )}
-
-        {memberType === "USER" && (
-          <div className="button-wrapper">
-            <Button className="button" color="primary" onClick={handleDetailClick}>
-              상세
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </StyledGpuServerInfoItem>
     </>
   );
