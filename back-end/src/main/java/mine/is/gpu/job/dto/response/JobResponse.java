@@ -1,24 +1,29 @@
 package mine.is.gpu.job.dto.response;
 
-import mine.is.gpu.job.domain.Job;
-import mine.is.gpu.job.domain.JobStatus;
 import java.util.List;
 import java.util.stream.Collectors;
+import mine.is.gpu.job.domain.CalculatedTime;
+import mine.is.gpu.job.domain.Job;
+import mine.is.gpu.job.domain.JobStatus;
 
 public class JobResponse {
-    private final Long id;
-    private final String name;
-    private final JobStatus status;
-    private final Long memberId;
-    private final String memberName;
-    private final Long gpuServerId;
-    private final String gpuServerName;
-    private final String metaData;
-    private final String expectedTime;
+    private Long id;
+    private String name;
+    private JobStatus status;
+    private Long memberId;
+    private String memberName;
+    private Long gpuServerId;
+    private String gpuServerName;
+    private String metaData;
+    private String expectedTime;
+    private CalculatedTime calculatedTime;
 
-    public JobResponse(Long id, String name, JobStatus status, Long memberId,
-                       String memberName, Long gpuServerId, String gpuServerName,
-                       String metaData, String expectedTime) {
+    private JobResponse() {
+    }
+
+    private JobResponse(Long id, String name, JobStatus status, Long memberId,
+                        String memberName, Long gpuServerId, String gpuServerName,
+                        String metaData, String expectedTime, CalculatedTime calculatedTime) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -28,6 +33,7 @@ public class JobResponse {
         this.gpuServerName = gpuServerName;
         this.metaData = metaData;
         this.expectedTime = expectedTime;
+        this.calculatedTime = calculatedTime;
     }
 
     public static JobResponse of(Job job) {
@@ -40,7 +46,23 @@ public class JobResponse {
                 job.getGpuServer().getId(),
                 job.getGpuServer().getName(),
                 job.getMetaData(),
-                job.getExpectedTime()
+                job.getExpectedTime(),
+                new CalculatedTime()
+        );
+    }
+
+    public static JobResponse of(Job job, CalculatedTime calculatedTime) {
+        return new JobResponse(
+                job.getId(),
+                job.getName(),
+                job.getStatus(),
+                job.getMember().getId(),
+                job.getMember().getName(),
+                job.getGpuServer().getId(),
+                job.getGpuServer().getName(),
+                job.getMetaData(),
+                job.getExpectedTime(),
+                calculatedTime
         );
     }
 
@@ -84,5 +106,9 @@ public class JobResponse {
 
     public String getExpectedTime() {
         return expectedTime;
+    }
+
+    public CalculatedTime getCalculatedTime() {
+        return calculatedTime;
     }
 }

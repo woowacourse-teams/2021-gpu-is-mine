@@ -1,24 +1,28 @@
 package mine.is.gpu.job.dto.response;
 
-import mine.is.gpu.job.domain.Job;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import mine.is.gpu.job.domain.CalculatedTime;
+import mine.is.gpu.job.domain.Job;
 
 public class JobResponses {
-
     private List<JobResponse> jobResponses;
+
+    private JobResponses() {
+    }
 
     private JobResponses(List<JobResponse> jobResponses) {
         this.jobResponses = jobResponses;
     }
 
-    public JobResponses() {
-    }
-
     public static JobResponses of(List<Job> jobs) {
-        List<JobResponse> jobResponses = jobs.stream()
-                .map(JobResponse::of)
-                .collect(Collectors.toList());
+        Long usageTime = 0L;
+        List<JobResponse> jobResponses = new ArrayList<>();
+
+        for (Job job : jobs) {
+            jobResponses.add(JobResponse.of(job, new CalculatedTime(job, usageTime, job.getExpectedTime())));
+            usageTime += Integer.parseInt(job.getExpectedTime());
+        }
 
         return new JobResponses(jobResponses);
     }

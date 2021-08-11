@@ -4,6 +4,9 @@ public class MailDto {
     private String email;
     private String jobName;
 
+    public MailDto() {
+    }
+
     public MailDto(String email, String jobName) {
         this.email = email;
         this.jobName = jobName;

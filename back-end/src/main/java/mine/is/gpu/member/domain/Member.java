@@ -1,9 +1,5 @@
 package mine.is.gpu.member.domain;
 
-import mine.is.gpu.gpuserver.domain.BaseEntity;
-import mine.is.gpu.job.domain.Job;
-import mine.is.gpu.lab.domain.Lab;
-import mine.is.gpu.member.exception.MemberException;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,14 +10,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import mine.is.gpu.admin.Account;
+import mine.is.gpu.gpuserver.domain.BaseEntity;
+import mine.is.gpu.job.domain.Job;
+import mine.is.gpu.lab.domain.Lab;
+import mine.is.gpu.member.exception.MemberException;
 
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -150,7 +151,12 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
+    @Override
     public boolean hasSamePassword(String password) {
         return this.password.equals(password);
+    }
+
+    public boolean isManager() {
+        return memberType.isManager();
     }
 }

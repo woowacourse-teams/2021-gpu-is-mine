@@ -2,6 +2,7 @@ package mine.is.gpu.worker;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -14,27 +15,23 @@ import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @DataJpaTest
 class JobRepositoryTest {
-
     @Autowired
     private JobRepository jobRepository;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -42,28 +39,27 @@ class JobRepositoryTest {
     @Test
     void findAllByBoardIdByOrderById() {
         // given
-        Lab lab1 = new Lab("lab1");
-        labRepository.save(lab1);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab1);
-        gpuServerRepository.save(gpuServer1);
-        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        Member member1 = new Member("email@email.com", "password", "name1", MemberType.MANAGER, lab1);
-        memberRepository.save(member1);
-        Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard1, member1, "metaData1", "10");
+        Lab lab = new Lab("lab");
+        labRepository.save(lab);
+        GpuServer gpuServer = new GpuServer("server", true, 1024L, 1024L, lab);
+        gpuServerRepository.save(gpuServer);
+        GpuBoard gpuBoard = new GpuBoard(true, 600L, "NVIDIA42", gpuServer);
+        gpuBoardRepository.save(gpuBoard);
+        Member member = new Member("email@email.com", "password", "name", MemberType.MANAGER, lab);
+        memberRepository.save(member);
+        Job job1 = new Job("job1", JobStatus.WAITING, gpuBoard, member, "metaData1", "10");
         jobRepository.save(job1);
-        Job job2 = new Job("job2", JobStatus.RUNNING, gpuBoard1, member1, "metaData2", "10");
+        Job job2 = new Job("job2", JobStatus.RUNNING, gpuBoard, member, "metaData2", "10");
         jobRepository.save(job2);
-        Job job3 = new Job("job2", JobStatus.WAITING, gpuBoard1, member1, "metaData3", "10");
+        Job job3 = new Job("job2", JobStatus.WAITING, gpuBoard, member, "metaData3", "10");
         jobRepository.save(job3);
 
         // when
-        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard1.getId(), JobStatus.WAITING);
+        List<Job> jobs = jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING);
 
         // then
         assertThat(jobs.size()).isEqualTo(2);
         assertThat(jobs.get(0).getId()).isEqualTo(job1.getId());
         assertThat(jobs.get(1).getId()).isEqualTo(job3.getId());
     }
-
 }

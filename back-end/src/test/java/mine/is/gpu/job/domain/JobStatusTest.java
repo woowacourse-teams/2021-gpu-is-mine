@@ -8,8 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class JobStatusTest {
-
+class JobStatusTest {
     @ParameterizedTest
     @ValueSource(strings = {"not", "existing", " "})
     @DisplayName("존재하지 않는 Enum으로의 요청 에러 발생")

@@ -6,46 +6,43 @@ import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
+import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.gpuserver.fixture.GpuServerFixtures;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 class GpuServerControllerTest {
-
     @Autowired
     private GpuServerController gpuServerController;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
 
-    private Lab lab = new Lab("lab1");
-    private GpuServer serverInLab = new GpuServer("server1", false, 600L, 1024L, lab);
+    private Lab lab = new Lab("lab");
+    private GpuServer serverInLab = new GpuServer("server", false, 600L, 1024L, lab);
     private Member member = new Member("email@email.com", "password", "name", MemberType.USER, lab);
 
     @BeforeEach
-    private void setUp() {
+    void setUp() {
         labRepository.save(lab);
         gpuServerRepository.save(serverInLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "aaa", serverInLab));
@@ -55,8 +52,8 @@ class GpuServerControllerTest {
     @DisplayName("lab에 속하지 않은 server에는 조회 권한이 없다.")
     @Test
     void searchWithOtherLabServer() {
-        Lab otherLab = labRepository.save(new Lab("lab2"));
-        GpuServer serverInOtherLab = new GpuServer("server1", true, 800L, 1024L, otherLab);
+        Lab otherLab = labRepository.save(new Lab("otherLab"));
+        GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
         gpuServerRepository.save(serverInOtherLab);
         gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));
@@ -68,8 +65,8 @@ class GpuServerControllerTest {
                 .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
-    @DisplayName("관리자 권한을 확인한다.")
     @Nested
+    @DisplayName("관리자 권한을 확인한다.")
     class ManagerAuthorization {
         private Lab otherLab = new Lab("otherLab");
         private Member manager = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);
@@ -97,8 +94,8 @@ class GpuServerControllerTest {
         @DisplayName("lab에 속하지 않은 server에 조회, 생성, 수정, 삭제할 수 없다.")
         @Test
         void handleWithOtherLabServer() {
-            Lab otherLab = labRepository.save(new Lab("lab2"));
-            GpuServer serverInOtherLab = new GpuServer("server1", true, 800L, 1024L, otherLab);
+            Lab otherLab = labRepository.save(new Lab("anotherOtherLab"));
+            GpuServer serverInOtherLab = new GpuServer("server2", true, 800L, 1024L, otherLab);
 
             gpuServerRepository.save(serverInOtherLab);
             gpuBoardRepository.save(new GpuBoard(true, 800L, "bbb", serverInOtherLab));

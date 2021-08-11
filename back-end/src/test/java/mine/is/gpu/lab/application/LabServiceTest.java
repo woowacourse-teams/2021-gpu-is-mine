@@ -25,8 +25,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class LabServiceTest {
@@ -34,19 +36,14 @@ class LabServiceTest {
 
     @Autowired
     private LabService labService;
-
     @Autowired
     private GpuServerRepository gpuServerRepository;
-
     @Autowired
     private GpuBoardRepository gpuBoardRepository;
-
     @Autowired
     private LabRepository labRepository;
-
     @Autowired
     private MemberRepository memberRepository;
-
     @Autowired
     private JobRepository jobRepository;
 
@@ -56,6 +53,27 @@ class LabServiceTest {
         Long createdId = labService.save(LAB_REQUEST);
 
         assertThat(createdId).isNotNull();
+    }
+
+    @Test
+    @DisplayName("중복 이름 생성")
+    void duplicateNameSave() {
+        labService.save(LAB_REQUEST);
+
+        assertThatThrownBy(() -> labService.save(LAB_REQUEST))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
+    }
+
+    @Test
+    @DisplayName("중복 이름 수정")
+    void duplicateNameUpdate() {
+        labService.save(LAB_REQUEST);
+
+        LabRequest labRequest = new LabRequest("LabName2");
+        Long labId = labService.save(labRequest);
+
+        assertThatThrownBy(() -> labService.update(labId, labRequest))
+                .isEqualTo(LabException.DUPLICATE_LAB_NAME.getException());
     }
 
     @Test
@@ -167,10 +185,10 @@ class LabServiceTest {
 
         // then
         assertThatThrownBy(() -> labService.findById(labId)).isInstanceOf(NotFoundException.class);
-        assertThat(gpuServerRepository.findAllByLabId(labId)).hasSize(0);
-        assertThat(gpuBoardRepository.findById(gpuBoardId).isPresent()).isFalse();
-        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId).isPresent()).isFalse();
-        Assertions.assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).hasSize(0);
-        assertThat(memberRepository.findById(memberId).isPresent()).isFalse();
+        assertThat(gpuServerRepository.findAllByLabId(labId)).isEmpty();
+        assertThat(gpuBoardRepository.findById(gpuBoardId)).isNotPresent();
+        assertThat(gpuBoardRepository.findByGpuServerId(gpuServerId)).isNotPresent();
+        Assertions.assertThat(jobRepository.findAllByGpuBoardId(gpuBoardId)).isEmpty();
+        assertThat(memberRepository.findById(memberId)).isNotPresent();
     }
 }

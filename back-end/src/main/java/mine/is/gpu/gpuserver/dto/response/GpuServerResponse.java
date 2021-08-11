@@ -1,13 +1,12 @@
 package mine.is.gpu.gpuserver.dto.response;
 
+import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.dto.response.JobResponse;
-import java.util.List;
 
 public class GpuServerResponse {
-
     private Long id;
     private String serverName;
     private Long memorySize;
@@ -16,8 +15,11 @@ public class GpuServerResponse {
     private GpuBoardResponse gpuBoard;
     private List<JobResponse> jobs;
 
+    public GpuServerResponse() {
+    }
+
     private GpuServerResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
-            GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
+                              GpuBoardResponse gpuBoard, List<JobResponse> jobs) {
         this.id = id;
         this.serverName = serverName;
         this.memorySize = memorySize;
@@ -25,9 +27,6 @@ public class GpuServerResponse {
         this.isOn = isOn;
         this.gpuBoard = gpuBoard;
         this.jobs = jobs;
-    }
-
-    public GpuServerResponse() {
     }
 
     public static GpuServerResponse of(GpuServer gpuServer, GpuBoard gpuBoard, List<Job> jobs) {
