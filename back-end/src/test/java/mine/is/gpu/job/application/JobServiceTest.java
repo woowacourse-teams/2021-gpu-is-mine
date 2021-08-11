@@ -237,6 +237,21 @@ class JobServiceTest {
                     jobId2);
         }
 
+        @Test
+        @DisplayName("다음 Job의 예상 실행 시간이 이전 Job의 기대 시간의 합과 같다")
+        void findAllTimeByLab() {
+            Long jobId1 = jobService
+                    .save(saveMember(lab, "email3"), jobCreationRequest(saveGpuServerInLab(lab, "server3")));
+            Long jobId2 = jobService
+                    .save(saveMember(lab, "email4"), jobCreationRequest(saveGpuServerInLab(lab, "server4")));
+
+            JobResponses jobs = jobService.findJobs(lab.getId(), null, null);
+
+            assertThat(jobs.getJobResponses().get(1).getCalculatedTime().getExpectedStartedTime()).isEqualTo(
+                    jobs.getJobResponses().get(1).getCalculatedTime().getCreatedTime().plusHours(
+                            Long.parseLong(jobs.getJobResponses().get(0).getExpectedTime())));
+        }
+
         private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {
             assertThat(
                     responses.getJobResponses().stream()

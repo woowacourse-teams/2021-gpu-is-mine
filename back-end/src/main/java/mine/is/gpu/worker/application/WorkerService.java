@@ -1,5 +1,6 @@
 package mine.is.gpu.worker.application;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
@@ -44,6 +45,12 @@ public class WorkerService {
     public void updateJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
         Job job = findJobById(jobId);
         job.changeStatus(workerJobRequest.getJobStatus());
+        if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
+            job.setStartedTime(LocalDateTime.now());
+        }
+        if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
+            job.setCompletedTime(LocalDateTime.now());
+        }
     }
 
     @Transactional
@@ -83,6 +90,7 @@ public class WorkerService {
             throw new IllegalArgumentException();
         }
         job.changeStatus(JobStatus.RUNNING);
+        job.setStartedTime(LocalDateTime.now());
     }
 
     @Transactional
@@ -92,5 +100,6 @@ public class WorkerService {
             throw new IllegalArgumentException();
         }
         job.changeStatus(JobStatus.COMPLETED);
+        job.setCompletedTime(LocalDateTime.now());
     }
 }
