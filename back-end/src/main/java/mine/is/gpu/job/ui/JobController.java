@@ -14,8 +14,6 @@ import mine.is.gpu.mail.MailService;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
 import org.springframework.data.domain.Pageable;
-import mine.is.gpu.worker.dto.LogsResponse;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
