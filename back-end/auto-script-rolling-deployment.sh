@@ -56,7 +56,7 @@ do
       echo "> Health check: ${response}"
   fi
 
-  if [ $retry_count -eq 1000 ]
+  if [ $retry_count -eq 1 ]
   then
     echo "> Health check 실패. "
     echo "> Nginx에 연결하지 않고 배포를 종료합니다."
