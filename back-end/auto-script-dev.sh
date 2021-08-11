@@ -46,30 +46,3 @@ do
 done
 
 sleep 3
-
-
-
-
-for retry_count in {1..100}
-do
-  response=$(curl -s http://localhost:$IDLE_PORT/healths)
-  up_count=$(echo $response | grep 'UP' | wc -l)
-
-  if [ $up_count -ge 1 ]
-  then
-      echo "> Health check 성공"
-      break
-  else
-      echo "> Health check: ${response}"
-  fi
-
-  if [ $retry_count -eq 100 ]
-  then
-    echo "> Health check 실패. "
-    echo "> Nginx에 연결하지 않고 배포를 종료합니다."
-    exit 1
-  fi
-
-  echo "> Health check 연결 실패. 재시도..."
-  sleep 1
-done
