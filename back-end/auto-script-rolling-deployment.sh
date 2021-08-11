@@ -25,12 +25,12 @@ fi
 
 IDLE_PID=$(pgrep -f $IDLE_PROFILE)
 
-echo "> $IDLE_PORT 가 사용중인 PID 확인 :  $IDLE_PID"
+echo "> $IDLE_PORT 가 사용 중인 PID 확인 :  $IDLE_PID"
 if [ -z $IDLE_PID ]; then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+  echo "> 현재 $IDLE_PORT 가 사용 중인 애플리케이션이 없으므로 종료하지 않습니다."
 else
   echo "> kill -9 $IDLE_PID"
-  kill -15 $IDLE_PID
+  kill -9 $IDLE_PID
   sleep 5
 fi
 
