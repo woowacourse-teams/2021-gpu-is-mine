@@ -25,12 +25,12 @@ fi
 
 IDLE_PID=$(pgrep -f $IDLE_PROFILE)
 
-echo "> $IDLE_PORT 가 사용중인 PID 확인 :  $IDLE_PID"
+echo "> $IDLE_PORT 가 사용 중인 PID 확인 :  $IDLE_PID"
 if [ -z $IDLE_PID ]; then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+  echo "> 현재 $IDLE_PORT 가 사용 중인 애플리케이션이 없으므로 종료하지 않습니다."
 else
   echo "> kill -9 $IDLE_PID"
-  kill -15 $IDLE_PID
+  kill -9 $IDLE_PID
   sleep 5
 fi
 
@@ -43,7 +43,7 @@ echo "> Health check 시작합니다."
 echo "> curl -s http://localhost:$IDLE_PORT/healths"
 sleep 1
 
-for retry_count in {1..1000}
+for retry_count in {1..100}
 do
   response=$(curl -s http://localhost:$IDLE_PORT/healths)
   up_count=$(echo $response | grep 'UP' | wc -l)
@@ -56,7 +56,7 @@ do
       echo "> Health check: ${response}"
   fi
 
-  if [ $retry_count -eq 1000 ]
+  if [ $retry_count -eq 100 ]
   then
     echo "> Health check 실패. "
     echo "> Nginx에 연결하지 않고 배포를 종료합니다."
