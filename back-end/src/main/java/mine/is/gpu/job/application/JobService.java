@@ -1,6 +1,7 @@
 package mine.is.gpu.job.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -204,6 +205,10 @@ public class JobService {
         int totalCount = jobs.size();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), totalCount);
+
+        if(start > end) {
+            return Collections.emptyList();
+        }
 
         PageImpl<Job> jobsInPage = new PageImpl<>(jobs.subList(start, end), pageable, totalCount);
         return jobsInPage.stream().collect(Collectors.toList());
