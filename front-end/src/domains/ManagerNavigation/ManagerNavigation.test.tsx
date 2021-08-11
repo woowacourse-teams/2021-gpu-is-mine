@@ -36,7 +36,7 @@ describe("ManagerNavigation", () => {
 
     userEvent.click(screen.getByRole("link", { name: "gpu-server-view" }), leftClick);
 
-    expect(getLocation().pathname).toBe(PATH.MANAGER.GPU_SERVER.VIEW);
+    expect(getLocation().pathname).toBe(PATH.GPU_SERVER.VIEW);
   });
 
   test("Gpu 서버 관리 등록 Route 테스트", () => {
@@ -44,7 +44,7 @@ describe("ManagerNavigation", () => {
 
     userEvent.click(screen.getByRole("link", { name: "gpu-server-register" }), leftClick);
 
-    expect(getLocation().pathname).toBe(PATH.MANAGER.GPU_SERVER.REGISTER);
+    expect(getLocation().pathname).toBe(PATH.GPU_SERVER.REGISTER);
   });
 
   test("Job 관리 조회  Route 테스트", () => {
@@ -52,7 +52,7 @@ describe("ManagerNavigation", () => {
 
     userEvent.click(screen.getByRole("link", { name: "job-view" }), leftClick);
 
-    expect(getLocation().pathname).toBe(PATH.MANAGER.JOB.VIEW);
+    expect(getLocation().pathname).toBe(PATH.JOB.VIEW);
   });
 
   test("Job 관리 등록  Route 테스트", () => {
@@ -60,6 +60,6 @@ describe("ManagerNavigation", () => {
 
     userEvent.click(screen.getByRole("link", { name: "job-register" }), leftClick);
 
-    expect(getLocation().pathname).toBe(PATH.MANAGER.JOB.REGISTER);
+    expect(getLocation().pathname).toBe(PATH.JOB.REGISTER);
   });
 });

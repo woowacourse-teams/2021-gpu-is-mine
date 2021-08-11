@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { useBoolean, useDeleteGpuServer } from "../../hooks";
 import {
   Flicker,
@@ -12,10 +11,11 @@ import {
   Dimmer,
 } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { GpuServerViewResponse } from "../../types";
+import { GpuServerViewResponse, MemberType } from "../../types";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
-  refresh: () => Promise<unknown | AxiosError<unknown>>;
+  memberType: MemberType;
+  refresh: () => Promise<unknown>;
 }
 
 const GpuServerInfoItem = ({
@@ -24,6 +24,7 @@ const GpuServerInfoItem = ({
   isOn,
   gpuBoard: { performance },
   jobs,
+  memberType,
   refresh,
 }: GpuServerInfoItemProps) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
@@ -100,14 +101,17 @@ const GpuServerInfoItem = ({
             </Text>
           </div>
         </VerticalBox>
-        <div className="button-wrapper">
-          <Button className="button" color="primary-dark">
-            수정
-          </Button>
-          <Button className="button" color="primary" disabled={isLoading} onClick={openConfirm}>
-            삭제
-          </Button>
-        </div>
+
+        {memberType === "MANAGER" && (
+          <div className="button-wrapper">
+            <Button className="button" color="primary-dark">
+              수정
+            </Button>
+            <Button className="button" color="primary" disabled={isLoading} onClick={openConfirm}>
+              삭제
+            </Button>
+          </div>
+        )}
       </StyledGpuServerInfoItem>
     </>
   );

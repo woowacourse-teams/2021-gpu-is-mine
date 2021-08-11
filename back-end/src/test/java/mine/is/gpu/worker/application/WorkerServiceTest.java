@@ -11,17 +11,13 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
-import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.MemberType;
 import mine.is.gpu.member.domain.repository.MemberRepository;
-import mine.is.gpu.worker.domain.repository.LogRepository;
-import mine.is.gpu.worker.dto.WorkerJobLogRequest;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,8 +41,6 @@ class WorkerServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private JobRepository jobRepository;
-    @Autowired
-    private LogRepository logRepository;
     @Autowired
     private WorkerService workerService;
 
@@ -92,6 +86,16 @@ class WorkerServiceTest {
         assertThat(job2.getStatus()).isEqualTo(JobStatus.RUNNING);
     }
 
+    @DisplayName("job 의 상태 RUNNING 으로 변경시 시작 시간이 기록된다")
+    @Test
+    void checkStartedTimeJobStatusRunning() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
+
+        assertThat(job2.getStartedTime()).isNotNull();
+    }
+
     @DisplayName("job 의 상태 COMPLETED 으로 변경한다.")
     @Test
     void changeJobStatusCompleted() {
@@ -105,18 +109,41 @@ class WorkerServiceTest {
         assertThat(job2.getStatus()).isEqualTo(JobStatus.COMPLETED);
     }
 
+    @DisplayName("job 의 상태 COMPLETED 으로 변경시 종료 시간이 기록된다")
+    @Test
+    void checkEndTimeJobStatusCompleted() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+
+        assertThat(job2.getCompletedTime()).isNotNull();
+    }
+
+    @DisplayName("job 이 완료되면 해당 job은 모든 시간값이 입력되어 있다")
+    @Test
+    void checkTime() {
+        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.RUNNING));
+        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+
+        assertThat(job2.getCreatedAt()).isNotNull();
+        assertThat(job2.getStartedTime()).isNotNull();
+        assertThat(job2.getCompletedTime()).isNotNull();
+    }
+
     @DisplayName("서버가 n 분마다 상태를 알려주면 상태와 마지막 응답시간이 수정된다.")
     @Test
     void updateWorkerStatus() throws InterruptedException {
         // given
-        assertThat(gpuServer.getOn()).isTrue();
+        assertThat(gpuServer.getIsOn()).isTrue();
 
         // when
         LocalDateTime now1 = LocalDateTime.now();
         workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(false, now1));
 
         // then
-        assertThat(gpuServer.getOn()).isFalse();
+        assertThat(gpuServer.getIsOn()).isFalse();
         assertThat(gpuServer.getLastResponse()).isEqualTo(now1);
 
         // when
@@ -125,28 +152,9 @@ class WorkerServiceTest {
         workerService.updateWorkerStatus(gpuServer.getId(), new WorkerRequest(true, now2));
 
         // then
-        assertThat(gpuServer.getOn()).isTrue();
+        assertThat(gpuServer.getIsOn()).isTrue();
         assertThat(now1).isNotEqualTo(now2);
         assertThat(gpuServer.getLastResponse()).isEqualTo(now2);
     }
 
-    @DisplayName("로그를 저장하는 경우")
-    @Test
-    void saveLog() {
-        // then
-        Assertions.assertDoesNotThrow(() -> {
-            Long logId = workerService.saveLog(job1.getId(), new WorkerJobLogRequest("content"));
-            assertThat(logId).isNotNull();
-        });
-    }
-
-    @DisplayName("로그 저장에 실패하는 경우")
-    @Test
-    void saveLogFail() {
-        // given
-        Long notExistJobId = Long.MAX_VALUE;
-        // then
-        Assertions.assertThrows(JobException.JOB_NOT_FOUND.getException().getClass(), () ->
-                workerService.saveLog(notExistJobId, new WorkerJobLogRequest("content")));
-    }
 }

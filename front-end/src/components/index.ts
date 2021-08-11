@@ -11,6 +11,7 @@ export { default as Input } from "./Input/Input";
 export { default as Layout } from "./Layout/Layout";
 export { default as Loading } from "./Loading/Loading";
 export { default as Logo } from "./Logo/Logo";
+export { default as ManagerRoute } from "./ManagerRoute/ManagerRoute";
 export { default as Modal } from "./Modal/Modal";
 export { default as ModalProvider } from "./ModalProvider/ModalProvider";
 export { default as Portal } from "./Portal/Portal";
