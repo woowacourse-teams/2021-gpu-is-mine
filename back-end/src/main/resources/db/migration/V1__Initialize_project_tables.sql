@@ -37,7 +37,6 @@ create table job (
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-
 create table lab (
     id bigint not null auto_increment,
     created_at datetime,
@@ -46,12 +45,12 @@ create table lab (
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
-create table log (
+create table administrator (
     id bigint not null auto_increment,
     created_at datetime,
     updated_at datetime,
-    content longtext,
-    job_id bigint,
+    email varchar(255),
+    password varchar(255),
     primary key (id)
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -75,8 +74,6 @@ alter table job
     add constraint FKg8a9jo8un6ps9dqlqb7ijxc2d foreign key (gpu_board_id) references gpu_board (id);
 alter table job
     add constraint FKdt0g2w772iceic8f57vwd590s foreign key (member_id) references member (id);
-alter table log
-    add constraint FKcsomb9ys7ebgc77sx8a9jip2f foreign key (job_id) references job (id);
 alter table member
     add constraint FKbxh2eojsjc94cmeo0fn5uvnwu foreign key (lab_id) references lab (id);
 
