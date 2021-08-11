@@ -26,8 +26,6 @@ import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.member.exception.MemberException;
-import mine.is.gpu.worker.domain.repository.LogRepository;
-import mine.is.gpu.worker.dto.LogsResponse;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

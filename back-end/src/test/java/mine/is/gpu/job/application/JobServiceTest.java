@@ -181,29 +181,6 @@ class JobServiceTest {
         return member.getId();
     }
 
-    @Test
-    @DisplayName("로그 정보 모두 조회")
-    void findAllLogsByJob() {
-        //given
-        Lab lab2 = new Lab("lab2");
-        labRepository.save(lab2);
-        GpuServer gpuServer1 = new GpuServer("server1", true, 1024L, 1024L, lab2);
-        gpuServerRepository.save(gpuServer1);
-        GpuBoard gpuBoard1 = new GpuBoard(true, 600L, "NVIDIA42", gpuServer1);
-        gpuBoardRepository.save(gpuBoard1);
-        Member member1 = new Member("email2@email.com", "password", "name1", MemberType.MANAGER,
-                lab2);
-        memberRepository.save(member1);
-        Job job1 = new Job("job1", JobStatus.COMPLETED, gpuBoard1, member1, "metaData", "10");
-        jobRepository.save(job1);
-
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-        logRepository.save(new Log("content1", job1));
-
-        Assertions.assertThat(jobService.findLogAllById(job1.getId()).getLogs()).hasSize(3);
-    }
-
     @Nested
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
     class FindAll {
