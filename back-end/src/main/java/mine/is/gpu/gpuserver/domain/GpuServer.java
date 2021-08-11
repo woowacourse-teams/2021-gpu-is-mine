@@ -83,10 +83,6 @@ public class GpuServer extends BaseEntity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Boolean getIsOn() {
         return isOn;
     }
@@ -95,20 +91,24 @@ public class GpuServer extends BaseEntity {
         return memorySize;
     }
 
-    public void setMemorySize(Long memorySize) {
-        this.memorySize = memorySize;
-    }
-
     public Long getDiskSize() {
         return diskSize;
     }
 
-    public void setDiskSize(Long diskSize) {
-        this.diskSize = diskSize;
-    }
-
     public LocalDateTime getLastResponse() {
         return lastResponse;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMemorySize(Long memorySize) {
+        this.memorySize = memorySize;
+    }
+
+    public void setDiskSize(Long diskSize) {
+        this.diskSize = diskSize;
     }
 
     public void changeStatus(Boolean isOn) {

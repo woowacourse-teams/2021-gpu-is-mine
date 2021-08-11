@@ -1,7 +1,7 @@
 package mine.is.gpu.job.domain;
 
-import java.util.Locale;
 import mine.is.gpu.job.exception.JobException;
+import java.util.Locale;
 
 public enum JobStatus {
     WAITING, RUNNING, COMPLETED, CANCELED;

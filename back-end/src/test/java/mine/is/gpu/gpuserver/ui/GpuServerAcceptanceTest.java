@@ -28,8 +28,6 @@ import org.springframework.http.MediaType;
 public class GpuServerAcceptanceTest extends AcceptanceTest {
     private static Long labId;
     private static List<Long> GpuServerIds;
-    private String userToken;
-    private String managerToken;
 
     public static ExtractableResponse<Response> GpuServer_아이디조회(String token, Long labId, Long gpuServerId) {
         return RestAssured
@@ -125,6 +123,9 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         String[] locationPaths = response.header("Location").split("/");
         return Long.parseLong(locationPaths[locationPaths.length - 1]);
     }
+
+    private String userToken;
+    private String managerToken;
 
     @BeforeEach
     public void setUp() {
