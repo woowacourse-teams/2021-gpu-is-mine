@@ -40,7 +40,7 @@ export const useGetJobDetailLogForGraph = ({ labId, jobId }: { labId: number; jo
   });
 
 export const useCancelJob = ({ labId, jobId }: { labId: number; jobId: number }) =>
-  useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}`, {
+  useFetch(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/cancel`, {
     method: "put",
   });
 
