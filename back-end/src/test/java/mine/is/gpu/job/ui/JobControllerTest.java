@@ -81,7 +81,7 @@ public class JobControllerTest {
         @DisplayName("본인의 Job 예약을 취소한다.")
         @Test
         void cancelJob() {
-            Job job = new Job("jobInLab", boardInLab, userInLab, "data", "time");
+            Job job = new Job("jobInLab", boardInLab, userInLab, "data", "10");
             jobRepository.save(job);
             int beforeSize = numberOfWaitingJobs();
 
@@ -95,7 +95,7 @@ public class JobControllerTest {
         @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")
         @Test
         void managerCancelJob() {
-            Job jobFromOther = new Job("jobFromOther", boardInLab, userInLab, "data", "time");
+            Job jobFromOther = new Job("jobFromOther", boardInLab, userInLab, "data", "10");
             jobRepository.save(jobFromOther);
             int beforeSize = numberOfWaitingJobs();
 
@@ -110,7 +110,7 @@ public class JobControllerTest {
         @Test
         void userCancelJobWithoutPermission() {
             Member otherInLab = new Member("OtherInLab@email.com", "password", "name", MemberType.USER, lab);
-            Job jobFromOther = new Job("jobFromOther", boardInLab, otherInLab, "data", "time");
+            Job jobFromOther = new Job("jobFromOther", boardInLab, otherInLab, "data", "10");
             jobRepository.save(jobFromOther);
 
             assertThatThrownBy(() -> jobController.cancel(jobFromOther.getId(), userInLab))
@@ -152,7 +152,7 @@ public class JobControllerTest {
         @DisplayName("Job Id로 Job을 조회한다.")
         @Test
         void findById() {
-            Job job = new Job("jobInLab", boardInLab, userInLab, "data", "time");
+            Job job = new Job("jobInLab", boardInLab, userInLab, "data", "10");
             jobRepository.save(job);
 
             ResponseEntity<JobResponse> response = jobController.findById(job.getId(), userInLab);
@@ -162,8 +162,8 @@ public class JobControllerTest {
         @DisplayName("사용자를 기준으로 Job을 조회한다.")
         @Test
         void findJobsByMember() {
-            Job myJob = new Job("myJob1", boardInLab, userInLab, "data", "time");
-            Job jobFromOtherInLab = new Job("jobInLab", boardInLab, otherInLab, "data", "time");
+            Job myJob = new Job("myJob1", boardInLab, userInLab, "data", "10");
+            Job jobFromOtherInLab = new Job("jobInLab", boardInLab, otherInLab, "data", "10");
 
             jobRepository.save(myJob);
             jobRepository.save(jobFromOtherInLab);
@@ -174,8 +174,8 @@ public class JobControllerTest {
         @DisplayName("lab를 기준으로 Job을 조회한다.")
         @Test
         void findJobsByLab() {
-            Job jobInLab = new Job("myJob1", boardInLab, userInLab, "data", "time");
-            Job jobInOtherLab = new Job("jobInOtherLab", boardInOtherLab, userInOtherLab, "data", "time");
+            Job jobInLab = new Job("myJob1", boardInLab, userInLab, "data", "10");
+            Job jobInOtherLab = new Job("jobInOtherLab", boardInOtherLab, userInOtherLab, "data", "10");
 
             jobRepository.save(jobInLab);
             jobRepository.save(jobInOtherLab);
@@ -186,8 +186,8 @@ public class JobControllerTest {
         @DisplayName("서버를 기준으로 작업 목록을 확인할 수 있다.")
         @Test
         void findJobsByServer() {
-            Job myJob = new Job("myJob1", boardInLab, userInLab, "data", "time");
-            Job jobFromOtherServer = new Job("jobFromOtherLab", otherBoardInLab, otherInLab, "data", "time");
+            Job myJob = new Job("myJob1", boardInLab, userInLab, "data", "10");
+            Job jobFromOtherServer = new Job("jobFromOtherLab", otherBoardInLab, otherInLab, "data", "10");
 
             jobRepository.save(myJob);
             jobRepository.save(jobFromOtherServer);
@@ -225,7 +225,7 @@ public class JobControllerTest {
         private GpuBoard boardInOtherLab = new GpuBoard(true, 8L, "aaa", serverInOtherLab);
         private Member userInOtherLab = new Member(
                 "userInOtherLab@email.com", "password", "name", MemberType.USER, otherLab);
-        private Job jobInOtherLab = new Job("jobInOtherName", boardInOtherLab, userInOtherLab, "data", "time");
+        private Job jobInOtherLab = new Job("jobInOtherName", boardInOtherLab, userInOtherLab, "data", "10");
 
         @BeforeEach
         void setUp() {
