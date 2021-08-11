@@ -18,7 +18,7 @@ public class AuthService {
     private final Encrypt encrypt;
 
     public AuthService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
-            Encrypt encrypt) {
+                       Encrypt encrypt) {
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.encrypt = encrypt;

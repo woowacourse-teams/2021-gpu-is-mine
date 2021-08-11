@@ -1,4 +1,4 @@
-type MemberType = "MANAGER" | "USER";
+export type MemberType = "MANAGER" | "USER";
 
 export interface MemberSignupRequest {
   email: string;

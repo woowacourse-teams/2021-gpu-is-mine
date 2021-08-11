@@ -50,7 +50,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> GpuServer_전체조회_페이지네이션(String token, Long labId, Integer page,
-            Integer size) {
+                                                                      Integer size) {
         return RestAssured
                 .given().log().all()
                 .auth()
