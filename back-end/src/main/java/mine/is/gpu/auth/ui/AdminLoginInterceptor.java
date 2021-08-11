@@ -1,7 +1,5 @@
 package mine.is.gpu.auth.ui;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mine.is.gpu.auth.application.AuthService;
@@ -13,12 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
+public class AdminLoginInterceptor implements HandlerInterceptor {
 
-    private static final Pattern pattern = Pattern.compile("(?<=labs\\/)\\d+");
     private final AuthService authService;
 
-    public LoginInterceptor(AuthService authService) {
+    public AdminLoginInterceptor(AuthService authService) {
         this.authService = authService;
     }
 
@@ -31,18 +28,18 @@ public class LoginInterceptor implements HandlerInterceptor {
         String credentials = AuthorizationExtractor.extract(request);
         checkCredentialsExistence(credentials);
 
-        if (authService.existAdministratorByToken(credentials)) {
+        if (isManagerAvailableMethods(request) && authService.existMemberByToken(credentials)) {
+            Member member = authService.findMemberByToken(credentials);
+            checkManager(member);
             return true;
         }
 
-        checkMemberInLab(request, credentials);
+        checkAdministrator(credentials);
         return true;
     }
 
-    private void checkMemberInLab(HttpServletRequest request, String credentials) {
-        Member member = authService.findMemberByToken(credentials);
-        Matcher labIdMatcher = pattern.matcher(request.getRequestURI());
-        if (includeLabId(labIdMatcher) && !isMemberOfLab(member, labIdMatcher)) {
+    private void checkAdministrator(String credentials) {
+        if (!authService.existAdministratorByToken(credentials)) {
             throw AuthorizationException.UNAUTHORIZED_USER.getException();
         }
     }
@@ -53,13 +50,17 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
     }
 
-    private boolean isMemberOfLab(Member member, Matcher labIdMatcher) {
-        String uriLabId = labIdMatcher.group();
-        String memberLabId = member.getLab().getId().toString();
-        return uriLabId.equals(memberLabId);
+    private void checkManager(Member member) {
+        if (!member.isManager()) {
+            throw AuthorizationException.UNAUTHORIZED_USER.getException();
+        }
     }
 
-    private boolean includeLabId(Matcher matcher) {
-        return matcher.find();
+    private boolean isManagerAvailableMethods(HttpServletRequest request) {
+        if (HttpMethod.DELETE.matches(request.getMethod()) || HttpMethod.PUT.matches(request.getMethod())) {
+            return true;
+        }
+        return HttpMethod.GET.matches(request.getMethod())
+                && request.getRequestURI().matches(".*labs/\\d+");
     }
 }
