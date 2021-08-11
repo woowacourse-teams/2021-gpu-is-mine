@@ -1,4 +1,4 @@
-import { useBoolean, useDeleteGpuServer } from "../../hooks";
+import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
 import {
   Flicker,
   Text,
@@ -12,6 +12,7 @@ import {
 } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import { GpuServerViewResponse, MemberType } from "../../types";
+import { PATH } from "../../constants";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
   memberType: MemberType;
@@ -34,6 +35,8 @@ const GpuServerInfoItem = ({
     labId: 1,
     serverId: id,
   });
+
+  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${id}`);
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
@@ -102,16 +105,17 @@ const GpuServerInfoItem = ({
           </div>
         </VerticalBox>
 
-        {memberType === "MANAGER" && (
-          <div className="button-wrapper">
-            <Button className="button" color="primary-dark">
-              수정
-            </Button>
-            <Button className="button" color="primary" disabled={isLoading} onClick={openConfirm}>
+        <div className="button-wrapper">
+          <Button className="button" color="primary" onClick={handleDetailClick}>
+            상세
+          </Button>
+
+          {memberType === "MANAGER" && (
+            <Button className="button" color="error" disabled={isLoading} onClick={openConfirm}>
               삭제
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </StyledGpuServerInfoItem>
     </>
   );
