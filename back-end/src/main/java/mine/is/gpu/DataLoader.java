@@ -1,5 +1,6 @@
 package mine.is.gpu;
 
+import java.time.LocalDateTime;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -86,14 +87,19 @@ public class DataLoader implements CommandLineRunner {
         Job job2 = new Job("가짜 뉴스 검증을 위한 댓글 분류 학습", JobStatus.RUNNING, gpuBoard1, member1,
                 "myagya/fake_news", "50");
         jobRepository.save(job2);
+        job2.setStartedTime(LocalDateTime.now());
 
         Job job3 = new Job("신경망을 이용한 스포츠 경기 비디오와 텍스트 요약", JobStatus.COMPLETED, gpuBoard1, member1,
                 "better/sports_analysis", "60");
         jobRepository.save(job3);
+        job3.setStartedTime(LocalDateTime.now().minusHours(60));
+        job3.setCompletedTime(LocalDateTime.now());
 
         Job job4 = new Job("보스턴 주택 가격 예측과 k-겹 검증", JobStatus.COMPLETED, gpuBoard1, member1,
                 "ed/housing_prices", "70");
         jobRepository.save(job4);
+        job4.setStartedTime(LocalDateTime.now().minusHours(60));
+        job4.setCompletedTime(LocalDateTime.now());
 
         Job job5 = new Job("소셜 미디어 게시물을 기반으로 한 우울증 감정 분석", JobStatus.WAITING, gpuBoard1, member2,
                 "wannte/social_media", "20");
@@ -110,6 +116,7 @@ public class DataLoader implements CommandLineRunner {
         Job job8 = new Job("자연어 처리 : 문자-단위 RNN으로 이름 생성하기", JobStatus.RUNNING, gpuBoard3, member1,
                 "danny/natural_language", "100");
         jobRepository.save(job8);
+        job8.setStartedTime(LocalDateTime.now());
 
         Job job9 = new Job("유튜브 댓글 긍정도 평가 학습", JobStatus.WAITING, gpuBoard4, member2,
                 "myagya/youtube_comments", "20");
@@ -118,5 +125,6 @@ public class DataLoader implements CommandLineRunner {
         Job job10 = new Job("망막 이미지 분류, 망막 질환 진단 학습", JobStatus.RUNNING, gpuBoard4, member2,
                 "better/retina_classification", "10");
         jobRepository.save(job10);
+        job10.setStartedTime(LocalDateTime.now());
     }
 }
