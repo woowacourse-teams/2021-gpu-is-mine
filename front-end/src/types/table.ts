@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export type Row = {
   id: number;
-  data: Record<string, ReactNode>;
+  data: Record<string, { priority?: number | string | null; value: ReactNode }>;
 };
 
 export type Order = "asc" | "desc";
