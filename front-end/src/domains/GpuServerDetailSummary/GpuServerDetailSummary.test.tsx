@@ -13,11 +13,9 @@ describe("GpuServerDetailSummary", () => {
   test("data", () => {
     render(<GpuServerDetailSummary serverId={1} labId={1} />);
 
-    expect(screen.getByText(/서버 이름/)).toBeInTheDocument();
     expect(screen.getByText(gpuServerResponse.serverName)).toBeInTheDocument();
 
-    expect(screen.getByText(/서버 상태/)).toBeInTheDocument();
-    expect(screen.getByText(gpuServerResponse.isOn ? /ON/ : /OFF/)).toBeInTheDocument();
+    expect(screen.getByRole("alert", { name: /서버 상태/ })).toBeInTheDocument();
 
     expect(screen.getByText(/RAM 용량/)).toBeInTheDocument();
     expect(screen.getByText(gpuServerResponse.memorySize)).toBeInTheDocument();
