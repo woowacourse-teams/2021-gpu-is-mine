@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { render, screen } from "@testing-library/react";
-import GpuServerDetail from "./GpuServerDetail";
+import GpuServerDetailSummary from "./GpuServerDetailSummary";
 import { gpuServerResponse } from "../../__fixtures__";
 
-jest.mock("./useGpuServerDetail", () => ({
-  ...jest.requireActual("./useGpuServerDetail"),
+jest.mock("./useGpuServerDetailSummary", () => ({
+  ...jest.requireActual("./useGpuServerDetailSummary"),
   useGpuServerDetail: () => ({ detail: gpuServerResponse }),
-  useServerId: () => 1,
 }));
 
-describe("GpuServerDetail", () => {
+describe("GpuServerDetailSummary", () => {
   test("data", () => {
-    render(<GpuServerDetail labId={1} />);
+    render(<GpuServerDetailSummary serverId={1} labId={1} />);
 
     expect(screen.getByText(/서버 이름/)).toBeInTheDocument();
     expect(screen.getByText(gpuServerResponse.serverName)).toBeInTheDocument();
