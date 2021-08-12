@@ -74,11 +74,11 @@ public class DataLoader implements CommandLineRunner {
 
         Long savedMemberId1 = memberService
                 .save(new MemberRequest("email@email.com", "password", "name", "manager", lab1.getId()));
-        Member member1 = memberRepository.findById(savedMemberId1).get();
+        final Member member1 = memberRepository.findById(savedMemberId1).get();
 
         Long savedMemberId2 = memberService
                 .save(new MemberRequest("test@test.com", "test1234!", "name", "manager", lab1.getId()));
-        Member member2 = memberRepository.findById(savedMemberId2).get();
+        final Member member2 = memberRepository.findById(savedMemberId2).get();
 
         Job job1 = new Job("영화 리뷰 분석을 통한 긍정도 평가", JobStatus.WAITING, gpuBoard1, member1,
                 "danny/movie_review", "80");
