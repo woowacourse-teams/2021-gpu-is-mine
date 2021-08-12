@@ -3,33 +3,37 @@ import { StyledSection, StyledForm, StyledLabel } from "./login.styled";
 
 import { default as Button } from "../button/button";
 
-const Login = () => {
+const Login = ({ apiService }) => {
   const formRef = useRef();
-  const idRef = useRef();
+  const emailRef = useRef();
   const passwordRef = useRef();
-  const onSubmit = (e) => {
+  const onLogin = e => {
     e.preventDefault();
-    const login = {
-      id: idRef.current.value || "",
+    const loginData = {
+      email: emailRef.current.value || "",
       password: passwordRef.current.value || "",
     };
     formRef.current.reset();
-    console.log(login);
+    apiService
+      .login(loginData.email, loginData.password) //
+      .then(accessToken => {
+        sessionStorage.setItem("accessToken", accessToken);
+      });
   };
   return (
     <section>
       <StyledSection>
         <h2>ADMIN LOGIN</h2>
-        <StyledForm ref={formRef} onSubmit={(e) => e.preventDefault()}>
+        <StyledForm ref={formRef} onSubmit={e => e.preventDefault()}>
           <StyledLabel>
-            ID
-            <input ref={idRef} type="text" name="id" />
+            EMAIN
+            <input ref={emailRef} type="text" name="id" />
           </StyledLabel>
           <StyledLabel>
             PASSWORD
             <input ref={passwordRef} type="password" name="password" />
           </StyledLabel>
-          <Button text="로그인" onSubmit={onSubmit} />
+          <Button text="로그인" onSubmit={onLogin} />
         </StyledForm>
       </StyledSection>
     </section>

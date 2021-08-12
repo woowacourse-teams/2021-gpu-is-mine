@@ -1,7 +1,7 @@
 class ApiService {
   constructor(key) {
     this.key = key;
-    this.base = "https://gpuismine.kro.kr/api/";
+    this.base = "http://localhost:8080/api/";
     this.requestOptions = {
       method: "GET",
       redirect: "follow",
@@ -29,6 +29,16 @@ class ApiService {
       method: "DELETE",
       headers: this.headers,
     });
+  }
+
+  async login(email, password){
+    const response = await fetch(`${this.base}login`,{
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify({ email, password }),
+    })
+    const result = await response.json();
+    return result.accessToken;
   }
 }
 

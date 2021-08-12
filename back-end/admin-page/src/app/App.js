@@ -11,7 +11,7 @@ function App({ apiService }) {
             <Lab apiService={apiService} />
           </Route>
           <Route path="/">
-            <Login />
+            <Login apiService={apiService} />
           </Route>
         </Switch>
       </BrowserRouter>
