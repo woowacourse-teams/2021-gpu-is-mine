@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import GpuServerDetailSummary from "../GpuServerDetailSummary/GpuServerDetailSummary";
 import GpuServerDetailCurrentJob from "../GpuServerDetailCurrentJob/GpuServerDetailCurrentJob";
+import GpuServerDetailJobTable from "../GpuServerDetailJobTable/GpuServerDetailJobTable";
 
 export const StyledGpuServerDetail = styled.section`
   width: 100%;
@@ -22,4 +23,8 @@ export const StyledGpuServerDetailSummary = styled(GpuServerDetailSummary)`
 
 export const StyledGpuServerDetailCurrentJob = styled(GpuServerDetailCurrentJob)`
   grid-area: current-job;
+`;
+
+export const StyledGpuServerDetailJobTable = styled(GpuServerDetailJobTable)`
+  grid-area: waiting-job;
 `;

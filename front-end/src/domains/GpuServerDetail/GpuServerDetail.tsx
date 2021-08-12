@@ -3,6 +3,7 @@ import {
   StyledGpuServerDetail,
   StyledGpuServerDetailCurrentJob,
   StyledGpuServerDetailSummary,
+  StyledGpuServerDetailJobTable,
 } from "./GpuServerDetail.styled";
 
 interface GpuServerDetailProps {
@@ -24,6 +25,7 @@ const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
             serverId={serverId}
           />
           <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} />
+          <StyledGpuServerDetailJobTable jobs={gpuServerDetail.jobs} />
         </>
       )}
     </StyledGpuServerDetail>
