@@ -1,13 +1,14 @@
 import { Switch, Redirect } from "react-router-dom";
-import { PrivateRoute, PublicRoute } from "../components";
+import { ManagerRoute, PrivateRoute, PublicRoute } from "../components";
 import {
   GpuServerView,
   GpuServerRegister,
   JobView,
   JobRegister,
   JobViewDetail,
-} from "../pages/manager";
-import { Login, Signup } from "../pages/member";
+  Login,
+  Signup,
+} from "../pages";
 import Providers from "../providers/Providers";
 import { PATH } from "../constants";
 
@@ -20,19 +21,24 @@ const App = () => (
       <PublicRoute exact path={PATH.MEMBER.LOGIN}>
         <Login />
       </PublicRoute>
-      <PrivateRoute exact path={PATH.MANAGER.GPU_SERVER.VIEW}>
+      <PrivateRoute exact path={PATH.GPU_SERVER.VIEW}>
         <GpuServerView />
       </PrivateRoute>
-      <PrivateRoute exact path={PATH.MANAGER.GPU_SERVER.REGISTER}>
-        <GpuServerRegister />
+      <PrivateRoute exact path={PATH.GPU_SERVER.VIEW_DETAIL}>
+        {/* TODO: GPU 상세 페이지 컴포넌트 추가 - #261 */}
       </PrivateRoute>
-      <PrivateRoute exact path={PATH.MANAGER.JOB.REGISTER}>
+      <PrivateRoute exact path={PATH.GPU_SERVER.REGISTER}>
+        <ManagerRoute>
+          <GpuServerRegister />
+        </ManagerRoute>
+      </PrivateRoute>
+      <PrivateRoute exact path={[PATH.JOB.REGISTER]}>
         <JobRegister />
       </PrivateRoute>
-      <PrivateRoute exact path={PATH.MANAGER.JOB.VIEW}>
+      <PrivateRoute exact path={PATH.JOB.VIEW}>
         <JobView />
       </PrivateRoute>
-      <PrivateRoute path={PATH.MANAGER.JOB.VIEW_DETAIL}>
+      <PrivateRoute exact path={PATH.JOB.VIEW_DETAIL}>
         <JobViewDetail />
       </PrivateRoute>
       <Redirect to={PATH.MEMBER.LOGIN} />

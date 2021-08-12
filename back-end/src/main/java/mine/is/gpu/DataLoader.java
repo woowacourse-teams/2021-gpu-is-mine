@@ -30,9 +30,9 @@ public class DataLoader implements CommandLineRunner {
     private final MemberService memberService;
 
     public DataLoader(LabRepository labRepository,
-            GpuServerRepository gpuServerRepository,
-            GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository,
-            JobRepository jobRepository, MemberService memberService) {
+                      GpuServerRepository gpuServerRepository,
+                      GpuBoardRepository gpuBoardRepository, MemberRepository memberRepository,
+                      JobRepository jobRepository, MemberService memberService) {
         this.labRepository = labRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;

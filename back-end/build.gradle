@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.flywaydb:flyway-core'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.assertj:assertj-core:3.19.0'
@@ -35,6 +36,13 @@ dependencies {
     //swagger 설정
     compile 'io.springfox:springfox-swagger2:2.9.2'
     compile 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    // elasticSearch
+    implementation  'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    
+    // logging to cloudwatch
+    implementation("ca.pjer:logback-awslogs-appender:1.4.0")
+    implementation("org.codehaus.janino:janino:3.0.7")
 
     testRuntimeOnly 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'

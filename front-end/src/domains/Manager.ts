@@ -1,3 +1,2 @@
-export { default as ManagerHeader } from "./ManagerHeader/ManagerHeader";
-export { default as ManagerSubHeader } from "./ManagerSubHeader/ManagerSubHeader";
+// eslint-disable-next-line import/prefer-default-export
 export { default as ManagerNavigation } from "./ManagerNavigation/ManagerNavigation";

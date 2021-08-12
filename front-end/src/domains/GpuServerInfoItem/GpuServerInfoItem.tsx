@@ -1,5 +1,4 @@
-import { AxiosError } from "axios";
-import { useBoolean, useDeleteGpuServer } from "../../hooks";
+import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
 import {
   Flicker,
   Text,
@@ -12,10 +11,12 @@ import {
   Dimmer,
 } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { GpuServerViewResponse } from "../../types";
+import { GpuServerViewResponse, MemberType } from "../../types";
+import { PATH } from "../../constants";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
-  refresh: () => Promise<unknown | AxiosError<unknown>>;
+  memberType: MemberType;
+  refresh: () => Promise<unknown>;
 }
 
 const GpuServerInfoItem = ({
@@ -24,6 +25,7 @@ const GpuServerInfoItem = ({
   isOn,
   gpuBoard: { performance },
   jobs,
+  memberType,
   refresh,
 }: GpuServerInfoItemProps) => {
   const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
@@ -33,6 +35,8 @@ const GpuServerInfoItem = ({
     labId: 1,
     serverId: id,
   });
+
+  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${id}`);
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
@@ -100,13 +104,17 @@ const GpuServerInfoItem = ({
             </Text>
           </div>
         </VerticalBox>
+
         <div className="button-wrapper">
-          <Button className="button" color="primary-dark">
-            수정
+          <Button className="button" color="primary" onClick={handleDetailClick}>
+            상세
           </Button>
-          <Button className="button" color="primary" disabled={isLoading} onClick={openConfirm}>
-            삭제
-          </Button>
+
+          {memberType === "MANAGER" && (
+            <Button className="button" color="error" disabled={isLoading} onClick={openConfirm}>
+              삭제
+            </Button>
+          )}
         </div>
       </StyledGpuServerInfoItem>
     </>
