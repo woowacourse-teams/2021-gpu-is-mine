@@ -30,7 +30,7 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
       {status === "succeed" && detail && (
         <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
-          <StyledJobDetailGraph detail={detail} />
+          <StyledJobDetailGraph labId={labId} jobId={jobId} detail={detail} />
           <StyledJobDetailLog labId={labId} jobId={jobId} />
         </StyledJobDetail>
       )}

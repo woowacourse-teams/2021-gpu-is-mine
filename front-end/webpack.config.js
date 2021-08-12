@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = () => {
   const isDevelopment = process.env.NODE_ENV !== "production";
@@ -31,7 +32,7 @@ module.exports = () => {
               before: [styledComponentsTransformer],
             }),
           },
-          exclude: /node_modules/,
+          exclude: [/__fixtures__/, /__mocks__/, /__test__/, /stories.tsx?/],
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/i,
@@ -55,15 +56,9 @@ module.exports = () => {
       extensions: [".tsx", ".ts", ".js", "jsx"],
     },
     performance: {
-      maxEntrypointSize: 500000,
-      maxAssetSize: 300000,
-      hints: isDevelopment ? "warning" : "error",
-    },
-    optimization: {
-      splitChunks: {
-        chunks: "all",
-        maxSize: 70000,
-      },
+      maxEntrypointSize: 500 * 1_024,
+      maxAssetSize: 300 * 1_024,
+      hints: "warning",
     },
   };
 };
