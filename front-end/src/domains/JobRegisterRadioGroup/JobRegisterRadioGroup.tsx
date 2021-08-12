@@ -21,7 +21,6 @@ export const sortByIsOn = (a: GpuServerViewResponse, b: GpuServerViewResponse): 
 
   return 0;
 };
-
 export const sortByPerformanceDesc = (a: GpuServerViewResponse, b: GpuServerViewResponse): number =>
   b.gpuBoard.performance - a.gpuBoard.performance;
 
@@ -60,8 +59,8 @@ const JobRegisterRadioGroup = ({
         <ol className="job-register-radio-group__list">
           {data?.gpuServers
             .slice()
-            .sort(sortByIsOn)
             .sort(sortByPerformanceDesc)
+            .sort(sortByIsOn)
             .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
               <li key={id}>
                 <Radio
