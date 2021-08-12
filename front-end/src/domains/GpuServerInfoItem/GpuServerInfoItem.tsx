@@ -16,15 +16,17 @@ import { PATH } from "../../constants";
 
 interface GpuServerInfoItemProps extends GpuServerViewResponse {
   memberType: MemberType;
+  labId: number;
   refresh: () => Promise<unknown>;
 }
 
 const GpuServerInfoItem = ({
-  id,
+  id: serverId,
   serverName,
   isOn,
   gpuBoard: { performance },
   jobs,
+  labId,
   memberType,
   refresh,
 }: GpuServerInfoItemProps) => {
@@ -32,11 +34,11 @@ const GpuServerInfoItem = ({
   const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
   const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
-    labId: 1,
-    serverId: id,
+    labId,
+    serverId,
   });
 
-  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${id}`);
+  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
