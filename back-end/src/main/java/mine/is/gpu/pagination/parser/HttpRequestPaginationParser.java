@@ -38,7 +38,7 @@ public class HttpRequestPaginationParser implements PaginationParser {
         String sortBy = listOfSortParam[0];
         String sortDir = listOfSortParam[1];
 
-        if (sortDir.equals("desc") || sortDir.equals("DESC") || sortDir.equals("des") || sortDir.equals("DES")) {
+        if (sortDir.equalsIgnoreCase("desc")) {
             return Sort.by(Direction.DESC, sortBy);
         }
         return Sort.by(Direction.ASC, sortBy);
