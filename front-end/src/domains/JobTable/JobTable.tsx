@@ -6,7 +6,7 @@ import { Field, JobStatus, JobViewResponse, Row } from "../../types";
 import { PATH } from "../../constants";
 
 interface JobTableProps {
-  jobs: JobViewResponse[];
+  jobs: Readonly<JobViewResponse[]>;
   className?: string;
 }
 
