@@ -35,6 +35,15 @@ class ApiService {
     return this.getLabs();
   }
 
+  async updateLab(id, name) {
+    await fetch(`${this.base}labs/${id}`, {
+      method: "PUT",
+      headers: this.headers,
+      body: JSON.stringify({ name }),
+    });
+    return this.getLabs();
+  }
+
   async login(email, password) {
     const response = await fetch(`${this.base}login`, {
       method: "POST",

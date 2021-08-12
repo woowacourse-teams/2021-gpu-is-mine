@@ -21,8 +21,9 @@ export const StyledButton = styled.button`
   background-color: #eeede7;
   font-weight: 600;
   width: 3rem;
+  margin-left: 1rem;
   :hover {
-    background-color: #e43d40;
+    background-color: ${props => props.color || "#aec9f5"};
     cursor: pointer;
   }
 `;

@@ -14,15 +14,20 @@ const StyledSpan = styled.span`
   margin-right: 2rem;
 `;
 
-const LabList = ({ labs, onDelete }) => {
+const LabList = ({ labs, onDelete, onUpdate }) => {
   return (
     <StyledSection>
       <h3>
         <StyledSpan>ID</StyledSpan>NAME
       </h3>
       <StyledUl>
-        {labs.map((lab) => (
-          <LabItem key={lab.name} lab={lab} onDelete={onDelete} />
+        {labs.map(lab => (
+          <LabItem
+            key={lab.name}
+            lab={lab}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+          />
         ))}
       </StyledUl>
     </StyledSection>

@@ -6,14 +6,14 @@ import { StyledSection } from "./lab.styled";
 const Lab = ({ apiService }) => {
   const [labs, setLabs] = useState([]);
   useEffect(() => {
-    apiService
-      .getLabs() //
+    apiService //
+      .getLabs()
       .then(labs => setLabs(labs));
   }, [apiService]);
 
   const onAdd = lab => {
-    apiService
-      .saveLab(lab) //
+    apiService //
+      .saveLab(lab)
       .then(newLabs => setLabs(newLabs));
   };
 
@@ -27,12 +27,22 @@ const Lab = ({ apiService }) => {
       .then(newLabs => setLabs(newLabs));
   };
 
+  const onUpdate = (id, name) => {
+    if (id === "1") {
+      alert("1번 랩은 수정할 수 없습니다.");
+      return;
+    }
+    apiService //
+      .updateLab(id, name)
+      .then(newLabs => setLabs(newLabs));
+  };
+
   return (
     <section>
       <StyledSection>
         <h2>랩 관리</h2>
         <LabAddForm onAdd={onAdd} />
-        <LabList labs={labs} onDelete={onDelete} />
+        <LabList labs={labs} onDelete={onDelete} onUpdate={onUpdate} />
       </StyledSection>
     </section>
   );
