@@ -5,6 +5,7 @@ import {
   StyledGpuServerDetailSummary,
   StyledGpuServerDetailJobTable,
 } from "./GpuServerDetail.styled";
+import { getCurrentJob } from "../GpuServerDetailSummary/useGpuServerDetailSummary";
 
 interface GpuServerDetailProps {
   className?: string;
@@ -15,6 +16,8 @@ const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
   const serverId = useServerId();
   const { detail: gpuServerDetail } = useGpuServerDetail({ labId, serverId });
 
+  const jobId = gpuServerDetail && getCurrentJob(gpuServerDetail)?.id;
+
   return (
     <StyledGpuServerDetail {...rest}>
       {gpuServerDetail && (
@@ -24,7 +27,9 @@ const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
             labId={labId}
             serverId={serverId}
           />
-          <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} />
+          {jobId != null && (
+            <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} jobId={jobId} />
+          )}
           <StyledGpuServerDetailJobTable jobs={gpuServerDetail.jobs} />
         </>
       )}
