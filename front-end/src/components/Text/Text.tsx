@@ -1,7 +1,7 @@
 import { HTMLAttributes } from "react";
 import { StyledTextProps, StyledText } from "./Text.styled";
 
-type TextProps = HTMLAttributes<HTMLElement> &
+export type TextProps = HTMLAttributes<HTMLElement> &
   Partial<StyledTextProps> & {
     as?: keyof HTMLElementTagNameMap;
   };

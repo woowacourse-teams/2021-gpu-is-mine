@@ -13,7 +13,7 @@ export interface JobRegisterRequest {
   metaData: string;
 }
 
-export interface JobViewResponse {
+export type JobViewResponse = {
   id: number;
   name: string;
   status: JobStatus;
@@ -23,7 +23,7 @@ export interface JobViewResponse {
   gpuServerName: string;
   expectedTime: string;
   metaData: string;
-}
+};
 
 export interface JobViewResponses {
   jobResponses: Readonly<JobViewResponse[]>;
