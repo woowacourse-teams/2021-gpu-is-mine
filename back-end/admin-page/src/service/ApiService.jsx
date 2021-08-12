@@ -1,15 +1,15 @@
 class ApiService {
   constructor(key) {
     this.key = key;
-    this.base = "http://localhost:8080/api/";
+    this.base = "https://gpuismine.kro.kr/api/";
+    this.headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+    };
     this.requestOptions = {
       method: "GET",
       headers: this.headers,
       redirect: "follow",
-    };
-    this.headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
     };
   }
   async getLabs() {

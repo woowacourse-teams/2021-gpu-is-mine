@@ -18,7 +18,10 @@ const Lab = ({ apiService }) => {
   };
 
   const onDelete = id => {
-    console.log(id);
+    if (id === "1") {
+      alert("1번 랩은 삭제할 수 없습니다.");
+      return;
+    }
     apiService //
       .deleteLab(id)
       .then(newLabs => setLabs(newLabs));
