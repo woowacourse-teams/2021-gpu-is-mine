@@ -4,6 +4,7 @@ export const StyledJobDetailGraph = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  position: relative;
 `;
 
 export const Graph = styled.div`
