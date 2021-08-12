@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Text } from "../../components";
-import { useGetGpuServerById } from "../../hooks";
+import { useGetGpuServerById, useParseParams } from "../../hooks";
 import { getCurrentJob, getWaitingJob } from "./useGpuServerDetail";
 
 interface GpuServerDetailProps {
@@ -7,8 +8,19 @@ interface GpuServerDetailProps {
   labId: number;
 }
 
+const useServerId = () => Number(useParseParams("serverId"));
+
 const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
-  const { data } = useGetGpuServerById({ labId, serverId: 1 });
+  const serverId = useServerId();
+
+  const { data, makeRequest, done } = useGetGpuServerById({ labId, serverId });
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
+
+    return done;
+  }, [makeRequest, done]);
 
   return (
     <div {...rest}>
