@@ -13,6 +13,7 @@ import mine.is.gpu.mail.MailDto;
 import mine.is.gpu.mail.MailService;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
+import mine.is.gpu.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +61,7 @@ public class JobController {
     @GetMapping("/jobs/me")
     public ResponseEntity<JobResponses> findJobsOfMine(@AuthenticationPrincipal Member member,
                                                        @RequestParam(required = false) String status,
-                                                       Pageable pageable) {
+                                                       @Pagination Pageable pageable) {
         JobResponses jobResponses = jobService.findJobsOfMember(member.getId(), status, pageable);
         return ResponseEntity.ok(jobResponses);
     }
@@ -69,7 +70,7 @@ public class JobController {
     public ResponseEntity<JobResponses> findAll(@PathVariable Long labId,
                                                 @RequestParam(required = false) Long serverId,
                                                 @RequestParam(required = false) String status,
-                                                Pageable pageable) {
+                                                @Pagination Pageable pageable) {
         JobResponses jobResponses = jobService.findJobs(labId, serverId, status, pageable);
         return ResponseEntity.ok(jobResponses);
     }
