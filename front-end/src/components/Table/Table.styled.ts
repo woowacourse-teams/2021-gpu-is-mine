@@ -32,6 +32,8 @@ export const StyledTable = styled.table`
 export const StyledHeader = styled.thead`
   background-color: var(--primary-600);
   color: var(--on-primary-600);
+  position: sticky;
+  inset: -1.25rem;
 `;
 
 export const StyledBody = styled.tbody`
