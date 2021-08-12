@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useGetGpuServerById, useParseParams } from "../../hooks";
 import { GpuServer, JobViewResponse } from "../../types";
 
 export const getCurrentJob = (server: GpuServer): JobViewResponse | undefined =>
@@ -7,12 +8,17 @@ export const getCurrentJob = (server: GpuServer): JobViewResponse | undefined =>
 export const getWaitingJob = (server: GpuServer): JobViewResponse[] =>
   server.jobs.filter((job) => job.status === "WAITING");
 
-export const useServerId = () => {
-  const { serverId } = useParams<{ serverId?: string }>();
+export const useServerId = () => Number(useParseParams("serverId"));
 
-  if (serverId == null || serverId === "" || Number.isNaN(Number(serverId))) {
-    throw Error(`Invalid serverId in params: ${String(serverId)}`);
-  }
+export const useGpuServerDetail = ({ labId, serverId }: { labId: number; serverId: number }) => {
+  const { data, makeRequest, done, ...rest } = useGetGpuServerById({ labId, serverId });
 
-  return Number(serverId);
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    makeRequest();
+
+    return done;
+  }, [makeRequest, done]);
+
+  return { detail: data, makeRequest, done, ...rest };
 };

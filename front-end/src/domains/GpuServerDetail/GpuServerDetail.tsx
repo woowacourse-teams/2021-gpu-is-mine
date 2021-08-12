@@ -1,47 +1,41 @@
-import { useEffect } from "react";
 import { Text } from "../../components";
-import { useGetGpuServerById, useParseParams } from "../../hooks";
-import { getCurrentJob, getWaitingJob } from "./useGpuServerDetail";
+import {
+  getCurrentJob,
+  getWaitingJob,
+  useServerId,
+  useGpuServerDetail,
+} from "./useGpuServerDetail";
 
 interface GpuServerDetailProps {
   className?: string;
   labId: number;
 }
 
-const useServerId = () => Number(useParseParams("serverId"));
-
 const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
   const serverId = useServerId();
 
-  const { data, makeRequest, done } = useGetGpuServerById({ labId, serverId });
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    makeRequest();
-
-    return done;
-  }, [makeRequest, done]);
+  const { detail } = useGpuServerDetail({ labId, serverId });
 
   return (
     <div {...rest}>
-      {data && (
+      {detail && (
         <>
           <Text>서버 이름</Text>
-          <Text>{data.serverName}</Text>
+          <Text>{detail.serverName}</Text>
           <Text>서버 상태</Text>
-          <Text>{data.isOn ? "ON" : "OFF"}</Text>
+          <Text>{detail.isOn ? "ON" : "OFF"}</Text>
           <Text>RAM 용량</Text>
-          <Text>{data.memorySize}</Text>
+          <Text>{detail.memorySize}</Text>
           <Text>디스크 용량</Text>
-          <Text>{data.diskSize}</Text>
+          <Text>{detail.diskSize}</Text>
           <Text>GPU 장치명</Text>
-          <Text>{data.gpuBoard.modelName}</Text>
+          <Text>{detail.gpuBoard.modelName}</Text>
           <Text>성능(TFLOPS)</Text>
-          <Text>{data.gpuBoard.performance}</Text>
+          <Text>{detail.gpuBoard.performance}</Text>
           <Text>현재 실행중인 Job</Text>
-          <Text>{getCurrentJob(data)?.name ?? "N/A"}</Text>
+          <Text>{getCurrentJob(detail)?.name ?? "N/A"}</Text>
           <Text>대기 중인 Job 개수</Text>
-          <Text>{`${getWaitingJob(data)?.length}개` ?? "N/A"}</Text>
+          <Text>{`${getWaitingJob(detail)?.length}개` ?? "N/A"}</Text>
         </>
       )}
     </div>
