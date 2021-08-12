@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { render, screen } from "@testing-library/react";
 import GpuServerDetail from "./GpuServerDetail";
 import { gpuServerResponse } from "../../__fixtures__";
 
-jest.mock("../../hooks", () => ({ useGetGpuServerById: () => ({ data: gpuServerResponse }) }));
+jest.mock("./useGpuServerDetail", () => ({
+  ...jest.requireActual("./useGpuServerDetail"),
+  useGpuServerDetail: () => ({ detail: gpuServerResponse }),
+  useServerId: () => 1,
+}));
 
 describe("GpuServerDetail", () => {
   test("data", () => {
