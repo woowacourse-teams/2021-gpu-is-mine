@@ -1,5 +1,9 @@
-import { useServerId } from "./useGpuServerDetail";
-import GpuServerDetailSummary from "../GpuServerDetailSummary/GpuServerDetailSummary";
+import { useServerId, useGpuServerDetail } from "./useGpuServerDetail";
+import {
+  StyledGpuServerDetail,
+  StyledGpuServerDetailCurrentJob,
+  StyledGpuServerDetailSummary,
+} from "./GpuServerDetail.styled";
 
 interface GpuServerDetailProps {
   className?: string;
@@ -8,11 +12,21 @@ interface GpuServerDetailProps {
 
 const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
   const serverId = useServerId();
+  const { detail: gpuServerDetail } = useGpuServerDetail({ labId, serverId });
 
   return (
-    <div {...rest}>
-      <GpuServerDetailSummary labId={labId} serverId={serverId} />
-    </div>
+    <StyledGpuServerDetail {...rest}>
+      {gpuServerDetail && (
+        <>
+          <StyledGpuServerDetailSummary
+            detail={gpuServerDetail}
+            labId={labId}
+            serverId={serverId}
+          />
+          <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} />
+        </>
+      )}
+    </StyledGpuServerDetail>
   );
 };
 
