@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useGetJobDetailLog } from "../../hooks";
+import { REFRESH_TIME } from "../../constants";
+import { useGetJobDetailLog, useInterval } from "../../hooks";
 import { Loading, Text } from "../../components";
 import JobDetailLogContent from "../JobDetailLogContent/JobDetailLogContent";
 import {
@@ -14,13 +15,18 @@ interface JobDetailLogProps {
   className?: string;
   labId: number;
   jobId: number;
+  isRunning: boolean;
 }
 
-const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
+const JobDetailLog = ({ labId, jobId, isRunning, ...rest }: JobDetailLogProps) => {
   const { data, makeRequest, done, isFailed, isLoading } = useGetJobDetailLog({
     labId,
     jobId,
   });
+
+  const refreshLog = () => makeRequest();
+
+  useInterval(refreshLog, isRunning ? REFRESH_TIME : null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -28,8 +34,6 @@ const JobDetailLog = ({ labId, jobId, ...rest }: JobDetailLogProps) => {
 
     return done;
   }, [makeRequest, done]);
-
-  const refreshLog = () => makeRequest();
 
   return (
     <StyledJobDetailLog {...rest}>

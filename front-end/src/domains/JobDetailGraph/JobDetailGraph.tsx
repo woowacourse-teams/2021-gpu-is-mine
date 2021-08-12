@@ -1,19 +1,21 @@
 import { useEffect } from "react";
-import { useGetJobDetailLogForGraph } from "../../hooks/useApi/useApi";
+import { REFRESH_TIME } from "../../constants";
+import { useGetJobDetailLogForGraph, useInterval } from "../../hooks";
 import { Text, Loading } from "../../components";
 import JobDetailGraphChart from "../JobDetailGraphChart/JobDetailGraphChart";
 import { StyledJobDetailGraph } from "./JobDetailGraph.styled";
-import { JobViewResponse } from "../../types";
 
 interface JobDetailGraphProps {
   className?: string;
-  detail: JobViewResponse;
+  isRunning: boolean;
   jobId: number;
   labId: number;
 }
 
-const JobDetailGraph = ({ labId, jobId, detail, ...rest }: JobDetailGraphProps) => {
+const JobDetailGraph = ({ labId, jobId, isRunning, ...rest }: JobDetailGraphProps) => {
   const { data, makeRequest, isLoading, done } = useGetJobDetailLogForGraph({ labId, jobId });
+
+  useInterval(() => makeRequest(), isRunning ? REFRESH_TIME : null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
