@@ -12,6 +12,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverA",
       metaData: "danny/movie_review",
       expectedTime: "80",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 2,
@@ -23,6 +30,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverA",
       metaData: "myagya/fake_news",
       expectedTime: "50",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 3,
@@ -34,6 +48,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverA",
       metaData: "better/sports_analysis",
       expectedTime: "60",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 4,
@@ -45,6 +66,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverA",
       metaData: "ed/housing_prices",
       expectedTime: "70",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 5,
@@ -56,6 +84,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverA",
       metaData: "wannte/social_media",
       expectedTime: "20",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 6,
@@ -67,6 +102,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverB",
       metaData: "corgy/traffic_signs",
       expectedTime: "30",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 7,
@@ -78,6 +120,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverB",
       metaData: "collin/mask_recognition",
       expectedTime: "50",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 8,
@@ -89,6 +138,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverC",
       metaData: "danny/natural_language",
       expectedTime: "100",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 9,
@@ -100,6 +156,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverD",
       metaData: "myagya/youtube_comments",
       expectedTime: "20",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
     {
       id: 10,
@@ -111,6 +174,13 @@ export const jobsResponsesMock: JobViewResponses = {
       gpuServerName: "serverD",
       metaData: "better/retina_classification",
       expectedTime: "10",
+      calculatedTime: {
+        createdTime: "2021-08-12T23:01:41",
+        startedTime: "2021-08-12T23:02:54",
+        expectedStartedTime: "2021-08-13T02:01:41",
+        completedTime: "2021-08-12T23:08:22",
+        expectedCompletedTime: "2021-08-13T04:01:41",
+      },
     },
   ],
 } as const;

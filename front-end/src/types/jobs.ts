@@ -23,6 +23,13 @@ export type JobViewResponse = {
   gpuServerName: string;
   expectedTime: string;
   metaData: string;
+  calculatedTime: {
+    createdTime: string | null;
+    startedTime: string | null;
+    expectedStartedTime: string | null;
+    completedTime: string | null;
+    expectedCompletedTime: string | null;
+  };
 };
 
 export interface JobViewResponses {
