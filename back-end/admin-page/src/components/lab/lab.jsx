@@ -8,17 +8,20 @@ const Lab = ({ apiService }) => {
   useEffect(() => {
     apiService
       .getLabs() //
-      .then((labs) => setLabs(labs));
+      .then(labs => setLabs(labs));
   }, [apiService]);
 
-  const onAdd = (lab) => {
+  const onAdd = lab => {
     apiService
       .saveLab(lab) //
-      .then((newLabs) => setLabs(newLabs));
+      .then(newLabs => setLabs(newLabs));
   };
 
-  const onDelete = (id) => {
-    apiService.deleteLab(id);
+  const onDelete = id => {
+    console.log(id);
+    apiService //
+      .deleteLab(id)
+      .then(newLabs => setLabs(newLabs));
   };
 
   return (
