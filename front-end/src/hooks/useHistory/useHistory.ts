@@ -23,16 +23,12 @@ export const useMoveToPage = (route: string) => {
   return () => history.push(route);
 };
 
-export const useParseParams = <T extends string | number>(param: T) => {
-  const parsed = useParams() as unknown;
+export const useParseParams = (key: string) => {
+  const parsed = useParams<Record<string, string>>();
 
-  if (typeof parsed !== "object" || parsed == null || !(param in parsed)) {
-    throw Error(`Invalid ${param} in params: ${String(param)}`);
+  if (typeof parsed !== "object" || parsed == null || !(key in parsed)) {
+    throw Error(`Invalid ${key} in params: ${String(key)}`);
   }
 
-  if (typeof param === "number" && Number.isNaN(Number(param))) {
-    throw Error(`Invalid ${param} in params: ${String(param)} is NaN`);
-  }
-
-  return typeof param === "number" ? Number(param) : param;
+  return parsed[key];
 };
