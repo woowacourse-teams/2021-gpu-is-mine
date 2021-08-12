@@ -2270,6 +2270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kurkle/color@npm:^0.1.9":
+  version: 0.1.9
+  resolution: "@kurkle/color@npm:0.1.9"
+  checksum: 511822c35a2e576b1df9d07e779284c7f62ecad0c60d7d07cb52fabe69feb9a8c528f424d07f65d89669fdec79155784f26f7d1aca398730d816201f516c9d49
+  languageName: node
+  linkType: hard
+
 "@mdx-js/loader@npm:^1.6.22":
   version: 1.6.22
   resolution: "@mdx-js/loader@npm:1.6.22"
@@ -4185,6 +4192,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 4ee41e0c8d0e938f501f80ac75a5ee70b5e8cd5968a1f764960bf7b2694fd0d8ca01345f00325617130643b4af6e072bb3ade023dbc2bd2db7e73504b355b8d9
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^17.0.0":
+  version: 17.0.16
+  resolution: "@types/react@npm:17.0.16"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: cba60aeb284d4024feaca1364557fda72011e984b6b08f6e06a7cdc65e267eabc42d59c541ddbbb81720ab195b6df95a3535540abadd5c0e2cce26b16759dbaa
   languageName: node
   linkType: hard
 
@@ -6448,6 +6466,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "chart.js@npm:3.5.0"
+  checksum: 9ce5400b3e98000511a727968bbbbc06988e9b76e964f7fb22c078cd733756604a04692c255d4e91a8c7a0cb963f9e40190bee16bb2c9640bd34a255267aff5f
+  languageName: node
+  linkType: hard
+
+"chartjs-plugin-zoom@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "chartjs-plugin-zoom@npm:1.1.1"
+  dependencies:
+    hammerjs: ^2.0.8
+  peerDependencies:
+    chart.js: ^3.2.0
+  checksum: effd03bac94ad0b19c4ef1862a6c4d42e51cd48e3c056e78f7975eb09d21e9ade9832a6a177d33a5fcc8255e64e16579884e7f11c35c73701f5e9d1d6e07be61
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^2.1.8":
   version: 2.1.8
   resolution: "chokidar@npm:2.1.8"
@@ -6820,6 +6856,18 @@ __metadata:
   dependencies:
     mime-db: ">= 1.43.0 < 2"
   checksum: 58321a85b375d39230405654721353f709d0c1442129e9a17081771b816302a012471a9b8f4864c7dbe02eef7f2aaac3c614795197092262e94b409c9be108f0
+  languageName: node
+  linkType: hard
+
+"compression-webpack-plugin@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "compression-webpack-plugin@npm:8.0.1"
+  dependencies:
+    schema-utils: ^3.0.0
+    serialize-javascript: ^6.0.0
+  peerDependencies:
+    webpack: ^5.1.0
+  checksum: 6290b8be8a01d6f118fcfae98b01e35c1f3505a198dafc08daa6a239fd8c0f8344ae1c964fa6fce8805b43be56954d54241f386a99f7d5450fb683a13cf56fb6
   languageName: node
   linkType: hard
 
@@ -7553,6 +7601,13 @@ __metadata:
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: 6b406620d269619852885ce15965272b829df6f409724415e0002c8632ab6a8c0a08ec1f0bd2add05dc7bd7507606f7e2cc034fa24224ab829580040b835ecd9
+  languageName: node
+  linkType: hard
+
+"dequal@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
   languageName: node
   linkType: hard
 
@@ -9636,6 +9691,7 @@ fsevents@^1.2.7:
   resolution: "gpu-is-mine-client@workspace:."
   dependencies:
     "@babel/core": ^7.15.0
+    "@kurkle/color": ^0.1.9
     "@pmmmwh/react-refresh-webpack-plugin": ^0.4.3
     "@storybook/addon-actions": ^6.3.2
     "@storybook/addon-essentials": ^6.3.2
@@ -9657,7 +9713,10 @@ fsevents@^1.2.7:
     "@typescript-eslint/parser": ^4.28.1
     axios: ^0.21.1
     babel-loader: ^8.2.2
+    chart.js: ^3.5.0
+    chartjs-plugin-zoom: ^1.1.1
     classnames: ^2.3.1
+    compression-webpack-plugin: ^8.0.1
     cross-env: ^7.0.3
     eslint: ^7.30.0
     eslint-config-airbnb: ^18.2.1
@@ -9687,6 +9746,7 @@ fsevents@^1.2.7:
     ts-loader: ^9.2.3
     typescript: ^4.3.5
     typescript-plugin-styled-components: ^1.6.0
+    use-deep-compare-effect: ^1.6.1
     webpack: ^5.42.0
     webpack-cli: ^4.7.2
     webpack-dev-server: ^3.11.2
@@ -9728,6 +9788,13 @@ fsevents@^1.2.7:
     duplexer: ^0.1.1
     pify: ^4.0.1
   checksum: 6451ba2210877368f6d9ee9b4dc0d14501671472801323bf81fbd38bdeb8525f40a78be45a59d0182895d51e6b60c6314b7d02bd6ed40e7225a01e8d038aac1b
+  languageName: node
+  linkType: hard
+
+"hammerjs@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "hammerjs@npm:2.0.8"
+  checksum: b092da7d1565a165d7edb53ef0ce212837a8b11f897aa3cf81a7818b66686b0ab3f4747fbce8fc8a41d1376594639ce3a054b0fd4889ca8b5b136a29ca500e27
   languageName: node
   linkType: hard
 
@@ -17440,6 +17507,19 @@ typescript@^4.3.5:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: b438c1577eafb26dd8aff8d7ffbeae10b544172fc4c4f38733343f70c04da6f14a748a274cb76b70b829604e1382be56fb37a96f3c62b5aeec50657e23e61097
+  languageName: node
+  linkType: hard
+
+"use-deep-compare-effect@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "use-deep-compare-effect@npm:1.6.1"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    "@types/react": ^17.0.0
+    dequal: ^2.0.2
+  peerDependencies:
+    react: ">=16.13"
+  checksum: 3724473628570ccf62706b6775b2bdbdad57e4e72aaa70965388b5a4ae322a8bd0f9647d13d85f3a892cdcb4bb6d0dbdf7eedded5f7040ac3888ff7c96b381a9
   languageName: node
   linkType: hard
 
