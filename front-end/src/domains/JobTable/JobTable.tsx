@@ -6,8 +6,9 @@ import { Field, JobStatus, JobViewResponse, Row } from "../../types";
 import { PATH } from "../../constants";
 
 interface JobTableProps {
-  jobs: JobViewResponse[];
+  jobs: Readonly<JobViewResponse[]>;
   className?: string;
+  rowCountPerPage?: number;
 }
 
 const jobFields: Field[] = [
@@ -65,7 +66,7 @@ const getJobStatusCell = (status: JobStatus) => {
   }
 };
 
-const JobTable = ({ jobs, ...rest }: JobTableProps) => {
+const JobTable = ({ jobs, rowCountPerPage = 5, ...rest }: JobTableProps) => {
   const history = useHistory();
 
   const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
@@ -100,7 +101,7 @@ const JobTable = ({ jobs, ...rest }: JobTableProps) => {
       },
     })) as Row[];
 
-  return <Table fields={jobFields} rows={rows} rowCountPerPage={5} {...rest} />;
+  return <Table fields={jobFields} rows={rows} rowCountPerPage={rowCountPerPage} {...rest} />;
 };
 
 export default JobTable;
