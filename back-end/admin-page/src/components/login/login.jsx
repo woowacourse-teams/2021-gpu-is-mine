@@ -18,7 +18,12 @@ const Login = ({ apiService }) => {
     apiService
       .login(loginData.email, loginData.password) //
       .then(accessToken => {
-        sessionStorage.setItem("accessToken", accessToken);
+        if (accessToken) {
+          sessionStorage.setItem("accessToken", accessToken);
+          window.location.href = "/lab";
+        } else {
+          alert("관리자 로그인이 필요합니다");
+        }
       });
   };
   return (

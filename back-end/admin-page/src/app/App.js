@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { Login, Lab } from "../components";
 
 function App({ apiService }) {
@@ -7,8 +7,12 @@ function App({ apiService }) {
     <div>
       <BrowserRouter>
         <Switch>
-          <Route path="/lab">
-            <Lab apiService={apiService} />
+          <Route exact path="/lab">
+            {sessionStorage.length !== 0 ? (
+              <Lab apiService={apiService} />
+            ) : (
+              <Redirect to="/" />
+            )}
           </Route>
           <Route path="/">
             <Login apiService={apiService} />
