@@ -8,6 +8,7 @@ import {
   JobViewDetail,
   Login,
   Signup,
+  GpuServerViewDetail,
 } from "../pages";
 import Providers from "../providers/Providers";
 import { PATH } from "../constants";
@@ -25,7 +26,7 @@ const App = () => (
         <GpuServerView />
       </PrivateRoute>
       <PrivateRoute exact path={PATH.GPU_SERVER.VIEW_DETAIL}>
-        {/* TODO: GPU 상세 페이지 컴포넌트 추가 - #261 */}
+        <GpuServerViewDetail />
       </PrivateRoute>
       <PrivateRoute exact path={PATH.GPU_SERVER.REGISTER}>
         <ManagerRoute>

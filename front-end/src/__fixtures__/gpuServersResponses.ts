@@ -1,12 +1,12 @@
-import { GpuServerViewResponses } from "../types";
+import { GpuServerViewResponse, GpuServerViewResponses } from "../types";
 
-const gpuServersResponses: GpuServerViewResponses = {
+export const gpuServersResponses: GpuServerViewResponses = {
   gpuServers: [
     {
       id: 1,
       serverName: "serverA",
       memorySize: 1024,
-      diskSize: 1024,
+      diskSize: 4096,
       isOn: true,
       gpuBoard: {
         id: 1,
@@ -62,7 +62,7 @@ const gpuServersResponses: GpuServerViewResponses = {
         {
           id: 5,
           name: "소셜 미디어 게시물을 기반으로 한 우울증 감정 분석",
-          status: "COMPLETED",
+          status: "WAITING",
           memberId: 2,
           memberName: "name",
           gpuServerId: 1,
@@ -201,4 +201,4 @@ const gpuServersResponses: GpuServerViewResponses = {
   ],
 } as const;
 
-export default gpuServersResponses;
+export const gpuServerResponse: GpuServerViewResponse = gpuServersResponses.gpuServers[0];

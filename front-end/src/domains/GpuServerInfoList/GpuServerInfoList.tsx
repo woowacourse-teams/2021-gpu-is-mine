@@ -44,6 +44,7 @@ const GpuServerInfoList = ({ labId, memberType, ...rest }: GpuServerInfoListProp
                 key={res.id}
                 refresh={() => makeRequest()}
                 memberType={memberType}
+                labId={labId}
                 {...res}
               />
             ))
