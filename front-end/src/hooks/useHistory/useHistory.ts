@@ -27,7 +27,7 @@ export const useParseParams = (key: string) => {
   const parsed = useParams<Record<string, string>>();
 
   if (typeof parsed !== "object" || parsed == null || !(key in parsed)) {
-    throw Error(`Invalid ${key} in params: ${String(key)}`);
+    throw Error(`Invalid ${key} in params: ${JSON.stringify(parsed)}`);
   }
 
   return parsed[key];
