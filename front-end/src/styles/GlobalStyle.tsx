@@ -1,15 +1,15 @@
 import { createGlobalStyle } from "styled-components";
-import fonts from "./fonts/fonts";
 import reset from "./reset";
 import colors from "./colors";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-  ${fonts}
   ${colors}
 
+  @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
+
   :root {
-    font-family: "Noto Sans KR";
+    font-family: "Noto Sans KR", sans-serif;
     font-weight: 400;
     color: var(--text-dark);
   }
