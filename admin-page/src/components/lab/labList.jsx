@@ -1,5 +1,5 @@
 import React from "react";
-import { default as LabItem } from "./labItem";
+import { default as LabItem } from "./LabItem";
 import styled from "styled-components";
 
 const StyledUl = styled.ul`

@@ -1,5 +1,5 @@
 import React, { memo, useRef } from "react";
-import { StyledLi, StyledSpan, StyledButton } from "./labItem.styled";
+import { StyledLi, StyledSpan, StyledButton } from "./LabItem.styled";
 
 const LabItem = memo(({ lab, onDelete, onUpdate }) => {
   const { id, name } = lab;

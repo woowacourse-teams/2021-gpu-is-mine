@@ -1,2 +1,2 @@
-export { default as Lab } from "./lab/lab";
-export { default as Login } from "./login/login";
+export { default as Lab } from "./lab/Lab";
+export { default as Login } from "./login/Login";

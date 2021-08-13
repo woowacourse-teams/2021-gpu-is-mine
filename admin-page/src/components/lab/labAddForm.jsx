@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
-import { default as Button } from "../button/button";
-import { StyledForm, StyledLabel, StyledInput } from "./labAddForm.styled";
+import { default as Button } from "../button/Button";
+import { StyledForm, StyledLabel, StyledInput } from "./LabAddForm.styled";
 
 const LabAddForm = ({ onAdd }) => {
   const formRef = useRef();

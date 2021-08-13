@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledButton } from "./button.styled";
+import { StyledButton } from "./Button.styled";
 
 const Button = ({ text }) => {
   return <StyledButton type="submit">{text}</StyledButton>;

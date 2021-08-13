@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { StyledSection, StyledForm, StyledLabel } from "./login.styled";
+import { StyledSection, StyledForm, StyledLabel } from "./Login.styled";
 
-import { default as Button } from "../button/button";
+import { default as Button } from "../button/Button";
 
 const Login = ({ apiService }) => {
   const formRef = useRef();
