@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { default as LabList } from "./labList";
-import { default as LabAddForm } from "./labAddForm";
+import LabList from "./labList";
+import LabAddForm from "./labAddForm";
 import { StyledSection } from "./lab.styled";
 
 const Lab = ({ apiService }) => {
