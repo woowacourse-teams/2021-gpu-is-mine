@@ -36,6 +36,7 @@ ServerInfoItemRadio.args = {
     <GpuServerInfoItem
       {...gpuServersResponses.gpuServers[0]}
       memberType="MANAGER"
+      labId={1}
       refresh={() => new Promise(() => {})}
     />
   ),
