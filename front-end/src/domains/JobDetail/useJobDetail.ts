@@ -19,12 +19,19 @@ export const useJobId = () => {
 };
 
 export const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number }) => {
-  const { status, makeRequest, data } = useGetJobDetail({ labId, jobId });
+  const { status, makeRequest, data, ...rest } = useGetJobDetail({ labId, jobId });
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 
-  return { status, detail: data };
+  return {
+    status,
+    detail: data,
+    makeRequest,
+    ...rest,
+    isRunning: data?.status === "RUNNING",
+    isWaiting: data?.status === "WAITING",
+  };
 };

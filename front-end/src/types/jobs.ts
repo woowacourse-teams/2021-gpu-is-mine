@@ -23,6 +23,13 @@ export type JobViewResponse = {
   gpuServerName: string;
   expectedTime: string;
   metaData: string;
+  calculatedTime: {
+    createdTime: string | null;
+    startedTime: string | null;
+    expectedStartedTime: string | null;
+    completedTime: string | null;
+    expectedCompletedTime: string | null;
+  };
 };
 
 export interface JobViewResponses {
@@ -32,3 +39,9 @@ export interface JobViewResponses {
 export type JobDetailResponse = JobViewResponse;
 
 export type JobDetailLogResponse = { logs: string[] };
+
+export type ParsedLog = {
+  [x in "currentEpoch" | "totalEpoch" | "loss" | "accuracy"]: number;
+};
+
+export type ParsedLogResponse = { parsedLogResponses: Readonly<ParsedLog[]> };

@@ -6,8 +6,9 @@ import { Field, JobStatus, JobViewResponse, Row } from "../../types";
 import { PATH } from "../../constants";
 
 interface JobTableProps {
-  jobs: JobViewResponse[];
+  jobs: Readonly<JobViewResponse[]>;
   className?: string;
+  rowCountPerPage?: number;
 }
 
 const jobFields: Field[] = [
@@ -65,30 +66,45 @@ const getJobStatusCell = (status: JobStatus) => {
   }
 };
 
-const JobTable = ({ jobs, ...rest }: JobTableProps) => {
+const JobTable = ({ jobs, rowCountPerPage = 5, ...rest }: JobTableProps) => {
   const history = useHistory();
 
   const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
 
-  const fieldSelectors = ["id", "name", "status", "memberName", "expectedTime"];
+  const fieldSelectors = ["id", "name", "status", "memberName", "expectedTime", "calculatedTime"];
 
   const rows = jobs
     .map((job) => pick(job, fieldSelectors))
-    .map(({ id, name, status, memberName, expectedTime }) => ({
-      id: Number(id),
-      name,
-      status: status as JobStatus,
-      memberName,
-      expectedTime: Number(expectedTime),
+    .map(({ calculatedTime, ...job }) => ({
+      ...job,
+      ...calculatedTime,
     }))
-    .map(({ id, name, status, memberName, expectedTime }) => ({
+    .map(
+      ({
+        expectedTime,
+        startedTime,
+        expectedStartedTime,
+        completedTime,
+        expectedCompletedTime,
+        ...obj
+      }) => ({
+        ...obj,
+        expectedTime,
+        startTime: startedTime || expectedStartedTime || Date.now(),
+        completedTime:
+          completedTime ||
+          expectedCompletedTime ||
+          Date.now() + Number(expectedTime) * 1_000 * 3_600,
+      })
+    )
+    .map(({ id, name, status, memberName, expectedTime, startTime, completedTime }) => ({
       id,
       data: {
         status: getJobStatusCell(status),
         name: { value: name },
         expectedTime: { value: expectedTime },
-        startTime: { value: formatDate(new Date()) },
-        completedTime: { value: formatDate(addHours(new Date(), expectedTime)) },
+        startTime: { value: startTime && formatDate(new Date(startTime)) },
+        completedTime: { value: completedTime && formatDate(new Date(completedTime)) },
         memberName: { value: memberName },
         etc: {
           value: (
@@ -100,7 +116,7 @@ const JobTable = ({ jobs, ...rest }: JobTableProps) => {
       },
     })) as Row[];
 
-  return <Table fields={jobFields} rows={rows} rowCountPerPage={5} {...rest} />;
+  return <Table fields={jobFields} rows={rows} rowCountPerPage={rowCountPerPage} {...rest} />;
 };
 
 export default JobTable;

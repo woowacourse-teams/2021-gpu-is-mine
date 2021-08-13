@@ -11,6 +11,8 @@ import {
   GpuServerRegisterRequest,
   JobDetailLogResponse,
   GpuServerViewResponses,
+  GpuServerViewResponse,
+  ParsedLogResponse,
 } from "../../types";
 
 export const useGetJobAll = ({ labId }: { labId: number }) =>
@@ -30,6 +32,11 @@ export const useGetJobDetail = ({ labId, jobId }: { labId: number; jobId: number
 
 export const useGetJobDetailLog = ({ labId, jobId }: { labId: number; jobId: number }) =>
   useFetch<JobDetailLogResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs`, {
+    method: "get",
+  });
+
+export const useGetJobDetailLogForGraph = ({ labId, jobId }: { labId: number; jobId: number }) =>
+  useFetch<ParsedLogResponse>(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs-graph`, {
     method: "get",
   });
 
@@ -55,6 +62,11 @@ export const usePostSignup = () =>
 
 export const useGetGpuServerAll = ({ labId }: { labId: number }) =>
   useFetch<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS, {
+    method: "get",
+  });
+
+export const useGetGpuServerById = ({ labId, serverId }: { labId: number; serverId: number }) =>
+  useFetch<GpuServerViewResponse>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`, {
     method: "get",
   });
 

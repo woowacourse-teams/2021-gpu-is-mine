@@ -15,7 +15,7 @@ interface JobDetailProps {
 const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
   const jobId = useJobId();
 
-  const { detail, status } = useJobDetail({ labId, jobId });
+  const { detail, status, isRunning, isWaiting } = useJobDetail({ labId, jobId });
 
   const goToPreviousPage = useGoToPage(-1);
 
@@ -30,8 +30,8 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
       {status === "succeed" && detail && (
         <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
-          <StyledJobDetailGraph detail={detail} />
-          <StyledJobDetailLog labId={labId} jobId={jobId} />
+          <StyledJobDetailGraph labId={labId} jobId={jobId} interval={isRunning || isWaiting } />
+          <StyledJobDetailLog labId={labId} jobId={jobId} interval={isRunning || isWaiting} />
         </StyledJobDetail>
       )}
     </>

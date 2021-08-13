@@ -1,4 +1,4 @@
-import { formatDate, addHours } from "../../utils";
+import { formatDate } from "../../utils";
 import { useBoolean, useCancelJob, useMoveToPage } from "../../hooks";
 import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
@@ -38,6 +38,7 @@ const JobInfoItem = ({
   status: jobStatus,
   gpuServerName,
   memberName,
+  calculatedTime: { expectedStartedTime, startedTime, completedTime, expectedCompletedTime },
   refresh,
 }: JobInfoItemProps) => {
   const { status, makeRequest: cancelJob, done } = useCancelJob({ labId, jobId });
@@ -46,14 +47,16 @@ const JobInfoItem = ({
 
   const handleDetailClick = useMoveToPage(`${PATH.JOB.VIEW}/${jobId}`);
 
-  // TODO: 실제 작업의 시작 시간 교체
-  const startTime = formatDate(new Date());
-  const endTime = formatDate(addHours(new Date(), Math.floor(Math.random() * 100)));
+  const startTime = startedTime || expectedStartedTime;
+  const formattedStartTime = startTime && formatDate(new Date(startTime));
+
+  const endTime = completedTime || expectedCompletedTime;
+  const formattedEndTime = endTime && formatDate(new Date(endTime));
 
   const details = [
     { label: "할당 서버", content: gpuServerName },
-    { label: startTimeLabel[jobStatus], content: startTime },
-    { label: endTimeLabel[jobStatus], content: endTime },
+    { label: startTimeLabel[jobStatus], content: formattedStartTime },
+    { label: endTimeLabel[jobStatus], content: formattedEndTime },
     { label: "예약자", content: memberName },
   ];
 
@@ -100,7 +103,7 @@ const JobInfoItem = ({
                 {label}
               </Text>
               <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
-                {content}
+                {content || "N/A"}
               </Text>
             </div>
           ))}

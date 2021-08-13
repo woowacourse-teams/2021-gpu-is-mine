@@ -1,5 +1,4 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { JobResponseMock } from "../../__fixtures__";
 import JobDetailGraph from "./JobDetailGraph";
 
 export default {
@@ -12,5 +11,5 @@ const Template: ComponentStory<typeof JobDetailGraph> = (args) => <JobDetailGrap
 export const Default = Template.bind({});
 
 Default.args = {
-  detail: JobResponseMock,
+  interval: false,
 };
