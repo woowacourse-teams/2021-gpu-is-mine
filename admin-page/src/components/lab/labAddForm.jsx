@@ -1,5 +1,9 @@
 import React, { useRef } from "react";
+<<<<<<< HEAD
 import { default as Button } from "../Button/Button";
+=======
+import { default as Button } from "../button/Button";
+>>>>>>> origin/develop
 import { StyledForm, StyledLabel, StyledInput } from "./LabAddForm.styled";
 
 const LabAddForm = ({ onAdd }) => {
