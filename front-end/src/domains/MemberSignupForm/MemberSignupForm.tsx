@@ -128,7 +128,7 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
       <RadioGroup label="멤버타입">
-        <Radio {...memberTypeManagerProps} isValid={!isRadioValidationMessageVisible}>
+        <Radio {...memberTypeManagerProps} isValid={!isRadioValidationMessageVisible} disabled>
           관리자
         </Radio>
         <Radio {...memberTypeUserProps} isValid={!isRadioValidationMessageVisible}>
