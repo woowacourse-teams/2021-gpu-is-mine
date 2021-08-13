@@ -5,7 +5,7 @@ import { StyledForm, StyledLabel, StyledInput } from "./labAddForm.styled";
 const LabAddForm = ({ onAdd }) => {
   const formRef = useRef();
   const nameRef = useRef();
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     e.preventDefault();
     const lab = {
       name: nameRef.current.value || "",
@@ -15,12 +15,12 @@ const LabAddForm = ({ onAdd }) => {
   };
 
   return (
-    <StyledForm ref={formRef} onSubmit={(e) => e.preventDefault()}>
+    <StyledForm ref={formRef} onSubmit={onSubmit}>
       <StyledLabel>
         NAME
         <StyledInput ref={nameRef} type="text" name="name" />
       </StyledLabel>
-      <Button text="등록하기" onSubmit={onSubmit} />
+      <Button text="등록하기" />
     </StyledForm>
   );
 };

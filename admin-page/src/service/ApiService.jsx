@@ -15,7 +15,7 @@ class ApiService {
   async getLabs() {
     const response = await fetch(`${this.base}labs`, this.requestOptions);
     if (response.status !== 200) {
-      alert("올바르지 접근입니다.");
+      alert("올바르지 않은 접근입니다.");
       window.location.href = "/";
     }
     const result = await response.json();

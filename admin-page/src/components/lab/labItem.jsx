@@ -6,6 +6,7 @@ const LabItem = memo(({ lab, onDelete, onUpdate }) => {
   const nameRef = useRef();
   const findTarget = e => {
     const id = e.currentTarget.closest("li").id;
+
     return id;
   };
 
@@ -25,6 +26,7 @@ const LabItem = memo(({ lab, onDelete, onUpdate }) => {
     const newName = window.prompt("수정할 이름을 입력해주세요", currentName);
     onUpdate(id, newName);
   };
+
   return (
     <StyledLi key={name} id={id}>
       <div>

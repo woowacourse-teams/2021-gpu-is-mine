@@ -30,7 +30,7 @@ const Login = ({ apiService }) => {
     <section>
       <StyledSection>
         <h2>ADMIN LOGIN</h2>
-        <StyledForm ref={formRef} onSubmit={e => e.preventDefault()}>
+        <StyledForm ref={formRef} onSubmit={onLogin}>
           <StyledLabel>
             EMAIN
             <input ref={emailRef} type="text" name="id" />
@@ -39,7 +39,7 @@ const Login = ({ apiService }) => {
             PASSWORD
             <input ref={passwordRef} type="password" name="password" />
           </StyledLabel>
-          <Button text="로그인" onSubmit={onLogin} />
+          <Button text="로그인" />
         </StyledForm>
       </StyledSection>
     </section>
