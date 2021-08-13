@@ -7,15 +7,15 @@ import { StyledJobDetailGraph } from "./JobDetailGraph.styled";
 
 interface JobDetailGraphProps {
   className?: string;
-  isRunning: boolean;
+  interval: boolean;
   jobId: number;
   labId: number;
 }
 
-const JobDetailGraph = ({ labId, jobId, isRunning, ...rest }: JobDetailGraphProps) => {
+const JobDetailGraph = ({ labId, jobId, interval, ...rest }: JobDetailGraphProps) => {
   const { data, makeRequest, isLoading, done } = useGetJobDetailLogForGraph({ labId, jobId });
 
-  useInterval(() => makeRequest(), isRunning ? REFRESH_TIME : null);
+  useInterval(() => makeRequest(), interval ? REFRESH_TIME : null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

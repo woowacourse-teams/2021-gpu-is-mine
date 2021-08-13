@@ -11,5 +11,5 @@ const Template: ComponentStory<typeof JobDetailGraph> = (args) => <JobDetailGrap
 export const Default = Template.bind({});
 
 Default.args = {
-  isRunning: false,
+  interval: false,
 };

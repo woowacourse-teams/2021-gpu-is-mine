@@ -15,10 +15,10 @@ interface JobDetailLogProps {
   className?: string;
   labId: number;
   jobId: number;
-  isRunning: boolean;
+  interval: boolean;
 }
 
-const JobDetailLog = ({ labId, jobId, isRunning, ...rest }: JobDetailLogProps) => {
+const JobDetailLog = ({ labId, jobId, interval, ...rest }: JobDetailLogProps) => {
   const { data, makeRequest, done, isFailed, isLoading } = useGetJobDetailLog({
     labId,
     jobId,
@@ -26,7 +26,7 @@ const JobDetailLog = ({ labId, jobId, isRunning, ...rest }: JobDetailLogProps) =
 
   const refreshLog = () => makeRequest();
 
-  useInterval(refreshLog, isRunning ? REFRESH_TIME : null);
+  useInterval(refreshLog, interval ? REFRESH_TIME : null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

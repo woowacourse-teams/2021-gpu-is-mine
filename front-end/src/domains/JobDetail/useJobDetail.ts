@@ -26,5 +26,12 @@ export const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number })
     makeRequest();
   }, [makeRequest]);
 
-  return { status, detail: data, makeRequest, ...rest, isRunning: data?.status === "RUNNING" };
+  return {
+    status,
+    detail: data,
+    makeRequest,
+    ...rest,
+    isRunning: data?.status === "RUNNING",
+    isWaiting: data?.status === "WAITING",
+  };
 };
