@@ -49,6 +49,9 @@ module.exports = () => {
         base: "/",
         template: "public/index.html",
       }),
+      new webpack.DefinePlugin({
+        "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
+      }),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
