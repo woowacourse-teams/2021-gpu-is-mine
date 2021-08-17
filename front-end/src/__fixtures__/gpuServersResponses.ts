@@ -1,12 +1,12 @@
-import { GpuServerViewResponses } from "../types";
+import { GpuServerViewResponse, GpuServerViewResponses } from "../types";
 
-const gpuServersResponses: GpuServerViewResponses = {
+export const gpuServersResponses: GpuServerViewResponses = {
   gpuServers: [
     {
       id: 1,
       serverName: "serverA",
       memorySize: 1024,
-      diskSize: 1024,
+      diskSize: 4096,
       isOn: true,
       gpuBoard: {
         id: 1,
@@ -25,6 +25,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverA",
           metaData: "danny/movie_review",
           expectedTime: "80",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 2,
@@ -36,6 +43,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverA",
           metaData: "myagya/fake_news",
           expectedTime: "50",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 3,
@@ -47,6 +61,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverA",
           metaData: "better/sports_analysis",
           expectedTime: "60",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 4,
@@ -58,17 +79,31 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverA",
           metaData: "ed/housing_prices",
           expectedTime: "70",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 5,
           name: "소셜 미디어 게시물을 기반으로 한 우울증 감정 분석",
-          status: "COMPLETED",
+          status: "WAITING",
           memberId: 2,
           memberName: "name",
           gpuServerId: 1,
           gpuServerName: "serverA",
           metaData: "wannte/social_media",
           expectedTime: "20",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
       ],
     },
@@ -95,6 +130,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverB",
           metaData: "corgy/traffic_signs",
           expectedTime: "30",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 7,
@@ -106,6 +148,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverB",
           metaData: "collin/mask_recognition",
           expectedTime: "50",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
       ],
     },
@@ -132,6 +181,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverC",
           metaData: "danny/natural_language",
           expectedTime: "100",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
       ],
     },
@@ -158,6 +214,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverD",
           metaData: "myagya/youtube_comments",
           expectedTime: "20",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
         {
           id: 10,
@@ -169,6 +232,13 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverD",
           metaData: "better/retina_classification",
           expectedTime: "10",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
       ],
     },
@@ -195,10 +265,17 @@ const gpuServersResponses: GpuServerViewResponses = {
           gpuServerName: "serverC",
           metaData: "danny/natural_language",
           expectedTime: "100",
+          calculatedTime: {
+            createdTime: "2021-08-12T23:01:41",
+            startedTime: "2021-08-12T23:02:54",
+            expectedStartedTime: "2021-08-13T02:01:41",
+            completedTime: "2021-08-12T23:08:22",
+            expectedCompletedTime: "2021-08-13T04:01:41",
+          },
         },
       ],
     },
   ],
 } as const;
 
-export default gpuServersResponses;
+export const gpuServerResponse: GpuServerViewResponse = gpuServersResponses.gpuServers[0];

@@ -1,4 +1,4 @@
-import { useHistory, matchPath } from "react-router-dom";
+import { useHistory, matchPath, useParams } from "react-router-dom";
 import { PATH } from "../../constants";
 
 const pathList = [
@@ -21,4 +21,14 @@ export const useMoveToPage = (route: string) => {
   }
 
   return () => history.push(route);
+};
+
+export const useParseParams = (key: string) => {
+  const parsed = useParams<Record<string, string>>();
+
+  if (typeof parsed !== "object" || parsed == null || !(key in parsed)) {
+    throw Error(`Invalid ${key} in params: ${JSON.stringify(parsed)}`);
+  }
+
+  return parsed[key];
 };
