@@ -2,6 +2,9 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.0'
 }
 
 group = 'com.example'
@@ -17,11 +20,104 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.flywaydb:flyway-core'
 
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'io.rest-assured:rest-assured:3.3.0'
+
+    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //swagger 설정
+    compile 'io.springfox:springfox-swagger2:2.9.2'
+    compile 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    // elasticSearch
+    implementation  'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    
+    // logging to cloudwatch
+    implementation("ca.pjer:logback-awslogs-appender:1.4.0")
+    implementation("org.codehaus.janino:janino:3.0.7")
+
+    testRuntimeOnly 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+}
+
+processResources.dependsOn('copyPrivate')
+
+task copyPrivate(type: Copy) {
+    copy {
+        from '../private-configuration'
+        include "*.properties"
+        into 'src/main/resources'
+    }
 }
 
 test {
     useJUnitPlatform()
+//    finalizedBy 'jacocoTestReport'
+    jacoco {
+        enabled = false
+    }
+}
+
+checkstyle {
+    maxWarnings = 0
+    configFile = file("${rootDir}/config/gpu-im-checkstyle.xml")
+    toolVersion = "8.39"
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = false
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+        }
+    }
+}
+
+apply plugin: 'org.sonarqube'
+
+def sonarqubeProperties = new Properties()
+file("src/main/resources/sonarqube.properties").withInputStream { sonarqubeProperties.load(it) }
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', sonarqubeProperties.getProperty("url")
+        property 'sonar.projectKey', sonarqubeProperties.getProperty("projectKey")
+        property 'sonar.login', sonarqubeProperties.getProperty("login")
+        property 'sonar.sources', sonarqubeProperties.getProperty("sources")
+        property 'sonar.language', sonarqubeProperties.getProperty("language")
+        property 'sonar.projectVersion', sonarqubeProperties.getProperty("projectVersion")
+        property 'sonar.sourceEncoding', sonarqubeProperties.getProperty("sourceEncoding")
+        property 'sonar.coverage.jacoco.xmlReportPaths', sonarqubeProperties.getProperty("coverage.jacoco.xmlReportPaths")
+        property 'sonar.java.binaries', sonarqubeProperties.getProperty("java.binaries")
+        property 'sonar.test.inclusions', sonarqubeProperties.getProperty("test.inclusions")
+        property 'sonar.exclusions', sonarqubeProperties.getProperty("exclusions")
+    }
 }

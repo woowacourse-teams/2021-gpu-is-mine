@@ -4,3 +4,9 @@
 *.iml
 *.ipr
 out/
+
+### Log ###
+logs
+
+# Local Netlify folder
+.netlify

@@ -32,3 +32,15 @@ out/
 /.nb-gradle/
 ### VS Code ###
 .vscode/
+
+### Log ###
+logs
+
+### Private ###
+/src/main/resources/application-auth.properties
+/src/main/resources/application-mail.properties
+/src/main/resources/application-encryption.properties
+/src/main/resources/application-db.properties
+/docker/docker-compose.yml
+/src/main/resources/sonarqube.properties
+/src/main/resources/application-elk.properties
