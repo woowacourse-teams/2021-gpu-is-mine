@@ -50,9 +50,7 @@ module.exports = () => {
         template: "public/index.html",
       }),
       new webpack.DefinePlugin({
-        "process.env.BASE_URL": JSON.stringify(
-          process.env.BASE_URL ?? "https://gpuismine.kro.kr/api" // dev server
-        ),
+        "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
       }),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
