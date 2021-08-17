@@ -61,9 +61,9 @@ task copyPrivate(type: Copy) {
 
 test {
     useJUnitPlatform()
-    finalizedBy 'jacocoTestReport'
+//    finalizedBy 'jacocoTestReport'
     jacoco {
-        enabled = true
+        enabled = false
     }
 }
 
