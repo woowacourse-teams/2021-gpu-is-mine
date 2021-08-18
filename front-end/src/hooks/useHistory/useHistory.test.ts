@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react-hooks/dom";
-import { useGoToPage } from "./useJobDetail";
+import { useGoToPage } from "./useHistory";
 
 const mockHistory = jest.fn();
 

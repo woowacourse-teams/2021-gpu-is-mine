@@ -7,7 +7,12 @@ const pathList = [
   Object.values(PATH.MEMBER),
 ].flat();
 
-// eslint-disable-next-line import/prefer-default-export
+export const useGoToPage = (pointer: number) => {
+  const history = useHistory();
+
+  return () => history.go(pointer);
+};
+
 export const useMoveToPage = (route: string) => {
   const history = useHistory();
 
