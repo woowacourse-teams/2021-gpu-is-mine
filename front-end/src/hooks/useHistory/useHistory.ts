@@ -1,7 +1,7 @@
 import { useHistory, matchPath, useParams } from "react-router-dom";
 import { PATH } from "../../constants";
 
-const pathList = [
+export const pathList = [
   Object.values(PATH.GPU_SERVER),
   Object.values(PATH.JOB),
   Object.values(PATH.MEMBER),
@@ -22,7 +22,7 @@ export const useMoveToPage = (route: string) => {
   });
 
   if (!match) {
-    throw new Error("정의되지 않은 url 입니다.");
+    throw new Error(`정의되지 않은 url 입니다: ${route}`);
   }
 
   return () => history.push(route);
@@ -31,7 +31,7 @@ export const useMoveToPage = (route: string) => {
 export const useParseParams = (key: string) => {
   const parsed = useParams<Record<string, string>>();
 
-  if (typeof parsed !== "object" || parsed == null || !(key in parsed)) {
+  if (!(key in parsed)) {
     throw Error(`Invalid ${key} in params: ${JSON.stringify(parsed)}`);
   }
 
