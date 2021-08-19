@@ -112,13 +112,14 @@ describe("Member/SignupForm", () => {
       expect(emailInput).toHaveAttribute("placeholder", "example@gmail.com");
     });
 
-    test.skip("invalid한 이메일을 입력하면 validationMessage가 표시된다", () => {
+    test("invalid한 이메일을 입력하면 validationMessage가 표시된다", () => {
       const { emailInput } = setup();
 
       userEvent.type(emailInput, "1@");
+      userEvent.tab();
 
       expect(emailInput).toHaveValue("1@");
-      expect(screen.getByText("형식에 맞지 않은 이메일입니다")).toBeInTheDocument();
+      expect(screen.getByText(/형식에 맞지 않은 이메일입니다/)).toBeInTheDocument();
     });
   });
 
