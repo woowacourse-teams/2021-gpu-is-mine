@@ -1,14 +1,12 @@
 import { renderHook } from "@testing-library/react-hooks/dom";
 import useInterval from "./useInterval";
 
-beforeEach(() => {
-  jest.useFakeTimers();
-  jest.spyOn(globalThis, "setInterval");
-  jest.spyOn(globalThis, "clearInterval");
-});
+jest.useFakeTimers("modern");
+jest.spyOn(globalThis, "setInterval");
+jest.spyOn(globalThis, "clearInterval");
 
 afterEach(() => {
-  jest.useRealTimers();
+  jest.clearAllMocks();
 });
 
 describe("useInterval", () => {
