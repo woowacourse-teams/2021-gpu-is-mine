@@ -16,6 +16,10 @@ export const formatDate = (date: Date): string => {
   return `${dateString} ${timeString}`;
 };
 
+/**
+ * @params {Date} 시간을 더할 원본 Date 객체
+ * @params {number} 더할 시간. 소숫점 미만은 반올림되어 정수 시간만 반영된다
+ */
 export const addHours = (date: Date, hour: number): Date => {
   const result = new Date(date);
   result.setHours(result.getHours() + hour);
