@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { renderHook, act } from "@testing-library/react-hooks/dom";
-import { useAuthProvider } from "./useAuth";
+import useAuthProvider from "./useAuthProvider";
 import { SESSION_STORAGE_KEY } from "../../constants";
 
 const mockRequestSignup = jest.fn();
