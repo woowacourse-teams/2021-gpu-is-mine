@@ -17,7 +17,7 @@ const UserNavigation = (props: NavigationProps) => {
 
   return (
     <StyledUserNavigation {...props}>
-      <Menu>
+      <Menu forwardedAs="div">
         <MenuTitle forwardedAs="div" weight="medium">
           GPU 서버 관리
         </MenuTitle>
@@ -27,7 +27,7 @@ const UserNavigation = (props: NavigationProps) => {
           </MenuItem>
         </NavLink>
       </Menu>
-      <Menu>
+      <Menu forwardedAs="div">
         <MenuTitle forwardedAs="div" weight="medium">
           나의 Job
         </MenuTitle>
@@ -42,7 +42,7 @@ const UserNavigation = (props: NavigationProps) => {
           </MenuItem>
         </NavLink>
       </Menu>
-      <Menu>
+      <Menu forwardedAs="div">
         <MenuTitle forwardedAs="div" weight="medium">
           내 정보
         </MenuTitle>
