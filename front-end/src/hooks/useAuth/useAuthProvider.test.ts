@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { renderHook, act } from "@testing-library/react-hooks/dom";
+import { rest } from "msw";
 import useAuthProvider from "./useAuthProvider";
-import { SESSION_STORAGE_KEY } from "../../constants";
+import { API_ENDPOINT, SESSION_STORAGE_KEY } from "../../constants";
+import server from "../../__mocks__/server";
 
 const mockRequestSignup = jest.fn();
-
-const mockFetchMyInfo = jest.fn();
 
 jest.mock("../useApi/useApi", () => {
   const originalUseApi = jest.requireActual("../useApi/useApi");
@@ -18,17 +18,13 @@ jest.mock("../useApi/useApi", () => {
       ...originalUseApi.usePostSignup,
       makeRequest: mockRequestSignup,
     }),
-    useGetMyInfo: () => ({
-      ...originalUseApi.useGetInfo,
-      makeRequest: mockFetchMyInfo,
-    }),
   };
 });
 
 describe("useAuthProvider", () => {
   afterEach(() => {
     sessionStorage.clear();
-    jest.resetModules();
+    jest.clearAllMocks();
   });
 
   test(`login을 호출하면 login API를 호출한다.
@@ -86,31 +82,24 @@ describe("useAuthProvider", () => {
   });
 
   describe("sessionStorage에 token이 존재하는 경우", () => {
-    test("올바른 토큰인 경우 isAuthenticated가 true이다", async () => {
-      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, "access-token");
+    const setupAccessToken = (token: string) =>
+      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, token);
 
-      const data = {};
-      const error = null;
-      mockFetchMyInfo.mockResolvedValue({ data, error });
+    test("올바른 토큰인 경우 isAuthenticated가 true이다", async () => {
+      setupAccessToken("access-token");
 
       const { result, waitForValueToChange } = renderHook(() => useAuthProvider());
 
       await waitForValueToChange(() => result.current.isAuthenticated);
 
-      expect(mockFetchMyInfo).toHaveBeenCalled();
-
       expect(result.current.isAuthenticated).toBe(true);
     });
 
     test("잘못된 토큰인 경우 isAuthenticated가 false이다", async () => {
-      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, "wrong-access-token");
-
-      const data = null;
-      const error = {};
-      mockFetchMyInfo.mockResolvedValue({ data, error });
+      setupAccessToken("wrong-access-token");
+      server.use(rest.get(API_ENDPOINT.MEMBER.ME, (_, res, ctx) => res(ctx.status(400))));
 
       const { result, waitFor } = renderHook(() => useAuthProvider());
-      expect(mockFetchMyInfo).toHaveBeenCalled();
 
       await waitFor(() => sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN) === null);
 
