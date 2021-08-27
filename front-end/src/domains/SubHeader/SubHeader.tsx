@@ -76,7 +76,7 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
         <Text className="lab-name" size="md" weight="medium">
           {myInfo?.labResponse.name}
         </Text>
-        <button type="button" className="down-arrow" onClick={toggleIsNavVisible}>
+        <button type="button" className="down-arrow" onClick={() => toggleIsNavVisible()}>
           {isNavVisible ? "▲" : "▼"}
         </button>
       </StyledSubHeader>

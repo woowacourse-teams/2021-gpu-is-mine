@@ -1,1 +1,5 @@
 build
+storybook-static
+
+.pnp.cjs
+.yarn

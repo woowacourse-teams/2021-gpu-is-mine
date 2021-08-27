@@ -112,13 +112,14 @@ describe("Member/SignupForm", () => {
       expect(emailInput).toHaveAttribute("placeholder", "example@gmail.com");
     });
 
-    test.skip("invalid한 이메일을 입력하면 validationMessage가 표시된다", () => {
+    test("invalid한 이메일을 입력하면 validationMessage가 표시된다", () => {
       const { emailInput } = setup();
 
       userEvent.type(emailInput, "1@");
+      userEvent.tab();
 
       expect(emailInput).toHaveValue("1@");
-      expect(screen.getByText("형식에 맞지 않은 이메일입니다")).toBeInTheDocument();
+      expect(screen.getByText(/형식에 맞지 않은 이메일입니다/)).toBeInTheDocument();
     });
   });
 
@@ -171,12 +172,15 @@ describe("Member/SignupForm", () => {
       expect(userRadio).toBeInTheDocument();
     });
 
-    test.skip("관리자 라디오 버튼을 클릭하면 관리자 라디오 버튼의 checked가 true가 된다", () => {
+    /**
+     * 현재 회원가입 폼에서 관리자를 선택하여 회원가입 할 수 없게 설정되어 있다. 관리자는 admin page에서 권한을 부여받을 수 있다.
+     */
+    test("관리자 라디오 버튼을 클릭하여도 관리자 라디오 버튼의 checked는 true가 되지 않는다", () => {
       const { managerRadio } = setup();
 
       userEvent.click(managerRadio, { button: 0 });
 
-      expect(managerRadio).toBeChecked();
+      expect(managerRadio).not.toBeChecked();
     });
 
     test("사용자 라디오 버튼을 클릭하면 사용자 라디오 버튼의 checked가 true가 된다", () => {

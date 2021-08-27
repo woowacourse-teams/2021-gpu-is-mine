@@ -1,8 +1,7 @@
-import { render, screen, fireEvent, waitFor } from "../../__test__/test-utils";
-import { PATH, SESSION_STORAGE_KEY } from "../../constants";
+import { render, screen, userEvent } from "../../__test__/test-utils";
+import { PATH } from "../../constants";
 import MemberLoginForm from "./MemberLoginForm";
-
-const mockHistoryPush = jest.fn();
+import { emailValidator, passwordValidator } from "../MemberSignupForm/validator";
 
 describe("Member/LoginForm", () => {
   const setup = () => {
@@ -108,69 +107,28 @@ describe("Member/LoginForm", () => {
   });
 
   describe("제출", () => {
-    test.skip("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
+    test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
       const { emailInput, passwordInput, loginButton, loginForm } = setup();
 
       const validEmail = "test@dd.com";
       const invalidPassword = "123456";
 
-      fireEvent.change(emailInput, { target: { value: validEmail } });
-      fireEvent.blur(emailInput);
+      expect(emailValidator(validEmail) || passwordValidator(invalidPassword)).not.toBe("");
 
-      fireEvent.change(passwordInput, { target: { value: invalidPassword } });
-      fireEvent.blur(passwordInput);
+      userEvent.type(emailInput, validEmail);
+      userEvent.tab();
+
+      userEvent.type(passwordInput, invalidPassword);
+      userEvent.tab();
+
+      userEvent.click(loginButton);
 
       expect(loginForm).toHaveFormValues({ email: validEmail, password: invalidPassword });
-
-      fireEvent.click(loginButton, { button: 0 });
 
       const alert = await screen.findByRole("alertdialog");
 
       expect(alert).toBeInTheDocument();
       expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
-    });
-
-    const login = () => {
-      jest.mock("react-router-dom", () => ({
-        ...jest.requireActual("react-router-dom"),
-        useHistory: () => ({
-          push: mockHistoryPush,
-        }),
-      }));
-
-      const elements = setup();
-
-      const { emailInput, passwordInput, loginButton, loginForm } = elements;
-
-      const validEmail = "test@dd.com";
-      const validPassword = "123456*a";
-
-      fireEvent.change(emailInput, { target: { value: validEmail } });
-      fireEvent.blur(emailInput);
-
-      fireEvent.change(passwordInput, { target: { value: validPassword } });
-      fireEvent.blur(passwordInput);
-
-      expect(loginForm).toHaveFormValues({ email: validEmail, password: validPassword });
-
-      fireEvent.click(loginButton, { button: 0 });
-
-      return elements;
-    };
-
-    test.skip("유효한 이메일 또는 비밀번호를 입력한 경우, 로그인이 되고 GpuServer조회 페이지로 이동한다", async () => {
-      login();
-
-      await waitFor(() => expect(mockHistoryPush).toBeCalled());
-    });
-
-    test.skip("로그인에 성공하여 반환된 accessToken을 sessionStorage에 저장한다", () => {
-      login();
-      const sessionStorageSetItemSpy = jest.spyOn(Storage.prototype, "setItem");
-
-      expect(sessionStorageSetItemSpy).toBeCalled();
-
-      expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).toBe("access-token");
     });
   });
 });
