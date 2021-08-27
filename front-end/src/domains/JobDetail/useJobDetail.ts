@@ -1,12 +1,6 @@
 import { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetJobDetail } from "../../hooks";
-
-export const useGoToPage = (pointer: number) => {
-  const history = useHistory();
-
-  return () => history.go(pointer);
-};
 
 export const useJobId = () => {
   const { jobId } = useParams<{ jobId?: string }>();

@@ -1,12 +1,18 @@
 import { rest } from "msw";
 import { membersMeResponse, logs } from "../__fixtures__";
 import { API_ENDPOINT, BASE_URL } from "../constants";
+import { MemberLoginRequest, MemberLoginResponse } from "../types";
+import { emailValidator, passwordValidator } from "../domains/MemberSignupForm/validator";
 
 const handlers = [
   rest.post(API_ENDPOINT.MEMBER.SIGNUP, (_, res, ctx) => res(ctx.status(201))),
-  rest.post(API_ENDPOINT.MEMBER.LOGIN, (_, res, ctx) =>
-    res(ctx.json({ accessToken: "access-token" }), ctx.status(200))
-  ),
+  rest.post<MemberLoginRequest, MemberLoginResponse>(API_ENDPOINT.MEMBER.LOGIN, (req, res, ctx) => {
+    const { email, password } = req.body;
+
+    return emailValidator(email) === "" && passwordValidator(password) === ""
+      ? res(ctx.json({ accessToken: "access-token" }), ctx.status(200))
+      : res(ctx.status(400));
+  }),
   rest.get(API_ENDPOINT.MEMBER.ME, (_, res, ctx) =>
     res(ctx.json(membersMeResponse), ctx.status(200))
   ),

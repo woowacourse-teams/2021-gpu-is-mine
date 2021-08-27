@@ -11,6 +11,9 @@ jest.mock("./useJobDetail", () => ({
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   useJobDetail: () => mockUseJobDetail(),
   useJobId: () => 1,
+}));
+
+jest.mock("../../hooks/useHistory/useHistory", () => ({
   useGoToPage: () => mockGoBack,
 }));
 

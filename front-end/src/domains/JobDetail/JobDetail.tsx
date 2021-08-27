@@ -1,4 +1,5 @@
-import { useGoToPage, useJobId, useJobDetail } from "./useJobDetail";
+import { useGoToPage } from "../../hooks";
+import { useJobId, useJobDetail } from "./useJobDetail";
 import { Loading, Text, Alert } from "../../components";
 import {
   StyledJobDetail,
@@ -30,7 +31,7 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
       {status === "succeed" && detail && (
         <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
-          <StyledJobDetailGraph labId={labId} jobId={jobId} interval={isRunning || isWaiting } />
+          <StyledJobDetailGraph labId={labId} jobId={jobId} interval={isRunning || isWaiting} />
           <StyledJobDetailLog labId={labId} jobId={jobId} interval={isRunning || isWaiting} />
         </StyledJobDetail>
       )}
