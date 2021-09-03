@@ -40,7 +40,8 @@ public class AuthService {
         }
 
         String token = jwtTokenProvider.createToken(request.getEmail());
-        return new LoginResponse(token);
+        Long validityInMilliseconds = jwtTokenProvider.getValidityInMilliseconds();
+        return new LoginResponse(token, validityInMilliseconds);
     }
 
     private Account findUser(LoginRequest request) {
