@@ -62,13 +62,8 @@ const useAuthProvider = () => {
 
       sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
-      const { error } = await fetchMyInfo();
-
-      if (error) {
-        sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
-
-        return;
-      }
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      await fetchMyInfo();
 
       authenticate();
     },

@@ -7,7 +7,7 @@ export interface GpuBoard {
   isWorking: boolean;
 }
 
-export interface GpuServerDetail {
+export interface GpuServer {
   id: number;
   serverName: string;
   isOn: boolean;
@@ -18,27 +18,11 @@ export interface GpuServerDetail {
 }
 
 export type GpuServerViewRequest = Pick<
-  GpuServerDetail,
+  GpuServer,
   "memorySize" | "diskSize" | "gpuBoard" | "serverName"
 >;
 
-export type GpuServerViewDetailResponse = GpuServerDetail;
-
-type RunningJob = { id: number; name: string; status: "RUNNING"; memberId: number };
-
-type SimpleGpuServer = {
-  id: number;
-  serverName: string;
-  isOn: boolean;
-  memorySize: number;
-  diskSize: number;
-  gpuBoard: GpuBoard;
-  runningJobs: Readonly<RunningJob[]>;
-  waitingJobCount: number;
-  totalExpectedTime: number;
-};
-
-export type GpuServerViewResponse = SimpleGpuServer;
+export type GpuServerViewResponse = GpuServer;
 
 export type GpuServerViewResponses = {
   gpuServers: Readonly<GpuServerViewResponse[]>;
@@ -46,9 +30,6 @@ export type GpuServerViewResponses = {
 
 type GpuBoardRequest = Pick<GpuBoard, "modelName" | "performance">;
 
-export type GpuServerRegisterRequest = Pick<
-  GpuServerDetail,
-  "memorySize" | "diskSize" | "serverName"
-> & {
+export type GpuServerRegisterRequest = Pick<GpuServer, "memorySize" | "diskSize" | "serverName"> & {
   gpuBoardRequest: GpuBoardRequest;
 };

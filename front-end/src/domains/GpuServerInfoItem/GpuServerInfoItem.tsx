@@ -25,13 +25,13 @@ const GpuServerInfoItem = ({
   serverName,
   isOn,
   gpuBoard: { performance },
-  runningJobs,
+  jobs,
   labId,
   memberType,
-  waitingJobCount,
   refresh,
 }: GpuServerInfoItemProps) => {
-  const runningJobName = runningJobs[0]?.name || "N/A";
+  const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
+  const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
 
   const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
     labId,
@@ -94,7 +94,7 @@ const GpuServerInfoItem = ({
               현재 실행중인 Job
             </Text>
             <Text size="sm" weight="medium">
-              {runningJobName}
+              {currentJobName}
             </Text>
           </div>
           <div className="detail">
