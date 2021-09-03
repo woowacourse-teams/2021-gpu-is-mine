@@ -46,5 +46,8 @@ public class JwtTokenProvider {
             return false;
         }
     }
-}
 
+    public Long getValidityInMilliseconds() {
+        return validityInMilliseconds;
+    }
+}
