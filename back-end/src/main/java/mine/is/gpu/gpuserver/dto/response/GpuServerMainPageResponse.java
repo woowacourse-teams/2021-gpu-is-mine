@@ -4,21 +4,21 @@ import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.domain.Job;
-import mine.is.gpu.job.dto.response.JobSimpleResponse;
+import mine.is.gpu.job.dto.response.JobMainPageResponse;
 
-public class GpuServerSummaryResponse {
+public class GpuServerMainPageResponse {
     private Long id;
     private String serverName;
     private Long memorySize;
     private Long diskSize;
     private Boolean isOn;
     private GpuBoardResponse gpuBoard;
-    private List<JobSimpleResponse> runningJobs;
+    private List<JobMainPageResponse> runningJobs;
     private Integer waitingJobCount;
     private Long totalExpectedTime;
 
-    private GpuServerSummaryResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
-                                     GpuBoardResponse board, List<JobSimpleResponse> runningJobs,
+    private GpuServerMainPageResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
+                                     GpuBoardResponse board, List<JobMainPageResponse> runningJobs,
                                      Integer waitingJobCount, Long totalExpectedTime) {
         this.id = id;
         this.serverName = serverName;
@@ -31,16 +31,16 @@ public class GpuServerSummaryResponse {
         this.totalExpectedTime = totalExpectedTime;
     }
 
-    public static GpuServerSummaryResponse of(GpuServer server, GpuBoard board, List<Job> runningJobs,
+    public static GpuServerMainPageResponse of(GpuServer server, GpuBoard board, List<Job> runningJobs,
                                               Integer waitingJobCount, Long totalExpectedTime) {
-        return new GpuServerSummaryResponse(
+        return new GpuServerMainPageResponse(
                 server.getId(),
                 server.getName(),
                 server.getMemorySize(),
                 server.getDiskSize(),
                 server.getIsOn(),
                 GpuBoardResponse.of(board),
-                JobSimpleResponse.listOf(runningJobs),
+                JobMainPageResponse.listOf(runningJobs),
                 waitingJobCount,
                 totalExpectedTime
         );
@@ -70,7 +70,7 @@ public class GpuServerSummaryResponse {
         return gpuBoard;
     }
 
-    public List<JobSimpleResponse> getRunningJobs() {
+    public List<JobMainPageResponse> getRunningJobs() {
         return runningJobs;
     }
 

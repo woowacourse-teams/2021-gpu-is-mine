@@ -5,26 +5,26 @@ import java.util.stream.Collectors;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 
-public class JobSimpleResponse {
+public class JobMainPageResponse {
     private Long id;
     private String name;
     private JobStatus status;
     private Long memberId;
 
-    private JobSimpleResponse(Long id, String name, JobStatus status, Long memberId) {
+    private JobMainPageResponse(Long id, String name, JobStatus status, Long memberId) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.memberId = memberId;
     }
 
-    public static JobSimpleResponse of(Job job) {
-        return new JobSimpleResponse(job.getId(), job.getName(), job.getStatus(), job.getMember().getId());
+    public static JobMainPageResponse of(Job job) {
+        return new JobMainPageResponse(job.getId(), job.getName(), job.getStatus(), job.getMember().getId());
     }
 
-    public static List<JobSimpleResponse> listOf(List<Job> jobs) {
+    public static List<JobMainPageResponse> listOf(List<Job> jobs) {
         return jobs.stream()
-                .map(JobSimpleResponse::of)
+                .map(JobMainPageResponse::of)
                 .collect(Collectors.toList());
     }
 

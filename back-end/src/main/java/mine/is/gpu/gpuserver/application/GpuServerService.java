@@ -11,8 +11,8 @@ import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerSummaryResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerSummaryResponses;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
@@ -140,18 +140,18 @@ public class GpuServerService {
     }
 
     @Transactional(readOnly = true)
-    public GpuServerSummaryResponses findAllInLab(Long labId, Pageable pageable) {
+    public GpuServerMainPageResponses findAllInLab(Long labId, Pageable pageable) {
         validateLab(labId);
 
         List<GpuServer> gpuServers = findAllByLabId(labId, pageable);
-        List<GpuServerSummaryResponse> gpuServerSummaryResponses = gpuServers.stream()
+        List<GpuServerMainPageResponse> gpuServerMainPageRespons = gpuServers.stream()
                 .map(this::summaryResponse)
                 .collect(Collectors.toList());
 
-        return GpuServerSummaryResponses.of(gpuServerSummaryResponses);
+        return GpuServerMainPageResponses.of(gpuServerMainPageRespons);
     }
 
-    private GpuServerSummaryResponse summaryResponse(GpuServer server) {
+    private GpuServerMainPageResponse summaryResponse(GpuServer server) {
         GpuBoard gpuBoard = findGpuBoardByServerId(server.getId());
 
         List<Job> runningJobs = jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.RUNNING);
@@ -160,6 +160,6 @@ public class GpuServerService {
         Long totalExpectedTime = waitingJobs.stream()
                 .mapToLong(job -> Long.parseLong(job.getExpectedTime()))
                 .sum();
-        return GpuServerSummaryResponse.of(server, gpuBoard, runningJobs, waitingJobs.size(), totalExpectedTime);
+        return GpuServerMainPageResponse.of(server, gpuBoard, runningJobs, waitingJobs.size(), totalExpectedTime);
     }
 }

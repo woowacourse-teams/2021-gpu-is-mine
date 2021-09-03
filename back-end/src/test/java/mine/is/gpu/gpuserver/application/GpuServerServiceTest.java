@@ -14,7 +14,7 @@ import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerSummaryResponses;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.repository.JobRepository;
@@ -91,12 +91,12 @@ class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
-        GpuServerSummaryResponses before = gpuServerService.findAllInLab(lab.getId(), null);
+        GpuServerMainPageResponses before = gpuServerService.findAllInLab(lab.getId(), null);
         int beforeSize = before.getGpuServers().size();
 
         gpuServerService.deleteById(gpuServer1.getId());
 
-        GpuServerSummaryResponses after = gpuServerService.findAllInLab(lab.getId(), null);
+        GpuServerMainPageResponses after = gpuServerService.findAllInLab(lab.getId(), null);
         assertThat(after.getGpuServers()).hasSize(beforeSize - 1);
     }
 
