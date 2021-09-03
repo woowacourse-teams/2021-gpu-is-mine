@@ -60,10 +60,10 @@ const useAuthProvider = () => {
       }
       const { accessToken } = data;
 
+      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
+
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       await fetchMyInfo();
-
-      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
       authenticate();
     },
