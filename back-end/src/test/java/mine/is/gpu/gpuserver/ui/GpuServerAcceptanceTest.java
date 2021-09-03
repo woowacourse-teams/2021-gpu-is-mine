@@ -16,6 +16,7 @@ import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerSummaryResponse;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.lab.ui.LabAcceptanceTest;
 import org.assertj.core.api.Assertions;
@@ -63,8 +64,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     public static int GpuServer_전체조회갯수(String token, Long labId) {
         ExtractableResponse<Response> response = GpuServer_전체조회(token, labId);
-        List<GpuServerResponse> gpus = response.jsonPath()
-                .getList("gpuServers", GpuServerResponse.class);
+        List<GpuServerSummaryResponse> gpus = response.jsonPath()
+                .getList("gpuServers", GpuServerSummaryResponse.class);
         return gpus.size();
     }
 
@@ -150,7 +151,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회(managerToken, labId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
+        assertThat(response.jsonPath().getList("gpuServers", GpuServerSummaryResponse.class))
                 .hasSize(GpuServerIds.size());
     }
 
@@ -161,9 +162,9 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회_페이지네이션(managerToken, labId, page, GpuServerIds.size());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<Long> searchedIds = response.jsonPath().getList("gpuServers", GpuServerResponse.class)
+        List<Long> searchedIds = response.jsonPath().getList("gpuServers", GpuServerSummaryResponse.class)
                 .stream()
-                .map(GpuServerResponse::getId)
+                .map(GpuServerSummaryResponse::getId)
                 .collect(Collectors.toList());
         assertThat(searchedIds).usingRecursiveComparison().isEqualTo(GpuServerIds);
     }

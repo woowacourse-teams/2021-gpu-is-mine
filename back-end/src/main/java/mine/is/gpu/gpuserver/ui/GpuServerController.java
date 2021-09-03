@@ -5,8 +5,8 @@ import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.gpuserver.application.GpuServerService;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerSummaryResponses;
 import mine.is.gpu.member.application.MemberService;
 import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.pagination.Pagination;
@@ -53,13 +53,13 @@ public class GpuServerController {
     }
 
     @GetMapping
-    public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId,
-                                                           @Pagination Pageable pageable,
-                                                           @AuthenticationPrincipal Member member) {
+    public ResponseEntity<GpuServerSummaryResponses> findAllInLab(@PathVariable Long labId,
+                                                                  @Pagination Pageable pageable,
+                                                                  @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfLab(member.getId(), labId);
 
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId, pageable);
-        return ResponseEntity.ok(gpuServerResponses);
+        GpuServerSummaryResponses gpuServerSummaryResponses = gpuServerService.findAllInLab(labId, pageable);
+        return ResponseEntity.ok(gpuServerSummaryResponses);
     }
 
     @PutMapping("/{gpuServerId}")
