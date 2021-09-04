@@ -10,11 +10,13 @@ import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
+import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
@@ -47,22 +49,6 @@ public class GpuServerService {
 
         List<Job> jobsInBoard = jobRepository.findAllByGpuBoardId(gpuBoard.getId());
         return GpuServerResponse.of(gpuServer, gpuBoard, jobsInBoard);
-    }
-
-    @Transactional(readOnly = true)
-    public GpuServerResponses findAllInLab(Long labId) {
-        return findAllInLab(labId, null);
-    }
-
-    @Transactional(readOnly = true)
-    public GpuServerResponses findAllInLab(Long labId, Pageable pageable) {
-        validateLab(labId);
-
-        List<GpuServer> gpuServers = findAllByLabId(labId, pageable);
-        List<GpuServerResponse> gpuServerResponses = gpuServers.stream()
-                .map(server -> findById(server.getId()))
-                .collect(Collectors.toList());
-        return GpuServerResponses.of(gpuServerResponses);
     }
 
     @Transactional
@@ -151,5 +137,29 @@ public class GpuServerService {
             gpuServerRepository.findAllByLabId(labId);
         }
         return gpuServerRepository.findAllByLabId(labId, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public GpuServerMainPageResponses findAllInLab(Long labId, Pageable pageable) {
+        validateLab(labId);
+
+        List<GpuServer> gpuServers = findAllByLabId(labId, pageable);
+        List<GpuServerMainPageResponse> gpuServerMainPageRespons = gpuServers.stream()
+                .map(this::summaryResponse)
+                .collect(Collectors.toList());
+
+        return GpuServerMainPageResponses.of(gpuServerMainPageRespons);
+    }
+
+    private GpuServerMainPageResponse summaryResponse(GpuServer server) {
+        GpuBoard gpuBoard = findGpuBoardByServerId(server.getId());
+
+        List<Job> runningJobs = jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.RUNNING);
+        List<Job> waitingJobs = jobRepository.findAllByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.WAITING);
+
+        Long totalExpectedTime = waitingJobs.stream()
+                .mapToLong(job -> Long.parseLong(job.getExpectedTime()))
+                .sum();
+        return GpuServerMainPageResponse.of(server, gpuBoard, runningJobs, waitingJobs.size(), totalExpectedTime);
     }
 }

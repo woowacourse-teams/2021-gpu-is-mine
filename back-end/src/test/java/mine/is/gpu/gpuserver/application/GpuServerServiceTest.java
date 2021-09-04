@@ -13,8 +13,8 @@ import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.repository.JobRepository;
@@ -91,20 +91,20 @@ class GpuServerServiceTest {
     @DisplayName("삭제된 GPU 서버를 제외한 전체를 조회 한다.")
     @Test
     void 삭제된_GPU_서버를_제외한_전체_조회() {
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(lab.getId());
-        int beforeSize = gpuServerResponses.getGpuServers().size();
+        GpuServerMainPageResponses before = gpuServerService.findAllInLab(lab.getId(), null);
+        int beforeSize = before.getGpuServers().size();
 
         gpuServerService.deleteById(gpuServer1.getId());
 
-        GpuServerResponses gpuServers = gpuServerService.findAllInLab(lab.getId());
-        assertThat(gpuServers.getGpuServers()).hasSize(beforeSize - 1);
+        GpuServerMainPageResponses after = gpuServerService.findAllInLab(lab.getId(), null);
+        assertThat(after.getGpuServers()).hasSize(beforeSize - 1);
     }
 
     @DisplayName("존재하지 Lab_ID로 GPU 서버 전체를 조회한다")
     @Test
     void 존재하지_않는_Lab_ID로_전체_조회() {
         final Long nonexistentLabId = Long.MAX_VALUE;
-        assertThatThrownBy(() -> gpuServerService.findAllInLab(nonexistentLabId))
+        assertThatThrownBy(() -> gpuServerService.findAllInLab(nonexistentLabId, null))
                 .isEqualTo(LabException.LAB_NOT_FOUND.getException());
     }
 
