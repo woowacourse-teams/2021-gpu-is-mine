@@ -1,8 +1,9 @@
+<div align="center">
+<img src="https://raw.githubusercontent.com/woowacourse-teams/2021-gpu-is-mine/ed20a2971047d34d0e1716a196e8597b03113156/front-end/src/components/GpuIcon/gpu.svg" width="100" height="100">
 
-<center> <img src="https://raw.githubusercontent.com/woowacourse-teams/2021-gpu-is-mine/ed20a2971047d34d0e1716a196e8597b03113156/front-end/src/components/GpuIcon/gpu.svg" width="100" height="100"> </center>
-
-# <center> [GPU 내껀데](https://www.gpuismine.com/) </center>
-### <center> 딥러닝 학습 자동화 서비스 </center>
+# [GPU 내껀데](https://www.gpuismine.com/)
+### 딥러닝 학습 자동화 서비스
+</div>
 
 ---
 # 서비스 소개
@@ -34,6 +35,7 @@
 ---
 # 기술
 ## 스택
+<div align="center">
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=purple">
 <img src="https://img.shields.io/badge/spring_boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=darkgreen">
 <img src="https://img.shields.io/badge/hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=skyblue">
@@ -51,6 +53,7 @@
 <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=skyblue">
 <img src="https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=black">
 <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=navy">
+</div>
 
 ## 전체 플로우
 - jenkins 를 통한 자동배포를 구축하였다.
