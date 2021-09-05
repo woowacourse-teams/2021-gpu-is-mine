@@ -83,8 +83,11 @@
 - [슬랙으로 깃헙 이벤트 받기](https://ecsimsw.tistory.com/entry/Slack으로-Github-알림-받기-Github-앱-설정하기)
 ---
 # 팀원
+<div align="center">
 
 |<img alt="콜린" src="https://avatars.githubusercontent.com/u/46412689?v=4" height="80"/>|<img alt="동동" src="https://avatars.githubusercontent.com/u/31029000?v=4" height="80"/>|<img alt="배럴" src="https://avatars.githubusercontent.com/u/66905013?v=4" height="80"/>|<img alt="코기" src="https://avatars.githubusercontent.com/u/46060746?v=4" height="80"/>|<img alt="완태" src="https://avatars.githubusercontent.com/u/49307266?v=4" height="80"/>|<img alt="마갸" src="https://avatars.githubusercontent.com/u/38939015?v=4" height="80"/>|<img alt="에드" src="https://avatars.githubusercontent.com/u/66653739?v=4" height="80"/>|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |[콜린](https://github.com/2SOOY)|[동동](https://github.com/bigsaigon333)|[배럴](https://github.com/knae11)|[코기](https://github.com/ecsimsw)|[완태](https://github.com/wannte)|[마갸](https://github.com/MyaGya)|[에드](https://github.com/sjpark-dev)|
 | front-end |front-end|back-end|back-end|back-end|back-end|back-end|
+
+</div>
