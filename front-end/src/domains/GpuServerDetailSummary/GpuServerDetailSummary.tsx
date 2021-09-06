@@ -1,13 +1,13 @@
 import { Flicker, Text } from "../../components";
 import { getCurrentJob, getWaitingJob } from "./useGpuServerDetailSummary";
 import { ServerNameBox, StyledGpuServerDetailSummary } from "./GpuServerDetailSummary.styled";
-import { GpuServer } from "../../types";
+import { GpuServerDetail } from "../../types";
 
 interface GpuServerDetailSummaryProps {
   className?: string;
   labId: number;
   serverId: number;
-  detail: GpuServer;
+  detail: GpuServerDetail;
 }
 
 const GpuServerDetailSummary = ({

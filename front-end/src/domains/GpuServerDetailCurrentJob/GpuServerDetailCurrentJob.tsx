@@ -1,4 +1,4 @@
-import { GpuServer } from "../../types";
+import { GpuServerDetail } from "../../types";
 import { useJobDetail } from "../JobDetail/useJobDetail";
 import JobDetailSummary from "../JobDetailSummary/JobDetailSummary";
 
@@ -6,7 +6,7 @@ interface GpuServerDetailCurrentJobProps {
   className?: string;
   labId: number;
   jobId: number;
-  detail: GpuServer;
+  detail: GpuServerDetail;
 }
 const GpuServerDetailCurrentJob = ({
   labId,
