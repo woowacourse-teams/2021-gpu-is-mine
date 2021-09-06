@@ -1,7 +1,11 @@
 package mine.is.gpu.job.ui;
 
 import java.net.URI;
+import mine.is.gpu.account.application.MemberService;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
+import mine.is.gpu.infra.MailDto;
+import mine.is.gpu.infra.MailService;
 import mine.is.gpu.job.application.JobService;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
@@ -9,10 +13,6 @@ import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.dto.response.LogsResponse;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
-import mine.is.gpu.mail.MailDto;
-import mine.is.gpu.mail.MailService;
-import mine.is.gpu.member.application.MemberService;
-import mine.is.gpu.member.domain.Member;
 import mine.is.gpu.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

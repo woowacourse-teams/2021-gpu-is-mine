@@ -1,8 +1,8 @@
 package mine.is.gpu.gpuserver.ui;
 
+import static mine.is.gpu.account.fixture.MemberFixtures.managerCreationRequest;
+import static mine.is.gpu.account.fixture.MemberFixtures.userCreationRequest;
 import static mine.is.gpu.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
-import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;

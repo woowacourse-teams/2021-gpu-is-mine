@@ -2,10 +2,10 @@ package mine.is.gpu.auth.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.application.AuthService;
 import mine.is.gpu.auth.exception.AuthorizationException;
 import mine.is.gpu.auth.infrastructure.AuthorizationExtractor;
-import mine.is.gpu.member.domain.Member;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

@@ -1,5 +1,7 @@
 package mine.is.gpu.mail;
 
+import mine.is.gpu.infra.MailDto;
+import mine.is.gpu.infra.MailService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
