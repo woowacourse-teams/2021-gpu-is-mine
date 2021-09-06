@@ -3,7 +3,7 @@
   "files.trimTrailingWhitespace": true,
   "editor.formatOnSave": true,
   "prettier.useEditorConfig": true,
-  "prettier.enable": false,
+  "prettier.enable": true,
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
