@@ -3,5 +3,5 @@
 
 cd front-end
 yarn build
-yarn test
-yarn storybook-build
+yarn jest --clearCache && yarn test
+yarn build-storybook
