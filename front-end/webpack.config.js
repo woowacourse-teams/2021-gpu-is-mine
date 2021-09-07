@@ -11,7 +11,7 @@ module.exports = (env) => {
   return {
     entry: "./src/index.tsx",
     output: {
-      filename: "[name].bundle.js",
+      filename: "[name].[fullhash].js",
       path: path.resolve(__dirname, "build"),
       clean: true,
     },
