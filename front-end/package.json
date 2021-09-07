@@ -17,6 +17,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.15.5",
     "@kurkle/color": "^0.1.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@storybook/addon-actions": "^6.3.2",
