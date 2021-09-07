@@ -3764,7 +3764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:*, @types/history@npm:^4.7.9":
+"@types/history@npm:*":
   version: 4.7.9
   resolution: "@types/history@npm:4.7.9"
   checksum: 556b062adb92795839301965776b0418e9ca32798bd8a6031345a6a84d7512771107143a497b7e3ff826d0b0d4456e962c6450485dda6f55c7dd33371e840529
@@ -9567,7 +9567,6 @@ fsevents@^1.2.7:
     "@testing-library/react": ^12.0.0
     "@testing-library/react-hooks": ^7.0.1
     "@testing-library/user-event": ^13.2.1
-    "@types/history": ^4.7.9
     "@types/jest": ^26.0.24
     "@types/node": ^16.4.13
     "@types/react": ^17.0.13
