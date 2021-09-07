@@ -1,4 +1,4 @@
-package mine.is.gpu.utils;
+package mine.is.gpu.utils.encrypt;
 
 import mine.is.gpu.exception.http.CustomException;
 import mine.is.gpu.exception.http.NotFoundException;

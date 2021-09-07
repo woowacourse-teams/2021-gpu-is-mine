@@ -1,4 +1,4 @@
-package mine.is.gpu.utils;
+package mine.is.gpu.utils.encrypt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

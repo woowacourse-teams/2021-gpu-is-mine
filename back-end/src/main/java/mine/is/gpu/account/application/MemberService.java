@@ -17,7 +17,7 @@ import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.exception.LabException;
-import mine.is.gpu.utils.Encrypt;
+import mine.is.gpu.utils.encrypt.Encrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

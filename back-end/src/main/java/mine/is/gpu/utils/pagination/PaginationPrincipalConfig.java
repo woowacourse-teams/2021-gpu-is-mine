@@ -1,7 +1,7 @@
-package mine.is.gpu.pagination;
+package mine.is.gpu.utils.pagination;
 
 import java.util.List;
-import mine.is.gpu.pagination.parser.PaginationParser;
+import mine.is.gpu.utils.pagination.parser.PaginationParser;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

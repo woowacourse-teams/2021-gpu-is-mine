@@ -1,4 +1,4 @@
-package mine.is.gpu.pagination.parser;
+package mine.is.gpu.utils.pagination.parser;
 
 import java.util.Objects;
 import org.springframework.data.domain.PageRequest;

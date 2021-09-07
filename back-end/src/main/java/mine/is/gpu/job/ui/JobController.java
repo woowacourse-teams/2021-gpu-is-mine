@@ -13,7 +13,7 @@ import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.dto.response.LogsResponse;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
-import mine.is.gpu.pagination.Pagination;
+import mine.is.gpu.utils.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

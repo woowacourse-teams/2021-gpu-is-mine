@@ -10,7 +10,7 @@ import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.auth.exception.AuthorizationException;
 import mine.is.gpu.auth.infrastructure.JwtTokenProvider;
-import mine.is.gpu.utils.Encrypt;
+import mine.is.gpu.utils.encrypt.Encrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

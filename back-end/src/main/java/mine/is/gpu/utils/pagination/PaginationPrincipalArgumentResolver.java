@@ -1,8 +1,8 @@
-package mine.is.gpu.pagination;
+package mine.is.gpu.utils.pagination;
 
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
-import mine.is.gpu.pagination.parser.PaginationParser;
+import mine.is.gpu.utils.pagination.parser.PaginationParser;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.support.WebDataBinderFactory;

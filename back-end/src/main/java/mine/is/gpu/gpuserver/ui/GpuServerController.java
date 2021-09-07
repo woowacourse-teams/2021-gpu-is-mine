@@ -9,7 +9,7 @@ import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
-import mine.is.gpu.pagination.Pagination;
+import mine.is.gpu.utils.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,4 +1,4 @@
-package mine.is.gpu.utils;
+package mine.is.gpu.utils.encrypt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
