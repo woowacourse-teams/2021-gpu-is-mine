@@ -5,6 +5,9 @@ import { MemberLoginRequest, MemberSignupRequest } from "../../types";
 import { unwrapResult } from "../useFetch/useFetch";
 import { SESSION_STORAGE_KEY } from "../../constants";
 
+// eslint-disable-next-line prefer-const
+let logoutTimer: null | NodeJS.Timeout = null;
+
 const useRequest = () => {
   const { makeRequest: requestLogin, status: loginStatus, done: loginDone } = usePostLogin();
 
@@ -41,8 +44,16 @@ const useRequest = () => {
 const useAuthProvider = () => {
   const [isAuthenticated, authenticate, unauthenticate] = useBoolean(false);
 
-  const { isLoading, isFailed, requestLogin, requestSignup, fetchMyInfo, myInfo, done, isSucceed } =
-    useRequest();
+  const {
+    isLoading,
+    isFailed,
+    requestLogin,
+    requestSignup,
+    fetchMyInfo,
+    myInfo,
+    done,
+    isSucceed,
+  }: ReturnType<typeof useRequest> = useRequest();
 
   const signup = useCallback(
     async ({ email, labId, password, name, memberType }: MemberSignupRequest) => {
@@ -52,41 +63,73 @@ const useAuthProvider = () => {
     [requestSignup]
   );
 
-  const login = useCallback(
-    async ({ email, password }: MemberLoginRequest) => {
-      const { data } = await requestLogin({ email, password });
-      if (!data) {
-        return;
-      }
-      const { accessToken } = data;
-
-      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
-
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      const { error } = await fetchMyInfo();
-
-      if (error) {
-        sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
-
-        return;
-      }
-
-      authenticate();
-    },
-    [authenticate, fetchMyInfo, requestLogin]
-  );
-
   const logout = useCallback(async () => {
     unauthenticate();
 
     sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+    sessionStorage.removeItem(SESSION_STORAGE_KEY.EXPIRE_TIME);
+
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
   }, [unauthenticate]);
 
+  const updateLogoutTimer = useCallback(
+    (expireTime: number) => {
+      const remainingTime = expireTime - new Date().getTime();
+
+      logoutTimer = setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        logout();
+      }, remainingTime);
+    },
+    [logout]
+  );
+
+  const authenticateMyInfo = useCallback(
+    async (expireTime: number) => {
+      fetchMyInfo()
+        .then(unwrapResult)
+        .then(() => {
+          authenticate();
+          updateLogoutTimer(expireTime);
+        })
+        .catch(logout);
+    },
+    [authenticate, fetchMyInfo, logout, updateLogoutTimer]
+  );
+
+  const login = useCallback(
+    async ({ email, password }: MemberLoginRequest) => {
+      const { data } = await requestLogin({ email, password });
+
+      if (!data) {
+        return;
+      }
+
+      const { accessToken, expires = 3_600_000 } = data;
+      const expireTime = new Date().getTime() + expires;
+
+      sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
+      sessionStorage.setItem(SESSION_STORAGE_KEY.EXPIRE_TIME, expireTime.toString());
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      await authenticateMyInfo(expireTime);
+    },
+    [requestLogin, authenticateMyInfo]
+  );
+
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)) {
-      fetchMyInfo().then(unwrapResult).then(authenticate).catch(logout);
+    const accessToken = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+    const expireTime = Number(sessionStorage.getItem(SESSION_STORAGE_KEY.EXPIRE_TIME));
+
+    if (accessToken && expireTime) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      (async () => {
+        await authenticateMyInfo(expireTime);
+      })();
     }
-  }, [authenticate, fetchMyInfo, logout]);
+  }, [authenticateMyInfo]);
 
   return { isAuthenticated, isLoading, isFailed, signup, login, logout, myInfo, done, isSucceed };
 };
