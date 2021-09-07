@@ -12,6 +12,7 @@ export type MemberLoginRequest = Pick<MemberSignupRequest, "email" | "password">
 
 export interface MemberLoginResponse {
   accessToken: string;
+  expires: number;
 }
 
 export interface MyInfoResponse {

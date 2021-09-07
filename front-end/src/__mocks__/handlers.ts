@@ -10,7 +10,7 @@ const handlers = [
     const { email, password } = req.body;
 
     return emailValidator(email) === "" && passwordValidator(password) === ""
-      ? res(ctx.json({ accessToken: "access-token" }), ctx.status(200))
+      ? res(ctx.json({ accessToken: "access-token", expires: 5_000 }), ctx.status(200))
       : res(ctx.status(400));
   }),
   rest.get(API_ENDPOINT.MEMBER.ME, (_, res, ctx) =>
