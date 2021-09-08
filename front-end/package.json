@@ -53,7 +53,9 @@
     "eslint-plugin-testing-library": "^4.10.1",
     "history": "^5.0.1",
     "html-webpack-plugin": "^5.3.2",
+    "husky": ">=6",
     "jest": "^27.0.6",
+    "lint-staged": ">=10",
     "msw": "^0.33.0",
     "prettier": "2.3.2",
     "react-refresh": "^0.10.0",
@@ -88,9 +90,14 @@
     "lint": "eslint --cache --fix .",
     "format": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watch --runInBand"
+    "test:watch": "jest --watch --runInBand",
+    "postinstall": "cd .. && husky install front-end/.husky && cd front-end"
   },
   "resolutions": {
     "styled-components": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*": "prettier --ignore-unknown --write"
   }
 }
