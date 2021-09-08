@@ -84,7 +84,7 @@
   "scripts": {
     "start": "webpack serve --env production --node-env=production",
     "dev": "webpack serve --env development --node-env=development",
-    "build": "webpack --env production --node-env=production",
+    "build": "webpack --env production --node-env=production --progress",
     "storybook": "start-storybook -p 6006",
     "upgrade": "yarn upgrade-interactive",
     "build-storybook": "build-storybook",
@@ -93,7 +93,7 @@
     "test": "jest",
     "test:watch": "jest --watch --runInBand",
     "postinstall": "cd .. && husky install front-end/.husky && cd front-end",
-    "analyze": "webpack --analyze --mode production"
+    "analyze": "webpack --analyze --progress --env production --node-env=production"
   },
   "resolutions": {
     "styled-components": "^5"
