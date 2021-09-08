@@ -12,6 +12,7 @@ module.exports = (env) => {
     entry: "./src/index.tsx",
     output: {
       filename: "[name].[fullhash].js",
+      chunkFilename: "[name].[chunkhash].js",
       path: path.resolve(__dirname, "build"),
       clean: true,
     },
@@ -61,6 +62,19 @@ module.exports = (env) => {
       maxEntrypointSize: 500 * 1_024,
       maxAssetSize: 300 * 1_024,
       hints: "warning",
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          defaultVendors: {
+            chunks: "all",
+            test: /[\\/]\.yarn[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+            filename: "vendors.[contenthash].js",
+          },
+        },
+      },
     },
   };
 };
