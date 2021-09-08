@@ -97,7 +97,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .oauth2(token)
                 .body(gpuServerUpdateRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/api/labs/1/gpus/" + gpuServerId)
+                .when().put("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
@@ -107,7 +107,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth()
                 .oauth2(token)
-                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .when().delete("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
