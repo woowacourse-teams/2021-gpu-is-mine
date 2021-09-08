@@ -17,7 +17,7 @@ Default.args = {
   serverName: "GPU 서버",
   isOn: true,
   performance: 2_000,
-  jobs: gpuServersResponses.gpuServers[0].jobs,
+  runningJobs: gpuServersResponses.gpuServers[0].runningJobs,
 };
 
 export const LongItem = Template.bind({});
@@ -26,5 +26,5 @@ LongItem.args = {
   serverName: "일이삼사오육칠팔구공일이삼사오",
   isOn: true,
   performance: 20_000,
-  jobs: gpuServersResponses.gpuServers[2].jobs,
+  runningJobs: gpuServersResponses.gpuServers[2].runningJobs,
 };

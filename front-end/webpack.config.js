@@ -4,15 +4,14 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
-const CompressionPlugin = require("compression-webpack-plugin");
 
-module.exports = () => {
-  const isDevelopment = process.env.NODE_ENV !== "production";
+module.exports = (env) => {
+  const isDevelopment = !env.production;
 
   return {
     entry: "./src/index.tsx",
     output: {
-      filename: "[name].bundle.js",
+      filename: "[name].[fullhash].js",
       path: path.resolve(__dirname, "build"),
       clean: true,
     },
