@@ -101,5 +101,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "*": "prettier --ignore-unknown --write"
-  }
+  },
+  "sideEffects": false
 }
