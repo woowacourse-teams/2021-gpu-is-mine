@@ -1,19 +1,34 @@
-import { ComponentProps, useRef } from "react";
-import ChartClass, { ChartConfiguration } from "chart.js/auto";
-import { Chart, Button } from "../../components";
+import { Suspense, lazy, ComponentProps, useRef, SuspenseProps } from "react";
+import { Chart as ChartClass, ChartConfiguration } from "chart.js";
+import { Button } from "../../components";
 import { ButtonPanel } from "./JobDetailGraphChart.styled";
 import { ParsedLog } from "../../types";
 
 interface JobDetailGraphChartProps extends Omit<ComponentProps<typeof Chart>, "config"> {
   data: Readonly<ParsedLog[]>;
+  fallback?: SuspenseProps["fallback"];
 }
+
+const Chart = lazy(
+  () =>
+    import(
+      /* webpackPrefetch: true,
+        webpackChunkName: "chart-component",
+       */
+      "../../components/Chart/Chart"
+    )
+);
 
 const accuracyColor = "rgb(3, 105, 161)";
 const accuracyBackgroundColor = "rgba(3, 105, 161, 0.5)";
 const lossColor = "rgb(185, 28, 28)";
 const lossBackgroundColor = "rgba(185, 28, 28, 0.5)";
 
-const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
+const JobDetailGraphChart = ({
+  data,
+  fallback = <div>Chart Loading...</div>,
+  ...rest
+}: JobDetailGraphChartProps) => {
   const chartRef = useRef<ChartClass<"line", number[], number> | null>(null);
 
   const labels = data.map(({ currentEpoch }) => currentEpoch);
@@ -100,14 +115,14 @@ const JobDetailGraphChart = ({ data, ...rest }: JobDetailGraphChartProps) => {
   const resetZoom = () => chartRef.current?.resetZoom();
 
   return (
-    <>
+    <Suspense fallback={fallback}>
       <Chart {...rest} config={config} ref={chartRef} />
       <ButtonPanel>
         <Button color="primary" onClick={resetZoom}>
           Reset Zoom
         </Button>
       </ButtonPanel>
-    </>
+    </Suspense>
   );
 };
 
