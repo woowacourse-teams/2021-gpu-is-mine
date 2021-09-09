@@ -17,9 +17,12 @@ public class GpuServerMainPageResponse {
     private Integer waitingJobCount;
     private Long totalExpectedTime;
 
+    public GpuServerMainPageResponse() {
+    }
+
     private GpuServerMainPageResponse(Long id, String serverName, Long memorySize, Long diskSize, Boolean isOn,
-                                     GpuBoardResponse board, List<JobMainPageResponse> runningJobs,
-                                     Integer waitingJobCount, Long totalExpectedTime) {
+                                      GpuBoardResponse board, List<JobMainPageResponse> runningJobs,
+                                      Integer waitingJobCount, Long totalExpectedTime) {
         this.id = id;
         this.serverName = serverName;
         this.memorySize = memorySize;
@@ -32,7 +35,7 @@ public class GpuServerMainPageResponse {
     }
 
     public static GpuServerMainPageResponse of(GpuServer server, GpuBoard board, List<Job> runningJobs,
-                                              Integer waitingJobCount, Long totalExpectedTime) {
+                                               Integer waitingJobCount, Long totalExpectedTime) {
         return new GpuServerMainPageResponse(
                 server.getId(),
                 server.getName(),

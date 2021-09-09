@@ -5,6 +5,9 @@ import java.util.List;
 public class GpuServerMainPageResponses {
     private List<GpuServerMainPageResponse> gpuServerMainPageRespons;
 
+    public GpuServerMainPageResponses() {
+    }
+
     private GpuServerMainPageResponses(List<GpuServerMainPageResponse> gpuServerMainPageRespons) {
         this.gpuServerMainPageRespons = gpuServerMainPageRespons;
     }
