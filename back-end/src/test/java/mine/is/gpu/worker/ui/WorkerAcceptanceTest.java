@@ -1,12 +1,12 @@
 package mine.is.gpu.worker.ui;
 
+import static mine.is.gpu.account.fixture.MemberFixtures.managerCreationRequest;
+import static mine.is.gpu.account.fixture.MemberFixtures.userCreationRequest;
 import static mine.is.gpu.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
 import static mine.is.gpu.job.fixture.JobFixtures.jobCreationRequest;
 import static mine.is.gpu.job.ui.JobAcceptanceTest.Job_Id로_검색;
 import static mine.is.gpu.job.ui.JobAcceptanceTest.Job_예약_후_id_반환;
 import static mine.is.gpu.lab.ui.LabAcceptanceTest.LAB_생성_요청_후_생성_ID_리턴;
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
-import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
@@ -14,6 +14,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import mine.is.gpu.AcceptanceTest;
+import mine.is.gpu.account.domain.repository.MemberRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
@@ -24,7 +25,6 @@ import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.lab.dto.LabRequest;
-import mine.is.gpu.member.domain.repository.MemberRepository;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
 import org.junit.jupiter.api.BeforeEach;
