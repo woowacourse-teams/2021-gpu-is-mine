@@ -1,8 +1,8 @@
 package mine.is.gpu.gpuserver.ui;
 
+import static mine.is.gpu.account.fixture.MemberFixtures.managerCreationRequest;
+import static mine.is.gpu.account.fixture.MemberFixtures.userCreationRequest;
 import static mine.is.gpu.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
-import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
@@ -97,7 +97,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .oauth2(token)
                 .body(gpuServerUpdateRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/api/labs/1/gpus/" + gpuServerId)
+                .when().put("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
@@ -107,7 +107,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth()
                 .oauth2(token)
-                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .when().delete("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }

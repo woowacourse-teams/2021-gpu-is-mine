@@ -1,11 +1,11 @@
 package mine.is.gpu;
 
 import io.restassured.RestAssured;
+import mine.is.gpu.account.domain.repository.MemberRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.repository.LabRepository;
-import mine.is.gpu.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

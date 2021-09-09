@@ -10,11 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.exception.JobException;
-import mine.is.gpu.member.domain.Member;
 
 @Entity
 public class Job extends BaseEntity {

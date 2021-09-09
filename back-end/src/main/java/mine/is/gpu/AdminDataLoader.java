@@ -1,8 +1,8 @@
 package mine.is.gpu;
 
-import mine.is.gpu.admin.Administrator;
-import mine.is.gpu.admin.AdministratorRepository;
-import mine.is.gpu.encryption.Encrypt;
+import mine.is.gpu.account.domain.Administrator;
+import mine.is.gpu.account.domain.repository.AdministratorRepository;
+import mine.is.gpu.utils.encrypt.Encrypt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

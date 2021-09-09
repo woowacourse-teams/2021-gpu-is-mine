@@ -3,12 +3,12 @@ package mine.is.gpu.job.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import mine.is.gpu.account.domain.Member;
+import mine.is.gpu.account.domain.MemberType;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.lab.domain.Lab;
-import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.domain.MemberType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

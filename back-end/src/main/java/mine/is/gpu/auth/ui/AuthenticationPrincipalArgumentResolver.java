@@ -1,10 +1,10 @@
 package mine.is.gpu.auth.ui;
 
+import javax.servlet.http.HttpServletRequest;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.application.AuthService;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.auth.infrastructure.AuthorizationExtractor;
-import mine.is.gpu.member.domain.Member;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
