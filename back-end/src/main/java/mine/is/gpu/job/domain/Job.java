@@ -26,7 +26,7 @@ public class Job extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "status")
+    @Column(nullable = false)
     private JobStatus status;
 
     @ManyToOne
@@ -41,10 +41,8 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private String expectedTime;
 
-    @Column
     private LocalDateTime startedTime;
 
-    @Column
     private LocalDateTime completedTime;
 
     protected Job() {

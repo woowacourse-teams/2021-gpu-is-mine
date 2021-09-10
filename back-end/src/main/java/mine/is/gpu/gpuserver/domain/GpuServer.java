@@ -34,7 +34,6 @@ public class GpuServer extends BaseEntity {
     @JoinColumn(name = "lab_id")
     private Lab lab;
 
-    @Column(name = "last_response")
     private LocalDateTime lastResponse;
 
     protected GpuServer() {
