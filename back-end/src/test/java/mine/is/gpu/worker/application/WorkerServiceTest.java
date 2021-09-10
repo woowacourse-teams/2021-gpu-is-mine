@@ -100,23 +100,23 @@ class WorkerServiceTest {
     @Test
     void changeJobStatusCompleted() {
         // given
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.RUNNING);
 
         // when
-        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
         // then
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.COMPLETED);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.COMPLETED);
     }
 
     @DisplayName("job 의 상태 COMPLETED 으로 변경시 종료 시간이 기록된다")
     @Test
     void checkEndTimeJobStatusCompleted() {
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.RUNNING);
 
-        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
-        assertThat(job2.getCompletedTime()).isNotNull();
+        assertThat(job1.getCompletedTime()).isNotNull();
     }
 
     @DisplayName("job 이 완료되면 해당 job은 모든 시간값이 입력되어 있다")

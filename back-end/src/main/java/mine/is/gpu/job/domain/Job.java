@@ -41,9 +41,11 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private String expectedTime;
 
-    private LocalDateTime startedTime = null;
+    @Column
+    private LocalDateTime startedTime;
 
-    private LocalDateTime completedTime = null;
+    @Column
+    private LocalDateTime completedTime;
 
     protected Job() {
     }
@@ -95,6 +97,10 @@ public class Job extends BaseEntity {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public JobStatus getStatus() {
         return status;
     }
@@ -126,11 +132,20 @@ public class Job extends BaseEntity {
         this.status = JobStatus.CANCELED;
     }
 
+    public void start() {
+        if (!this.status.isWaiting()) {
+            throw JobException.JOB_NOT_WAITING.getException();
+        }
+        this.status = JobStatus.RUNNING;
+        this.startedTime = LocalDateTime.now();
+    }
+
     public void complete() {
         if (!this.status.isRunning()) {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
+        this.completedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -141,20 +156,16 @@ public class Job extends BaseEntity {
         this.status = status;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDateTime getStartedTime() {
         return startedTime;
     }
 
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
-    }
-
     public void setStartedTime(LocalDateTime startedTime) {
         this.startedTime = startedTime;
+    }
+
+    public LocalDateTime getCompletedTime() {
+        return completedTime;
     }
 
     public void setCompletedTime(LocalDateTime completedTime) {
