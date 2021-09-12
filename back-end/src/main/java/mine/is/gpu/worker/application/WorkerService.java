@@ -88,7 +88,7 @@ public class WorkerService {
     }
 
     @Transactional
-    public void end(Long jobId) {
+    public void complete(Long jobId) {
         Job job = findJobById(jobId);
         job.complete();
     }
