@@ -45,10 +45,13 @@ public class WorkerService {
         Job job = findJobById(jobId);
         if (workerJobRequest.getJobStatus().isRunning()) {
             job.start();
+            return;
         }
         if (workerJobRequest.getJobStatus().isCompleted()) {
             job.complete();
+            return;
         }
+        throw JobException.UNSUPPORTED_JOB_STATUS_UPDATE.getException();
     }
 
     @Transactional
