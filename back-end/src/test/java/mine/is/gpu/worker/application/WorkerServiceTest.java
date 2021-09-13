@@ -1,6 +1,7 @@
 package mine.is.gpu.worker.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import mine.is.gpu.account.domain.Member;
@@ -14,6 +15,7 @@ import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
+import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
@@ -21,6 +23,8 @@ import mine.is.gpu.worker.dto.WorkerRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -100,23 +104,23 @@ class WorkerServiceTest {
     @Test
     void changeJobStatusCompleted() {
         // given
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.RUNNING);
 
         // when
-        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
         // then
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.COMPLETED);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.COMPLETED);
     }
 
     @DisplayName("job 의 상태 COMPLETED 으로 변경시 종료 시간이 기록된다")
     @Test
     void checkEndTimeJobStatusCompleted() {
-        assertThat(job2.getStatus()).isEqualTo(JobStatus.WAITING);
+        assertThat(job1.getStatus()).isEqualTo(JobStatus.RUNNING);
 
-        workerService.updateJobStatus(job2.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
+        workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
-        assertThat(job2.getCompletedTime()).isNotNull();
+        assertThat(job1.getCompletedTime()).isNotNull();
     }
 
     @DisplayName("job 이 완료되면 해당 job은 모든 시간값이 입력되어 있다")
@@ -130,6 +134,16 @@ class WorkerServiceTest {
         assertThat(job2.getCreatedAt()).isNotNull();
         assertThat(job2.getStartedTime()).isNotNull();
         assertThat(job2.getCompletedTime()).isNotNull();
+    }
+
+    @DisplayName("허용되지 않는 job status update 요청")
+    @ParameterizedTest(name = "{displayName}::[{argumentsWithNames}]")
+    @ValueSource(strings = {"canceled", "waiting"})
+    void unsupportedJobStatusUpdate(String request) {
+        JobStatus jobStatus = JobStatus.ignoreCaseValueOf(request);
+        assertThatThrownBy(
+                () -> workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(jobStatus))
+        ).isEqualTo(JobException.UNSUPPORTED_JOB_STATUS_UPDATE.getException());
     }
 
     @DisplayName("서버가 n 분마다 상태를 알려주면 상태와 마지막 응답시간이 수정된다.")
