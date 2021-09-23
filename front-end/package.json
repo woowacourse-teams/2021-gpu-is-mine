@@ -42,6 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "cypress": "^8.3.1",
+    "debug": "^4.3.2",
     "eslint": "^7.30.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -96,6 +97,7 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch --runInBand",
+    "cypress:open": "cypress open",
     "postinstall": "cd .. && husky install front-end/.husky && cd front-end",
     "analyze": "webpack --analyze --progress --env production --node-env=production"
   },
