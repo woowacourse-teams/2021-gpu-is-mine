@@ -16,6 +16,7 @@ const handlers = [
   rest.get(API_ENDPOINT.MEMBER.ME, (_, res, ctx) =>
     res(ctx.json(membersMeResponse), ctx.status(200))
   ),
+  rest.delete(`${BASE_URL}/labs/:labId/gpus/:serverId`, (_, res, ctx) => res(ctx.status(204))),
   rest.get(`${BASE_URL}/labs/:labId/jobs/:jobId/logs`, (_, res, ctx) =>
     res(ctx.json(logs), ctx.status(200))
   ),
