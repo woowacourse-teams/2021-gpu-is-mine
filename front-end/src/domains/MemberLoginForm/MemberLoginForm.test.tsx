@@ -1,22 +1,22 @@
-import { ContextType } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PATH } from "../../constants";
-import { authContextValue } from "../../__fixtures__";
-import { authContext } from "../../hooks/useAuth/useAuth";
+import { AuthProvider, PublicRoute } from "../../components";
 import MemberLoginForm from "./MemberLoginForm";
 import { emailValidator, passwordValidator } from "../MemberSignupForm/validator";
 import { ThemeProvider } from "../../styles";
 
 describe("Member/LoginForm", () => {
-  const setup = (ctx?: ContextType<typeof authContext>) => {
+  const setup = () => {
     render(
       <ThemeProvider>
-        <MemoryRouter>
-          <authContext.Provider value={ctx ?? authContextValue}>
-            <MemberLoginForm />
-          </authContext.Provider>
+        <MemoryRouter initialEntries={["/"]}>
+          <AuthProvider>
+            <PublicRoute exact path="/">
+              <MemberLoginForm />
+            </PublicRoute>
+          </AuthProvider>
         </MemoryRouter>
       </ThemeProvider>
     );
@@ -121,16 +121,7 @@ describe("Member/LoginForm", () => {
 
   describe("제출", () => {
     test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
-      const ctx = {
-        ...authContextValue,
-        login: jest.fn(async ({ email, password }: { email: string; password: string }) => {
-          if (emailValidator(email) !== "" || passwordValidator(password) !== "") {
-            ctx.isFailed = true;
-          }
-        }),
-      };
-
-      const { emailInput, passwordInput, loginButton, loginForm } = setup(ctx);
+      const { emailInput, passwordInput, loginButton, loginForm } = setup();
 
       const validEmail = "test@dd.com";
       const invalidPassword = "123456";
@@ -154,16 +145,7 @@ describe("Member/LoginForm", () => {
     });
 
     test("유효한 이메일과 비밀번호를 입력하면 Alert가 표시되지 않는다", async () => {
-      const ctx = {
-        ...authContextValue,
-        login: jest.fn(async ({ email, password }: { email: string; password: string }) => {
-          ctx.isLoading = true;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          ctx.isFailed = emailValidator(email) !== "" || passwordValidator(password) !== "";
-          ctx.isLoading = false;
-        }),
-      };
-      const { emailInput, passwordInput, loginButton, loginForm } = setup(ctx);
+      const { emailInput, passwordInput, loginButton } = setup();
 
       // 유효한 이메일과 비밀번호를 정의한다
       const validEmail = "test@dd.com";
@@ -179,15 +161,19 @@ describe("Member/LoginForm", () => {
       userEvent.click(loginButton);
       expect(loginButton).toBeDisabled();
 
-      // 이메일과 비밀번호가 폼에 잘 입력되었는지 확인한다
-      expect(loginForm).toHaveFormValues({ email: validEmail, password: validPassword });
-      expect(ctx.login).toHaveBeenCalledWith({
-        email: validEmail,
-        password: validPassword,
-      });
-
       // 유효하지 않은 이메일과 비밀번호를 나타내는 Alert가 표시되지 않는 것을 확인한다
       expect(screen.queryByRole("dialog", { name: /alert/ })).not.toBeInTheDocument();
+
+      // 비동기 api 호출 중 로딩 스피너 표시
+      await waitFor(() => expect(screen.queryByRole("progressbar")).toBeInTheDocument());
+
+      // 비동기 api 호출 완료 후 로딩 스피너 제거
+      await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
+
+      // 로그인이 완료되면 PublicRoute에 의해 로그인폼이 렌더링되지 않는다
+      await waitFor(() => {
+        expect(screen.queryByRole("form", { name: /로그인/ })).not.toBeInTheDocument();
+      });
     });
   });
 });
