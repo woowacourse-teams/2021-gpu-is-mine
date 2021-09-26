@@ -156,7 +156,12 @@ describe("Member/LoginForm", () => {
     test("유효한 이메일과 비밀번호를 입력하면 Alert가 표시되지 않는다", async () => {
       const ctx = {
         ...authContextValue,
-        login: jest.fn(),
+        login: jest.fn(async ({ email, password }: { email: string; password: string }) => {
+          ctx.isLoading = true;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          ctx.isFailed = emailValidator(email) !== "" || passwordValidator(password) !== "";
+          ctx.isLoading = false;
+        }),
       };
       const { emailInput, passwordInput, loginButton, loginForm } = setup(ctx);
 
@@ -172,6 +177,7 @@ describe("Member/LoginForm", () => {
       userEvent.type(passwordInput, validPassword);
       userEvent.tab();
       userEvent.click(loginButton);
+      expect(loginButton).toBeDisabled();
 
       // 이메일과 비밀번호가 폼에 잘 입력되었는지 확인한다
       expect(loginForm).toHaveFormValues({ email: validEmail, password: validPassword });

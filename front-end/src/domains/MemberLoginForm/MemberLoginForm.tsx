@@ -48,7 +48,9 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
       {isFailed && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
-      <SubmitButton color="secondary">로그인</SubmitButton>
+      <SubmitButton color="secondary" disabled={isLoading}>
+        로그인
+      </SubmitButton>
       <Link to={PATH.MEMBER.SIGNUP}>
         <Text size="sm" className="signup">
           아직 회원이 아니신가요?
