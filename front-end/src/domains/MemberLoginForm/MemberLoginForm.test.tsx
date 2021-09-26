@@ -26,7 +26,6 @@ describe("Member/LoginForm", () => {
       passwordInput,
       loginButton,
       signupLink,
-      alert,
     };
   };
 
@@ -125,7 +124,7 @@ describe("Member/LoginForm", () => {
 
       expect(loginForm).toHaveFormValues({ email: validEmail, password: invalidPassword });
 
-      const alert = await screen.findByRole("alertdialog");
+      const alert = await screen.findByRole("dialog", { name: /alert/ });
 
       expect(alert).toBeInTheDocument();
       expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");

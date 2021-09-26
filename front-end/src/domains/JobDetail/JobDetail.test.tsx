@@ -38,7 +38,7 @@ describe("JobDetail", () => {
 
     render(<JobDetail labId={1} />);
 
-    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: /alert/i })).toBeInTheDocument();
 
     userEvent.click(screen.getByRole("button"));
 

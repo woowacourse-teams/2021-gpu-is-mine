@@ -234,7 +234,7 @@ describe("Member/SignupForm", () => {
         memberType: "manager",
       });
 
-      const alert = await screen.findByRole("alertdialog");
+      const alert = await screen.findByRole("dialog", { name: /alert/i });
 
       expect(alert).toBeInTheDocument();
     });
