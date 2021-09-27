@@ -11,8 +11,6 @@ describe("Member/SignupForm", () => {
     const passwordInput = screen.getByLabelText("비밀번호");
     const passwordConfirmInput = screen.getByLabelText("비밀번호 확인");
     const nameInput = screen.getByLabelText("이름");
-    const managerRadio = screen.getByRole("radio", { name: /관리자/ });
-    const userRadio = screen.getByRole("radio", { name: /사용자/ });
     const submitButton = screen.getByRole("button", { name: "submit" });
 
     return {
@@ -21,8 +19,6 @@ describe("Member/SignupForm", () => {
       passwordInput,
       passwordConfirmInput,
       nameInput,
-      managerRadio,
-      userRadio,
       submitButton,
     };
   };
@@ -163,35 +159,6 @@ describe("Member/SignupForm", () => {
     });
   });
 
-  describe("멤버타입", () => {
-    test("멤버타입 라벨과 관리자와 사용자 라디오 버튼이 표시된다", () => {
-      const { userRadio, managerRadio } = setup();
-
-      expect(screen.getByText("멤버타입")).toBeInTheDocument();
-      expect(managerRadio).toBeInTheDocument();
-      expect(userRadio).toBeInTheDocument();
-    });
-
-    /**
-     * 현재 회원가입 폼에서 관리자를 선택하여 회원가입 할 수 없게 설정되어 있다. 관리자는 admin page에서 권한을 부여받을 수 있다.
-     */
-    test("관리자 라디오 버튼을 클릭하여도 관리자 라디오 버튼의 checked는 true가 되지 않는다", () => {
-      const { managerRadio } = setup();
-
-      userEvent.click(managerRadio, { button: 0 });
-
-      expect(managerRadio).not.toBeChecked();
-    });
-
-    test("사용자 라디오 버튼을 클릭하면 사용자 라디오 버튼의 checked가 true가 된다", () => {
-      const { userRadio } = setup();
-
-      userEvent.click(userRadio, { button: 0 });
-
-      expect(userRadio).toBeChecked();
-    });
-  });
-
   describe("제출 버튼", () => {
     test("제출 버튼이 표시된다", () => {
       const { submitButton } = setup();
@@ -201,15 +168,8 @@ describe("Member/SignupForm", () => {
     });
 
     test("valid한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, 회원가입이 성공했다는 Alert가 뜬다", async () => {
-      const {
-        form,
-        emailInput,
-        passwordInput,
-        passwordConfirmInput,
-        nameInput,
-        managerRadio,
-        submitButton,
-      } = setup();
+      const { form, emailInput, passwordInput, passwordConfirmInput, nameInput, submitButton } =
+        setup();
 
       const validEmail = "test@dd.com";
       const validPassword = "123@cde!";
@@ -223,7 +183,6 @@ describe("Member/SignupForm", () => {
       fireEvent.blur(passwordConfirmInput);
       fireEvent.change(nameInput, { target: { value: validName } });
       fireEvent.blur(nameInput);
-      fireEvent.click(managerRadio);
       fireEvent.click(submitButton);
 
       expect(form).toHaveFormValues({
@@ -231,7 +190,6 @@ describe("Member/SignupForm", () => {
         password: validPassword,
         passwordConfirm: validPassword,
         name: validName,
-        memberType: "manager",
       });
 
       const alert = await screen.findByRole("alertdialog");
