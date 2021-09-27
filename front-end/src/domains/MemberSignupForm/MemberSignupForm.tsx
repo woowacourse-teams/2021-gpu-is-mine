@@ -1,14 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  useAuth,
-  useMoveToPage,
-  useForm,
-  getFormProps,
-  getInputProps,
-  getRadioProps,
-} from "../../hooks";
-import { Radio, Input, RadioGroup, Alert, Text, Loading } from "../../components";
+import { useAuth, useMoveToPage, useForm, getFormProps, getInputProps } from "../../hooks";
+import { Input, Alert, Text, Loading } from "../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH } from "../../constants";
 import {
@@ -27,7 +20,6 @@ type Values = {
   password: string;
   passwordConfirm: string;
   name: string;
-  memberType: "MANAGER" | "USER" | "";
 };
 
 const MemberSignupForm = (props: MemberSignupFormProps) => {
@@ -35,13 +27,13 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
 
   useEffect(() => done, [done]);
 
-  const handleSubmit = ({ email, password, name, memberType }: Values) =>
+  const handleSubmit = ({ email, password, name }: Values) =>
     signup({
       email,
       password,
       labId: 1,
       name,
-      memberType: memberType === "MANAGER" ? "MANAGER" : "USER",
+      memberType: "USER",
     });
 
   const { state, dispatch } = useForm<Values>({
@@ -49,10 +41,9 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     password: "",
     passwordConfirm: "",
     name: "",
-    memberType: "",
   });
 
-  const form = getFormProps({ state, dispatch, handleSubmit });
+  const formProps = getFormProps({ state, dispatch, handleSubmit });
 
   const emailInputProps = getInputProps({
     state,
@@ -86,29 +77,10 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     validator: nameValidator,
   });
 
-  const memberTypeManagerProps = getRadioProps({
-    state,
-    dispatch,
-    name: "memberType",
-    label: "manager",
-    value: "manager",
-  });
-
-  const memberTypeUserProps = getRadioProps({
-    state,
-    dispatch,
-    name: "memberType",
-    label: "user",
-    value: "user",
-  });
-
-  const isRadioValidationMessageVisible =
-    state.areValidationMessagesVisible.memberType && state.values.memberType === "";
-
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
   return (
-    <StyledForm {...form} {...props} aria-label="signup-form">
+    <StyledForm {...formProps} {...props} aria-label="signup-form">
       {isLoading && <Loading size="lg" />}
 
       {isSucceed && (
@@ -127,14 +99,6 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
-      <RadioGroup label="멤버타입">
-        <Radio {...memberTypeManagerProps} isValid={!isRadioValidationMessageVisible} disabled>
-          관리자
-        </Radio>
-        <Radio {...memberTypeUserProps} isValid={!isRadioValidationMessageVisible}>
-          사용자
-        </Radio>
-      </RadioGroup>
       <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={isLoading}>
         제출
       </SubmitButton>

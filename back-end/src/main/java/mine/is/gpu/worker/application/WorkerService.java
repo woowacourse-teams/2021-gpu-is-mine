@@ -1,6 +1,5 @@
 package mine.is.gpu.worker.application;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
@@ -44,13 +43,15 @@ public class WorkerService {
     @Transactional
     public void updateJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
         Job job = findJobById(jobId);
-        job.changeStatus(workerJobRequest.getJobStatus());
-        if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
-            job.setStartedTime(LocalDateTime.now());
+        if (workerJobRequest.getJobStatus().isRunning()) {
+            job.start();
+            return;
         }
-        if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
-            job.setCompletedTime(LocalDateTime.now());
+        if (workerJobRequest.getJobStatus().isCompleted()) {
+            job.complete();
+            return;
         }
+        throw JobException.UNSUPPORTED_JOB_STATUS_UPDATE.getException();
     }
 
     @Transactional
@@ -86,20 +87,12 @@ public class WorkerService {
     @Transactional
     public void start(Long jobId) {
         Job job = findJobById(jobId);
-        if (job.getStatus() != JobStatus.WAITING) {
-            throw new IllegalArgumentException();
-        }
-        job.changeStatus(JobStatus.RUNNING);
-        job.setStartedTime(LocalDateTime.now());
+        job.start();
     }
 
     @Transactional
-    public void end(Long jobId) {
+    public void complete(Long jobId) {
         Job job = findJobById(jobId);
-        if (job.getStatus() != JobStatus.RUNNING) {
-            throw new IllegalArgumentException();
-        }
-        job.changeStatus(JobStatus.COMPLETED);
-        job.setCompletedTime(LocalDateTime.now());
+        job.complete();
     }
 }

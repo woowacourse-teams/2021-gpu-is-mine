@@ -63,9 +63,9 @@ public class WorkerController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("jobs/{jobId}/end")
-    public ResponseEntity<Void> end(@PathVariable Long jobId) {
-        workerService.end(jobId);
+    @PutMapping("jobs/{jobId}/complete")
+    public ResponseEntity<Void> complete(@PathVariable Long jobId) {
+        workerService.complete(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
         logger.info("job #" + jobId + " is completed");
