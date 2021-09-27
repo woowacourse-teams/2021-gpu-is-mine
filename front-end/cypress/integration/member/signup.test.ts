@@ -21,10 +21,6 @@ describe("signup", () => {
     cy.findByLabelText(/비밀번호 확인/i).type(password);
     cy.findByRole("textbox", { name: /이름/i }).type(name);
 
-    // 멤버 타입을 설정한다
-    cy.findByLabelText(/관리자/i).should("be.disabled");
-    cy.findByLabelText(/사용자/i).click({ force: true });
-
     // 회원가입 버튼을 클릭한다
     cy.findByRole("button", { name: /submit/i }).click();
 
