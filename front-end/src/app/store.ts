@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import memberReducer from "../features/member/memberSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    member: memberReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
