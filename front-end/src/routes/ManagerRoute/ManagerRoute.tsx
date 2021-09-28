@@ -1,18 +1,15 @@
 import { ComponentProps } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { useAuth } from "../../hooks";
 import { PATH } from "../../constants";
+import { useAppSelector } from "../../app/hooks";
+import { selectMemberType } from "../../features/member/memberSlice";
 
 const ManagerRoute = ({ children, ...rest }: ComponentProps<typeof Route>) => {
-  const { myInfo } = useAuth();
+  const memberType = useAppSelector(selectMemberType);
 
   return (
     <Route {...rest}>
-      {myInfo?.memberType === "MANAGER" ? (
-        children
-      ) : (
-        <Redirect to={{ pathname: PATH.MEMBER.LOGIN }} />
-      )}
+      {memberType === "MANAGER" ? children : <Redirect to={{ pathname: PATH.MEMBER.LOGIN }} />}
     </Route>
   );
 };

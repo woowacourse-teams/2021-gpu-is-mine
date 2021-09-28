@@ -1,5 +1,5 @@
 import { Switch, Redirect } from "react-router-dom";
-import { ManagerRoute, PrivateRoute, PublicRoute } from "../components";
+import { ManagerRoute, PrivateRoute, PublicRoute } from "../routes";
 import {
   GpuServerView,
   GpuServerRegister,

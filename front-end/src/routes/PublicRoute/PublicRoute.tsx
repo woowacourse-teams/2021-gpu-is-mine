@@ -1,7 +1,8 @@
 import { Redirect, Route } from "react-router-dom";
 import { ComponentProps } from "react";
-import { useAuth } from "../../hooks";
 import { PATH } from "../../constants";
+import { useAppSelector } from "../../app/hooks";
+import { selectIsAuthenticated } from "../../features/member/memberSlice";
 
 type Location = {
   state?: { from?: Location };
@@ -9,7 +10,7 @@ type Location = {
 };
 
 const PublicRoute = ({ children, ...rest }: ComponentProps<typeof Route>) => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   return (
     <Route
