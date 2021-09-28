@@ -1,12 +1,17 @@
 <included>
   <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_PATH}/${WARN_LOG_FILE_NAME}.log</file>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>WARN</level>
+    </filter>
     <encoder>
       <pattern>${LOG_PATTERN}</pattern>
     </encoder>
     <rollingPolicy
       class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_PATH}/${BACKUP_PATH}/%d{yyyy-MM-dd}/${WARN_LOG_FILE_NAME}-%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <fileNamePattern>
+        ${LOG_PATH}/${BACKUP_PATH}/%d{yyyy-MM-dd}/${WARN_LOG_FILE_NAME}-%d{yyyy-MM-dd}_%i.log
+      </fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy
         class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>10MB</maxFileSize>

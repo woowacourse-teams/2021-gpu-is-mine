@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-<!--  <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>-->
+  <!--  <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>-->
   <property name="LOG_PATH" value="logs"/>
   <property name="BACKUP_PATH" value="backup"/>
   <property name="DEBUG_LOG_FILE_NAME" value="debug"/>
@@ -11,9 +11,34 @@
 
   <springProfile name="local,test">
     <include resource="appender/console-appender.xml"/>
-    <include resource="appender/file-info-appender.xml"/>
+    <logger name="mine.is.gpu" level="DEBUG" additivity="false">
+      <appender-ref ref="CONSOLE"/>
+    </logger>
     <root level="INFO">
       <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="dev">
+    <include resource="appender/file-error-appender.xml"/>
+    <include resource="appender/file-warn-appender.xml"/>
+    <include resource="appender/file-info-appender.xml"/>
+    <include resource="appender/file-debug-appender.xml"/>
+    <root level="DEBUG">
+      <appender-ref ref="FILE-ERROR"/>
+      <appender-ref ref="FILE-WARN"/>
+      <appender-ref ref="FILE-INFO"/>
+      <appender-ref ref="FILE-DEBUG"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="prod,was1,was2">
+    <include resource="appender/file-error-appender.xml"/>
+    <include resource="appender/file-warn-appender.xml"/>
+    <include resource="appender/file-info-appender.xml"/>
+    <root level="INFO">
+      <appender-ref ref="FILE-ERROR"/>
+      <appender-ref ref="FILE-WARN"/>
       <appender-ref ref="FILE-INFO"/>
     </root>
   </springProfile>
