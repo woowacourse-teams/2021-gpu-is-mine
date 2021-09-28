@@ -2,7 +2,7 @@ import { rest } from "msw";
 import { membersMeResponse, logs } from "../__fixtures__";
 import { API_ENDPOINT, BASE_URL } from "../constants";
 import { MemberLoginRequest, MemberLoginResponse } from "../types";
-import { emailValidator, passwordValidator } from "../domains/MemberSignupForm/validator";
+import { emailValidator, passwordValidator } from "../features/member/validator/validator";
 
 const handlers = [
   rest.post(API_ENDPOINT.MEMBER.SIGNUP, (_, res, ctx) => res(ctx.status(201))),
