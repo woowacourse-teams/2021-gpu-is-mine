@@ -4,7 +4,7 @@
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>WARN</level>
       <onMatch>ACCESS</onMatch>
-      <onMisMatch>DENY</onMisMatch>
+      <onMismatch>DENY</onMismatch>
     </filter>
     <encoder>
       <pattern>${LOG_PATTERN}</pattern>
