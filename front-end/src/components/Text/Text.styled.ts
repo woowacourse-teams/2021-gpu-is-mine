@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import type { Size, FontWeight, Color } from "./Text";
-import { srOnly as srOnlyStyle, notSrOnly as notSrOnlyStyle } from "../../styles";
+import { srOnly as srOnlyStyle } from "../../styles";
 
 const getSizeStyle = (size: Size) => {
   const style = {
@@ -86,5 +86,5 @@ export const StyledText = styled.p<{
 
   ${({ color }) => color && getColorStyle(color)}
 
-  ${({ srOnly }) => (srOnly ? srOnlyStyle : notSrOnlyStyle)}
+  ${({ srOnly }) => srOnly && srOnlyStyle}
 `;
