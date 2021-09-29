@@ -1,16 +1,6 @@
 import styled, { css } from "styled-components";
-
-type Size = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
-
-type FontWeight = "thin" | "light" | "regular" | "medium" | "bold" | "black";
-
-type Color = "dark" | "light" | "error";
-
-export interface StyledTextProps {
-  size: Size;
-  weight: FontWeight;
-  color?: Color;
-}
+import type { Size, FontWeight, Color } from "./Text";
+import { srOnly as srOnlyStyle, notSrOnly as notSrOnlyStyle } from "../../styles";
 
 const getSizeStyle = (size: Size) => {
   const style = {
@@ -84,10 +74,17 @@ const getColorStyle = (color: Color) => {
   return style[color];
 };
 
-export const StyledText = styled.p<StyledTextProps>`
+export const StyledText = styled.p<{
+  size: Size;
+  weight: FontWeight;
+  color?: Color;
+  srOnly: boolean;
+}>`
   ${({ size }) => getSizeStyle(size)}
 
   ${({ weight }) => getFontWeightStyle(weight)}
 
   ${({ color }) => color && getColorStyle(color)}
+
+  ${({ srOnly }) => (srOnly ? srOnlyStyle : notSrOnlyStyle)}
 `;
