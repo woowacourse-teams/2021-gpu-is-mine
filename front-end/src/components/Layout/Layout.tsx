@@ -3,16 +3,16 @@ import {
   StyledLayout,
   HeaderContainer,
   SubHeaderContainer,
-  NavContainer,
-  ContentContainer,
+  AsideContainer,
+  MainContainer,
   FooterContainer,
 } from "./Layout.styled";
 
 interface LayoutProps {
   Header: ReactNode;
   SubHeader: ReactNode;
-  Navigation: ReactNode;
-  Content: ReactNode;
+  Aside: ReactNode;
+  Main: ReactNode;
   Footer?: ReactNode;
   className?: string;
 }
@@ -20,16 +20,16 @@ interface LayoutProps {
 const Layout = ({
   Header,
   SubHeader,
-  Navigation,
-  Content,
+  Aside,
+  Main,
   Footer = <span>All Rights Reserved gpu-is-mine</span>,
   className,
 }: LayoutProps) => (
   <StyledLayout className={className}>
     <HeaderContainer>{Header}</HeaderContainer>
     <SubHeaderContainer>{SubHeader}</SubHeaderContainer>
-    <NavContainer>{Navigation}</NavContainer>
-    <ContentContainer>{Content}</ContentContainer>
+    <AsideContainer>{Aside}</AsideContainer>
+    <MainContainer>{Main}</MainContainer>
     <FooterContainer>{Footer}</FooterContainer>
   </StyledLayout>
 );

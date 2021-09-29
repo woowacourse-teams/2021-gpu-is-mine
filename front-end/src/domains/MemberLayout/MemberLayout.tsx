@@ -23,8 +23,8 @@ const MemberLayout = ({ children, ...rest }: MemberLayoutProps) => (
         </LogoContainer>
       </Link>
     }
-    Navigation={null}
-    Content={children}
+    Aside={null}
+    Main={children}
   />
 );
 

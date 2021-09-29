@@ -25,7 +25,7 @@ export const SubHeaderContainer = styled.section`
   }
 `;
 
-export const NavContainer = styled.aside`
+export const AsideContainer = styled.aside`
   display: none;
 
   ${up("tablet")} {
@@ -36,7 +36,7 @@ export const NavContainer = styled.aside`
   }
 `;
 
-export const ContentContainer = styled.main`
+export const MainContainer = styled.main`
   grid-row: 4 / 5;
   overflow-y: auto;
   padding: 1rem;

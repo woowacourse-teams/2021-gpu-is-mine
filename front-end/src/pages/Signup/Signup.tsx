@@ -1,10 +1,10 @@
 import { MemberLayout } from "../../domains/Member";
 import { StyledSignupForm } from "./Signup.styled";
 
-const Login = () => (
+const Signup = () => (
   <MemberLayout>
     <StyledSignupForm />
   </MemberLayout>
 );
 
-export default Login;
+export default Signup;
