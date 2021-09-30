@@ -1,19 +1,19 @@
-import { useEffect } from "react";
+import { HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
-import { useAuth, useMoveToPage, useForm, getFormProps, getInputProps } from "../../hooks";
-import { Input, Alert, Text, Loading } from "../../components";
+import { useForm, getFormProps, getInputProps } from "../../../hooks";
+import { Input, Text } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
-import { PATH } from "../../constants";
+import { PATH } from "../../../constants";
 import {
   emailValidator,
   passwordValidator,
   passwordConfirmValidator,
   nameValidator,
-} from "./validator";
+} from "../validator/validator";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { selectLoginStatus, signup } from "../memberSlice";
 
-interface MemberSignupFormProps {
-  className?: string;
-}
+type MemberSignupFormProps = HTMLAttributes<HTMLFormElement>;
 
 type Values = {
   email: string;
@@ -22,19 +22,20 @@ type Values = {
   name: string;
 };
 
-const MemberSignupForm = (props: MemberSignupFormProps) => {
-  const { signup, isLoading, isSucceed, isFailed, done } = useAuth();
+const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
+  const appDispatch = useAppDispatch();
+  const { isLoading } = useAppSelector(selectLoginStatus);
 
-  useEffect(() => done, [done]);
-
-  const handleSubmit = ({ email, password, name }: Values) =>
-    signup({
-      email,
-      password,
-      labId: 1,
-      name,
-      memberType: "USER",
-    });
+  const handleSubmit = ({ email, password, name }: Values) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    appDispatch(
+      signup({
+        email,
+        password,
+        name,
+      })
+    );
+  };
 
   const { state, dispatch } = useForm<Values>({
     email: "",
@@ -42,6 +43,8 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     passwordConfirm: "",
     name: "",
   });
+
+  const disabled = isLoading || !state.isFormValid;
 
   const formProps = getFormProps({ state, dispatch, handleSubmit });
 
@@ -77,29 +80,13 @@ const MemberSignupForm = (props: MemberSignupFormProps) => {
     validator: nameValidator,
   });
 
-  const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
-
   return (
-    <StyledForm {...formProps} {...props} aria-label="signup-form">
-      {isLoading && <Loading size="lg" />}
-
-      {isSucceed && (
-        <Alert aria-label="succeed-alert" onConfirm={moveToLoginPage}>
-          <Text>회원가입에 성공하였습니다.</Text>
-        </Alert>
-      )}
-
-      {isFailed && (
-        <Alert aria-label="회원가입 실패 알림창" onConfirm={done}>
-          <Text>회원가입에 실패하였습니다.</Text>
-        </Alert>
-      )}
-
+    <StyledForm {...formProps} {...rest} aria-label="signup-form">
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gmail.com" />
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
-      <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={isLoading}>
+      <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={disabled}>
         제출
       </SubmitButton>
       <Link to={PATH.MEMBER.LOGIN}>

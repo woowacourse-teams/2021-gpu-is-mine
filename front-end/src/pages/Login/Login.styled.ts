@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { MemberLoginForm } from "../../domains/Member";
+import { MemberLoginForm } from "../../features/member";
 
 export const Container = styled.div`
   margin: auto;
   width: 100%;
+  position: relative;
 `;
 
 export const Paragraph = styled.p`

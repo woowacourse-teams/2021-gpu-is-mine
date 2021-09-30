@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { GpuIcon, Text } from "../../components";
+import { GpuIcon, Text } from "../../../components";
 import { StyledLayout, LogoContainer } from "./MemberLayout.styled";
-import { PATH } from "../../constants";
+import { PATH } from "../../../constants";
 
 interface MemberLayoutProps {
   children: ReactNode;

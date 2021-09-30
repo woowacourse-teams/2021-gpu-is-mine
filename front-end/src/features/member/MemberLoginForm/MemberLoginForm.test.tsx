@@ -1,7 +1,7 @@
-import { render, screen, userEvent } from "../../__test__/test-utils";
-import { PATH } from "../../constants";
+import { render, screen, userEvent, waitFor } from "../../../__test__/test-utils";
+import { PATH } from "../../../constants";
 import MemberLoginForm from "./MemberLoginForm";
-import { emailValidator, passwordValidator } from "../MemberSignupForm/validator";
+import { emailValidator, passwordValidator } from "../validator/validator";
 
 describe("Member/LoginForm", () => {
   const setup = () => {
@@ -26,7 +26,6 @@ describe("Member/LoginForm", () => {
       passwordInput,
       loginButton,
       signupLink,
-      alert,
     };
   };
 
@@ -107,7 +106,7 @@ describe("Member/LoginForm", () => {
   });
 
   describe("제출", () => {
-    test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
+    test("이메일과 비밀번호를 입력하여 로그인 버튼을 클릭하면 로그인 버튼이 disabled 된다", async () => {
       const { emailInput, passwordInput, loginButton, loginForm } = setup();
 
       const validEmail = "test@dd.com";
@@ -121,14 +120,13 @@ describe("Member/LoginForm", () => {
       userEvent.type(passwordInput, invalidPassword);
       userEvent.tab();
 
-      userEvent.click(loginButton);
-
       expect(loginForm).toHaveFormValues({ email: validEmail, password: invalidPassword });
 
-      const alert = await screen.findByRole("alertdialog");
+      userEvent.click(loginButton);
 
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
+      expect(loginButton).toBeDisabled();
+
+      await waitFor(() => expect(loginButton).toBeEnabled());
     });
   });
 });

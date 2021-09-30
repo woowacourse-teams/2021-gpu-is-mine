@@ -1,9 +1,10 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth, useForm, getInputProps, getFormProps } from "../../hooks";
-import { Alert, Input, Text, Loading } from "../../components";
+import { useForm, getInputProps, getFormProps } from "../../../hooks";
+import { Input, Text } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
-import { PATH } from "../../constants";
+import { PATH } from "../../../constants";
+import { login, selectLoginStatus } from "../memberSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface MemberLoginFormProps {
   className?: string;
@@ -15,16 +16,16 @@ type Values = {
 };
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
-  const { login, isLoading, isFailed, done } = useAuth();
+  const appDispatch = useAppDispatch();
 
-  useEffect(() => done, [done]);
-
-  const { state, dispatch } = useForm<Values>({ email: "", password: "" });
+  const { isLoading } = useAppSelector(selectLoginStatus);
 
   const handleSubmit = ({ email, password }: Values) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    login({ email, password });
+    appDispatch(login({ email, password }));
   };
+
+  const { state, dispatch } = useForm<Values>({ email: "", password: "" });
 
   const formProps = getFormProps({ state, dispatch, handleSubmit });
 
@@ -44,11 +45,11 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
 
   return (
     <StyledForm {...formProps} aria-label="로그인" className={className}>
-      {isLoading && <Loading size="lg" />}
-      {isFailed && <Alert onConfirm={done}>이메일 또는 비밀번호를 확인해주세요</Alert>}
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
-      <SubmitButton color="secondary">로그인</SubmitButton>
+      <SubmitButton color="secondary" disabled={isLoading}>
+        로그인
+      </SubmitButton>
       <Link to={PATH.MEMBER.SIGNUP}>
         <Text size="sm" className="signup">
           아직 회원이 아니신가요?

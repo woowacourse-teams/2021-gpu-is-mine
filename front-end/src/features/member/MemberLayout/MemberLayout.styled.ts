@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { Layout } from "../../components";
-import { ContentContainer, FooterContainer } from "../../components/Layout/Layout.styled";
+import { Layout } from "../../../components";
+import { ContentContainer, FooterContainer } from "../../../components/Layout/Layout.styled";
 
 export const StyledLayout = styled(Layout)`
   background-color: var(--primary-900);

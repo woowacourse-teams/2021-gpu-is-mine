@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
-import { Button } from "../../components";
+import { Button } from "../../../components";
 
 export const StyledForm = styled.form`
   width: 100%;
@@ -20,13 +20,13 @@ export const StyledForm = styled.form`
     margin: auto;
   }
 
-  .signup-form__login {
+  .signup {
     margin-top: 0.5rem;
     color: var(--primary-800);
     text-align: center;
   }
 
-  .signup-form__login:hover {
+  .signup:hover {
     text-decoration: underline;
   }
 `;
