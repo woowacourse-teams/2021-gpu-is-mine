@@ -1,10 +1,8 @@
 <included>
   <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_PATH}/${INFO_LOG_FILE_NAME}.log</file>
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>INFO</level>
-      <onMatch>ACCESS</onMatch>
-      <onMismatch>DENY</onMismatch>
     </filter>
     <encoder>
       <pattern>${LOG_PATTERN}</pattern>
