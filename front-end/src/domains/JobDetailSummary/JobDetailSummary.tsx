@@ -1,5 +1,9 @@
 import { Text } from "../../components";
-import { StyledJobDetailSummary, Anchor } from "./JobDetailSummary.styled";
+import {
+  StyledJobDetailSummary,
+  StyledJobDetailSummaryList,
+  Anchor,
+} from "./JobDetailSummary.styled";
 import { JobViewResponse } from "../../types";
 
 interface JobDetailSummaryProps {
@@ -13,48 +17,38 @@ const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
   return (
     <StyledJobDetailSummary {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        요약 정보
+        {detail.name}
       </Text>
-      <div>
-        <Text as="h4" weight="bold">
-          Job 이름
-        </Text>
-        <Text>{detail.name}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
+      <StyledJobDetailSummaryList>
+        <Text as="dt" weight="bold">
           Job 상태
         </Text>
-        <Text>{detail.status}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
+        <Text as="dd">{detail.status}</Text>
+
+        <Text as="dt" weight="bold">
           Job 등록자
         </Text>
-        <Text>{detail.memberName}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
+        <Text as="dd">{detail.memberName}</Text>
+
+        <Text as="dt" weight="bold">
           할당된 서버
         </Text>
-        <Text>{detail.gpuServerName}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
+        <Text as="dd">{detail.gpuServerName}</Text>
+
+        <Text as="dt" weight="bold">
           {detail.status === "RUNNING" ? "" : "예상 "}실행시간
         </Text>
-        <Text>{detail.expectedTime}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
+        <Text as="dd">{detail.expectedTime}</Text>
+
+        <Text as="dt" weight="bold">
           DockerHub URL
         </Text>
-        <Text>
+        <Text as="dd">
           <Anchor target="_blank" href={url} rel="noreferrer">
             {url}
           </Anchor>
         </Text>
-      </div>
+      </StyledJobDetailSummaryList>
     </StyledJobDetailSummary>
   );
 };
