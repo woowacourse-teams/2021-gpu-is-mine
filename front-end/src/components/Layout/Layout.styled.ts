@@ -12,11 +12,11 @@ export const StyledLayout = styled.div`
   }
 `;
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.header`
   grid-row: 1 / 2;
 `;
 
-export const SubHeaderContainer = styled.div`
+export const SubHeaderContainer = styled.section`
   grid-row: 2 / 3;
 
   ${up("tablet")} {
@@ -25,7 +25,7 @@ export const SubHeaderContainer = styled.div`
   }
 `;
 
-export const NavContainer = styled.div`
+export const AsideContainer = styled.aside`
   display: none;
 
   ${up("tablet")} {
@@ -36,7 +36,7 @@ export const NavContainer = styled.div`
   }
 `;
 
-export const ContentContainer = styled.div`
+export const MainContainer = styled.main`
   grid-row: 4 / 5;
   overflow-y: auto;
   padding: 1rem;
@@ -49,7 +49,7 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const FooterContainer = styled.div`
+export const FooterContainer = styled.footer`
   grid-row: 5 / 6;
   background-color: var(--primary-50);
   width: 100%;

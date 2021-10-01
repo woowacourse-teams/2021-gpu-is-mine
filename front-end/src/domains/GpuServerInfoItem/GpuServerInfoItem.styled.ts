@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
-import { VerticalBox } from "../../components";
 
-export const StyledGpuServerInfoItem = styled(VerticalBox)`
+export const StyledGpuServerInfoItem = styled.li`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   border-bottom: 2px solid var(--primary-200);
   border-radius: 0.5rem;

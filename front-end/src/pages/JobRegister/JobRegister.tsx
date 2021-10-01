@@ -10,10 +10,10 @@ const JobRegister = () => {
 
   return (
     <Layout
-      Header={<Header labName={labName} />}
+      Header={<Header as="div" labName={labName} />}
       SubHeader={<SubHeader />}
-      Navigation={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
-      Content={<JobRegisterForm labId={labId} />}
+      Aside={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
+      Main={<JobRegisterForm labId={labId} />}
     />
   );
 };

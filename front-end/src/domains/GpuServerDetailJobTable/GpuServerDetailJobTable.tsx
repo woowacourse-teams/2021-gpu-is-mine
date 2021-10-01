@@ -10,7 +10,7 @@ interface GpuServerDetailJobTableProps {
 
 const GpuServerDetailJobTable = ({ jobs, ...rest }: GpuServerDetailJobTableProps) => (
   <StyledGpuServerDetailJobTable {...rest}>
-    <Text weight="bold" size="lg">
+    <Text as="h3" weight="bold" size="lg">
       Job 목록
     </Text>
     <JobTable jobs={jobs} rowCountPerPage={10} />

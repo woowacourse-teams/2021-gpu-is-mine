@@ -1,10 +1,19 @@
+import { Text } from "../../components";
 import { MemberLayout } from "../../domains/Member";
+import { usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";
 
-const Login = () => (
-  <MemberLayout>
-    <StyledSignupForm />
-  </MemberLayout>
-);
+const Signup = () => {
+  const heading = usePathTitle();
 
-export default Login;
+  return (
+    <MemberLayout>
+      <Text as="h2" srOnly>
+        {heading}
+      </Text>
+      <StyledSignupForm />
+    </MemberLayout>
+  );
+};
+
+export default Signup;
