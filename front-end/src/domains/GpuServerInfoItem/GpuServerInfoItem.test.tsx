@@ -13,7 +13,7 @@ import { simpleGpuServer } from "../../__fixtures__/gpuServersResponses";
 const refresh = jest.fn();
 
 jest.mock("../../hooks/useHistory/useHistory.ts", () => ({
-  ...jest.requireActual("../../hooks/useHistory/useHistory.ts"),
+  ...jest.requireActual<Record<string, unknown>>("../../hooks/useHistory/useHistory.ts"),
   useMoveToPage: jest.fn<void, [string]>(),
 }));
 
