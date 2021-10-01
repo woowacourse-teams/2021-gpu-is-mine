@@ -20,6 +20,7 @@ export const ConfirmWrapper = styled.div`
 
     word-break: break-all;
     padding: 1rem 2rem;
+    user-select: none;
   }
 
   .button-wrapper {
