@@ -1,11 +1,25 @@
-import { render, screen, userEvent } from "../../__test__/test-utils";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { PATH } from "../../constants";
+import { AuthProvider, PublicRoute } from "../../components";
 import MemberLoginForm from "./MemberLoginForm";
 import { emailValidator, passwordValidator } from "../MemberSignupForm/validator";
+import { ThemeProvider } from "../../styles";
 
 describe("Member/LoginForm", () => {
   const setup = () => {
-    render(<MemberLoginForm />);
+    render(
+      <ThemeProvider>
+        <MemoryRouter initialEntries={["/"]}>
+          <AuthProvider>
+            <PublicRoute exact path="/">
+              <MemberLoginForm />
+            </PublicRoute>
+          </AuthProvider>
+        </MemoryRouter>
+      </ThemeProvider>
+    );
 
     const loginForm = screen.getByRole("form", { name: /로그인/ });
 
@@ -26,7 +40,6 @@ describe("Member/LoginForm", () => {
       passwordInput,
       loginButton,
       signupLink,
-      alert,
     };
   };
 
@@ -125,10 +138,42 @@ describe("Member/LoginForm", () => {
 
       expect(loginForm).toHaveFormValues({ email: validEmail, password: invalidPassword });
 
-      const alert = await screen.findByRole("alertdialog");
+      const alert = await screen.findByRole("alertdialog", { name: /alert/ });
 
       expect(alert).toBeInTheDocument();
       expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
+    });
+
+    test("유효한 이메일과 비밀번호를 입력하면 Alert가 표시되지 않는다", async () => {
+      const { emailInput, passwordInput, loginButton } = setup();
+
+      // 유효한 이메일과 비밀번호를 정의한다
+      const validEmail = "test@dd.com";
+      const validPassword = "abcd1234!";
+      expect(emailValidator(validEmail)).toBe("");
+      expect(passwordValidator(validPassword)).toBe("");
+
+      // 이메일과 비밀번호를 입력한다
+      userEvent.type(emailInput, validEmail);
+      userEvent.tab();
+      userEvent.type(passwordInput, validPassword);
+      userEvent.tab();
+      userEvent.click(loginButton);
+      expect(loginButton).toBeDisabled();
+
+      // 유효하지 않은 이메일과 비밀번호를 나타내는 Alert가 표시되지 않는 것을 확인한다
+      expect(screen.queryByRole("alertdialog", { name: /alert/ })).not.toBeInTheDocument();
+
+      // 비동기 api 호출 중 로딩 스피너 표시
+      await waitFor(() => expect(screen.queryByRole("progressbar")).toBeInTheDocument());
+
+      // 비동기 api 호출 완료 후 로딩 스피너 제거
+      await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
+
+      // 로그인이 완료되면 PublicRoute에 의해 로그인폼이 렌더링되지 않는다
+      await waitFor(() => {
+        expect(screen.queryByRole("form", { name: /로그인/ })).not.toBeInTheDocument();
+      });
     });
   });
 });

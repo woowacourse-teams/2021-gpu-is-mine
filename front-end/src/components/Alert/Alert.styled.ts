@@ -22,6 +22,7 @@ export const ContentWrapper = styled.div`
 
   word-break: break-all;
   padding: 1rem 2rem;
+  user-select: none;
 `;
 
 export const ButtonWrapper = styled.div`

@@ -1,35 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <property name="LOG_PATH" value="logs"/>
-  <property name="LOG_FILE_NAME" value="log"/>
+  <property name="BACKUP_PATH" value="backup"/>
+  <property name="ACCESS_LOG_FILE_NAME" value="access"/>
   <property name="LOG_PATTERN"
     value="%n###### HTTP Request ######%n%fullRequest%n%n###### HTTP Response ######%n%fullResponse%n%n"/>
 
-  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+  <springProfile name="local,test">
+    <include resource="appender/console-appender.xml"/>
+    <appender-ref ref="CONSOLE"/>
+  </springProfile>
 
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>${LOG_PATTERN}</pattern>
-    </encoder>
-  </appender>
-  <appender-ref ref="CONSOLE"/>
+  <springProfile name="dev,prod,was1,was2">
+    <include resource="appender/file-access-appender.xml"/>
+    <appender-ref ref="FILE-ACCESS"/>
+  </springProfile>
 
-  <configuration>
-    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
-      <encoder>
-        <pattern>${LOG_PATTERN}</pattern>
-      </encoder>
-      <rollingPolicy
-        class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
-        <timeBasedFileNamingAndTriggeringPolicy
-          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-          <maxFileSize>10MB</maxFileSize>
-        </timeBasedFileNamingAndTriggeringPolicy>
-        <maxHistory>30</maxHistory>
-      </rollingPolicy>
-    </appender>
-    <appender-ref ref="FILE"/>
-  </configuration>
 </configuration>
