@@ -20,7 +20,7 @@ const Alert = ({ dimmedColor, isOpen = true, close, children, onConfirm }: Alert
   return isOpen ? (
     <Portal>
       <Dimmer color={dimmedColor}>
-        <StyledAlert role="dialog" aria-label="alert">
+        <StyledAlert role="alertdialog" aria-label="alert">
           <ContentWrapper>{children}</ContentWrapper>
           <ButtonWrapper>
             <StyledButton aria-label="confirm" color="secondary-light" onClick={handleConfirm}>

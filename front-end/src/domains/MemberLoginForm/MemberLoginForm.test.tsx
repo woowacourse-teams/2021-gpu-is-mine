@@ -138,7 +138,7 @@ describe("Member/LoginForm", () => {
 
       expect(loginForm).toHaveFormValues({ email: validEmail, password: invalidPassword });
 
-      const alert = await screen.findByRole("dialog", { name: /alert/ });
+      const alert = await screen.findByRole("alertdialog", { name: /alert/ });
 
       expect(alert).toBeInTheDocument();
       expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
@@ -162,7 +162,7 @@ describe("Member/LoginForm", () => {
       expect(loginButton).toBeDisabled();
 
       // 유효하지 않은 이메일과 비밀번호를 나타내는 Alert가 표시되지 않는 것을 확인한다
-      expect(screen.queryByRole("dialog", { name: /alert/ })).not.toBeInTheDocument();
+      expect(screen.queryByRole("alertdialog", { name: /alert/ })).not.toBeInTheDocument();
 
       // 비동기 api 호출 중 로딩 스피너 표시
       await waitFor(() => expect(screen.queryByRole("progressbar")).toBeInTheDocument());

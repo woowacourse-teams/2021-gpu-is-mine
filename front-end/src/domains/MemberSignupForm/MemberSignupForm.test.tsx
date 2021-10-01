@@ -192,7 +192,7 @@ describe("Member/SignupForm", () => {
         name: validName,
       });
 
-      const alert = await screen.findByRole("dialog", { name: /alert/i });
+      const alert = await screen.findByRole("alertdialog", { name: /alert/i });
 
       expect(alert).toBeInTheDocument();
     });
