@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-  <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
   <property name="LOG_PATH" value="logs"/>
-  <property name="LOG_FILE_NAME" value="log"/>
+  <property name="BACKUP_PATH" value="backup"/>
+  <property name="DEBUG_LOG_FILE_NAME" value="debug"/>
+  <property name="INFO_LOG_FILE_NAME" value="info"/>
+  <property name="WARN_LOG_FILE_NAME" value="warn"/>
+  <property name="ERROR_LOG_FILE_NAME" value="error"/>
   <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss} [%logger{0}:%line] - %msg%n"/>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${LOG_PATTERN}</pattern>
-    </encoder>
-    <rollingPolicy
-      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <maxFileSize>10MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-  </appender>
+  <springProfile name="local,test">
+    <include resource="appender/console-appender.xml"/>
+    <logger name="mine.is.gpu" level="DEBUG" additivity="false">
+      <appender-ref ref="CONSOLE"/>
+    </logger>
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
 
-  <root level="${LOG_LEVEL}">
-    <appender-ref ref="FILE"/>
-  </root>
+  <springProfile name="dev">
+    <include resource="appender/file-error-appender.xml"/>
+    <include resource="appender/file-warn-appender.xml"/>
+    <include resource="appender/file-info-appender.xml"/>
+    <include resource="appender/file-debug-appender.xml"/>
+    <root level="DEBUG">
+      <appender-ref ref="FILE-ERROR"/>
+      <appender-ref ref="FILE-WARN"/>
+      <appender-ref ref="FILE-INFO"/>
+      <appender-ref ref="FILE-DEBUG"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="prod,was1,was2">
+    <include resource="appender/file-error-appender.xml"/>
+    <include resource="appender/file-warn-appender.xml"/>
+    <include resource="appender/file-info-appender.xml"/>
+    <root level="INFO">
+      <appender-ref ref="FILE-ERROR"/>
+      <appender-ref ref="FILE-WARN"/>
+      <appender-ref ref="FILE-INFO"/>
+    </root>
+  </springProfile>
+
 </configuration>

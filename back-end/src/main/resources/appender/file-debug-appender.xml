@@ -1,0 +1,20 @@
+<included>
+  <appender name="FILE-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/${DEBUG_LOG_FILE_NAME}.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+    <rollingPolicy
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/${BACKUP_PATH}/%d{yyyy-MM-dd}/${DEBUG_LOG_FILE_NAME}-%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+  </appender>
+</included>
