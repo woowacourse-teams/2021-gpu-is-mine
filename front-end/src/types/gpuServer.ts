@@ -26,7 +26,7 @@ export type GpuServerViewDetailResponse = GpuServerDetail;
 
 type RunningJob = { id: number; name: string; status: "RUNNING"; memberId: number };
 
-type SimpleGpuServer = {
+export type SimpleGpuServer = {
   id: number;
   serverName: string;
   isOn: boolean;

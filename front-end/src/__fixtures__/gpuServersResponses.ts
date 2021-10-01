@@ -2,6 +2,7 @@ import {
   GpuServerViewDetailResponse,
   GpuServerViewResponse,
   GpuServerViewResponses,
+  SimpleGpuServer,
 } from "../types";
 
 export const gpuServersResponses: GpuServerViewResponses = {
@@ -101,6 +102,8 @@ export const gpuServerResponse: GpuServerViewResponse = {
   waitingJobCount: 4,
   totalExpectedTime: 100,
 };
+
+export const simpleGpuServer: SimpleGpuServer = gpuServerResponse;
 
 export const gpuServerDetailResponse: GpuServerViewDetailResponse = {
   id: 1,
