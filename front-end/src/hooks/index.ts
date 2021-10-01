@@ -6,6 +6,7 @@ export { default as useBreakpoints } from "./useBreakpoints/useBreakpoints";
 export { default as useFetch } from "./useFetch/useFetch";
 export { default as useForm, getFormProps, getInputProps, getRadioProps } from "./useForm/useForm";
 export * from "./useHistory/useHistory";
+export { default as usePathTitle } from "./usePathTitle/usePathTitle";
 export { default as useInterval } from "./useInterval/useInterval";
 export { default as usePagination } from "./usePagination/usePagination";
 export { default as useTable } from "./useTable/useTable";

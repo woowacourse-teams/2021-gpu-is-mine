@@ -45,5 +45,7 @@ export const LogoutMenu = styled(Menu)`
 
   button {
     text-align: left;
+    width: 100%;
+    display: block;
   }
 `;
