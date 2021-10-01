@@ -11,13 +11,14 @@ import {
   Dimmer,
 } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { GpuServerViewResponse, MemberType } from "../../types";
+import { SimpleGpuServer, MemberType } from "../../types";
 import { PATH } from "../../constants";
 
-interface GpuServerInfoItemProps extends GpuServerViewResponse {
+interface GpuServerInfoItemProps extends SimpleGpuServer {
   memberType: MemberType;
   labId: number;
   refresh: () => Promise<unknown>;
+  className?: string;
 }
 
 const GpuServerInfoItem = ({
@@ -30,6 +31,7 @@ const GpuServerInfoItem = ({
   memberType,
   waitingJobCount,
   refresh,
+  className,
 }: GpuServerInfoItemProps) => {
   const runningJobName = runningJobs[0]?.name || "N/A";
 
@@ -61,7 +63,10 @@ const GpuServerInfoItem = ({
       {isFailed && (
         <Alert onConfirm={done}>
           <Text size="md" weight="regular">
-            {`${serverName} 삭제에 실패하였습니다.`}
+            {
+              /* TODO: 에러에 따라 구체적인 디렉션 추가 */
+              `${serverName} 삭제에 실패하였습니다.`
+            }
           </Text>
         </Alert>
       )}
@@ -72,7 +77,7 @@ const GpuServerInfoItem = ({
         </Text>
       </Confirm>
 
-      <StyledGpuServerInfoItem>
+      <StyledGpuServerInfoItem className={className}>
         <div className="gpu-server-title-wrapper">
           <ServerIcon className="gpu-server-icon" />
           <Text className="gpu-server-title" size="md" weight="bold">
