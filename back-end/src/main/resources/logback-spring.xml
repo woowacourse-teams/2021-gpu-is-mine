@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-  <!--  <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>-->
   <property name="LOG_PATH" value="logs"/>
   <property name="BACKUP_PATH" value="backup"/>
   <property name="DEBUG_LOG_FILE_NAME" value="debug"/>
