@@ -1,5 +1,5 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { useMoveToPage } from "../../hooks";
@@ -21,7 +21,7 @@ describe("GpuServer/InfoItem", () => {
   const setup = (memberType: MemberType = "USER") => {
     render(
       <ThemeProvider>
-        <MemoryRouter initialEntries={[`${PATH.GPU_SERVER.VIEW}/${simpleGpuServer.id}`]}>
+        <MemoryRouter initialEntries={[`${PATH.GPU_SERVER.VIEW}/${String(simpleGpuServer.id)}`]}>
           <GpuServerInfoItem
             {...simpleGpuServer}
             labId={1}
@@ -43,7 +43,7 @@ describe("GpuServer/InfoItem", () => {
   test("상세 버튼을 클릭하면 상세 화면으로 이동한다", async () => {
     const { detailButton } = setup();
 
-    userEvent.click(detailButton, { button: 1 });
+    userEvent.click(detailButton);
 
     expect(useMoveToPage).toHaveBeenCalledWith(`${PATH.GPU_SERVER.VIEW}/${simpleGpuServer.id}`);
   });
@@ -53,7 +53,7 @@ describe("GpuServer/InfoItem", () => {
 
     const deleteButton = screen.getByRole("button", { name: /삭제/, hidden: true });
 
-    userEvent.click(deleteButton, { button: 1 });
+    userEvent.click(deleteButton);
 
     const confirm = await screen.findByRole("dialog", { name: /confirm/i });
 
@@ -61,30 +61,54 @@ describe("GpuServer/InfoItem", () => {
     expect(confirm).toHaveTextContent(`${simpleGpuServer.serverName}을(를) 정말 삭제하시겠습니까?`);
   });
 
+  test("삭제 버튼을 클릭하여 발생한 Confirm의 취소 버튼을 클릭하면 Confirm이 표시되지 않는다", async () => {
+    setup("MANAGER");
+
+    // 삭제 버튼을 클릭한다
+    const deleteButton = screen.getByRole("button", { name: /삭제/, hidden: true });
+    userEvent.click(deleteButton);
+
+    // Confirm창이 표시된다
+    expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
+
+    // Confirm 창의 취소 버튼을 클릭한다
+    const confirmButton = screen.getByRole("button", { name: /취소/, hidden: true });
+    userEvent.click(confirmButton);
+
+    // Confirm창이 닫힌 것을 확인한다
+    expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
+  });
+
   test("삭제 버튼을 클릭하여 발생한 Confirm의 확인 버튼을 클릭하면 Alert가 표시된다", async () => {
     setup("MANAGER");
 
     // 삭제 버튼을 클릭한다
     const deleteButton = screen.getByRole("button", { name: /삭제/, hidden: true });
-    userEvent.click(deleteButton, { button: 1 });
+    userEvent.click(deleteButton);
 
     // Confirm창이 표시된다
     expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
 
     // Confirm 창의 확인 버튼을 클릭한다
     const confirmButton = screen.getByRole("button", { name: /확인/, hidden: true });
-    userEvent.click(confirmButton, { button: 1 });
+    userEvent.click(confirmButton);
 
     // Confirm창이 닫힌 것을 확인한다
     expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
+
+    // 로딩 컴포넌트가 표시되었다가 사라진다
+    expect(await screen.findByRole("progressbar")).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
 
     // 삭제에 성공하였다는 메세지를 가진 Alert창이 표시된다
     const alert = await screen.findByText(`${simpleGpuServer.serverName}을(를) 삭제하였습니다.`);
     expect(alert).toBeInTheDocument();
 
     // Alert창의 확인 버튼을 클릭한다
-    userEvent.click(screen.getByRole("button", { name: /confirm/ }), { button: 1 });
+    userEvent.click(screen.getByRole("button", { name: /confirm/ }));
     expect(refresh).toHaveBeenCalled();
+
+    // TODO: Alert창 닫히는거 확인
   });
 
   // TODO: 에러에 따른 구체적인 디렉션 추가 필요
@@ -97,41 +121,27 @@ describe("GpuServer/InfoItem", () => {
 
     // 삭제 버튼을 클릭한다
     const deleteButton = screen.getByRole("button", { name: /삭제/, hidden: true });
-    userEvent.click(deleteButton, { button: 1 });
+    userEvent.click(deleteButton);
 
     // Confirm창이 표시된다
     expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
 
     // Confirm 창의 확인 버튼을 클릭한다
     const confirmButton = screen.getByRole("button", { name: /확인/, hidden: true });
-    userEvent.click(confirmButton, { button: 1 });
+    userEvent.click(confirmButton);
 
     // Confirm창이 닫힌 것을 확인한다
     expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
+
+    // 로딩 컴포넌트가 표시되었다가 사라진다
+    expect(await screen.findByRole("progressbar")).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
 
     // 삭제에 실패하였다는 메세지를 가진 Alert창이 표시된다
     const alert = await screen.findByText(`${simpleGpuServer.serverName} 삭제에 실패하였습니다.`);
     expect(alert).toBeInTheDocument();
 
     // Alert창의 확인 버튼을 클릭한다
-    userEvent.click(screen.getByRole("button", { name: /confirm/ }), { button: 1 });
-  });
-
-  test("삭제 버튼을 클릭하여 발생한 Confirm의 취소 버튼을 클릭하면 Confirm이 표시되지 않는다", async () => {
-    setup("MANAGER");
-
-    // 삭제 버튼을 클릭한다
-    const deleteButton = screen.getByRole("button", { name: /삭제/, hidden: true });
-    userEvent.click(deleteButton, { button: 1 });
-
-    // Confirm창이 표시된다
-    expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
-
-    // Confirm 창의 취소 버튼을 클릭한다
-    const confirmButton = screen.getByRole("button", { name: /취소/, hidden: true });
-    userEvent.click(confirmButton, { button: 1 });
-
-    // Confirm창이 닫힌 것을 확인한다
-    expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
+    userEvent.click(screen.getByRole("button", { name: /confirm/ }));
   });
 });
