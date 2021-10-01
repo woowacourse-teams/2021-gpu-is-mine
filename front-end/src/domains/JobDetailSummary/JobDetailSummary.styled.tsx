@@ -6,7 +6,7 @@ export const StyledJobDetailSummary = styled.div`
   row-gap: 0.75rem;
 `;
 
-export const StyledJobDetailSummaryList = styled.dl`
+export const SummaryList = styled.dl`
   display: flex;
   flex-direction: column;
   row-gap: 0.75rem;

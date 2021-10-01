@@ -3,7 +3,7 @@ import { getCurrentJob, getWaitingJob } from "./useGpuServerDetailSummary";
 import {
   ServerNameBox,
   StyledGpuServerDetailSummary,
-  StyledGpuServerDetailSummaryList,
+  SummaryList,
 } from "./GpuServerDetailSummary.styled";
 import { GpuServerDetail } from "../../types";
 
@@ -32,7 +32,7 @@ const GpuServerDetailSummary = ({
         aria-label={`서버 상태: ${detail.isOn ? "ON" : "OFF"}`}
       />
     </ServerNameBox>
-    <StyledGpuServerDetailSummaryList>
+    <SummaryList>
       <Text as="dt" weight="bold">
         RAM 용량
       </Text>
@@ -62,7 +62,7 @@ const GpuServerDetailSummary = ({
         대기 중인 Job 개수
       </Text>
       <Text as="dd">{`${getWaitingJob(detail)?.length}개` ?? "N/A"}</Text>
-    </StyledGpuServerDetailSummaryList>
+    </SummaryList>
   </StyledGpuServerDetailSummary>
 );
 

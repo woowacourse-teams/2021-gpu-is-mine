@@ -1,9 +1,5 @@
 import { Text } from "../../components";
-import {
-  StyledJobDetailSummary,
-  StyledJobDetailSummaryList,
-  Anchor,
-} from "./JobDetailSummary.styled";
+import { StyledJobDetailSummary, SummaryList, Anchor } from "./JobDetailSummary.styled";
 import { JobViewResponse } from "../../types";
 
 interface JobDetailSummaryProps {
@@ -19,7 +15,7 @@ const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
       <Text as="h3" weight="bold" size="lg">
         {detail.name}
       </Text>
-      <StyledJobDetailSummaryList>
+      <SummaryList>
         <Text as="dt" weight="bold">
           Job 상태
         </Text>
@@ -48,7 +44,7 @@ const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
             {url}
           </Anchor>
         </Text>
-      </StyledJobDetailSummaryList>
+      </SummaryList>
     </StyledJobDetailSummary>
   );
 };
