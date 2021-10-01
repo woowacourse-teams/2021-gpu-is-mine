@@ -28,8 +28,8 @@ const Layout = ({
   <StyledLayout className={className}>
     <HeaderContainer>{Header}</HeaderContainer>
     <SubHeaderContainer>{SubHeader}</SubHeaderContainer>
-    <AsideContainer>{Aside}</AsideContainer>
     <MainContainer>{Main}</MainContainer>
+    <AsideContainer>{Aside}</AsideContainer>
     <FooterContainer>{Footer}</FooterContainer>
   </StyledLayout>
 );
