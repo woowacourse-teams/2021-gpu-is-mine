@@ -77,6 +77,11 @@
 ### TechLogs
 - [✨gpu내껀데 QuickStart]()
 
+#### FE
+- [FE 성능 최적화: 로딩, 렌더링](https://rattle-king-c48.notion.site/GPU-IS-MINE-089cf77a60764695972a6644f1fb1194)
+- [Yarn Berry 도입기](https://velog.io/@bigsaigon333/Yarn-berry-%EB%8F%84%EC%9E%85%EA%B8%B0)
+
+#### BE
 - [배럴, 완태의 Elastic Stack 적용기](https://nauni.tistory.com/283)
 - [PageableHandlerMethodArgumentResolver Customize 하기 by 완태](https://github.com/woowacourse-teams/2021-gpu-is-mine/wiki/PageableHandlerMethodArgumentResolver-Cusomize-%ED%95%98%EA%B8%B0-by-%EC%99%84%ED%83%9C)
 - [젠킨스 jdk 11로 버전 업그레이드 해왔어요!!!](https://ecsimsw.tistory.com/entry/젠킨스-jdk-버전-11로-올리는-방법)
