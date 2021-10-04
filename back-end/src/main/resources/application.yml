@@ -83,7 +83,8 @@ spring:
     properties:
       hibernate:
         jdbc:
-          lob.non_contextual_creation: true
+          lob:
+            non_contextual_creation: true
   flyway:
     baselineOnMigrate: true
     enabled: true
