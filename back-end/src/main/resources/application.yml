@@ -40,7 +40,7 @@ spring:
         format_sql: true
 
 request:
-  origins: \*
+  origins: "*"
 
 ---
 spring:
@@ -66,7 +66,7 @@ spring:
         format_sql: true
 
 request:
-  origins: \*
+  origins: "*"
 
 ---
 spring:
@@ -90,7 +90,7 @@ spring:
     enabled: true
 
 request:
-  origins: \*
+  origins: "*"
 ---
 spring:
   config:
