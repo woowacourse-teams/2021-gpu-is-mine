@@ -1,0 +1,162 @@
+spring:
+  profiles:
+    active: local
+  flyway:
+    enabled: false
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+
+request:
+  origins: "*"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+    import: ./application-db.properties
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+    import: ./application-db.properties
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+
+request:
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
+---
+spring:
+  config:
+    activate:
+      on-profile: was1
+
+    import: ./application-db.properties
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+
+request:
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: was2
+
+    import: ./application-db.properties
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+
+request:
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
+server:
+  port: 8082
+
