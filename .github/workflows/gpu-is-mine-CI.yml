@@ -108,6 +108,7 @@ jobs:
 
   BE-checkstyle:
     needs: changes
+    if: ${{ needs.changes.outputs.back-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
       working-directory: ./back-end
@@ -130,6 +131,7 @@ jobs:
 
   BE-test:
     needs: changes
+    if: ${{ needs.changes.outputs.back-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
       working-directory: ./back-end
