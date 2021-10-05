@@ -1,9 +1,6 @@
 spring:
   profiles:
     active: local
-  jpa:
-    hibernate:
-      ddl-auto: none
   flyway:
     enabled: false
 
@@ -14,7 +11,7 @@ server:
     min-response-size: 1024
 
 request:
-  origins: https://duupyu9at80bw.cloudfront.net
+  origins: "*"
 
 ---
 spring:
@@ -32,15 +29,10 @@ spring:
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
         format_sql: true
-
-request:
-  origins: "*"
 
 ---
 spring:
@@ -58,15 +50,10 @@ spring:
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
         format_sql: true
-
-request:
-  origins: "*"
 
 ---
 spring:
@@ -89,8 +76,6 @@ spring:
     baselineOnMigrate: true
     enabled: true
 
-request:
-  origins: "*"
 ---
 spring:
   config:
@@ -115,7 +100,7 @@ spring:
     enabled: true
 
 request:
-  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com, https://gpuismine.com
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
 
 ---
 spring:
@@ -140,11 +125,11 @@ spring:
     baselineOnMigrate: true
     enabled: true
 
+request:
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
 server:
   port: 8081
-
-request:
-  origins: https://gpu-is-mine.netlify.app, https://duupyu9at80bw.cloudfront.net
 
 ---
 spring:
@@ -169,8 +154,9 @@ spring:
     baselineOnMigrate: true
     enabled: true
 
+request:
+  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
 server:
   port: 8082
 
-request:
-  origins: https://gpu-is-mine.netlify.app, https://duupyu9at80bw.cloudfront.net
