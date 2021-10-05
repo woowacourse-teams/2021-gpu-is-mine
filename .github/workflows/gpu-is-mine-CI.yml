@@ -49,7 +49,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   FE-test:
-    needs: FE-build
+    needs: changes
     if: ${{ needs.changes.outputs.front-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
@@ -75,7 +75,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   FE-storybook-build:
-    needs: FE-test
+    needs: changes
     if: ${{ needs.changes.outputs.front-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
@@ -124,7 +124,8 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   BE-checkstyle:
-    needs: BE-build
+    needs: changes
+    if: ${{ needs.changes.outputs.back-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
       working-directory: ./back-end
@@ -146,7 +147,8 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   BE-test:
-    needs: BE-checkstyle
+    needs: changes
+    if: ${{ needs.changes.outputs.back-end == 'true' }}
     runs-on: ubuntu-18.04
     env:
       working-directory: ./back-end
