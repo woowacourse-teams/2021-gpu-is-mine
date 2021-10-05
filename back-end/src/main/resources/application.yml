@@ -62,6 +62,7 @@ spring:
       on-profile: dev
 
     import: ./application-db.properties
+
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     generate-ddl: false
