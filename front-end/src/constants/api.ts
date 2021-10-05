@@ -1,4 +1,8 @@
-export const BASE_URL = process.env.BASE_URL ?? "https://gpuismine.kro.kr/api"; // dev server;
+export const { BASE_URL } = process.env;
+
+if (BASE_URL == null) {
+  throw new Error(`BASE_URL을 실행 시 환경변수로 주입해주세요.`);
+}
 
 const API_ENDPOINT = {
   LABS(labId: number) {
