@@ -3975,6 +3975,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dotenv@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@types/dotenv@npm:8.2.0"
+  dependencies:
+    dotenv: "*"
+  checksum: a1f524da7dc18b09bdb6c2613b9abbbe8ca575621cce4625efc7f98daf2ba07c7dbab622c9bb394507a12c5c515f9cbbbba4aeec17b801c88faeb8e8e656d460
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.0":
   version: 3.7.0
   resolution: "@types/eslint-scope@npm:3.7.0"
@@ -8304,6 +8313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:*, dotenv@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:^6.2.0":
   version: 6.2.0
   resolution: "dotenv@npm:6.2.0"
@@ -10247,6 +10263,7 @@ fsevents@^1.2.7:
     "@testing-library/react": ^12.0.0
     "@testing-library/react-hooks": ^7.0.1
     "@testing-library/user-event": ^13.2.1
+    "@types/dotenv": ^8.2.0
     "@types/jest": ^26.0.24
     "@types/node": ^16.4.13
     "@types/react": ^17.0.13
@@ -10263,6 +10280,7 @@ fsevents@^1.2.7:
     classnames: ^2.3.1
     cypress: ^8.3.1
     debug: ^4.3.2
+    dotenv: ^10.0.0
     dotenv-webpack: ^7.0.3
     eslint: ^7.30.0
     eslint-config-airbnb: ^18.2.1
