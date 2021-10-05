@@ -78,7 +78,9 @@ jobs:
           fetch-depth: 0
 
       - name: Create env file
-        run: echo "BASE_URL=$BASE_URL" > .env
+        run: |
+          echo "BASE_URL=$BASE_URL" > .env
+          echo $BASE_URL
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
 
