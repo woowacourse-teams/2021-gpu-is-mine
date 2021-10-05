@@ -36,10 +36,9 @@ jobs:
           fetch-depth: 0
 
       - name: Create env file
-        run: |
-          touch .env
-          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
-          cat .env
+        run: echo "BASE_URL=$BASE_URL" > .env
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: Build with webpack
         run: yarn build
@@ -58,10 +57,9 @@ jobs:
           fetch-depth: 0
 
       - name: Create env file
-        run: |
-          touch .env
-          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
-          cat .env
+        run: echo "BASE_URL=$BASE_URL" > .env
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: test with jest
         run: yarn test
@@ -80,10 +78,9 @@ jobs:
           fetch-depth: 0
 
       - name: Create env file
-        run: |
-          touch .env
-          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
-          cat .env
+        run: echo "BASE_URL=$BASE_URL" > .env
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: build-storybook
         run: yarn build-storybook
