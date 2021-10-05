@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
 
-export const StyledInfoList = styled.section`
+export const StyledInfoList = styled.ul`
   display: flex;
   align-items: center;
   flex-direction: column;

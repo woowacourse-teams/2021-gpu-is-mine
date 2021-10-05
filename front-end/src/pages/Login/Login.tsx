@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useAppSelector } from "../../app/hooks";
 import { Alert, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
 import { selectLoginStatus } from "../../features/member/memberSlice";
-import { useBoolean } from "../../hooks";
+import { useAppSelector } from "../../app/hooks";
+import { useBoolean, usePathTitle } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
 
 const Login = () => {
@@ -17,11 +17,16 @@ const Login = () => {
     }
   }, [isFailed, openAlert]);
 
+  const heading = usePathTitle();
+
   return (
     <>
       {isOpenAlert && <Alert onConfirm={closeAlert}>이메일 또는 비밀번호를 확인해주세요</Alert>}
 
       <MemberLayout>
+        <Text as="h2" srOnly>
+          {heading}
+        </Text>
         <Container>
           {isLoading && <Loading size="lg" />}
           <Paragraph>

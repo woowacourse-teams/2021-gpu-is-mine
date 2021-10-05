@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { textEllipsis } from "../../styles/common";
 
-export const StyledJobInfoItem = styled.div`
+export const StyledJobInfoItem = styled.li`
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) 4fr auto;
   align-items: center;

@@ -17,14 +17,14 @@ const MemberLayout = ({ children, ...rest }: MemberLayoutProps) => (
       <Link to={PATH.MEMBER.LOGIN}>
         <LogoContainer>
           <GpuIcon size="xl" />
-          <Text size="xl" weight="bold">
+          <Text as="h1" size="xl" weight="bold">
             GPU 내껀데
           </Text>
         </LogoContainer>
       </Link>
     }
-    Navigation={null}
-    Content={children}
+    Aside={null}
+    Main={children}
   />
 );
 

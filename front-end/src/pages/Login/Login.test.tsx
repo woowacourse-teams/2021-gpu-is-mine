@@ -69,8 +69,6 @@ describe("pages/Login", () => {
 
     userEvent.click(loginButton);
 
-    screen.debug();
-
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
 
     await waitFor(() => expect(screen.queryByText("딥러닝 학습 자동화")).not.toBeInTheDocument());

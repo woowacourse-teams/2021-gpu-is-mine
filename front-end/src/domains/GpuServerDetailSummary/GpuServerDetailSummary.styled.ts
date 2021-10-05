@@ -11,3 +11,9 @@ export const StyledGpuServerDetailSummary = styled.div`
   flex-direction: column;
   row-gap: 0.75rem;
 `;
+
+export const SummaryList = styled.dl`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+`;

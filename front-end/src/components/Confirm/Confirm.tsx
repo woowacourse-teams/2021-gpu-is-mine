@@ -34,7 +34,7 @@ const Confirm = ({
   return isOpen ? (
     <Portal>
       <Dimmer color={dimmedColor}>
-        <ConfirmWrapper>
+        <ConfirmWrapper role="dialog" aria-label="confirm">
           <div className="content-wrapper">{children}</div>
           <div className="button-wrapper">
             <Button

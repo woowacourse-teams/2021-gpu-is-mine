@@ -6,18 +6,20 @@ describe("JobDetail", () => {
   const setup = async () => {
     render(<JobDetailSummary detail={JobResponseMock} />);
 
-    const jobNameHeading = await screen.findByRole("heading", { level: 4, name: /job 이름/i });
-    const jobName = screen.getByText(JobResponseMock.name);
-    const jobStatusHeading = screen.getByRole("heading", { level: 4, name: /Job 상태/i });
+    const jobNameRegex = new RegExp(JobResponseMock.name, "i");
+    const jobNameHeading = screen.getByRole("heading", {
+      level: 3,
+      name: jobNameRegex,
+    });
+    const jobStatusHeading = screen.getByText("Job 상태");
     const jobStatus = screen.getByText(JobResponseMock.status);
-    const jobOwnerHeading = screen.getByRole("heading", { level: 4, name: /Job 등록자/i });
+    const jobOwnerHeading = screen.getByText("Job 등록자");
     const jobOwner = screen.getByText(JobResponseMock.memberName);
-    const assignedServerHeading = screen.getByRole("heading", { level: 4, name: /할당된 서버/i });
+    const assignedServerHeading = screen.getByText("할당된 서버");
     const assignedServer = screen.getByText(JobResponseMock.gpuServerName);
 
     return {
       jobNameHeading,
-      jobName,
       jobStatusHeading,
       jobStatus,
       jobOwnerHeading,
@@ -28,10 +30,9 @@ describe("JobDetail", () => {
   };
 
   test("Job이름이 보여진다", async () => {
-    const { jobNameHeading, jobName } = await setup();
+    const { jobNameHeading } = await setup();
 
     expect(jobNameHeading).toBeInTheDocument();
-    expect(jobName).toBeInTheDocument();
   });
 
   test("Job 상태가 보여진다", async () => {

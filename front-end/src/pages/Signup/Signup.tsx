@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { useAppSelector } from "../../app/hooks";
 import { Alert, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
 import { selectSignupStatus } from "../../features/member/memberSlice";
-import { useBoolean, useMoveToPage } from "../../hooks";
+import { useAppSelector } from "../../app/hooks";
+import { useBoolean, useMoveToPage, usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";
 
 const Signup = () => {
   const { isLoading, isSucceed, isFailed } = useAppSelector(selectSignupStatus);
 
   const [isOpenAlert, openAlert, closeAlert] = useBoolean(false);
+
+  const heading = usePathTitle();
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
@@ -34,6 +36,9 @@ const Signup = () => {
         </Alert>
       )}
 
+      <Text as="h2" srOnly>
+        {heading}
+      </Text>
       <StyledSignupForm />
     </MemberLayout>
   );

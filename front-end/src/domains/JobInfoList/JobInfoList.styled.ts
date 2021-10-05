@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledJobInfoList = styled.div`
+export const StyledJobInfoList = styled.ul`
   display: flex;
   align-items: center;
   flex-direction: column;

@@ -8,7 +8,7 @@ const mockPush = jest.fn();
 const mockUseParams = jest.fn();
 
 jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+  ...jest.requireActual<Record<string, unknown>>("react-router-dom"),
   useHistory: () => ({ go: mockGo, push: mockPush }),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   useParams: () => mockUseParams(),

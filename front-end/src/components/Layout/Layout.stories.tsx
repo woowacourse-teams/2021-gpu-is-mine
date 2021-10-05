@@ -30,6 +30,6 @@ const StyledRegisterForm = styled(GpuServerRegisterForm)`
 Default.args = {
   Header: <Header labName="GPU_IS_MINE" />,
   SubHeader: <SubHeader />,
-  Navigation: <ManagerNavigation />,
-  Content: <StyledRegisterForm />,
+  Aside: <ManagerNavigation />,
+  Main: <StyledRegisterForm />,
 };

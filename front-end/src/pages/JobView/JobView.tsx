@@ -10,10 +10,10 @@ const JobView = () => {
 
   return (
     <Layout
-      Header={<Header labName={labName} />}
+      Header={<Header as="div" labName={labName} />}
       SubHeader={<SubHeader />}
-      Navigation={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
-      Content={<JobInfoList labId={labId} memberId={memberId} memberType={memberType} />}
+      Aside={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
+      Main={<JobInfoList labId={labId} memberId={memberId} memberType={memberType} />}
     />
   );
 };

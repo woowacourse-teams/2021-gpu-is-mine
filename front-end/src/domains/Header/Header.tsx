@@ -4,6 +4,7 @@ import { StyledHeader } from "./Header.styled";
 
 interface HeaderProps extends HTMLAttributes<HTMLElement> {
   labName: string;
+  as?: keyof HTMLElementTagNameMap;
 }
 
 const Header = ({ labName, children, ...rest }: HeaderProps) => (

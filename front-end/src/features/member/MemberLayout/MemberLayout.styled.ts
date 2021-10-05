@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { Layout } from "../../../components";
-import { ContentContainer, FooterContainer } from "../../../components/Layout/Layout.styled";
+import { MainContainer, FooterContainer } from "../../../components/Layout/Layout.styled";
 
 export const StyledLayout = styled(Layout)`
   background-color: var(--primary-900);
   height: 100%;
 
-  ${ContentContainer},
+  ${MainContainer},
   ${FooterContainer} {
     background-color: var(--primary-700);
     color: var(--on-primary-700);
