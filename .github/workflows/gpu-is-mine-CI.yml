@@ -35,9 +35,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
-        run: yarn install
-        working-directory: ${{ env.working-directory }}
+      - name: Create env file
+        run: |
+          touch .env
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+          cat .env
 
       - name: Build with webpack
         run: yarn build
@@ -55,9 +57,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
-        run: yarn install
-        working-directory: ${{ env.working-directory }}
+      - name: Create env file
+        run: |
+          touch .env
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+          cat .env
 
       - name: test with jest
         run: yarn test
@@ -75,9 +79,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
-        run: yarn install
-        working-directory: ${{ env.working-directory }}
+      - name: Create env file
+        run: |
+          touch .env
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+          cat .env
 
       - name: build-storybook
         run: yarn build-storybook
