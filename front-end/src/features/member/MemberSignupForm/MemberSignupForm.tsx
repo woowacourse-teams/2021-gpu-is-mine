@@ -27,7 +27,6 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
   const { isLoading } = useAppSelector(selectLoginStatus);
 
   const handleSubmit = ({ email, password, name }: Values) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     appDispatch(
       signup({
         email,

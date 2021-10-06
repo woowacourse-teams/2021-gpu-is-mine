@@ -20,7 +20,6 @@ describe("useAuthProvider", () => {
     const validPassword = "abcd123!@#";
 
     act(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       result.current.login({ email: validEmail, password: validPassword });
     });
 
@@ -38,7 +37,6 @@ describe("useAuthProvider", () => {
     expect(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)).not.toBeNull();
 
     act(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       result.current.logout();
     });
 

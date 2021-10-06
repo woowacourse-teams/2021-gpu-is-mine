@@ -68,5 +68,11 @@ module.exports = {
         "react/require-default-props": "off",
       },
     },
+    {
+      files: ["./src/**/*.tsx", "./src/**/*Slice.ts", "./src/**/use*.ts"],
+      rules: {
+        "@typescript-eslint/no-floating-promises": "off",
+      },
+    },
   ],
 };

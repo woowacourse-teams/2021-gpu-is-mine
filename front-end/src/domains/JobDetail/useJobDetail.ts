@@ -16,7 +16,6 @@ export const useJobDetail = ({ labId, jobId }: { labId: number; jobId: number })
   const { status, makeRequest, data, ...rest } = useGetJobDetail({ labId, jobId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 

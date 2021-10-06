@@ -46,7 +46,6 @@ const useAuthProvider = () => {
 
   const signup = useCallback(
     async ({ email, labId, password, name, memberType }: MemberSignupRequest) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       requestSignup({ email, labId, password, name, memberType });
     },
     [requestSignup]
@@ -62,7 +61,6 @@ const useAuthProvider = () => {
 
       sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       const { error } = await fetchMyInfo();
 
       if (error) {

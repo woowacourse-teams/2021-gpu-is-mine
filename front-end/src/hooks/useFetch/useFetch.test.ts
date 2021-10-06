@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { renderHook, act } from "@testing-library/react-hooks/dom";
 import { AxiosError } from "axios";
 import useFetch, { generateStatusBoolean, unwrapResult } from "./useFetch";
