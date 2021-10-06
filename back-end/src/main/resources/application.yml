@@ -61,7 +61,7 @@ spring:
     activate:
       on-profile: dev
 
-    import: ./application-dev-db.properties
+    import: ./application-db.properties
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
