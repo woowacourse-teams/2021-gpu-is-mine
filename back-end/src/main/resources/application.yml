@@ -76,6 +76,10 @@ spring:
     baselineOnMigrate: true
     enabled: true
 
+swagger:
+  host: dev-api.gpuismine.com
+  protocol: https
+
 ---
 spring:
   config:
@@ -101,6 +105,10 @@ spring:
 
 request:
   origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+
+swagger:
+  host: api.gpuismine.com
+  protocol: https
 
 ---
 spring:
@@ -131,6 +139,10 @@ request:
 server:
   port: 8081
 
+swagger:
+  host: api.gpuismine.com
+  protocol: https
+
 ---
 spring:
   config:
@@ -160,3 +172,6 @@ request:
 server:
   port: 8082
 
+swagger:
+  host: api.gpuismine.com
+  protocol: https
