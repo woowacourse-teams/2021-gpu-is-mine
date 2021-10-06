@@ -11,7 +11,7 @@ import {
   nameValidator,
 } from "../validator/validator";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { selectLoginStatus, signup } from "../memberSlice";
+import { selectSignupStatus, signup } from "../signupSlice";
 
 type MemberSignupFormProps = HTMLAttributes<HTMLFormElement>;
 
@@ -24,7 +24,7 @@ type Values = {
 
 const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
   const appDispatch = useAppDispatch();
-  const { isLoading } = useAppSelector(selectLoginStatus);
+  const { isLoading } = useAppSelector(selectSignupStatus);
 
   const handleSubmit = ({ email, password, name }: Values) => {
     appDispatch(

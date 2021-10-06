@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Alert, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
-import { selectSignupStatus } from "../../features/member/memberSlice";
+import { selectSignupStatus } from "../../features/member/signupSlice";
 import { useAppSelector } from "../../app/hooks";
 import { useBoolean, useMoveToPage, usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";

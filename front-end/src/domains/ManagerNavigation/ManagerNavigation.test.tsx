@@ -19,10 +19,6 @@ const store = configureStore({
         status: "succeed",
         error: null,
       },
-      signup: {
-        status: "idle",
-        error: null,
-      },
       myInfo: {
         id: 2,
         email: "test@test.com",

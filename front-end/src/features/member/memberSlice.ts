@@ -14,7 +14,7 @@ interface MyInfo {
   memberType: MemberType;
 }
 
-type MemberState = (
+type MemberState =
   | {
       login: { status: typeof STATUS.IDLE; error: null };
       myInfo: null;
@@ -30,22 +30,7 @@ type MemberState = (
   | {
       login: { status: typeof STATUS.FAILED; error: Error };
       myInfo: null;
-    }
-) &
-  (
-    | {
-        signup: { status: typeof STATUS.IDLE; error: null };
-      }
-    | {
-        signup: { status: typeof STATUS.LOADING; error: null };
-      }
-    | {
-        signup: { status: typeof STATUS.SUCCEED; error: null };
-      }
-    | {
-        signup: { status: typeof STATUS.FAILED; error: Error };
-      }
-  );
+    };
 
 const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
@@ -61,18 +46,11 @@ const initialState = {
     status: STATUS.IDLE,
     error: null,
   },
-  signup: {
-    status: STATUS.IDLE,
-    error: null,
-  },
   myInfo: null,
 } as MemberState;
 
 export const selectLoginStatus = (state: RootState) =>
   generateStatusBoolean(state.member.login.status);
-
-export const selectSignupStatus = (state: RootState) =>
-  generateStatusBoolean(state.member.signup.status);
 
 export const selectIsAuthenticated = (state: RootState) => state.member.myInfo !== null;
 
@@ -118,19 +96,6 @@ export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
   }
 );
 
-export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
-  "member/signup",
-  async ({ email, password, name }) => {
-    await axios.post<never>(API_ENDPOINT.MEMBER.SIGNUP, {
-      email,
-      password,
-      name,
-      labId: 1,
-      memberType: "USER",
-    });
-  }
-);
-
 // TODO: logout API 요청하기
 export const logout = createAsyncThunk<void, void>("member/logout", () => {
   sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
@@ -162,15 +127,6 @@ const memberSlice = createSlice({
         state.login.status = STATUS.FAILED;
 
         // TODO: Error 메세지 표준화
-      })
-      .addCase(signup.pending, (state) => {
-        state.signup.status = STATUS.LOADING;
-      })
-      .addCase(signup.fulfilled, (state) => {
-        state.signup.status = STATUS.SUCCEED;
-      })
-      .addCase(signup.rejected, (state) => {
-        state.signup.status = STATUS.FAILED;
       })
       .addCase(checkAuthorization.pending, (state) => {
         state.login.status = STATUS.LOADING;
