@@ -14,27 +14,38 @@ interface MyInfo {
   memberType: MemberType;
 }
 
-type MemberState =
+type MemberState = (
   | {
       login: { status: typeof STATUS.IDLE; error: null };
-      signup: { status: typeof STATUS.IDLE; error: null };
       myInfo: null;
     }
   | {
       login: { status: typeof STATUS.LOADING; error: null };
-      signup: { status: typeof STATUS.LOADING; error: null };
       myInfo: null;
     }
   | {
       login: { status: typeof STATUS.SUCCEED; error: null };
-      signup: { status: typeof STATUS.SUCCEED; error: null };
       myInfo: MyInfo;
     }
   | {
       login: { status: typeof STATUS.FAILED; error: Error };
-      signup: { status: typeof STATUS.FAILED; error: Error };
       myInfo: null;
-    };
+    }
+) &
+  (
+    | {
+        signup: { status: typeof STATUS.IDLE; error: null };
+      }
+    | {
+        signup: { status: typeof STATUS.LOADING; error: null };
+      }
+    | {
+        signup: { status: typeof STATUS.SUCCEED; error: null };
+      }
+    | {
+        signup: { status: typeof STATUS.FAILED; error: Error };
+      }
+  );
 
 const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
@@ -186,6 +197,6 @@ const memberSlice = createSlice({
   },
 });
 
-// export const { logout } = memberSlice.actions;
+const memberReducer = memberSlice.reducer;
 
-export default memberSlice.reducer;
+export default memberReducer;

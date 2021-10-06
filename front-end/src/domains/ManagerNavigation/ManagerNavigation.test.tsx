@@ -1,10 +1,39 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 import { Location } from "history";
 import { MemoryRouter, Route } from "react-router-dom";
-import { AuthProvider } from "../../components";
+import { PrivateRoute } from "../../routes";
 import ManagerNavigation from "./ManagerNavigation";
 import { PATH } from "../../constants";
+import memberReducer from "../../features/member/memberSlice";
+
+const store = configureStore({
+  reducer: {
+    member: memberReducer,
+  },
+  preloadedState: {
+    member: {
+      login: {
+        status: "succeed",
+        error: null,
+      },
+      signup: {
+        status: "idle",
+        error: null,
+      },
+      myInfo: {
+        id: 2,
+        email: "test@test.com",
+        name: "name",
+        labId: 1,
+        labName: "GIM Lab - woowacourse",
+        memberType: "MANAGER",
+      },
+    },
+  },
+});
 
 describe("ManagerNavigation", () => {
   const leftClick = { button: 0 };
@@ -13,7 +42,7 @@ describe("ManagerNavigation", () => {
     let testLocation = {} as Location;
 
     render(
-      <AuthProvider>
+      <Provider store={store}>
         <MemoryRouter initialEntries={["/"]}>
           <ManagerNavigation />
           <Route
@@ -25,7 +54,7 @@ describe("ManagerNavigation", () => {
             }}
           />
         </MemoryRouter>
-      </AuthProvider>
+      </Provider>
     );
 
     return () => testLocation;
@@ -61,5 +90,23 @@ describe("ManagerNavigation", () => {
     userEvent.click(screen.getByRole("link", { name: "job-register" }), leftClick);
 
     expect(getLocation().pathname).toBe(PATH.JOB.REGISTER);
+  });
+
+  test("로그아웃 버튼을 클릭하면 로그아웃된다", async () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/"]}>
+          <PrivateRoute exact path="/">
+            <ManagerNavigation />
+          </PrivateRoute>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    userEvent.click(screen.getByRole("button", { name: /로그아웃/ }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: /로그아웃/ })).not.toBeInTheDocument()
+    );
   });
 });
