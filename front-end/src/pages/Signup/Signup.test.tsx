@@ -1,9 +1,15 @@
-import { render, screen, userEvent, waitFor } from "../../__test__/test-utils";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Providers from "../../providers/Providers";
 import Signup from "./Signup";
 
 describe("Member/SignupForm", () => {
   const setup = () => {
-    render(<Signup />);
+    render(
+      <Providers>
+        <Signup />
+      </Providers>
+    );
 
     const emailInput = screen.getByLabelText("이메일");
     const passwordInput = screen.getByLabelText("비밀번호");

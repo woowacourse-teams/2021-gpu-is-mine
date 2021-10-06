@@ -1,9 +1,16 @@
-import { fireEvent, render, screen, userEvent } from "../../../__test__/test-utils";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Providers from "../../../providers/Providers";
+
 import MemberSignupForm from "./MemberSignupForm";
 
 describe("Member/SignupForm", () => {
   const setup = () => {
-    render(<MemberSignupForm />);
+    render(
+      <Providers>
+        <MemberSignupForm />
+      </Providers>
+    );
 
     const form = screen.getByRole("form", { name: "signup-form" });
     const emailInput = screen.getByLabelText("이메일");
@@ -109,15 +116,15 @@ describe("Member/SignupForm", () => {
       const validPassword = "123@cde!";
       const validName = "동동;";
 
-      fireEvent.change(emailInput, { target: { value: validEmail } });
-      fireEvent.blur(emailInput);
-      fireEvent.change(passwordInput, { target: { value: validPassword } });
-      fireEvent.blur(passwordInput);
-      fireEvent.change(passwordConfirmInput, { target: { value: validPassword } });
-      fireEvent.blur(passwordConfirmInput);
-      fireEvent.change(nameInput, { target: { value: validName } });
-      fireEvent.blur(nameInput);
-      fireEvent.click(submitButton);
+      userEvent.type(emailInput, validEmail);
+      userEvent.tab();
+      userEvent.type(passwordInput, validPassword);
+      userEvent.tab();
+      userEvent.type(passwordConfirmInput, validPassword);
+      userEvent.tab();
+      userEvent.type(nameInput, validName);
+      userEvent.tab();
+      userEvent.click(submitButton);
 
       expect(form).toHaveFormValues({
         email: validEmail,

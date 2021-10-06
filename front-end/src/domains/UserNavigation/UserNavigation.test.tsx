@@ -6,14 +6,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import UserNavigation from "./UserNavigation";
 import { PATH } from "../../constants";
-import memberReducer from "../../features/member/memberSlice";
+import authReducer from "../../features/member/authSlice";
 
 const store = configureStore({
   reducer: {
-    member: memberReducer,
+    auth: authReducer,
   },
   preloadedState: {
-    member: {
+    auth: {
       status: "succeed",
       error: null,
       myInfo: {

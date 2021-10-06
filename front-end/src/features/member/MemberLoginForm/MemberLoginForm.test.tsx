@@ -1,11 +1,17 @@
-import { render, screen, userEvent, waitFor } from "../../../__test__/test-utils";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { PATH } from "../../../constants";
 import MemberLoginForm from "./MemberLoginForm";
 import { emailValidator, passwordValidator } from "../validator/validator";
+import Providers from "../../../providers/Providers";
 
 describe("Member/LoginForm", () => {
   const setup = () => {
-    render(<MemberLoginForm />);
+    render(
+      <Providers>
+        <MemberLoginForm />
+      </Providers>
+    );
 
     const loginForm = screen.getByRole("form", { name: /로그인/ });
 

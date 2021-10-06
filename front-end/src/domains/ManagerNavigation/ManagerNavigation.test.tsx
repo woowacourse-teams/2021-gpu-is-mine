@@ -7,14 +7,14 @@ import { MemoryRouter, Route } from "react-router-dom";
 import { PrivateRoute } from "../../routes";
 import ManagerNavigation from "./ManagerNavigation";
 import { PATH } from "../../constants";
-import memberReducer from "../../features/member/memberSlice";
+import authReducer from "../../features/member/authSlice";
 
 const store = configureStore({
   reducer: {
-    member: memberReducer,
+    auth: authReducer,
   },
   preloadedState: {
-    member: {
+    auth: {
       status: "succeed",
       error: null,
       myInfo: {
