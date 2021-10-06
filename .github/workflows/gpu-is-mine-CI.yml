@@ -42,6 +42,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
       - name: Create env file
         run: echo "BASE_URL=$BASE_URL" > .env
+        working-directory: ${{ env.working-directory }}
       - name: Build with webpack
         run: yarn build
         working-directory: ${{ env.working-directory }}
