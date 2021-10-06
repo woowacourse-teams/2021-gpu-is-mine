@@ -1,16 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import Providers from "../../../providers/Providers";
-
+import { render, screen, userEvent } from "../../../__test__/test-utils";
 import MemberSignupForm from "./MemberSignupForm";
 
 describe("Member/SignupForm", () => {
   const setup = () => {
-    render(
-      <Providers>
-        <MemberSignupForm />
-      </Providers>
-    );
+    render(<MemberSignupForm />);
 
     const form = screen.getByRole("form", { name: "signup-form" });
     const emailInput = screen.getByLabelText("이메일");

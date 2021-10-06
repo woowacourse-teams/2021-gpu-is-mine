@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../__test__/test-utils";
 import Input from "./Input";
 
 describe("Input", () => {

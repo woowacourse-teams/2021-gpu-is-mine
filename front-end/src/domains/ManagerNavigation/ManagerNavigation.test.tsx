@@ -1,18 +1,14 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { Location } from "history";
 import { MemoryRouter, Route } from "react-router-dom";
+import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import { PrivateRoute } from "../../routes";
 import ManagerNavigation from "./ManagerNavigation";
 import { PATH } from "../../constants";
 import authReducer from "../../features/member/authSlice";
 
 const store = configureStore({
-  reducer: {
-    auth: authReducer,
-  },
+  reducer: { auth: authReducer },
   preloadedState: {
     auth: {
       status: "succeed",
@@ -30,25 +26,21 @@ const store = configureStore({
 });
 
 describe("ManagerNavigation", () => {
-  const leftClick = { button: 0 };
-
   const renderWithRouter = () => {
     let testLocation = {} as Location;
 
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/"]}>
-          <ManagerNavigation />
-          <Route
-            path="*"
-            render={({ location }: { location: Location }) => {
-              testLocation = location;
+      <MemoryRouter initialEntries={["/"]}>
+        <ManagerNavigation />
+        <Route
+          path="*"
+          render={({ location }: { location: Location }) => {
+            testLocation = location;
 
-              return null;
-            }}
-          />
-        </MemoryRouter>
-      </Provider>
+            return null;
+          }}
+        />
+      </MemoryRouter>
     );
 
     return () => testLocation;
@@ -57,7 +49,7 @@ describe("ManagerNavigation", () => {
   test("Gpu 서버 관리 조회 Route 테스트", () => {
     const getLocation = renderWithRouter();
 
-    userEvent.click(screen.getByRole("link", { name: "gpu-server-view" }), leftClick);
+    userEvent.click(screen.getByRole("link", { name: "gpu-server-view" }));
 
     expect(getLocation().pathname).toBe(PATH.GPU_SERVER.VIEW);
   });
@@ -65,7 +57,7 @@ describe("ManagerNavigation", () => {
   test("Gpu 서버 관리 등록 Route 테스트", () => {
     const getLocation = renderWithRouter();
 
-    userEvent.click(screen.getByRole("link", { name: "gpu-server-register" }), leftClick);
+    userEvent.click(screen.getByRole("link", { name: "gpu-server-register" }));
 
     expect(getLocation().pathname).toBe(PATH.GPU_SERVER.REGISTER);
   });
@@ -73,7 +65,7 @@ describe("ManagerNavigation", () => {
   test("Job 관리 조회  Route 테스트", () => {
     const getLocation = renderWithRouter();
 
-    userEvent.click(screen.getByRole("link", { name: "job-view" }), leftClick);
+    userEvent.click(screen.getByRole("link", { name: "job-view" }));
 
     expect(getLocation().pathname).toBe(PATH.JOB.VIEW);
   });
@@ -81,20 +73,19 @@ describe("ManagerNavigation", () => {
   test("Job 관리 등록  Route 테스트", () => {
     const getLocation = renderWithRouter();
 
-    userEvent.click(screen.getByRole("link", { name: "job-register" }), leftClick);
+    userEvent.click(screen.getByRole("link", { name: "job-register" }));
 
     expect(getLocation().pathname).toBe(PATH.JOB.REGISTER);
   });
 
   test("로그아웃 버튼을 클릭하면 로그아웃된다", async () => {
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/"]}>
-          <PrivateRoute exact path="/">
-            <ManagerNavigation />
-          </PrivateRoute>
-        </MemoryRouter>
-      </Provider>
+      <MemoryRouter initialEntries={["/"]}>
+        <PrivateRoute exact path="/">
+          <ManagerNavigation />
+        </PrivateRoute>
+      </MemoryRouter>,
+      { store }
     );
 
     userEvent.click(screen.getByRole("button", { name: /로그아웃/ }));

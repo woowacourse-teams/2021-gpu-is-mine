@@ -1,12 +1,11 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { Location } from "history";
 import { MemoryRouter, Route } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
+import { render, screen, userEvent, waitFor } from "../../__test__/test-utils";
 import UserNavigation from "./UserNavigation";
 import { PATH } from "../../constants";
 import authReducer from "../../features/member/authSlice";
+import { PrivateRoute } from "../../routes";
 
 const store = configureStore({
   reducer: {
@@ -33,19 +32,17 @@ describe("UserNavigation", () => {
     let testLocation = {} as Location;
 
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/"]}>
-          <UserNavigation />
-          <Route
-            path="*"
-            render={({ location }: { location: Location }) => {
-              testLocation = location;
+      <MemoryRouter initialEntries={["/"]}>
+        <UserNavigation />
+        <Route
+          path="*"
+          render={({ location }: { location: Location }) => {
+            testLocation = location;
 
-              return null;
-            }}
-          />
-        </MemoryRouter>
-      </Provider>
+            return null;
+          }}
+        />
+      </MemoryRouter>
     );
 
     return () => testLocation;
@@ -73,5 +70,22 @@ describe("UserNavigation", () => {
     userEvent.click(screen.getByRole("link", { name: "job-register" }));
 
     expect(getLocation().pathname).toBe(PATH.JOB.REGISTER);
+  });
+
+  test("로그아웃 버튼을 클릭하면 로그아웃된다", async () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <PrivateRoute exact path="/">
+          <UserNavigation />
+        </PrivateRoute>
+      </MemoryRouter>,
+      { store }
+    );
+
+    userEvent.click(screen.getByRole("button", { name: /로그아웃/ }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: /로그아웃/ })).not.toBeInTheDocument()
+    );
   });
 });
