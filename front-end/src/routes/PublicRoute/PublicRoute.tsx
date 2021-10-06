@@ -2,7 +2,7 @@ import { Redirect, Route } from "react-router-dom";
 import { ComponentProps } from "react";
 import { PATH } from "../../constants";
 import { useAppSelector } from "../../app/hooks";
-import { selectIsAuthenticated } from "../../features/member/memberSlice";
+import { selectIsAuthenticated } from "../../features/member/authSlice";
 
 type Location = {
   state?: { from?: Location };

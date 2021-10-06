@@ -3,7 +3,7 @@ import { useForm, getInputProps, getFormProps } from "../../../hooks";
 import { Input, Text } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 import { PATH } from "../../../constants";
-import { login, selectLoginStatus } from "../memberSlice";
+import { login, selectLoginStatus } from "../authSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 
 interface MemberLoginFormProps {

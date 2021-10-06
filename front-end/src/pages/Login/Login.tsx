@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Alert, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { checkAuthorization, selectLoginStatus } from "../../features/member/memberSlice";
+import { checkAuthorization, selectLoginStatus } from "../../features/member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useBoolean, usePathTitle } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";

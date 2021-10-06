@@ -14,7 +14,7 @@ interface MyInfo {
   memberType: MemberType;
 }
 
-type MemberState =
+type AuthState =
   | {
       status: typeof STATUS.IDLE;
       error: null;
@@ -49,24 +49,24 @@ const initialState = {
   status: STATUS.IDLE,
   error: null,
   myInfo: null,
-} as MemberState;
+} as AuthState;
 
-export const selectLoginStatus = (state: RootState) => generateStatusBoolean(state.member.status);
+export const selectLoginStatus = (state: RootState) => generateStatusBoolean(state.auth.status);
 
-export const selectIsAuthenticated = (state: RootState) => state.member.myInfo !== null;
+export const selectIsAuthenticated = (state: RootState) => state.auth.myInfo !== null;
 
 export const selectMyInfo = (state: RootState) => {
-  if (state.member.myInfo == null) {
+  if (state.auth.myInfo == null) {
     throw new Error("Invalid myInfo");
   }
 
-  return state.member.myInfo;
+  return state.auth.myInfo;
 };
 
 export const selectMemberType = (state: RootState) => selectMyInfo(state).memberType;
 
 export const login = createAsyncThunk<MyInfoResponse, { email: string; password: string }>(
-  "member/login",
+  "auth/login",
   async ({ email, password }) => {
     const {
       data: { accessToken },
@@ -84,7 +84,7 @@ export const login = createAsyncThunk<MyInfoResponse, { email: string; password:
 );
 
 export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
-  "member/checkAuthorization",
+  "auth/checkAuthorization",
   async () => {
     // TODO: deliver accessToken to client
     // const accessToken = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
@@ -98,12 +98,12 @@ export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
 );
 
 // TODO: logout API 요청하기
-export const logout = createAsyncThunk<void, void>("member/logout", () => {
+export const logout = createAsyncThunk<void, void>("auth/logout", () => {
   sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
 });
 
-const memberSlice = createSlice({
-  name: "member",
+const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -154,6 +154,6 @@ const memberSlice = createSlice({
   },
 });
 
-const memberReducer = memberSlice.reducer;
+const authReducer = authSlice.reducer;
 
-export default memberReducer;
+export default authReducer;

@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { PATH } from "../../constants";
 import { useAppSelector } from "../../app/hooks";
-import { selectMemberType } from "../../features/member/memberSlice";
+import { selectMemberType } from "../../features/member/authSlice";
 
 const ManagerRoute = ({ children, ...rest }: ComponentProps<typeof Route>) => {
   const memberType = useAppSelector(selectMemberType);

@@ -4,7 +4,7 @@ import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
 import { GpuServerInfoList } from "../../domains/GpuServer";
 import { useAppSelector } from "../../app/hooks";
-import { selectMyInfo } from "../../features/member/memberSlice";
+import { selectMyInfo } from "../../features/member/authSlice";
 
 const GpuServerView = () => {
   const { labId, labName, memberType } = useAppSelector(selectMyInfo);

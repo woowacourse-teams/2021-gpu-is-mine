@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import memberReducer from "../features/member/memberSlice";
+import authReducer from "../features/member/authSlice";
 import signupReducer from "../features/member/signupSlice";
 
 export const store = configureStore({
   reducer: {
-    member: memberReducer,
+    auth: authReducer,
     signup: signupReducer,
   },
 });

@@ -4,7 +4,7 @@ import { Text } from "../../components";
 import { StyledManagerNavigation } from "./ManagerNavigation.styled";
 import { PATH } from "../../constants";
 import { useAppDispatch } from "../../app/hooks";
-import { logout } from "../../features/member/memberSlice";
+import { logout } from "../../features/member/authSlice";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 
