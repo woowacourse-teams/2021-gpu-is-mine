@@ -42,6 +42,7 @@ const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   isLoading: status === STATUS.LOADING,
   isSucceed: status === STATUS.SUCCEED,
   isFailed: status === STATUS.FAILED,
+  isSettled: status === STATUS.SUCCEED || status === STATUS.FAILED,
 });
 
 const initialState = {
@@ -119,6 +120,11 @@ export const signup = createAsyncThunk<void, { email: string; password: string; 
   }
 );
 
+// TODO: logout API 요청하기
+export const logout = createAsyncThunk<void, void>("member/logout", () => {
+  sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+});
+
 const memberSlice = createSlice({
   name: "member",
   initialState,
@@ -144,11 +150,7 @@ const memberSlice = createSlice({
       .addCase(login.rejected, (state) => {
         state.login.status = STATUS.FAILED;
 
-        // if (action.payload) {
-        //   state.error = action.payload.errorMessage as Error;
-        // } else {
-        //   state.error = action.error as Error;
-        // }
+        // TODO: Error 메세지 표준화
       })
       .addCase(signup.pending, (state) => {
         state.signup.status = STATUS.LOADING;
@@ -177,8 +179,13 @@ const memberSlice = createSlice({
       })
       .addCase(checkAuthorization.rejected, (state) => {
         state.login.status = STATUS.IDLE;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.myInfo = null;
       });
   },
 });
+
+// export const { logout } = memberSlice.actions;
 
 export default memberSlice.reducer;

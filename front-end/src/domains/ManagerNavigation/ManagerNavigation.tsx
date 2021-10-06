@@ -1,14 +1,16 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks";
 import { Text } from "../../components";
 import { StyledManagerNavigation } from "./ManagerNavigation.styled";
 import { PATH } from "../../constants";
+import { useAppDispatch } from "../../app/hooks";
+import { logout } from "../../features/member/memberSlice";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 
 const ManagerNavigation = (props: NavigationProps) => {
-  const { logout } = useAuth();
+  const dispatch = useAppDispatch();
+  const onLogout = () => dispatch(logout());
 
   return (
     <StyledManagerNavigation {...props}>
@@ -70,7 +72,7 @@ const ManagerNavigation = (props: NavigationProps) => {
           로그아웃
         </Text>
         <li>
-          <button type="button" onClick={logout}>
+          <button type="button" onClick={onLogout}>
             <Text weight="medium" className="menu__item">
               로그아웃
             </Text>

@@ -1,6 +1,5 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks";
 import { Text } from "../../components";
 import {
   StyledUserNavigation,
@@ -10,11 +9,14 @@ import {
   MenuItem,
 } from "./UserNavigation.styled";
 import { PATH } from "../../constants";
+import { useAppDispatch } from "../../app/hooks";
+import { logout } from "../../features/member/memberSlice";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 
 const UserNavigation = (props: NavigationProps) => {
-  const { logout } = useAuth();
+  const dispatch = useAppDispatch();
+  const onLogout = () => dispatch(logout());
 
   return (
     <StyledUserNavigation {...props}>
@@ -65,7 +67,7 @@ const UserNavigation = (props: NavigationProps) => {
           로그아웃
         </Text>
         <li>
-          <button type="button" onClick={logout}>
+          <button type="button" onClick={onLogout}>
             <MenuItem weight="medium">로그아웃</MenuItem>
           </button>
         </li>
