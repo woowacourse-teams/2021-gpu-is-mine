@@ -34,6 +34,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ExceptionResponse> noHandlerFoundHandle(Exception exception) {
+        logger.info("No Handler Found", exception);
+
         ExceptionResponse response = ExceptionResponse.of(exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
