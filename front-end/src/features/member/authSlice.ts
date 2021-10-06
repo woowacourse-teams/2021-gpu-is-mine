@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ENDPOINT, SESSION_STORAGE_KEY, STATUS } from "../../constants";
