@@ -20,13 +20,13 @@ import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 public class DataSourceConfig {
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.master")
+    @ConfigurationProperties(prefix = "spring.datasource.hikari.master")
     public DataSource masterDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.slave")
+    @ConfigurationProperties(prefix = "spring.datasource.hikari.slave")
     public DataSource slaveDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
