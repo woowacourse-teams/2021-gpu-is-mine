@@ -6,7 +6,7 @@ import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
 interface MyInfo {
-  id: number;
+  memberId: number;
   email: string;
   name: string;
   labId: number;
@@ -16,19 +16,23 @@ interface MyInfo {
 
 type MemberState =
   | {
-      login: { status: typeof STATUS.IDLE; error: null };
+      status: typeof STATUS.IDLE;
+      error: null;
       myInfo: null;
     }
   | {
-      login: { status: typeof STATUS.LOADING; error: null };
+      status: typeof STATUS.LOADING;
+      error: null;
       myInfo: null;
     }
   | {
-      login: { status: typeof STATUS.SUCCEED; error: null };
+      status: typeof STATUS.SUCCEED;
+      error: null;
       myInfo: MyInfo;
     }
   | {
-      login: { status: typeof STATUS.FAILED; error: Error };
+      status: typeof STATUS.FAILED;
+      error: Error;
       myInfo: null;
     };
 
@@ -42,15 +46,12 @@ const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
 });
 
 const initialState = {
-  login: {
-    status: STATUS.IDLE,
-    error: null,
-  },
+  status: STATUS.IDLE,
+  error: null,
   myInfo: null,
 } as MemberState;
 
-export const selectLoginStatus = (state: RootState) =>
-  generateStatusBoolean(state.member.login.status);
+export const selectLoginStatus = (state: RootState) => generateStatusBoolean(state.member.status);
 
 export const selectIsAuthenticated = (state: RootState) => state.member.myInfo !== null;
 
@@ -108,10 +109,10 @@ const memberSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.login.status = STATUS.LOADING;
+        state.status = STATUS.LOADING;
       })
       .addCase(login.fulfilled, (state, { payload }) => {
-        state.login.status = STATUS.SUCCEED;
+        state.status = STATUS.SUCCEED;
 
         const {
           id,
@@ -121,18 +122,18 @@ const memberSlice = createSlice({
           memberType,
         } = payload;
 
-        state.myInfo = { id, email, name, labId, labName, memberType };
+        state.myInfo = { memberId: id, email, name, labId, labName, memberType };
       })
       .addCase(login.rejected, (state) => {
-        state.login.status = STATUS.FAILED;
+        state.status = STATUS.FAILED;
 
         // TODO: Error 메세지 표준화
       })
       .addCase(checkAuthorization.pending, (state) => {
-        state.login.status = STATUS.LOADING;
+        state.status = STATUS.LOADING;
       })
       .addCase(checkAuthorization.fulfilled, (state, { payload }) => {
-        state.login.status = STATUS.SUCCEED;
+        state.status = STATUS.SUCCEED;
 
         const {
           id,
@@ -142,10 +143,10 @@ const memberSlice = createSlice({
           memberType,
         } = payload;
 
-        state.myInfo = { id, email, name, labId, labName, memberType };
+        state.myInfo = { memberId: id, email, name, labId, labName, memberType };
       })
       .addCase(checkAuthorization.rejected, (state) => {
-        state.login.status = STATUS.IDLE;
+        state.status = STATUS.IDLE;
       })
       .addCase(logout.fulfilled, (state) => {
         state.myInfo = null;

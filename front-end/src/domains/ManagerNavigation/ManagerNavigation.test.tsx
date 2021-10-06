@@ -15,12 +15,10 @@ const store = configureStore({
   },
   preloadedState: {
     member: {
-      login: {
-        status: "succeed",
-        error: null,
-      },
+      status: "succeed",
+      error: null,
       myInfo: {
-        id: 2,
+        memberId: 2,
         email: "test@test.com",
         name: "name",
         labId: 1,
