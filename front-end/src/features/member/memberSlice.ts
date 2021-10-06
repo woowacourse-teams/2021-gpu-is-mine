@@ -92,14 +92,17 @@ export const login = createAsyncThunk<MyInfoResponse, { email: string; password:
   }
 );
 
-export const checkAuthorization = createAsyncThunk<MyInfoResponse, string>(
+export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
   "member/checkAuthorization",
-  async (accessToken) => {
-    // deliver accessToken to client
-    console.log(accessToken);
+  async () => {
+    // TODO: deliver accessToken to client
+    // const accessToken = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+    //    console.log(accessToken);
     const { data: myInfo } = await axios.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
-
     return myInfo;
+  },
+  {
+    condition: () => Boolean(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)),
   }
 );
 

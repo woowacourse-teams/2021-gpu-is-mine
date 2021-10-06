@@ -1,10 +1,18 @@
 import { useEffect } from "react";
 import { Alert, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { selectLoginStatus } from "../../features/member/memberSlice";
-import { useAppSelector } from "../../app/hooks";
+import { checkAuthorization, selectLoginStatus } from "../../features/member/memberSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useBoolean, usePathTitle } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
+
+const useAutoLogin = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuthorization());
+  }, [dispatch]);
+};
 
 const Login = () => {
   const { isLoading, isFailed } = useAppSelector(selectLoginStatus);
@@ -18,6 +26,8 @@ const Login = () => {
   }, [isFailed, openAlert]);
 
   const heading = usePathTitle();
+
+  useAutoLogin();
 
   return (
     <>
