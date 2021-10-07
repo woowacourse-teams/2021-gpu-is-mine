@@ -7,14 +7,14 @@ if (BASE_URL == null) {
 const API_ENDPOINT = {
   LABS(labId: number) {
     return {
-      GPUS: `${BASE_URL}/labs/${labId}/gpus`,
-      JOBS: `${BASE_URL}/labs/${labId}/jobs`,
+      GPUS: `/labs/${labId}/gpus`,
+      JOBS: `/labs/${labId}/jobs`,
     };
   },
   MEMBER: {
-    SIGNUP: `${BASE_URL}/members`,
-    ME: `${BASE_URL}/members/me`,
-    LOGIN: `${BASE_URL}/login`,
+    SIGNUP: `/members`,
+    ME: `/members/me`,
+    LOGIN: `/login`,
   },
 };
 

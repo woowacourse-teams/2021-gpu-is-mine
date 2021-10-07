@@ -1,9 +1,12 @@
 import axios from "axios";
-import { SESSION_STORAGE_KEY } from "../constants";
-import { RequestConfig } from "../types";
+import { BASE_URL, SESSION_STORAGE_KEY } from "../constants";
+import storage from "../services/Storage";
+import type { RequestConfig } from "../types";
 
-axios.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+const httpClient = axios.create({ baseURL: BASE_URL });
+
+httpClient.interceptors.request.use((config) => {
+  const token = storage.get(SESSION_STORAGE_KEY.ACCESS_TOKEN);
 
   if (token) {
     // eslint-disable-next-line
@@ -17,7 +20,7 @@ axios.interceptors.request.use((config) => {
 export const getData = async <T = void, U = never>(url: string, config?: RequestConfig<U>) => {
   const { method = "get", body } = config ?? {};
 
-  const response = await axios(url, { method, data: body });
+  const response = await httpClient(url, { method, data: body });
 
   return response.data as T;
 };

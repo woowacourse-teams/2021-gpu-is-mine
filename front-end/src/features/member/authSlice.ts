@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ENDPOINT, SESSION_STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
+import { SESSION_STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
+import client from "../../services/Client";
+import storage from "../../services/Storage";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -67,16 +68,11 @@ export const selectMemberType = (state: RootState) => selectMyInfo(state).member
 export const login = createAsyncThunk<MyInfoResponse, { email: string; password: string }>(
   "auth/login",
   async ({ email, password }) => {
-    const {
-      data: { accessToken },
-    } = await axios.post<{ accessToken: string }>(API_ENDPOINT.MEMBER.LOGIN, {
-      email,
-      password,
-    });
+    const accessToken = await client.postLogin({ email, password });
 
-    sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
+    storage.set(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
 
-    const { data: myInfo } = await axios.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
+    const myInfo = await client.fetchMyInfo();
 
     return myInfo;
   }
@@ -85,14 +81,14 @@ export const login = createAsyncThunk<MyInfoResponse, { email: string; password:
 export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
   "auth/checkAuthorization",
   async () => {
-    // TODO: deliver accessToken to client
-    // const accessToken = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
-    //    console.log(accessToken);
-    const { data: myInfo } = await axios.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
+    const accessToken = storage.get<string>(SESSION_STORAGE_KEY.ACCESS_TOKEN) as string;
+
+    const myInfo = await client.fetchMyInfo(accessToken);
+
     return myInfo;
   },
   {
-    condition: () => Boolean(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)),
+    condition: () => Boolean(storage.get(SESSION_STORAGE_KEY.ACCESS_TOKEN)),
   }
 );
 
