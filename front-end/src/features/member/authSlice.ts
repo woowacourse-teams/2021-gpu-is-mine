@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_ENDPOINT, SESSION_STORAGE_KEY, STATUS } from "../../constants";
+import { API_ENDPOINT, SESSION_STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -102,7 +102,7 @@ export const logout = createAsyncThunk<void, void>("auth/logout", () => {
 });
 
 const authSlice = createSlice({
-  name: "auth",
+  name: SLICE_NAME.AUTH,
   initialState,
   reducers: {},
   extraReducers: (builder) => {

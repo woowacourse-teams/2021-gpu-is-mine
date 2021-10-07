@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_ENDPOINT, STATUS } from "../../constants";
+import { API_ENDPOINT, SLICE_NAME, STATUS } from "../../constants";
 import type { RootState } from "../../app/store";
 
 type SignupState =
@@ -39,7 +39,7 @@ export const signup = createAsyncThunk<void, { email: string; password: string; 
 );
 
 const signupSlice = createSlice({
-  name: "signup",
+  name: SLICE_NAME.SIGNUP,
   initialState,
   reducers: {},
   extraReducers: (builder) => {

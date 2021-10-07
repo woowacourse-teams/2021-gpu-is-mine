@@ -5,3 +5,8 @@ export const STATUS = {
   SUCCEED: "succeed",
   FAILED: "failed",
 } as const;
+
+export const SLICE_NAME = {
+  AUTH: "auth",
+  SIGNUP: "signup",
+} as const;
