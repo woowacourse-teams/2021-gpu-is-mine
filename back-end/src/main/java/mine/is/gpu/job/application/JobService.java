@@ -30,6 +30,7 @@ import mine.is.gpu.job.exception.JobException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -56,7 +57,7 @@ public class JobService {
         this.parsedLogRepository = parsedLogRepository;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
