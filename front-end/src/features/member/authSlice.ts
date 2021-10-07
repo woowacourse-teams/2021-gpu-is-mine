@@ -13,7 +13,7 @@ interface MyInfo {
   memberType: MemberType;
 }
 
-type AuthState =
+export type AuthState =
   | {
       status: typeof STATUS.IDLE;
       error: null;

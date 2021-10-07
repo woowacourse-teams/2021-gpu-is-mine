@@ -1,19 +1,15 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { MemoryRouter, Route } from "react-router-dom";
-import { authContext } from "../../hooks/useAuth/useAuth";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 import JobViewDetail from "./JobViewDetail";
-import { authContextValue } from "../../__fixtures__";
 
 export default {
   title: "Pages/JobViewDetail",
   component: JobViewDetail,
   decorators: [
     (story) => (
-      <authContext.Provider value={authContextValue}>
-        <MemoryRouter initialEntries={["/8"]}>
-          <Route path="/:jobId">{story()}</Route>
-        </MemoryRouter>
-      </authContext.Provider>
+      <MemoryRouter initialEntries={["/8"]}>
+        <Route path="/:jobId">{story()}</Route>
+      </MemoryRouter>
     ),
   ],
 } as ComponentMeta<typeof JobViewDetail>;
