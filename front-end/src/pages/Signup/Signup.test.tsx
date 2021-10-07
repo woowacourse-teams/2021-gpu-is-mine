@@ -40,7 +40,7 @@ describe("Member/SignupForm", () => {
     expect(submitButton).toBeDisabled();
   });
 
-  test("유효한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, Loading 스피너가 표시된다", async () => {
+  test("유효한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, Loading 스피너가 표시되며 표시되며, 다이어로그를 통해 회원 가입 성공 메시지를 확인할 수 있다.", async () => {
     const { emailInput, passwordInput, passwordConfirmInput, nameInput, submitButton } = setup();
 
     const validEmail = "test@dd.com";
