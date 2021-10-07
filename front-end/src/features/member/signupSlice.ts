@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ENDPOINT, SLICE_NAME, STATUS } from "../../constants";
+import { SLICE_NAME, STATUS } from "../../constants";
+import client from "../../services/Client";
 import type { RootState } from "../../app/store";
 
 type SignupState =
@@ -27,15 +27,8 @@ export const selectSignupStatus = (state: RootState) => generateStatusBoolean(st
 
 export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
   "signup/signup",
-  async ({ email, password, name }) => {
-    await axios.post<never>(API_ENDPOINT.MEMBER.SIGNUP, {
-      email,
-      password,
-      name,
-      labId: 1,
-      memberType: "USER",
-    });
-  }
+  async ({ email, password, name }) =>
+    client.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
 
 const signupSlice = createSlice({
