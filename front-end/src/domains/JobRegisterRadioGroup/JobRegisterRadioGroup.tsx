@@ -35,7 +35,6 @@ const JobRegisterRadioGroup = ({
   const { data, status, makeRequest, done } = useGetGpuServerAll({ labId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
 
     return done;

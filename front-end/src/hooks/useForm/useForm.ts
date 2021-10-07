@@ -125,7 +125,6 @@ export const getFormProps = <T>({
     dispatch(showAllValidationMessage());
 
     if (state.isFormValid) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       handleSubmit(state.values);
     }
   };

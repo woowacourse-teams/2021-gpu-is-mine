@@ -1,6 +1,6 @@
 import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useAuth, usePathTitle, useToggle } from "../../hooks";
+import { useMyInfo, usePathTitle, useToggle } from "../../hooks";
 import { Text } from "../../components";
 import { StyledSubHeader, StyledManagerNavigation } from "./SubHeader.styled";
 
@@ -46,7 +46,7 @@ const useParsePathname = ({
 };
 
 const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
-  const { myInfo } = useAuth();
+  const myInfo = useMyInfo();
   const { pathname } = useLocation();
   const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
   const list = useParsePathname({
@@ -79,7 +79,7 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
         </div>
 
         <Text className="lab-name" size="md" weight="medium">
-          {myInfo?.labResponse.name}
+          {myInfo.labName}
         </Text>
         <button type="button" className="down-arrow" onClick={() => toggleIsNavVisible()}>
           {isNavVisible ? "▲" : "▼"}
