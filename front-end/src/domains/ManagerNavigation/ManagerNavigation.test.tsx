@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Location } from "history";
-import { MemoryRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import { PrivateRoute } from "../../routes";
 import ManagerNavigation from "./ManagerNavigation";
@@ -30,7 +30,7 @@ describe("ManagerNavigation", () => {
     let testLocation = {} as Location;
 
     render(
-      <MemoryRouter initialEntries={["/"]}>
+      <>
         <ManagerNavigation />
         <Route
           path="*"
@@ -40,7 +40,9 @@ describe("ManagerNavigation", () => {
             return null;
           }}
         />
-      </MemoryRouter>
+        ,
+      </>,
+      { initialEntries: ["/"] }
     );
 
     return () => testLocation;
@@ -80,12 +82,10 @@ describe("ManagerNavigation", () => {
 
   test("로그아웃 버튼을 클릭하면 로그아웃된다", async () => {
     render(
-      <MemoryRouter initialEntries={["/"]}>
-        <PrivateRoute exact path="/">
-          <ManagerNavigation />
-        </PrivateRoute>
-      </MemoryRouter>,
-      { store }
+      <PrivateRoute exact path="/">
+        <ManagerNavigation />
+      </PrivateRoute>,
+      { store, initialEntries: ["/"] }
     );
 
     userEvent.click(screen.getByRole("button", { name: /로그아웃/ }));

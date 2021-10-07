@@ -1,4 +1,3 @@
-import { MemoryRouter } from "react-router-dom";
 import { rest } from "msw";
 import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import { useMoveToPage } from "../../hooks";
@@ -18,14 +17,7 @@ jest.mock("../../hooks/useHistory/useHistory.ts", () => ({
 describe("GpuServer/InfoItem", () => {
   const setup = (memberType: MemberType = "USER") => {
     render(
-      <MemoryRouter initialEntries={[`${PATH.GPU_SERVER.VIEW}/${String(simpleGpuServer.id)}`]}>
-        <GpuServerInfoItem
-          {...simpleGpuServer}
-          labId={1}
-          memberType={memberType}
-          refresh={refresh}
-        />
-      </MemoryRouter>
+      <GpuServerInfoItem {...simpleGpuServer} labId={1} memberType={memberType} refresh={refresh} />
     );
 
     const detailButton = screen.getByRole("button", { name: "상세", hidden: true });

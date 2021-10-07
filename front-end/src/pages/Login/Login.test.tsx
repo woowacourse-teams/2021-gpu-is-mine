@@ -1,4 +1,3 @@
-import { MemoryRouter } from "react-router-dom";
 import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import Login from "./Login";
 import { emailValidator, passwordValidator } from "../../features/member/validator/validator";
@@ -7,11 +6,10 @@ import { PublicRoute } from "../../routes";
 describe("pages/Login", () => {
   const setup = () => {
     render(
-      <MemoryRouter initialEntries={["/"]}>
-        <PublicRoute exact path="/">
-          <Login />
-        </PublicRoute>
-      </MemoryRouter>
+      <PublicRoute exact path="/">
+        <Login />
+      </PublicRoute>,
+      { initialEntries: ["/"] }
     );
 
     const emailInput = screen.getByLabelText("이메일");
