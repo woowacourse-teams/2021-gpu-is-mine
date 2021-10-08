@@ -33,7 +33,7 @@ export const signup = createAsyncThunk<void, { email: string; password: string; 
       password,
       name,
       labId: 1,
-      signupType: "USER",
+      memberType: "USER",
     });
   }
 );
