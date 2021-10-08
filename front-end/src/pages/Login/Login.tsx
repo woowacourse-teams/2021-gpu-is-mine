@@ -1,18 +1,10 @@
 import { useEffect } from "react";
 import { Dialog, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { authorize, selectLoginStatus } from "../../features/member/authSlice";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useBoolean, usePathTitle } from "../../hooks";
+import { selectLoginStatus } from "../../features/member/authSlice";
+import { useAppSelector } from "../../app/hooks";
+import { useBoolean, usePathTitle, useAuthorize } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
-
-const useAuthorize = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(authorize());
-  }, [dispatch]);
-};
 
 const Login = () => {
   const { isLoading, isFailed } = useAppSelector(selectLoginStatus);
