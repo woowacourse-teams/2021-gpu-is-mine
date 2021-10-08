@@ -15,6 +15,7 @@ export interface MemberLoginRequest {
 
 export interface MemberLoginResponse {
   accessToken: string;
+  expires: number;
 }
 
 export interface MyInfoResponse {

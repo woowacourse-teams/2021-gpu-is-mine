@@ -1,16 +1,16 @@
 import axios from "axios";
-import { BASE_URL, SESSION_STORAGE_KEY } from "../constants";
+import { BASE_URL, STORAGE_KEY } from "../constants";
 import storage from "../services/Storage";
 import type { RequestConfig } from "../types";
+import { throwError } from "./error";
 
-const httpClient = axios.create({ baseURL: BASE_URL });
+export const httpClient = axios.create({ baseURL: BASE_URL });
 
 httpClient.interceptors.request.use((config) => {
-  const token = storage.get(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+  const expires = storage.get(STORAGE_KEY.EXPIRES, (_, value: string) => new Date(value));
 
-  if (token) {
-    // eslint-disable-next-line
-    config.headers.Authorization = `Bearer ${token}`;
+  if (expires && expires.getTime() <= Date.now()) {
+    throwError("AuthorizationError", "유효하지 않은 Token입니다");
   }
 
   return config;

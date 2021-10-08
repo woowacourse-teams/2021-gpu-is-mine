@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { SESSION_STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
+import { createSlice, createAsyncThunk, SerializedError } from "@reduxjs/toolkit";
+import { STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
 import client from "../../services/Client";
 import storage from "../../services/Storage";
 import type { MemberType, MyInfoResponse } from "../../types";
@@ -32,7 +32,7 @@ export type AuthState =
     }
   | {
       status: typeof STATUS.FAILED;
-      error: Error;
+      error: SerializedError;
       myInfo: null;
     };
 
@@ -68,9 +68,10 @@ export const selectMemberType = (state: RootState) => selectMyInfo(state).member
 export const login = createAsyncThunk<MyInfoResponse, { email: string; password: string }>(
   "auth/login",
   async ({ email, password }) => {
-    const accessToken = await client.postLogin({ email, password });
+    const { accessToken, expires } = await client.postLogin({ email, password });
 
-    storage.set(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
+    storage.set(STORAGE_KEY.ACCESS_TOKEN, accessToken);
+    storage.set(STORAGE_KEY.EXPIRES, expires);
 
     const myInfo = await client.fetchMyInfo();
 
@@ -78,23 +79,33 @@ export const login = createAsyncThunk<MyInfoResponse, { email: string; password:
   }
 );
 
-export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
-  "auth/checkAuthorization",
+export const authorize = createAsyncThunk<MyInfoResponse, void>(
+  "auth/authorize",
   async () => {
-    const accessToken = storage.get<string>(SESSION_STORAGE_KEY.ACCESS_TOKEN) as string;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client.setAuthorizationHeader(storage.get(STORAGE_KEY.ACCESS_TOKEN)!);
+      return await client.fetchMyInfo();
+    } catch (e) {
+      const error = e as Error;
 
-    const myInfo = await client.fetchMyInfo(accessToken);
+      if (error.name === "AuthorizationError") {
+        storage.remove(STORAGE_KEY.ACCESS_TOKEN);
+        storage.remove(STORAGE_KEY.EXPIRES);
+      }
 
-    return myInfo;
+      throw error;
+    }
   },
   {
-    condition: () => Boolean(storage.get(SESSION_STORAGE_KEY.ACCESS_TOKEN)),
+    condition: () => storage.has(STORAGE_KEY.ACCESS_TOKEN),
   }
 );
 
 // TODO: logout API 요청하기
 export const logout = createAsyncThunk<void, void>("auth/logout", () => {
-  sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+  storage.remove(STORAGE_KEY.ACCESS_TOKEN);
+  storage.remove(STORAGE_KEY.EXPIRES);
 });
 
 const authSlice = createSlice({
@@ -119,15 +130,17 @@ const authSlice = createSlice({
 
         state.myInfo = { memberId: id, email, name, labId, labName, memberType };
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
         state.status = STATUS.FAILED;
+        state.error = action.error;
 
         // TODO: Error 메세지 표준화
+        // console.error(action.error);
       })
-      .addCase(checkAuthorization.pending, (state) => {
+      .addCase(authorize.pending, (state) => {
         state.status = STATUS.LOADING;
       })
-      .addCase(checkAuthorization.fulfilled, (state, { payload }) => {
+      .addCase(authorize.fulfilled, (state, { payload }) => {
         state.status = STATUS.SUCCEED;
 
         const {
@@ -140,8 +153,10 @@ const authSlice = createSlice({
 
         state.myInfo = { memberId: id, email, name, labId, labName, memberType };
       })
-      .addCase(checkAuthorization.rejected, (state) => {
+      .addCase(authorize.rejected, (state, action) => {
         state.status = STATUS.IDLE;
+        state.error = action.error;
+        // console.error(action.error);
       })
       .addCase(logout.fulfilled, (state) => {
         state.myInfo = null;
