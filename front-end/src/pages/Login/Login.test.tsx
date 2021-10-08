@@ -8,8 +8,7 @@ describe("pages/Login", () => {
     render(
       <PublicRoute exact path="/">
         <Login />
-      </PublicRoute>,
-      { initialEntries: ["/"] }
+      </PublicRoute>
     );
 
     const emailInput = screen.getByLabelText("이메일");
@@ -50,7 +49,6 @@ describe("pages/Login", () => {
     await waitFor(() => expect(alert).not.toBeInTheDocument());
   });
 
-  // FIXME: store를 매 render마다 초기화하게끔 customRender를 만든다
   test("유효한 이메일과 비밀번호를 입력하여 로그인이 되면, PublicRoute에 의해 로그인 페이지에 머물러 있을 수 없다", async () => {
     const { emailInput, passwordInput, loginButton } = setup();
 
