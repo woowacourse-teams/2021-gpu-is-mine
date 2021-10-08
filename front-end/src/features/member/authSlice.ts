@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, SerializedError } from "@reduxjs/toolkit";
-import { SLICE_NAME, STATUS, STORAGE_KEY } from "../../constants";
+import { SLICE_NAME, STATUS } from "../../constants";
 import { useAppDispatch } from "../../app/hooks";
-import { client, storage } from "../../services";
+import { client } from "../../services";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -65,16 +65,9 @@ export const selectMyInfo = (state: RootState) => {
 
 export const selectMemberType = (state: RootState) => selectMyInfo(state).memberType;
 
-export const authorize = createAsyncThunk<MyInfoResponse, void, { state: RootState }>(
+export const authorize = createAsyncThunk<MyInfoResponse, { accessToken: string; expires: Date }>(
   "auth/authorize",
-  async () => client.fetchMyInfo(),
-  {
-    condition: (_, { getState }) =>
-      [
-        selectLoginStatus(getState()).isLoading /* login thunk에서 호출되었거나 */,
-        storage.has(STORAGE_KEY.ACCESS_TOKEN) /* STORAGE에 ACCESS_TOKEN이 저장되어 있거나 */,
-      ].includes(true),
-  }
+  async (props) => client.fetchMyInfo(props)
 );
 
 export const login = createAsyncThunk<
@@ -82,9 +75,9 @@ export const login = createAsyncThunk<
   { email: string; password: string },
   { dispatch: ReturnType<typeof useAppDispatch> }
 >("auth/login", async ({ email, password }, { dispatch }) => {
-  await client.postLogin({ email, password });
+  const { accessToken, expires } = await client.postLogin({ email, password });
 
-  await dispatch(authorize()).unwrap();
+  await dispatch(authorize({ accessToken, expires })).unwrap();
 });
 
 export const logout = createAsyncThunk<void, void>("auth/logout", () => {
