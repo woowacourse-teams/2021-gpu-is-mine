@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, SerializedError } from "@reduxjs/toolkit";
-import { STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
-import client from "../../services/Client";
-import storage from "../../services/Storage";
+import { SLICE_NAME, STATUS, STORAGE_KEY } from "../../constants";
+import { useAppDispatch } from "../../app/hooks";
+import { client, storage } from "../../services";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -65,47 +65,30 @@ export const selectMyInfo = (state: RootState) => {
 
 export const selectMemberType = (state: RootState) => selectMyInfo(state).memberType;
 
-export const login = createAsyncThunk<MyInfoResponse, { email: string; password: string }>(
-  "auth/login",
-  async ({ email, password }) => {
-    const { accessToken, expires } = await client.postLogin({ email, password });
-
-    storage.set(STORAGE_KEY.ACCESS_TOKEN, accessToken);
-    storage.set(STORAGE_KEY.EXPIRES, expires);
-
-    const myInfo = await client.fetchMyInfo();
-
-    return myInfo;
-  }
-);
-
-export const authorize = createAsyncThunk<MyInfoResponse, void>(
+export const authorize = createAsyncThunk<MyInfoResponse, void, { state: RootState }>(
   "auth/authorize",
-  async () => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      client.setAuthorizationHeader(storage.get(STORAGE_KEY.ACCESS_TOKEN)!);
-      return await client.fetchMyInfo();
-    } catch (e) {
-      const error = e as Error;
-
-      if (error.name === "AuthorizationError") {
-        storage.remove(STORAGE_KEY.ACCESS_TOKEN);
-        storage.remove(STORAGE_KEY.EXPIRES);
-      }
-
-      throw error;
-    }
-  },
+  async () => client.fetchMyInfo(),
   {
-    condition: () => storage.has(STORAGE_KEY.ACCESS_TOKEN),
+    condition: (_, { getState }) =>
+      [
+        selectLoginStatus(getState()).isLoading /* login thunk에서 호출되었거나 */,
+        storage.has(STORAGE_KEY.ACCESS_TOKEN) /* STORAGE에 ACCESS_TOKEN이 저장되어 있거나 */,
+      ].includes(true),
   }
 );
 
-// TODO: logout API 요청하기
+export const login = createAsyncThunk<
+  void,
+  { email: string; password: string },
+  { dispatch: ReturnType<typeof useAppDispatch> }
+>("auth/login", async ({ email, password }, { dispatch }) => {
+  await client.postLogin({ email, password });
+
+  await dispatch(authorize()).unwrap();
+});
+
 export const logout = createAsyncThunk<void, void>("auth/logout", () => {
-  storage.remove(STORAGE_KEY.ACCESS_TOKEN);
-  storage.remove(STORAGE_KEY.EXPIRES);
+  client.logout();
 });
 
 const authSlice = createSlice({
@@ -117,25 +100,18 @@ const authSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.status = STATUS.LOADING;
       })
-      .addCase(login.fulfilled, (state, { payload }) => {
+      .addCase(login.fulfilled, (state) => {
         state.status = STATUS.SUCCEED;
-
-        const {
-          id,
-          email,
-          name,
-          labResponse: { id: labId, name: labName },
-          memberType,
-        } = payload;
-
-        state.myInfo = { memberId: id, email, name, labId, labName, memberType };
+        state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = STATUS.FAILED;
+        // TODO: Error Handling
+        // email, password가 일치하지 않을 경우
+        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
+        // 500 서버 에러
+        // Network 에러
         state.error = action.error;
-
-        // TODO: Error 메세지 표준화
-        // console.error(action.error);
       })
       .addCase(authorize.pending, (state) => {
         state.status = STATUS.LOADING;
@@ -152,11 +128,18 @@ const authSlice = createSlice({
         } = payload;
 
         state.myInfo = { memberId: id, email, name, labId, labName, memberType };
+        state.error = null;
       })
       .addCase(authorize.rejected, (state, action) => {
-        state.status = STATUS.IDLE;
+        // TODO: Error Handling
+        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
+        // 500 서버 에러
+        // Network 에러
         state.error = action.error;
-        // console.error(action.error);
+
+        // accessToken이 유효하지 않은 경우에만 STATUS.IDLE
+        // 500 서버, Network에러는 STATUS.FAILED
+        state.status = STATUS.IDLE;
       })
       .addCase(logout.fulfilled, (state) => {
         state.myInfo = null;

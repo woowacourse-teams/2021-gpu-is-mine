@@ -1,8 +1,8 @@
 import axios from "axios";
 import { BASE_URL, STORAGE_KEY } from "../constants";
+import { throwError } from "./error";
 import storage from "../services/Storage";
 import type { RequestConfig } from "../types";
-import { throwError } from "./error";
 
 export const httpClient = axios.create({ baseURL: BASE_URL });
 
