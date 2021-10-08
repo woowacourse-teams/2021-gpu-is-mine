@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../__test__/test-utils";
 import GpuServerDetailSummary from "./GpuServerDetailSummary";
 import { gpuServerDetailResponse } from "../../__fixtures__";
 

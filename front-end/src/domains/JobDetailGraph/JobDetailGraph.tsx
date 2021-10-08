@@ -18,7 +18,6 @@ const JobDetailGraph = ({ labId, jobId, interval, ...rest }: JobDetailGraphProps
   useInterval(() => makeRequest(), interval ? REFRESH_TIME : null);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
 
     return done;

@@ -18,7 +18,6 @@ const GpuServerInfoList = ({ labId, memberType, ...rest }: GpuServerInfoListProp
   const { data, status, makeRequest } = useGetGpuServerAll({ labId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 
