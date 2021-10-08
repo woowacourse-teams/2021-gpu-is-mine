@@ -3,6 +3,8 @@ spring:
     active: local
   flyway:
     enabled: false
+  jpa:
+    open-in-view: false
 
 server:
   compression:
