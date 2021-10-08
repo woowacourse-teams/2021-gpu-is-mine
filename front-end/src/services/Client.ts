@@ -1,6 +1,6 @@
-/* eslint-disable class-methods-use-this */
-import axios from "axios";
-import { API_ENDPOINT, BASE_URL } from "../constants";
+import type { AxiosInstance } from "axios";
+import { API_ENDPOINT } from "../constants";
+import { httpClient } from "../utils";
 import type {
   MemberLoginResponse,
   MemberLoginRequest,
@@ -8,38 +8,37 @@ import type {
   MemberSignupRequest,
 } from "../types";
 
-const httpClient = axios.create({ baseURL: BASE_URL });
-
 class Client {
+  constructor(private http: AxiosInstance) {}
+
   async postLogin({ email, password }: MemberLoginRequest) {
     const {
-      data: { accessToken },
-    } = await httpClient.post<MemberLoginResponse>(API_ENDPOINT.MEMBER.LOGIN, {
+      data: { accessToken, expires: maxAge },
+    } = await this.http.post<MemberLoginResponse>(API_ENDPOINT.MEMBER.LOGIN, {
       email,
       password,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    httpClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    const expires = new Date(Date.now() + maxAge);
 
-    return accessToken;
+    this.setAuthorizationHeader(accessToken);
+
+    return { accessToken, expires };
   }
 
-  async fetchMyInfo(accessToken?: string) {
-    const { data: myInfo } = await httpClient.get<MyInfoResponse>(
-      API_ENDPOINT.MEMBER.ME,
-      accessToken
-        ? {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        : undefined
-    );
+  setAuthorizationHeader(accessToken: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    this.http.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  }
+
+  async fetchMyInfo() {
+    const { data: myInfo } = await this.http.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
 
     return myInfo;
   }
 
   async postSignup({ email, password, name, labId, memberType }: MemberSignupRequest) {
-    await httpClient.post<never>(API_ENDPOINT.MEMBER.SIGNUP, {
+    await this.http.post<never>(API_ENDPOINT.MEMBER.SIGNUP, {
       email,
       password,
       name,
@@ -49,6 +48,6 @@ class Client {
   }
 }
 
-const client = new Client();
+const client = new Client(httpClient);
 
 export default client;
