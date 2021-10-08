@@ -53,6 +53,7 @@ export const StyledLoading = styled.div<StyledLoadingProps>`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 
   .spinner {
     display: flex;

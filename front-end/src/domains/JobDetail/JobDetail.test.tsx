@@ -1,5 +1,4 @@
-import { screen, render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, userEvent } from "../../__test__/test-utils";
 import JobDetail from "./JobDetail";
 import { JobResponseMock } from "../../__fixtures__";
 

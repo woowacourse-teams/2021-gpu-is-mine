@@ -1,10 +1,7 @@
-import { MemoryRouter } from "react-router-dom";
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
+import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import { useMoveToPage } from "../../hooks";
 import GpuServerInfoItem from "./GpuServerInfoItem";
-import { ThemeProvider } from "../../styles";
 import { BASE_URL, PATH } from "../../constants";
 import { MemberType } from "../../types";
 import server from "../../__mocks__/server";
@@ -20,16 +17,7 @@ jest.mock("../../hooks/useHistory/useHistory.ts", () => ({
 describe("GpuServer/InfoItem", () => {
   const setup = (memberType: MemberType = "USER") => {
     render(
-      <ThemeProvider>
-        <MemoryRouter initialEntries={[`${PATH.GPU_SERVER.VIEW}/${String(simpleGpuServer.id)}`]}>
-          <GpuServerInfoItem
-            {...simpleGpuServer}
-            labId={1}
-            memberType={memberType}
-            refresh={refresh}
-          />
-        </MemoryRouter>
-      </ThemeProvider>
+      <GpuServerInfoItem {...simpleGpuServer} labId={1} memberType={memberType} refresh={refresh} />
     );
 
     const detailButton = screen.getByRole("button", { name: "상세", hidden: true });
