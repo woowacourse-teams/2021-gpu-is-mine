@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useBoolean, usePathTitle } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
 
-const useAutoLogin = () => {
+const useAuthorize = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const Login = () => {
 
   const heading = usePathTitle();
 
-  useAutoLogin();
+  useAuthorize();
 
   return (
     <>
