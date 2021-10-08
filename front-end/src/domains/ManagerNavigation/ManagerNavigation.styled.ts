@@ -43,6 +43,8 @@ export const StyledManagerNavigation = styled.nav`
 
     button {
       text-align: left;
+      width: 100%;
+      display: block;
     }
   }
 `;

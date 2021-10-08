@@ -23,7 +23,6 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   });
 
   const handleSubmit = ({ jobName, expectedTime, gpuServerId, metaData }: Values) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest({ name: jobName, expectedTime, gpuServerId, metaData });
   };
 

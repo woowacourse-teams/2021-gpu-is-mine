@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const dotenvWebpack = require("dotenv-webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
@@ -49,9 +50,7 @@ module.exports = (env) => {
         base: "/",
         template: "public/index.html",
       }),
-      new webpack.DefinePlugin({
-        "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
-      }),
+      new dotenvWebpack(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
