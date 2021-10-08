@@ -1,5 +1,3 @@
-import { throwError } from "../utils/error";
-
 const Storage = class {
   constructor(private storage: globalThis.Storage) {}
 
@@ -23,10 +21,6 @@ const Storage = class {
   }
 
   remove(key: string) {
-    if (!this.has(key)) {
-      throwError("NotFoundItemError", "[Storage][remove] key에 해당하는 item이 없습니다.");
-    }
-
     this.storage.removeItem(key);
   }
 };
