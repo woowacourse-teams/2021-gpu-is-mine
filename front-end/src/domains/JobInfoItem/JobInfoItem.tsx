@@ -75,13 +75,13 @@ const JobInfoItem = ({
       {status === "failed" && (
         <Alert onConfirm={done}>
           <Text size="md" weight="regular">
-            {`${jobName} 취소에 실패하였습니다.`}
+            {jobName} 취소에 실패하였습니다.
           </Text>
         </Alert>
       )}
 
       <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => cancelJob()}>
-        <Text size="md" weight="regular">
+        <Text size="md" weight="medium">
           {jobName}을(를) 정말 취소하시겠습니까?
         </Text>
       </Confirm>

@@ -72,7 +72,7 @@ const GpuServerInfoItem = ({
       )}
 
       <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
-        <Text size="md" weight="regular">
+        <Text size="md" weight="medium">
           {serverName}을(를) 정말 삭제하시겠습니까?
         </Text>
       </Confirm>
