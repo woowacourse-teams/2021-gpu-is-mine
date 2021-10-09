@@ -1,8 +1,7 @@
 import { ReactNode, MouseEventHandler, MouseEvent, ComponentProps } from "react";
-import Button from "../Button/Button";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
-import { ConfirmWrapper } from "./Confirm.styled";
+import { Inner, Body, Footer, CancelButton, ConfirmButton } from "./Confirm.styled";
 
 interface ConfirmProps {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
@@ -11,6 +10,7 @@ interface ConfirmProps {
   onConfirm: MouseEventHandler<HTMLButtonElement>;
   onCancel?: MouseEventHandler<HTMLButtonElement>;
   children: ReactNode;
+  type?: "alert" | "confirm";
 }
 
 const Confirm = ({
@@ -20,6 +20,7 @@ const Confirm = ({
   children,
   onConfirm,
   onCancel,
+  type = "confirm",
 }: ConfirmProps) => {
   const handleConfirm = (event: MouseEvent<HTMLButtonElement>) => {
     onConfirm(event);
@@ -34,25 +35,13 @@ const Confirm = ({
   return isOpen ? (
     <Portal>
       <Dimmer color={dimmedColor}>
-        <ConfirmWrapper role="dialog" aria-label="confirm">
-          <div className="content-wrapper">{children}</div>
-          <div className="button-wrapper">
-            <Button
-              color="secondary-light"
-              className="button button-wrapper__cancel"
-              onClick={handleCancel}
-            >
-              취소
-            </Button>
-            <Button
-              color="secondary-light"
-              className="button button-wrapper__confirm"
-              onClick={handleConfirm}
-            >
-              확인
-            </Button>
-          </div>
-        </ConfirmWrapper>
+        <Inner aria-describedby="dialog-body">
+          <Body id="dialog-body">{children}</Body>
+          <Footer>
+            {type !== "alert" && <CancelButton onClick={handleCancel}>취소</CancelButton>}
+            <ConfirmButton onClick={handleConfirm}>확인</ConfirmButton>
+          </Footer>
+        </Inner>
       </Dimmer>
     </Portal>
   ) : null;
