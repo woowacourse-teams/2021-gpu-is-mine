@@ -7,8 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.util.HashMap;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +15,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Profile("dev|prod|was1|was2")
 @Configuration(proxyBeanMethods = false)
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
-@EnableTransactionManagement
 public class DataSourceConfig {
 
     @Bean
+    @FlywayDataSource
     @ConfigurationProperties(prefix = "spring.datasource.hikari.master")
     public DataSource masterDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
