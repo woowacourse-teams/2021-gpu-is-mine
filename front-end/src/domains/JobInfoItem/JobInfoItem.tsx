@@ -1,6 +1,6 @@
 import { formatDate } from "../../utils";
 import { useBoolean, useCancelJob, useMoveToPage } from "../../hooks";
-import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
+import { Button, CalendarIcon, Dialog, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
 import { JobViewResponse } from "../../types";
@@ -65,26 +65,34 @@ const JobInfoItem = ({
   return (
     <>
       {status === "succeed" && (
-        <Alert onConfirm={refresh}>
+        <Dialog onConfirm={refresh}>
           <Text size="md" weight="regular">
             {`${jobName}이(가) 취소되었습니다.`}
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {status === "failed" && (
-        <Alert onConfirm={done}>
+        <Dialog onConfirm={done}>
           <Text size="md" weight="regular">
             {jobName} 취소에 실패하였습니다.
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => cancelJob()}>
-        <Text size="md" weight="medium">
-          {jobName}을(를) 정말 취소하시겠습니까?
-        </Text>
-      </Confirm>
+      {isConfirmOpen && (
+        <Dialog
+          onConfirm={() => {
+            cancelJob();
+            closeConfirm();
+          }}
+          onCancel={closeConfirm}
+        >
+          <Text size="md" weight="medium">
+            {jobName}을(를) 정말 취소하시겠습니까?
+          </Text>
+        </Dialog>
+      )}
 
       <StyledJobInfoItem>
         <div className="job-info-title-wrapper">

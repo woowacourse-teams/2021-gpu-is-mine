@@ -1,7 +1,6 @@
 export { default as Button } from "./Button/Button";
 export { default as CalendarIcon } from "./CalendarIcon/CalendarIcon";
 export { default as Chart } from "./Chart/Chart";
-export { default as Confirm } from "./Confirm/Confirm";
 export { default as Dialog } from "./Dialog/Dialog";
 export { default as Dimmer } from "./Dimmer/Dimmer";
 export { default as Flicker } from "./Flicker/Flicker";
