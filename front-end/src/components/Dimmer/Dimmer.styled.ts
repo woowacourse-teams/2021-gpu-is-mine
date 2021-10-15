@@ -1,8 +1,7 @@
 import styled, { css } from "styled-components";
+import type { DimmerColor } from "./Dimmer";
 
-type DimmerColor = "transparent" | "light" | "dark";
-
-export interface StyledDimmerProps {
+interface StyledDimmerProps {
   color: DimmerColor;
 }
 
@@ -36,10 +35,8 @@ export const StyledDimmer = styled.div<StyledDimmerProps>`
 
   z-index: 50;
   ${({ color }) => getColorStyle(color)}
-
-  .inner {
-    isolation: isolate;
-  }
 `;
 
-// TODO: z-index 상수화
+export const Inner = styled.div`
+  isolation: isolate;
+`;

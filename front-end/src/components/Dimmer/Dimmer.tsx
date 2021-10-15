@@ -1,12 +1,18 @@
-import { HTMLAttributes } from "react";
-import { StyledDimmer, StyledDimmerProps } from "./Dimmer.styled";
+import { forwardRef, HTMLAttributes } from "react";
+import { StyledDimmer, Inner } from "./Dimmer.styled";
 
-type DimmerProps = HTMLAttributes<HTMLElement> & Partial<StyledDimmerProps>;
+export type DimmerColor = "transparent" | "light" | "dark";
 
-const Dimmer = ({ color = "light", children, ...rest }: DimmerProps) => (
-  <StyledDimmer color={color} {...rest}>
-    <div className="inner">{children}</div>
-  </StyledDimmer>
+interface DimmerProps extends HTMLAttributes<HTMLDivElement> {
+  color?: DimmerColor;
+}
+
+const Dimmer = forwardRef<HTMLDivElement, DimmerProps>(
+  ({ color = "light", children, ...rest }, ref) => (
+    <StyledDimmer ref={ref} color={color} {...rest}>
+      <Inner>{children}</Inner>
+    </StyledDimmer>
+  )
 );
 
 export default Dimmer;
