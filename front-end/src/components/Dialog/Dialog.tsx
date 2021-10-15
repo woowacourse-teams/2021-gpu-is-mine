@@ -34,6 +34,13 @@ const Dialog = ({
         event.preventDefault();
         Buttons[indexRef.current].focus();
         indexRef.current = (indexRef.current + 1) % Buttons.length;
+        return;
+      }
+
+      if (event.key === "Escape") {
+        onCancel?.();
+        // eslint-disable-next-line no-useless-return
+        return;
       }
     },
     [onCancel]
