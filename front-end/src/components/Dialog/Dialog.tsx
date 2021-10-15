@@ -1,4 +1,4 @@
-import { ReactNode, ComponentProps, HTMLAttributes, useRef, useEffect, useCallback } from "react";
+import { ReactNode, HTMLAttributes, useRef, useEffect, useCallback, ComponentProps } from "react";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { Inner, Body, Footer, CancelButton, ConfirmButton } from "./Dialog.styled";
@@ -19,6 +19,7 @@ const Dialog = ({
   className,
   ...rest
 }: DialogProps) => {
+  const dimmerRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
@@ -46,18 +47,32 @@ const Dialog = ({
     [onCancel]
   );
 
+  const handleClick = useCallback(
+    (event: MouseEvent) => {
+      if (event.target === dimmerRef.current) {
+        onCancel?.();
+      }
+    },
+    [onCancel]
+  );
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     dialogRef.current!.focus();
 
+    document.addEventListener("click", handleClick);
+
     document.addEventListener("keydown", handleKeyDown);
 
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("click", handleClick);
+    };
+  }, [handleClick, handleKeyDown]);
 
   return (
     <Portal>
-      <Dimmer color={dimmedColor}>
+      <Dimmer ref={dimmerRef} color={dimmedColor}>
         <Inner
           ref={dialogRef}
           tabIndex={-1}
