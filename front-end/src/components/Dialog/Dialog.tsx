@@ -23,7 +23,6 @@ const Dialog = ({
   className,
   ...rest
 }: DialogProps) => {
-  const dimmerRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
@@ -39,25 +38,15 @@ const Dialog = ({
         event.preventDefault();
         Buttons[indexRef.current].focus();
         indexRef.current = (indexRef.current + 1) % Buttons.length;
+
         return;
       }
 
       if (event.key === "Escape") {
         onClose();
-        // eslint-disable-next-line no-useless-return
-        return;
       }
     },
     [onCancel, onClose]
-  );
-
-  const handleClick = useCallback(
-    (event: MouseEvent) => {
-      if (event.target === dimmerRef.current) {
-        onClose();
-      }
-    },
-    [onClose]
   );
 
   useEffect(() => {
@@ -68,20 +57,17 @@ const Dialog = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     dialogRef.current!.focus();
 
-    document.addEventListener("click", handleClick);
-
     document.addEventListener("keydown", handleKeyDown);
 
     // eslint-disable-next-line consistent-return
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("click", handleClick);
     };
-  }, [handleClick, handleKeyDown, open]);
+  }, [handleKeyDown, open]);
 
   return open ? (
     <Portal>
-      <Dimmer ref={dimmerRef} color={dimmedColor}>
+      <Dimmer onClick={onClose} color={dimmedColor}>
         <Inner
           ref={dialogRef}
           tabIndex={-1}
