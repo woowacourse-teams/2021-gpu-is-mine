@@ -32,7 +32,6 @@ describe("JobDetail", () => {
 
     render(<JobDetail labId={1} />);
 
-    screen.debug();
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
 
