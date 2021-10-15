@@ -48,32 +48,31 @@ const GpuServerInfoItem = ({
         </Dimmer>
       )}
 
-      {isSucceed && (
-        <Dialog onConfirm={refresh}>
-          <Text size="md" weight="regular">
-            {`${serverName}을(를) 삭제하였습니다.`}
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
+        <Text size="md" weight="regular">
+          {`${serverName}을(를) 삭제하였습니다.`}
+        </Text>
+      </Dialog>
 
-      {isFailed && (
-        <Dialog onConfirm={done}>
-          <Text size="md" weight="regular">
-            {
-              /* TODO: 에러에 따라 구체적인 디렉션 추가 */
-              `${serverName} 삭제에 실패하였습니다.`
-            }
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="regular">
+          {
+            /* TODO: 에러에 따라 구체적인 디렉션 추가 */
+            `${serverName} 삭제에 실패하였습니다.`
+          }
+        </Text>
+      </Dialog>
 
-      {isConfirmOpen && (
-        <Dialog onConfirm={handleConfirmConfirmed} onCancel={closeConfirm}>
-          <Text size="md" weight="medium">
-            {serverName}을(를) 정말 삭제하시겠습니까?
-          </Text>
-        </Dialog>
-      )}
+      <Dialog
+        open={isConfirmOpen}
+        onClose={closeConfirm}
+        onConfirm={handleConfirmConfirmed}
+        onCancel={closeConfirm}
+      >
+        <Text size="md" weight="medium">
+          {serverName}을(를) 정말 삭제하시겠습니까?
+        </Text>
+      </Dialog>
 
       <StyledGpuServerInfoItem className={className}>
         <div className="gpu-server-title-wrapper">

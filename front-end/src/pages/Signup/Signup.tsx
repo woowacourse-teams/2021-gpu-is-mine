@@ -30,11 +30,9 @@ const Signup = () => {
     <MemberLayout>
       {isLoading && <Loading size="lg" />}
 
-      {isOpenDialog && (
-        <Dialog onConfirm={onConfirm}>
-          <Text>{DialogText}</Text>
-        </Dialog>
-      )}
+      <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={onConfirm}>
+        <Text>{DialogText}</Text>
+      </Dialog>
 
       <Text as="h2" srOnly>
         {heading}

@@ -31,7 +31,9 @@ const Login = () => {
 
   return (
     <>
-      {isOpenDialog && <Dialog onConfirm={closeDialog}>이메일 또는 비밀번호를 확인해주세요</Dialog>}
+      <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={closeDialog}>
+        이메일 또는 비밀번호를 확인해주세요
+      </Dialog>
 
       <MemberLayout>
         <Text as="h2" srOnly>

@@ -41,7 +41,13 @@ const JobInfoItem = ({
   calculatedTime: { expectedStartedTime, startedTime, completedTime, expectedCompletedTime },
   refresh,
 }: JobInfoItemProps) => {
-  const { status, makeRequest: cancelJob, done } = useCancelJob({ labId, jobId });
+  const {
+    isSucceed,
+    isFailed,
+    status,
+    makeRequest: cancelJob,
+    done,
+  } = useCancelJob({ labId, jobId });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
@@ -64,35 +70,31 @@ const JobInfoItem = ({
 
   return (
     <>
-      {status === "succeed" && (
-        <Dialog onConfirm={refresh}>
-          <Text size="md" weight="regular">
-            {`${jobName}이(가) 취소되었습니다.`}
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
+        <Text size="md" weight="regular">
+          {jobName}이(가) 취소되었습니다.
+        </Text>
+      </Dialog>
 
-      {status === "failed" && (
-        <Dialog onConfirm={done}>
-          <Text size="md" weight="regular">
-            {jobName} 취소에 실패하였습니다.
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="regular">
+          {jobName} 취소에 실패하였습니다.
+        </Text>
+      </Dialog>
 
-      {isConfirmOpen && (
-        <Dialog
-          onConfirm={() => {
-            cancelJob();
-            closeConfirm();
-          }}
-          onCancel={closeConfirm}
-        >
-          <Text size="md" weight="medium">
-            {jobName}을(를) 정말 취소하시겠습니까?
-          </Text>
-        </Dialog>
-      )}
+      <Dialog
+        open={isConfirmOpen}
+        onClose={closeConfirm}
+        onConfirm={() => {
+          cancelJob();
+          closeConfirm();
+        }}
+        onCancel={closeConfirm}
+      >
+        <Text size="md" weight="medium">
+          {jobName}을(를) 정말 취소하시겠습니까?
+        </Text>
+      </Dialog>
 
       <StyledJobInfoItem>
         <div className="job-info-title-wrapper">

@@ -5,6 +5,8 @@ import { Inner, Body, Footer, CancelButton, ConfirmButton } from "./Dialog.style
 
 interface DialogProps extends HTMLAttributes<HTMLDialogElement> {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
+  open: boolean;
+  onClose: () => void;
   onConfirm: () => void;
   onCancel?: () => void;
   children: ReactNode;
@@ -12,6 +14,8 @@ interface DialogProps extends HTMLAttributes<HTMLDialogElement> {
 }
 
 const Dialog = ({
+  open,
+  onClose,
   dimmedColor,
   children,
   onConfirm,
@@ -39,24 +43,28 @@ const Dialog = ({
       }
 
       if (event.key === "Escape") {
-        onCancel?.();
+        onClose();
         // eslint-disable-next-line no-useless-return
         return;
       }
     },
-    [onCancel]
+    [onCancel, onClose]
   );
 
   const handleClick = useCallback(
     (event: MouseEvent) => {
       if (event.target === dimmerRef.current) {
-        onCancel?.();
+        onClose();
       }
     },
-    [onCancel]
+    [onClose]
   );
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     dialogRef.current!.focus();
 
@@ -64,13 +72,14 @@ const Dialog = ({
 
     document.addEventListener("keydown", handleKeyDown);
 
+    // eslint-disable-next-line consistent-return
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("click", handleClick);
     };
-  }, [handleClick, handleKeyDown]);
+  }, [handleClick, handleKeyDown, open]);
 
-  return (
+  return open ? (
     <Portal>
       <Dimmer ref={dimmerRef} color={dimmedColor}>
         <Inner
@@ -94,7 +103,7 @@ const Dialog = ({
         </Inner>
       </Dimmer>
     </Portal>
-  );
+  ) : null;
 };
 
 export default Dialog;

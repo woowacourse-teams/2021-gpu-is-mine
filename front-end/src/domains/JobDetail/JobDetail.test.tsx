@@ -1,6 +1,8 @@
 import { render, screen, userEvent } from "../../__test__/test-utils";
 import JobDetail from "./JobDetail";
 import { JobResponseMock } from "../../__fixtures__";
+import { generateStatusBoolean } from "../../hooks/useFetch/useFetch";
+import type { APICallStatus } from "../../types";
 
 const mockGoBack = jest.fn();
 
@@ -21,6 +23,7 @@ describe("JobDetail", () => {
     mockUseJobDetail.mockReturnValue({
       detail,
       status,
+      ...generateStatusBoolean(status as APICallStatus),
     });
   };
 
@@ -29,6 +32,7 @@ describe("JobDetail", () => {
 
     render(<JobDetail labId={1} />);
 
+    screen.debug();
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
 

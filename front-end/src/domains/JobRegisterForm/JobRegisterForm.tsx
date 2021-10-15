@@ -11,7 +11,9 @@ interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
 }
 
 const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
-  const { status, makeRequest, done } = usePostJobRegister({ labId });
+  const { isIdle, isLoading, isFailed, isSucceed, makeRequest, done } = usePostJobRegister({
+    labId,
+  });
   const [key, setKey] = useState(0);
 
   const { state, dispatch, reset } = useForm<Values>({
@@ -67,23 +69,19 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   return (
     <>
-      {status === "succeed" && (
-        <Dialog onConfirm={handleConfirm}>
-          <Text size="md" weight="bold">
-            Job 등록에 성공하였습니다.
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={handleConfirm}>
+        <Text size="md" weight="bold">
+          Job 등록에 성공하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "failed" && (
-        <Dialog onConfirm={done}>
-          <Text size="md" weight="bold">
-            Job 등록에 실패하였습니다.
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="bold">
+          Job 등록에 실패하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "loading" && (
+      {isLoading && (
         <Dimmer>
           <Loading size="lg" />
         </Dimmer>
@@ -102,7 +100,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={status !== "idle"}>
+        <Button className="submit" color="secondary" disabled={!isIdle}>
           제출
         </Button>
       </StyledForm>

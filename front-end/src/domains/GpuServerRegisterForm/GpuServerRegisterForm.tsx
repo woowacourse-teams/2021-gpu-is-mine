@@ -10,7 +10,9 @@ type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   const goToGpuServerView = useMoveToPage(PATH.GPU_SERVER.VIEW);
 
-  const { status, makeRequest, done } = usePostGpuServer({ labId: 1 });
+  const { isIdle, isLoading, isSucceed, isFailed, makeRequest, done } = usePostGpuServer({
+    labId: 1,
+  });
 
   const {
     form,
@@ -23,23 +25,19 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
 
   return (
     <>
-      {status === "succeed" && (
-        <Dialog onConfirm={goToGpuServerView}>
-          <Text size="md" weight="bold">
-            서버 등록에 성공하였습니다.
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={goToGpuServerView}>
+        <Text size="md" weight="bold">
+          서버 등록에 성공하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "failed" && (
-        <Dialog onConfirm={done}>
-          <Text size="md" weight="bold">
-            서버 등록에 실패하였습니다.
-          </Text>
-        </Dialog>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="bold">
+          서버 등록에 실패하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "loading" && (
+      {isLoading && (
         <Dimmer>
           <Loading size="lg" />
         </Dimmer>
@@ -51,7 +49,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
         <Input size="sm" {...diskSizeInputProps} />
         <Input size="sm" {...performanceInputProps} />
         <Input size="sm" {...modelNameInputProps} />
-        <StyledButton color="secondary" disabled={status !== "idle"}>
+        <StyledButton color="secondary" disabled={!isIdle}>
           제출
         </StyledButton>
       </StyledForm>
