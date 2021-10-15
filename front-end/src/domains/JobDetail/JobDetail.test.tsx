@@ -32,12 +32,12 @@ describe("JobDetail", () => {
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
 
-  test("status가 failed 일 때 Alert가 표시된다. 확인 버튼을 클릭하면 이전 페이지로 이동한다", () => {
+  test("status가 failed 일 때 dialog가 표시된다. 확인 버튼을 클릭하면 이전 페이지로 이동한다", () => {
     mock({ status: "failed" });
 
     render(<JobDetail labId={1} />);
 
-    expect(screen.getByRole("alertdialog", { name: /alert/i })).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     userEvent.click(screen.getByRole("button"));
 

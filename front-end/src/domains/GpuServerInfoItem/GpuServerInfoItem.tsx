@@ -1,18 +1,9 @@
 import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
-import {
-  Flicker,
-  Text,
-  VerticalBox,
-  ServerIcon,
-  Button,
-  Confirm,
-  Alert,
-  Loading,
-  Dimmer,
-} from "../../components";
+import { Flicker, Text, VerticalBox, ServerIcon, Button, Loading, Dimmer } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import { SimpleGpuServer, MemberType } from "../../types";
 import { PATH } from "../../constants";
+import Dialog from "../../components/Dialog/Dialog";
 
 interface GpuServerInfoItemProps extends SimpleGpuServer {
   memberType: MemberType;
@@ -44,6 +35,11 @@ const GpuServerInfoItem = ({
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
+  const handleConfirmConfirmed = () => {
+    makeRequest();
+    closeConfirm();
+  };
+
   return (
     <>
       {isLoading && (
@@ -53,29 +49,31 @@ const GpuServerInfoItem = ({
       )}
 
       {isSucceed && (
-        <Alert onConfirm={refresh}>
+        <Dialog onConfirm={refresh}>
           <Text size="md" weight="regular">
             {`${serverName}을(를) 삭제하였습니다.`}
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {isFailed && (
-        <Alert onConfirm={done}>
+        <Dialog onConfirm={done}>
           <Text size="md" weight="regular">
             {
               /* TODO: 에러에 따라 구체적인 디렉션 추가 */
               `${serverName} 삭제에 실패하였습니다.`
             }
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
-        <Text size="md" weight="medium">
-          {serverName}을(를) 정말 삭제하시겠습니까?
-        </Text>
-      </Confirm>
+      {isConfirmOpen && (
+        <Dialog onConfirm={handleConfirmConfirmed} onCancel={closeConfirm}>
+          <Text size="md" weight="medium">
+            {serverName}을(를) 정말 삭제하시겠습니까?
+          </Text>
+        </Dialog>
+      )}
 
       <StyledGpuServerInfoItem className={className}>
         <div className="gpu-server-title-wrapper">

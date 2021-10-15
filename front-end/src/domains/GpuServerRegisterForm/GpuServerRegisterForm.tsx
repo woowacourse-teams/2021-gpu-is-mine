@@ -1,7 +1,7 @@
 import { FormHTMLAttributes } from "react";
 import { useMoveToPage, usePostGpuServer } from "../../hooks";
 import useGpuServerRegisterForm from "./useGpuServerRegisterForm";
-import { Input, Text, Alert, Loading, Dimmer } from "../../components";
+import { Input, Text, Dialog, Loading, Dimmer } from "../../components";
 import { StyledForm, StyledButton } from "./GpuServerRegisterForm.styled";
 import { PATH } from "../../constants";
 
@@ -24,19 +24,19 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
   return (
     <>
       {status === "succeed" && (
-        <Alert onConfirm={goToGpuServerView}>
+        <Dialog onConfirm={goToGpuServerView}>
           <Text size="md" weight="bold">
             서버 등록에 성공하였습니다.
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {status === "failed" && (
-        <Alert onConfirm={done}>
+        <Dialog onConfirm={done}>
           <Text size="md" weight="bold">
             서버 등록에 실패하였습니다.
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {status === "loading" && (

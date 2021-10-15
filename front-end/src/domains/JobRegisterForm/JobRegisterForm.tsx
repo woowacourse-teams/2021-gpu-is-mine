@@ -1,7 +1,7 @@
 import { FormHTMLAttributes, useState } from "react";
 import { expectedTimeValidator, jobNameValidator, minPerformanceValidator } from "./validator";
 import { getFormProps, getInputProps, useForm, usePostJobRegister } from "../../hooks";
-import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
+import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
 import { StyledForm } from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { Values } from "./JobRegisterForm.type";
@@ -68,19 +68,19 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   return (
     <>
       {status === "succeed" && (
-        <Alert onConfirm={handleConfirm}>
+        <Dialog onConfirm={handleConfirm}>
           <Text size="md" weight="bold">
             Job 등록에 성공하였습니다.
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {status === "failed" && (
-        <Alert onConfirm={done}>
+        <Dialog onConfirm={done}>
           <Text size="md" weight="bold">
             Job 등록에 실패하였습니다.
           </Text>
-        </Alert>
+        </Dialog>
       )}
 
       {status === "loading" && (

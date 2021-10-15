@@ -1,6 +1,6 @@
 import { useGoToPage } from "../../hooks";
 import { useJobId, useJobDetail } from "./useJobDetail";
-import { Loading, Text, Alert } from "../../components";
+import { Loading, Text, Dialog } from "../../components";
 import {
   StyledJobDetail,
   StyledJobDetailSummary,
@@ -24,9 +24,9 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
     <>
       {status === "loading" && <Loading size="lg" />}
       {status === "failed" && (
-        <Alert onConfirm={goToPreviousPage}>
+        <Dialog onConfirm={goToPreviousPage}>
           <Text>Job 상세 조회에 실패했습니다.</Text>
-        </Alert>
+        </Dialog>
       )}
       {status === "succeed" && detail && (
         <StyledJobDetail {...rest}>
