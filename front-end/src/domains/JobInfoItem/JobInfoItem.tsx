@@ -91,8 +91,8 @@ const JobInfoItem = ({
         }}
         onCancel={closeConfirm}
       >
-        <Text size="md" weight="medium">
-          {jobName}을(를) 정말 취소하시겠습니까?
+        <Text size="sm" weight="medium">
+          {jobName}을(를) 취소하시겠습니까?
         </Text>
       </Dialog>
 

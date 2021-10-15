@@ -46,7 +46,7 @@ describe("GpuServer/InfoItem", () => {
     const confirm = await screen.findByRole("dialog");
 
     expect(confirm).toBeInTheDocument();
-    expect(confirm).toHaveTextContent(`${simpleGpuServer.serverName}을(를) 정말 삭제하시겠습니까?`);
+    expect(confirm).toHaveTextContent(`${simpleGpuServer.serverName}을(를) 삭제하시겠습니까?`);
   });
 
   test("삭제 버튼을 클릭하여 발생한 Confirm의 취소 버튼을 클릭하면 Confirm이 표시되지 않는다", async () => {

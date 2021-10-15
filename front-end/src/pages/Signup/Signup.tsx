@@ -31,7 +31,9 @@ const Signup = () => {
       {isLoading && <Loading size="lg" />}
 
       <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={onConfirm}>
-        <Text>{DialogText}</Text>
+        <Text size="sm" weight="medium">
+          {DialogText}
+        </Text>
       </Dialog>
 
       <Text as="h2" srOnly>
