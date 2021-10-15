@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Button from "../Button/Button";
 
 export const Inner = styled.dialog`
   display: grid;
@@ -16,6 +15,10 @@ export const Inner = styled.dialog`
 
   padding: 0;
   position: sticky;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const Body = styled.div`
@@ -25,7 +28,6 @@ export const Body = styled.div`
 
   word-break: break-all;
   padding: 0.5rem 2rem;
-  user-select: none;
 `;
 
 export const Footer = styled.div`
@@ -33,24 +35,38 @@ export const Footer = styled.div`
   flex-direction: row;
 
   font-size: 1rem;
+  user-select: none;
 `;
 
-export const CancelButton = styled(Button)`
+export const CancelButton = styled.button`
   color: var(--warning);
   background-color: inherit;
   font-weight: 500;
+  width: 100%;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: rgba(248, 101, 101, 0.1);
+    font-weight: 600;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
-export const ConfirmButton = styled(Button)`
+export const ConfirmButton = styled.button`
   color: var(--primary-800);
   background-color: inherit;
   font-weight: 500;
+  width: 100%;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: rgba(52, 67, 85, 0.1);
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
