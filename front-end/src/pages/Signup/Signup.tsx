@@ -1,38 +1,46 @@
-import { useEffect } from "react";
 import { Alert, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
-import { selectSignupStatus } from "../../features/member/signupSlice";
-import { useAppSelector } from "../../app/hooks";
-import { useBoolean, useMoveToPage, usePathTitle } from "../../hooks";
+import {
+  selectSignupStatus,
+  signupErrorConfirmed,
+  signupSucceedConfirmed,
+} from "../../features/member/signupSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useMoveToPage, usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";
 
 const Signup = () => {
   const { isLoading, isSucceed, isFailed } = useAppSelector(selectSignupStatus);
 
-  const [isOpenAlert, openAlert, closeAlert] = useBoolean(false);
-
   const heading = usePathTitle();
+
+  const dispatch = useAppDispatch();
+
+  const handleFailedConfirm = () => {
+    dispatch(signupErrorConfirmed());
+  };
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
-  const onConfirm = isSucceed ? moveToLoginPage : closeAlert;
-
-  const alertText = isSucceed ? "회원가입에 성공하였습니다." : "회원가입에 실패하였습니다.";
-
-  useEffect(() => {
-    if (isSucceed || isFailed) {
-      openAlert();
-    }
-  }, [isSucceed, isFailed, openAlert]);
+  const handleSucceedConfirm = () => {
+    dispatch(signupSucceedConfirmed());
+    moveToLoginPage();
+  };
 
   return (
     <MemberLayout>
       {isLoading && <Loading size="lg" />}
 
-      {isOpenAlert && (
-        <Alert onConfirm={onConfirm}>
-          <Text>{alertText}</Text>
+      {isSucceed && (
+        <Alert onConfirm={handleSucceedConfirm}>
+          <Text>회원가입에 성공하였습니다.</Text>
+        </Alert>
+      )}
+
+      {isFailed && (
+        <Alert onConfirm={handleFailedConfirm}>
+          <Text>회원가입에 실패하였습니다.</Text>
         </Alert>
       )}
 
