@@ -72,7 +72,7 @@ const Dialog = ({
 
   return open ? (
     <Portal>
-      <Dimmer onClick={onClose} color={dimmedColor}>
+      <Dimmer backdrop={backdrop} onClose={onClose} color={dimmedColor}>
         <Inner
           ref={dialogRef}
           tabIndex={-1}
