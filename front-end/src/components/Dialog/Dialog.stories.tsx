@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import Dialog from "./Dialog";
 import Text from "../Text/Text";
@@ -17,6 +18,10 @@ DefaultDialog.args = {
       정말로 삭제하시겠습니까?
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
@@ -33,6 +38,10 @@ ShortContentDialog.args = {
       X
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
@@ -52,6 +61,10 @@ LongContentDialog.args = {
       삭제하시겠습니까?정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
