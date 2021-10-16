@@ -1,4 +1,13 @@
-import { ReactNode, HTMLAttributes, useRef, useEffect, useCallback, ComponentProps } from "react";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import {
+  ReactNode,
+  HTMLAttributes,
+  useRef,
+  useEffect,
+  ComponentProps,
+  KeyboardEventHandler,
+  MutableRefObject,
+} from "react";
 import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { Inner, Body, Footer, CancelButton, ConfirmButton } from "./Dialog.styled";
@@ -11,7 +20,28 @@ interface DialogProps extends HTMLAttributes<HTMLDialogElement> {
   onCancel?: () => void;
   children: ReactNode;
   className?: string;
+  backdrop?: "static";
 }
+
+const useTabTrap = (refs: MutableRefObject<HTMLElement>[]) => {
+  const indexRef = useRef(0);
+
+  const onKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        indexRef.current = (indexRef.current - 1 + refs.length) % refs.length;
+        refs[indexRef.current].current.focus();
+      } else {
+        refs[indexRef.current].current.focus();
+        indexRef.current = (indexRef.current + 1) % refs.length;
+      }
+    }
+  };
+
+  return onKeyDown;
+};
 
 const Dialog = ({
   open,
@@ -21,49 +51,24 @@ const Dialog = ({
   onConfirm,
   onCancel,
   className,
+  backdrop,
   ...rest
 }: DialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const cancelButtonRef = useRef<HTMLButtonElement>(null);
-  const confirmButtonRef = useRef<HTMLButtonElement>(null);
-  const indexRef = useRef(0);
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      const Buttons = [onCancel && cancelButtonRef.current, confirmButtonRef.current].filter(
-        Boolean
-      ) as HTMLElement[];
-
-      if (event.key === "Tab") {
-        event.preventDefault();
-        Buttons[indexRef.current].focus();
-        indexRef.current = (indexRef.current + 1) % Buttons.length;
-
-        return;
-      }
-
-      if (event.key === "Escape") {
-        onClose();
-      }
-    },
-    [onCancel, onClose]
-  );
 
   useEffect(() => {
-    if (!open) {
-      return;
+    if (open) {
+      dialogRef.current!.focus();
     }
+  }, [open]);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    dialogRef.current!.focus();
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
+  const ButtonRefs = [onCancel && cancelButtonRef, confirmButtonRef].filter(
+    Boolean
+  ) as MutableRefObject<HTMLElement>[];
 
-    document.addEventListener("keydown", handleKeyDown);
-
-    // eslint-disable-next-line consistent-return
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleKeyDown, open]);
+  const handleKeyDown = useTabTrap(ButtonRefs);
 
   return open ? (
     <Portal>
@@ -72,6 +77,7 @@ const Dialog = ({
           ref={dialogRef}
           tabIndex={-1}
           className={className}
+          onKeyDown={handleKeyDown}
           aria-describedby="dialog-body"
           {...rest}
         >
