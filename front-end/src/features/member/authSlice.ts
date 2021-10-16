@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, SerializedError } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, SerializedError, createAction } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
 import { useAppDispatch } from "../../app/hooks";
 import { client } from "../../services";
@@ -84,12 +84,18 @@ export const logout = createAsyncThunk<void, void>("auth/logout", () => {
   client.logout();
 });
 
+export const authErrorConfirmed = createAction("auth/error/confirmed");
+
 const authSlice = createSlice({
   name: SLICE_NAME.AUTH,
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(authErrorConfirmed, (state) => {
+        state.status = STATUS.IDLE;
+        state.error = null;
+      })
       .addCase(login.pending, (state) => {
         state.status = STATUS.LOADING;
       })
