@@ -12,7 +12,7 @@ import Dimmer from "../Dimmer/Dimmer";
 import Portal from "../Portal/Portal";
 import { Inner, Body, Footer, CancelButton, ConfirmButton } from "./Dialog.styled";
 
-interface DialogProps extends HTMLAttributes<HTMLDialogElement> {
+interface DialogProps extends HTMLAttributes<HTMLElement> {
   dimmedColor?: ComponentProps<typeof Dimmer>["color"];
   open: boolean;
   onClose: () => void;
@@ -24,19 +24,19 @@ interface DialogProps extends HTMLAttributes<HTMLDialogElement> {
 }
 
 const useTabTrap = (refs: MutableRefObject<HTMLElement>[]) => {
-  const indexRef = useRef(0);
+  let currIndex = 0;
 
-  const onKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
-    if (event.key === "Tab") {
-      event.preventDefault();
+  const onKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
+    if (event.key !== "Tab") return;
 
-      if (event.shiftKey) {
-        indexRef.current = (indexRef.current - 1 + refs.length) % refs.length;
-        refs[indexRef.current].current.focus();
-      } else {
-        refs[indexRef.current].current.focus();
-        indexRef.current = (indexRef.current + 1) % refs.length;
-      }
+    event.preventDefault();
+
+    if (event.shiftKey) {
+      currIndex = (currIndex - 1 + refs.length) % refs.length;
+      refs[currIndex].current.focus();
+    } else {
+      refs[currIndex].current.focus();
+      currIndex = (currIndex + 1) % refs.length;
     }
   };
 
@@ -54,8 +54,9 @@ const Dialog = ({
   backdrop,
   ...rest
 }: DialogProps) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (open) {
       dialogRef.current!.focus();
@@ -79,6 +80,8 @@ const Dialog = ({
           className={className}
           onKeyDown={handleKeyDown}
           aria-describedby="dialog-body"
+          role="dialog"
+          aria-modal={open}
           {...rest}
         >
           <Body id="dialog-body">{children}</Body>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Inner = styled.dialog`
+export const Inner = styled.div`
   display: grid;
   grid-template-rows: auto 3rem;
   box-shadow: 0 0 4px 2px rgb(253 243 226 / 30%);
