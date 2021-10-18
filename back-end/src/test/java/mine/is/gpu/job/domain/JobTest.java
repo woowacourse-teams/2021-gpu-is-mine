@@ -135,4 +135,20 @@ class JobTest {
 
         assertThatThrownBy(job::complete).isEqualTo(JobException.JOB_NOT_RUNNING.getException());
     }
+
+    @DisplayName("Job 예상 시간 검증 - 실패 케이스")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"-1", "0.5", "abc"})
+    void expectedTimeFailure(String expectedTime) {
+        assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", expectedTime))
+                .isEqualTo(JobException.INVALID_EXPECTED_TIME.getException());
+    }
+
+    @DisplayName("Job 예상 시간 검증 - 성공 케이스")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"0", "1", "700"})
+    void expectedTimeSuccess(String expectedTime) {
+        assertThatCode(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", expectedTime))
+                .doesNotThrowAnyException();
+    }
 }
