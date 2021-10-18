@@ -5,6 +5,7 @@ const dotenvWebpack = require("dotenv-webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = (env) => {
   const isDevelopment = !env.production;
@@ -46,6 +47,7 @@ module.exports = (env) => {
       ],
     },
     plugins: [
+      new FaviconsWebpackPlugin({ prefix: "/" }),
       new HtmlWebpackPlugin({
         base: "/",
         template: "public/index.html",
