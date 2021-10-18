@@ -60,6 +60,9 @@ const Dialog = ({
   useEffect(() => {
     if (open) {
       dialogRef.current!.focus();
+      const previousFocusedElement = document.activeElement as HTMLElement;
+
+      return () => previousFocusedElement.focus();
     }
   }, [open]);
 
