@@ -40,7 +40,6 @@ export const Footer = styled.div`
 
 export const CancelButton = styled.button`
   color: var(--warning);
-  background-color: inherit;
   font-weight: 500;
   width: 100%;
 
@@ -52,12 +51,13 @@ export const CancelButton = styled.button`
 
   &:focus {
     outline: none;
+    box-shadow: inset 0 0 2px 2px rgba(248, 101, 101, 0.5);
+    border-bottom-left-radius: 0.5rem;
   }
 `;
 
 export const ConfirmButton = styled.button`
   color: var(--primary-800);
-  background-color: inherit;
   font-weight: 500;
   width: 100%;
 
@@ -68,5 +68,7 @@ export const ConfirmButton = styled.button`
 
   &:focus {
     outline: none;
+    box-shadow: inset 0 0 2px 2px rgba(52, 67, 85, 0.5);
+    border-bottom-right-radius: 0.5rem;
   }
 `;
