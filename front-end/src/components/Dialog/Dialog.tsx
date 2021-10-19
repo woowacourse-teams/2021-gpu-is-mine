@@ -95,7 +95,7 @@ const Dialog = ({
                 취소
               </CancelButton>
             ) : null}
-            <ConfirmButton ref={confirmButtonRef} onClick={onConfirm}>
+            <ConfirmButton ref={confirmButtonRef} onClick={onConfirm} only={!onCancel}>
               확인
             </ConfirmButton>
           </Footer>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Inner = styled.div`
   display: grid;
@@ -56,7 +56,7 @@ export const CancelButton = styled.button`
   }
 `;
 
-export const ConfirmButton = styled.button`
+export const ConfirmButton = styled.button<{ only: boolean }>`
   color: var(--primary-800);
   font-weight: 500;
   width: 100%;
@@ -69,6 +69,12 @@ export const ConfirmButton = styled.button`
   &:focus {
     outline: none;
     box-shadow: inset 0 0 2px 2px rgba(52, 67, 85, 0.5);
+
     border-bottom-right-radius: 0.5rem;
+    ${({ only }) =>
+      only &&
+      css`
+        border-bottom-left-radius: 0.5rem;
+      `}
   }
 `;
