@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
 import client from "../../services/Client";
 import type { RootState } from "../../app/store";
@@ -7,7 +7,7 @@ type SignupState =
   | { status: typeof STATUS.IDLE; error: null }
   | { status: typeof STATUS.LOADING; error: null }
   | { status: typeof STATUS.SUCCEED; error: null }
-  | { status: typeof STATUS.FAILED; error: Error };
+  | { status: typeof STATUS.FAILED; error: SerializedError };
 
 const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
@@ -31,20 +31,33 @@ export const signup = createAsyncThunk<void, { email: string; password: string; 
     client.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
 
+export const signupErrorConfirmed = createAction("signup/error/confirmed");
+
+export const signupSucceedConfirmed = createAction("signup/succeed/confirmed");
+
 const signupSlice = createSlice({
   name: SLICE_NAME.SIGNUP,
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(signupSucceedConfirmed, (state) => {
+        state.status = STATUS.IDLE;
+      })
+      .addCase(signupErrorConfirmed, (state) => {
+        state.status = STATUS.IDLE;
+        state.error = null;
+      })
       .addCase(signup.pending, (state) => {
         state.status = STATUS.LOADING;
       })
       .addCase(signup.fulfilled, (state) => {
         state.status = STATUS.SUCCEED;
+        state.error = null;
       })
-      .addCase(signup.rejected, (state) => {
+      .addCase(signup.rejected, (state, action) => {
         state.status = STATUS.FAILED;
+        state.error = action.error;
       });
   },
 });

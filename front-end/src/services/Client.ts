@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { API_ENDPOINT, STORAGE_KEY } from "../constants";
 import { httpClient, throwError, validateExpires } from "../utils";
 import storage from "./Storage";
@@ -8,8 +8,6 @@ import type {
   MemberLoginRequest,
   MyInfoResponse,
   MemberSignupRequest,
-  GpuServerViewResponses,
-  GpuServerRegisterRequest,
 } from "../types";
 
 const Client = class {

@@ -1,32 +1,25 @@
-import { useEffect } from "react";
 import { Dialog, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { selectLoginStatus } from "../../features/member/authSlice";
-import { useAppSelector } from "../../app/hooks";
-import { useBoolean, usePathTitle, useAuthorize } from "../../hooks";
+import { authErrorConfirmed, selectLoginStatus } from "../../features/member/authSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { usePathTitle, useAuthorize } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
 
 const Login = () => {
   const { isLoading, isFailed } = useAppSelector(selectLoginStatus);
 
-  const [isOpenDialog, openDialog, closeDialog] = useBoolean(false);
-
-  useEffect(() => {
-    if (isFailed) {
-      openDialog();
-    }
-  }, [isFailed, openDialog]);
-
   const heading = usePathTitle();
+
+  const dispatch = useAppDispatch();
+
+  const handleConfirm = () => dispatch(authErrorConfirmed());
 
   useAuthorize();
 
   return (
     <>
-      <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={closeDialog}>
-        <Text size="sm" weight="medium">
-          이메일 또는 비밀번호를 확인해주세요
-        </Text>
+      <Dialog open={isFailed} onClose={handleConfirm} onConfirm={handleConfirm}>
+        이메일 또는 비밀번호를 확인해주세요
       </Dialog>
 
       <MemberLayout>
