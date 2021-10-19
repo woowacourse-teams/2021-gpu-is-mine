@@ -1,3 +1,4 @@
+import { SerializedError } from "@reduxjs/toolkit";
 import { useEffect, useRef } from "react";
 import { STORAGE_KEY } from "../../constants";
 import { storage } from "../../services";
@@ -14,7 +15,17 @@ const useAuthorize = () => {
 
   useEffect(() => {
     if (accessToken && expiresRef.current) {
-      dispatch(authorize({ accessToken, expires: expiresRef.current }));
+      dispatch(authorize({ accessToken, expires: expiresRef.current }))
+        .unwrap()
+        .catch((error: SerializedError) => {
+          if (error.name === "AuthorizationError") {
+            storage.remove(STORAGE_KEY.ACCESS_TOKEN);
+            storage.remove(STORAGE_KEY.EXPIRES);
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-throw-literal
+          throw error;
+        });
     }
   }, [dispatch, accessToken]);
 };

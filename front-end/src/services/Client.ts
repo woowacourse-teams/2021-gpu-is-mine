@@ -1,12 +1,15 @@
 /* eslint-disable class-methods-use-this */
+import { AxiosError } from "axios";
 import { API_ENDPOINT, STORAGE_KEY } from "../constants";
-import { httpClient, validateExpires } from "../utils";
+import { httpClient, throwError, validateExpires } from "../utils";
 import storage from "./Storage";
 import type {
   MemberLoginResponse,
   MemberLoginRequest,
   MyInfoResponse,
   MemberSignupRequest,
+  GpuServerViewResponses,
+  GpuServerRegisterRequest,
 } from "../types";
 
 const Client = class {
@@ -53,6 +56,28 @@ const Client = class {
   async logout() {
     storage.remove(STORAGE_KEY.ACCESS_TOKEN);
     storage.remove(STORAGE_KEY.EXPIRES);
+  }
+
+  async fetchGpuServerAll(labId: number) {
+    return httpClient.get<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS);
+  }
+
+  async postGpuServer(labId: number, body: GpuServerRegisterRequest) {
+    try {
+      await httpClient.post<{ message?: string }>(API_ENDPOINT.LABS(labId).GPUS, body);
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+
+      if (error?.response?.status === 400) {
+        throwError("BadRequestError", error?.response?.data.message);
+      }
+
+      throw error;
+    }
+  }
+
+  async deleteGpuServerById({ labId, serverId }: { labId: number; serverId: number }) {
+    await httpClient.delete<never>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`);
   }
 };
 

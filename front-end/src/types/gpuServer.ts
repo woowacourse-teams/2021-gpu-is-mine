@@ -41,7 +41,7 @@ export type SimpleGpuServer = {
 export type GpuServerViewResponse = SimpleGpuServer;
 
 export type GpuServerViewResponses = {
-  gpuServers: Readonly<GpuServerViewResponse[]>;
+  gpuServers: GpuServerViewResponse[];
 };
 
 type GpuBoardRequest = Pick<GpuBoard, "modelName" | "performance">;

@@ -36,7 +36,7 @@ export type AuthState =
       myInfo: null;
     };
 
-const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
+export const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
   isIdle: status === STATUS.IDLE,
   isLoading: status === STATUS.LOADING,

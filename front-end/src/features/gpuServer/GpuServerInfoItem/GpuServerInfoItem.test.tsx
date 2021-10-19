@@ -1,13 +1,10 @@
 import { rest } from "msw";
-import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
-import { useMoveToPage } from "../../hooks";
+import { render, screen, waitFor, userEvent } from "../../../__test__/test-utils";
+import { BASE_URL, PATH } from "../../../constants";
+import { useMoveToPage } from "../../../hooks";
 import GpuServerInfoItem from "./GpuServerInfoItem";
-import { BASE_URL, PATH } from "../../constants";
-import { MemberType } from "../../types";
-import server from "../../__mocks__/server";
-import { simpleGpuServer } from "../../__fixtures__/gpuServersResponses";
-
-const refresh = jest.fn();
+import server from "../../../__mocks__/server";
+import { simpleGpuServer } from "../../../__fixtures__/gpuServersResponses";
 
 jest.mock("../../hooks/useHistory/useHistory.ts", () => ({
   ...jest.requireActual<Record<string, unknown>>("../../hooks/useHistory/useHistory.ts"),
@@ -15,10 +12,8 @@ jest.mock("../../hooks/useHistory/useHistory.ts", () => ({
 }));
 
 describe("GpuServer/InfoItem", () => {
-  const setup = (memberType: MemberType = "USER") => {
-    render(
-      <GpuServerInfoItem {...simpleGpuServer} labId={1} memberType={memberType} refresh={refresh} />
-    );
+  const setup = () => {
+    render(<GpuServerInfoItem serverId={simpleGpuServer.id} />);
 
     const detailButton = screen.getByRole("button", { name: "상세", hidden: true });
     expect(detailButton).toBeInTheDocument();
@@ -43,10 +38,10 @@ describe("GpuServer/InfoItem", () => {
 
     userEvent.click(deleteButton);
 
-    const confirm = await screen.findByRole("dialog");
+    const confirm = await screen.findByRole("dialog", { name: /confirm/i });
 
     expect(confirm).toBeInTheDocument();
-    expect(confirm).toHaveTextContent(`${simpleGpuServer.serverName}을(를) 삭제하시겠습니까?`);
+    expect(confirm).toHaveTextContent(`${simpleGpuServer.serverName}을(를) 정말 삭제하시겠습니까?`);
   });
 
   test("삭제 버튼을 클릭하여 발생한 Confirm의 취소 버튼을 클릭하면 Confirm이 표시되지 않는다", async () => {
@@ -57,14 +52,14 @@ describe("GpuServer/InfoItem", () => {
     userEvent.click(deleteButton);
 
     // Confirm창이 표시된다
-    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
 
     // Confirm 창의 취소 버튼을 클릭한다
     const confirmButton = screen.getByRole("button", { name: /취소/, hidden: true });
     userEvent.click(confirmButton);
 
     // Confirm창이 닫힌 것을 확인한다
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
   });
 
   test("삭제 버튼을 클릭하여 발생한 Confirm의 확인 버튼을 클릭하면 Alert가 표시된다", async () => {
@@ -75,14 +70,14 @@ describe("GpuServer/InfoItem", () => {
     userEvent.click(deleteButton);
 
     // Confirm창이 표시된다
-    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
 
     // Confirm 창의 확인 버튼을 클릭한다
     const confirmButton = screen.getByRole("button", { name: /확인/, hidden: true });
     userEvent.click(confirmButton);
 
     // Confirm창이 닫힌 것을 확인한다
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
 
     // 로딩 컴포넌트가 표시되었다가 사라진다
     expect(await screen.findByRole("progressbar")).toBeInTheDocument();
@@ -93,7 +88,7 @@ describe("GpuServer/InfoItem", () => {
     expect(alert).toBeInTheDocument();
 
     // Alert창의 확인 버튼을 클릭한다
-    userEvent.click(screen.getByRole("button"));
+    userEvent.click(screen.getByRole("button", { name: /confirm/ }));
     expect(refresh).toHaveBeenCalled();
 
     // TODO: Alert창 닫히는거 확인
@@ -112,14 +107,14 @@ describe("GpuServer/InfoItem", () => {
     userEvent.click(deleteButton);
 
     // Confirm창이 표시된다
-    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /confirm/i })).toBeInTheDocument();
 
     // Confirm 창의 확인 버튼을 클릭한다
     const confirmButton = screen.getByRole("button", { name: /확인/, hidden: true });
     userEvent.click(confirmButton);
 
     // Confirm창이 닫힌 것을 확인한다
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: /confirm/i })).not.toBeInTheDocument();
 
     // 로딩 컴포넌트가 표시되었다가 사라진다
     expect(await screen.findByRole("progressbar")).toBeInTheDocument();
@@ -130,6 +125,6 @@ describe("GpuServer/InfoItem", () => {
     expect(alert).toBeInTheDocument();
 
     // Alert창의 확인 버튼을 클릭한다
-    userEvent.click(screen.getByRole("button"));
+    userEvent.click(screen.getByRole("button", { name: /confirm/ }));
   });
 });

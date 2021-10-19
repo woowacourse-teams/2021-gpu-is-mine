@@ -1,64 +1,49 @@
-import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
-import { Flicker, Text, VerticalBox, ServerIcon, Button, Loading, Dimmer } from "../../components";
+import { PATH } from "../../../constants";
+import {
+  selectGpuServerInfoById,
+  selectGpuServerStatus,
+  deleteGpuServerById,
+} from "../gpuServerSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useBoolean, useMoveToPage } from "../../../hooks";
+import { Flicker, Text, VerticalBox, ServerIcon, Button, Dialog } from "../../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { SimpleGpuServer, MemberType } from "../../types";
-import { PATH } from "../../constants";
-import Dialog from "../../components/Dialog/Dialog";
+import type { RootState } from "../../../app/store";
 
-interface GpuServerInfoItemProps extends SimpleGpuServer {
-  memberType: MemberType;
-  labId: number;
-  refresh: () => Promise<unknown>;
+interface GpuServerInfoItemProps {
   className?: string;
+  serverId: number;
 }
 
-const GpuServerInfoItem = ({
-  id: serverId,
-  serverName,
-  isOn,
-  gpuBoard: { performance },
-  runningJobs,
-  labId,
-  memberType,
-  waitingJobCount,
-  refresh,
-  className,
-}: GpuServerInfoItemProps) => {
-  const runningJobName = runningJobs[0]?.name || "N/A";
+const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
+  const { memberType, serverName, isOn, performance, runningJobName, waitingJobCount } =
+    useAppSelector((state: RootState) => selectGpuServerInfoById(state, serverId));
 
-  const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
-    labId,
-    serverId,
-  });
+  const { isLoading, isSucceed } = useAppSelector((state: RootState) =>
+    selectGpuServerStatus(state, deleteGpuServerById)
+  );
 
-  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
+  const dispatch = useAppDispatch();
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const handleConfirmConfirmed = () => {
-    makeRequest();
-    closeConfirm();
+  const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
+
+  const handleDelete = async () => {
+    await dispatch(deleteGpuServerById(serverId)).unwrap();
+    openDialog();
   };
+
+  const moveToDetailPage = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
 
   return (
     <>
-      {isLoading && (
-        <Dimmer>
-          <Loading size="lg" />
-        </Dimmer>
-      )}
-
-      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
-        <Text size="sm" weight="medium">
-          {`${serverName}을(를) 삭제하였습니다.`}
-        </Text>
-      </Dialog>
-
-      <Dialog open={isFailed} onClose={done} onConfirm={done}>
-        <Text size="sm" weight="medium">
+      <Dialog open={isDialogOpen} onClose={closeDialog} onConfirm={closeDialog}>
+        <Text size="md" weight="regular">
           {
-            /* TODO: 에러에 따라 구체적인 디렉션 추가 */
-            `${serverName} 삭제에 실패하였습니다.`
+            isSucceed
+              ? `${serverName}을(를) 삭제하였습니다.`
+              : `${serverName} 삭제에 실패하였습니다.` /* TODO: 에러에 따라 구체적인 디렉션 추가 */
           }
         </Text>
       </Dialog>
@@ -66,10 +51,10 @@ const GpuServerInfoItem = ({
       <Dialog
         open={isConfirmOpen}
         onClose={closeConfirm}
-        onConfirm={handleConfirmConfirmed}
         onCancel={closeConfirm}
+        onConfirm={handleDelete}
       >
-        <Text size="sm" weight="medium">
+        <Text size="md" weight="regular">
           {serverName}을(를) 삭제하시겠습니까?
         </Text>
       </Dialog>
@@ -110,7 +95,7 @@ const GpuServerInfoItem = ({
         </VerticalBox>
 
         <div className="button-wrapper">
-          <Button className="button" color="primary" onClick={handleDetailClick}>
+          <Button className="button" color="primary" onClick={moveToDetailPage}>
             상세
           </Button>
 
