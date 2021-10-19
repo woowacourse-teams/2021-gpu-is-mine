@@ -1,32 +1,40 @@
-import { ReactNode, useEffect } from "react";
-import Portal from "../Portal/Portal";
+import { useEffect } from "react";
+import Text from "../Text/Text";
+import CloseIcon from "./closeIcon.svg";
 import { Body, CloseButton, StyledToast } from "./Toast.styled";
+import ToastTypeIcon from "./ToastTypeIcon/ToastTypeIcon";
 
 interface ToastProps {
-  open: boolean;
   onClose: () => void;
   type: "info" | "success" | "warning" | "error";
+  title: string;
+  message?: string;
   delayMs?: number;
-  className?: string;
-  children: ReactNode;
 }
 
-const Toast = ({ type, open, onClose, children, delayMs = 5_000, ...rest }: ToastProps) => {
+const Toast = ({ type, onClose, title, message, delayMs = 5_000, ...rest }: ToastProps) => {
   useEffect(() => {
-    if (open) {
-      setTimeout(() => onClose(), delayMs);
-    }
-  }, [delayMs, onClose, open]);
+    const id = setTimeout(onClose, delayMs);
 
-  return open ? (
-    <Portal>
-      <StyledToast {...rest}>
-        <div>{type}</div>
-        <Body>{children}</Body>
-        <CloseButton>X</CloseButton>
-      </StyledToast>
-    </Portal>
-  ) : null;
+    return () => clearTimeout(id);
+  }, [delayMs, onClose]);
+
+  return (
+    <StyledToast type={type} {...rest}>
+      <ToastTypeIcon type={type} width="36px" height="36px" />
+      <Body>
+        <Text weight="medium">{title}</Text>
+        {message ? (
+          <Text size="sm" weight="light">
+            {message}
+          </Text>
+        ) : null}
+      </Body>
+      <CloseButton onClick={onClose}>
+        <CloseIcon />
+      </CloseButton>
+    </StyledToast>
+  );
 };
 
 export default Toast;

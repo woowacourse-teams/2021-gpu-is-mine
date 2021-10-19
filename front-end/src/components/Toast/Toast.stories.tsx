@@ -1,5 +1,4 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Text from "../Text/Text";
 
 import Toast from "./Toast";
 
@@ -14,42 +13,30 @@ export const InfoToast = Template.bind({});
 
 InfoToast.args = {
   type: "info",
-  open: true,
-  onClose: () => {
-    window.alert("onClose called");
-  },
-  children: <Text>GPU 내껀데는 2021년 6월 22일부터 시작하였어요</Text>,
+  title: "TMI",
+  message: "GPU 내껀데는 2021년 6월 22일부터 시작하였어요",
 };
 
 export const SuccessToast = Template.bind({});
 
 SuccessToast.args = {
   type: "success",
-  open: true,
-  onClose: () => {
-    window.alert("onClose called");
-  },
-  children: <Text>회원가입에 성공하였습니다</Text>,
+  title: "회원가입에 성공하였습니다",
+  message: "반가워요 동동님",
 };
 
 export const WarningToast = Template.bind({});
 
 WarningToast.args = {
   type: "warning",
-  open: true,
-  onClose: () => {
-    window.alert("onClose called");
-  },
-  children: <Text>회원가입에 성공하였습니다</Text>,
+  title: "자동 로그아웃 안내",
+  message: "10분 후 로그아웃됩니다",
 };
 
 export const ErrorToast = Template.bind({});
 
 ErrorToast.args = {
   type: "error",
-  open: true,
-  onClose: () => {
-    window.alert("onClose called");
-  },
-  children: <Text>회원가입에 성공하였습니다</Text>,
+  title: "Email Validation",
+  message: "중복된 이메일입니다",
 };
