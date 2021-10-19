@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Alert, Loading, Text } from "../../components";
+import { Dialog, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
 import { checkAuthorization, selectLoginStatus } from "../../features/member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -17,13 +17,13 @@ const useAutoLogin = () => {
 const Login = () => {
   const { isLoading, isFailed } = useAppSelector(selectLoginStatus);
 
-  const [isOpenAlert, openAlert, closeAlert] = useBoolean(false);
+  const [isOpenDialog, openDialog, closeDialog] = useBoolean(false);
 
   useEffect(() => {
     if (isFailed) {
-      openAlert();
+      openDialog();
     }
-  }, [isFailed, openAlert]);
+  }, [isFailed, openDialog]);
 
   const heading = usePathTitle();
 
@@ -31,7 +31,11 @@ const Login = () => {
 
   return (
     <>
-      {isOpenAlert && <Alert onConfirm={closeAlert}>이메일 또는 비밀번호를 확인해주세요</Alert>}
+      <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={closeDialog}>
+        <Text size="sm" weight="medium">
+          이메일 또는 비밀번호를 확인해주세요
+        </Text>
+      </Dialog>
 
       <MemberLayout>
         <Text as="h2" srOnly>

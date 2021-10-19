@@ -1,22 +1,27 @@
+/* eslint-disable no-alert */
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Confirm from "./Confirm";
+import Dialog from "./Dialog";
 import Text from "../Text/Text";
 
 export default {
-  title: "Components/Confirm",
-  component: Confirm,
-} as ComponentMeta<typeof Confirm>;
+  title: "Components/Dialog",
+  component: Dialog,
+} as ComponentMeta<typeof Dialog>;
 
-const Template: ComponentStory<typeof Confirm> = (args) => <Confirm {...args} />;
+const Template: ComponentStory<typeof Dialog> = (args) => <Dialog {...args} />;
 
-export const DefaultConfirm = Template.bind({});
+export const DefaultDialog = Template.bind({});
 
-DefaultConfirm.args = {
+DefaultDialog.args = {
   children: (
     <Text size="md" weight="bold">
       정말로 삭제하시겠습니까?
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
@@ -25,14 +30,18 @@ DefaultConfirm.args = {
   },
 };
 
-export const ShortContentConfirm = Template.bind({});
+export const ShortContentDialog = Template.bind({});
 
-ShortContentConfirm.args = {
+ShortContentDialog.args = {
   children: (
     <Text size="md" weight="bold">
       X
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
@@ -41,9 +50,9 @@ ShortContentConfirm.args = {
   },
 };
 
-export const LongContentConfirm = Template.bind({});
+export const LongContentDialog = Template.bind({});
 
-LongContentConfirm.args = {
+LongContentDialog.args = {
   children: (
     <Text size="md" weight="bold">
       정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?정말로
@@ -52,6 +61,10 @@ LongContentConfirm.args = {
       삭제하시겠습니까?정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?정말로 삭제하시겠습니까?
     </Text>
   ),
+  open: true,
+  onClose: () => {
+    alert("close");
+  },
   onCancel: () => {
     alert("취소");
   },
