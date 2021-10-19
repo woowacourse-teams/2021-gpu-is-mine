@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Alert, Loading, Text } from "../../components";
+import { Dialog, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
 import { selectSignupStatus } from "../../features/member/signupSlice";
@@ -10,31 +10,31 @@ import { StyledSignupForm } from "./Signup.styled";
 const Signup = () => {
   const { isLoading, isSucceed, isFailed } = useAppSelector(selectSignupStatus);
 
-  const [isOpenAlert, openAlert, closeAlert] = useBoolean(false);
+  const [isOpenDialog, openDialog, closeDialog] = useBoolean(false);
 
   const heading = usePathTitle();
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
-  const onConfirm = isSucceed ? moveToLoginPage : closeAlert;
+  const onConfirm = isSucceed ? moveToLoginPage : closeDialog;
 
-  const alertText = isSucceed ? "회원가입에 성공하였습니다." : "회원가입에 실패하였습니다.";
+  const DialogText = isSucceed ? "회원가입에 성공하였습니다." : "회원가입에 실패하였습니다.";
 
   useEffect(() => {
     if (isSucceed || isFailed) {
-      openAlert();
+      openDialog();
     }
-  }, [isSucceed, isFailed, openAlert]);
+  }, [isSucceed, isFailed, openDialog]);
 
   return (
     <MemberLayout>
       {isLoading && <Loading size="lg" />}
 
-      {isOpenAlert && (
-        <Alert onConfirm={onConfirm}>
-          <Text>{alertText}</Text>
-        </Alert>
-      )}
+      <Dialog open={isOpenDialog} onClose={closeDialog} onConfirm={onConfirm}>
+        <Text size="sm" weight="medium">
+          {DialogText}
+        </Text>
+      </Dialog>
 
       <Text as="h2" srOnly>
         {heading}
