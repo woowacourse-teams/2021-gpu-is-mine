@@ -59,8 +59,9 @@ const Dialog = ({
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (open) {
-      dialogRef.current!.focus();
       const previousFocusedElement = document.activeElement as HTMLElement;
+
+      dialogRef.current!.focus();
 
       return () => previousFocusedElement.focus();
     }
