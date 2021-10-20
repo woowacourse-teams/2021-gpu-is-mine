@@ -3,19 +3,28 @@ import { StyledJobDetailSummary, SummaryList, Anchor } from "./JobDetailSummary.
 import { JobViewResponse } from "../../types";
 
 interface JobDetailSummaryProps {
+  title?: string;
   className?: string;
   detail: JobViewResponse;
 }
 
-const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
-  const url = `https://hub.docker.com/${detail.metaData}`;
+const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => {
+  const url = `https://hub.docker.com/r/${detail.metaData}`;
 
   return (
     <StyledJobDetailSummary {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        {detail.name}
+        {title || detail.name}
       </Text>
       <SummaryList>
+        {title && (
+          <>
+            <Text as="dt" weight="bold">
+              Job 이름
+            </Text>
+            <Text as="dd">{detail.name}</Text>{" "}
+          </>
+        )}
         <Text as="dt" weight="bold">
           Job 상태
         </Text>
@@ -32,16 +41,16 @@ const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
         <Text as="dd">{detail.gpuServerName}</Text>
 
         <Text as="dt" weight="bold">
-          {detail.status === "RUNNING" ? "" : "예상 "}실행시간
+          {detail.status === "RUNNING" ? "" : "예상 "}실행시간(hour)
         </Text>
         <Text as="dd">{detail.expectedTime}</Text>
 
         <Text as="dt" weight="bold">
-          DockerHub URL
+          DockerHub Image
         </Text>
         <Text as="dd">
           <Anchor target="_blank" href={url} rel="noreferrer">
-            {url}
+            {detail.metaData}
           </Anchor>
         </Text>
       </SummaryList>

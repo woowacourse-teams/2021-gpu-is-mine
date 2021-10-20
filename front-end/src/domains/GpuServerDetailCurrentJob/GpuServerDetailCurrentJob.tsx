@@ -16,7 +16,11 @@ const GpuServerDetailCurrentJob = ({
 }: GpuServerDetailCurrentJobProps) => {
   const { detail: jobDetail } = useJobDetail({ labId, jobId });
 
-  return <div {...rest}>{jobDetail && <JobDetailSummary detail={jobDetail} />}</div>;
+  return (
+    <div {...rest}>
+      {jobDetail && <JobDetailSummary title="현재 실행중인 Job" detail={jobDetail} />}
+    </div>
+  );
 };
 
 export default GpuServerDetailCurrentJob;
