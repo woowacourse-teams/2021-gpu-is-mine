@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
-@Profile("dev|prod|was1|was2")
+@Profile("prod|was1|was2")
 @Configuration(proxyBeanMethods = false)
 public class DataSourceConfig {
 
