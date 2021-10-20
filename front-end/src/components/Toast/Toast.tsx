@@ -1,26 +1,24 @@
-import { useEffect } from "react";
 import Text from "../Text/Text";
 import CloseIcon from "./closeIcon.svg";
 import { Body, CloseButton, StyledToast } from "./Toast.styled";
 import ToastTypeIcon from "./ToastTypeIcon/ToastTypeIcon";
+import type { SettledToast } from "./ToastProvider";
 
-interface ToastProps {
+interface ToastProps extends SettledToast {
   onClose: () => void;
-  type: "info" | "success" | "warning" | "error";
-  title: string;
-  message?: string;
-  delayMs?: number;
 }
 
-const Toast = ({ type, onClose, title, message, delayMs = 5_000, ...rest }: ToastProps) => {
-  useEffect(() => {
-    const id = setTimeout(onClose, delayMs);
+const Toast = ({ id, type, onClose, title, message, duration = 3_000, ...rest }: ToastProps) => {
+  const handleAnimationEnd = () => {
+    if (duration === null) {
+      return;
+    }
 
-    return () => clearTimeout(id);
-  }, [delayMs, onClose]);
+    onClose();
+  };
 
   return (
-    <StyledToast type={type} {...rest}>
+    <StyledToast type={type} onAnimationEnd={handleAnimationEnd} duration={duration} {...rest}>
       <ToastTypeIcon type={type} width="36px" height="36px" />
       <Body>
         <Text weight="medium">{title}</Text>

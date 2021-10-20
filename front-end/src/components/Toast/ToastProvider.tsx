@@ -2,20 +2,20 @@ import { nanoid } from "@reduxjs/toolkit";
 import { createContext, FunctionComponent, useCallback, useContext, useState } from "react";
 import Portal from "../Portal/Portal";
 import ToastComponent from "./Toast";
-import { Container } from "./Toast.styled";
+import { Container } from "./ToastProvider.styled";
 
-interface Toast {
-  id: string;
+export interface Toast {
   title: string;
   message?: string;
   type: "info" | "success" | "warning" | "error";
+  duration?: number | null;
 }
 
-const context = createContext<{
-  showToast: ({ title, message, type }: Omit<Toast, "id">) => string;
-  hideToast: (id: string) => void;
-  list: Toast[];
-} | null>(null);
+export interface SettledToast extends Toast {
+  id: string;
+}
+
+const context = createContext<((toast: Toast) => void) | null>(null);
 
 export const useToast = () => {
   const ctx = useContext(context);
@@ -28,36 +28,28 @@ export const useToast = () => {
 };
 
 const ToastProvider: FunctionComponent = ({ children }) => {
-  const [list, setList] = useState<Toast[]>([]);
+  const [list, setList] = useState<SettledToast[]>([]);
 
-  const showToast = useCallback(({ title, message, type }: Omit<Toast, "id">) => {
-    const id = nanoid();
-
-    setList((prev) => [{ id, title, message, type }, ...prev]);
-
-    return id;
+  const showToast = useCallback((toast: Toast) => {
+    setList((prev) => [{ id: nanoid(), ...toast }, ...prev]);
   }, []);
 
-  const hideToast = useCallback((id: string) => {
+  const hideToast = (id: string) => {
     setList((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
-
-  const value = { list, showToast, hideToast };
-
-  return <context.Provider value={value}>{children}</context.Provider>;
-};
-
-export const ToastContainer = () => {
-  const { list, hideToast } = useToast();
+  };
 
   return (
-    <Portal>
-      <Container>
-        {list.map((toast) => (
-          <ToastComponent key={toast.id} onClose={() => hideToast(toast.id)} {...toast} />
-        ))}
-      </Container>
-    </Portal>
+    <context.Provider value={showToast}>
+      <Portal>
+        <Container>
+          {list.map((toast) => (
+            <ToastComponent key={toast.id} onClose={() => hideToast(toast.id)} {...toast} />
+          ))}
+        </Container>
+      </Portal>
+
+      {children}
+    </context.Provider>
   );
 };
 

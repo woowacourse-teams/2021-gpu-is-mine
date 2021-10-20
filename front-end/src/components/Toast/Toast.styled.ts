@@ -1,5 +1,31 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import Button from "../Button/Button";
+
+const fadeInFadeOut = keyframes`
+0% {
+  opacity: 0;
+}
+20% {
+  opacity: 1;
+}
+90% {
+  opacity: 1;
+  transform: scale(1);
+}
+100% {
+  opacity: 0;
+  transform: scale(0.75);
+}
+`;
+
+const defaultFadeIn = keyframes`
+0% {
+  opacity: 0;
+}
+100% {
+  opacity: 1;
+}
+`;
 
 const infoToastStyle = css`
   color: #084298;
@@ -41,13 +67,25 @@ const errorToastStyle = css`
   }
 `;
 
-export const StyledToast = styled.div<{ type: "info" | "success" | "warning" | "error" }>`
+export const StyledToast = styled.div<{
+  type: "info" | "success" | "warning" | "error";
+  duration: number | null;
+}>`
   display: flex;
   align-items: center;
   column-gap: 1rem;
   padding: 0.5rem 0.75rem;
   width: 100%;
   border-radius: 0.75rem;
+
+  ${({ duration }) =>
+    duration === null
+      ? css`
+          animation: ${defaultFadeIn} ease-in-out 0.5s;
+        `
+      : css`
+          animation: ${fadeInFadeOut} ease-in-out ${duration / 1000}s;
+        `}
 
   ${({ type }) => {
     const style = {
@@ -69,16 +107,4 @@ export const CloseButton = styled(Button)`
   width: 2rem;
   height: 2rem;
   align-self: flex-start;
-`;
-
-export const Container = styled.div`
-  width: 40rem;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  bottom: 0.5rem;
-  row-gap: 1rem;
-  display: flex;
-  flex-direction: column;
 `;
