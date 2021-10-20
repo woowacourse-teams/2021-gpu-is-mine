@@ -22,7 +22,7 @@ httpClient.interceptors.request.use((config) => {
   return config;
 });
 
-// eslint-disable-next-line import/prefer-default-export
+// TODO 마이그레이션 완료시 getData 제거하기
 export const getData = async <T = void, U = never>(url: string, config?: RequestConfig<U>) => {
   const { method = "get", body } = config ?? {};
 
