@@ -4,8 +4,10 @@ import {
   StyledGpuServerDetailCurrentJob,
   StyledGpuServerDetailSummary,
   StyledGpuServerDetailJobTable,
+  NoCurrentJobCard,
 } from "./GpuServerDetail.styled";
 import { getCurrentJob } from "../GpuServerDetailSummary/useGpuServerDetailSummary";
+import { Text } from "../../components";
 
 interface GpuServerDetailProps {
   className?: string;
@@ -27,8 +29,14 @@ const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
             labId={labId}
             serverId={serverId}
           />
-          {jobId != null && (
+          {jobId ? (
             <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} jobId={jobId} />
+          ) : (
+            <NoCurrentJobCard>
+              <Text size="md" color="dark">
+                현재 실행 중인 Job이 없습니다
+              </Text>
+            </NoCurrentJobCard>
           )}
           <StyledGpuServerDetailJobTable jobs={gpuServerDetail.jobs} />
         </>
