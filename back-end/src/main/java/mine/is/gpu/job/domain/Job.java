@@ -86,7 +86,7 @@ public class Job extends BaseEntity {
             throw JobException.INVALID_META_DATA.getException();
         }
 
-        if (Objects.isNull(expectedTime) || expectedTime.isEmpty()) {
+        if (Objects.isNull(expectedTime) || expectedTime.isEmpty() || !expectedTime.matches("\\d+")) {
             throw JobException.INVALID_EXPECTED_TIME.getException();
         }
     }

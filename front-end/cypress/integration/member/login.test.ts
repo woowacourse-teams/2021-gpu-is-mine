@@ -16,7 +16,8 @@ describe("login", () => {
 
     cy.wait("@postLogin");
 
-    cy.findByText(/로그아웃/i).should("be.visible");
+    // 메인페이지가 표시되는 것을 확인한다
+    cy.findByRole("button", { name: /로그아웃/i }).should("be.visible");
   };
 
   it("이메일, 비밀번호를 입력하면 로그인이 된다", () => {
@@ -29,6 +30,7 @@ describe("login", () => {
     login();
 
     cy.reload();
-    cy.findByText(/로그아웃/i).should("be.visible");
+    // 메인페이지가 표시되는 것을 확인한다
+    cy.findByRole("button", { name: /로그아웃/i }).should("be.visible");
   });
 });

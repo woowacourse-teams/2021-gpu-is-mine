@@ -1,6 +1,6 @@
 import { formatDate } from "../../utils";
 import { useBoolean, useCancelJob, useMoveToPage } from "../../hooks";
-import { Alert, Button, CalendarIcon, Confirm, Text, VerticalBox } from "../../components";
+import { Button, CalendarIcon, Dialog, Text, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
 import { JobViewResponse } from "../../types";
@@ -41,7 +41,13 @@ const JobInfoItem = ({
   calculatedTime: { expectedStartedTime, startedTime, completedTime, expectedCompletedTime },
   refresh,
 }: JobInfoItemProps) => {
-  const { status, makeRequest: cancelJob, done } = useCancelJob({ labId, jobId });
+  const {
+    isSucceed,
+    isFailed,
+    status,
+    makeRequest: cancelJob,
+    done,
+  } = useCancelJob({ labId, jobId });
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
@@ -64,27 +70,31 @@ const JobInfoItem = ({
 
   return (
     <>
-      {status === "succeed" && (
-        <Alert onConfirm={refresh}>
-          <Text size="md" weight="regular">
-            {`${jobName}이(가) 취소되었습니다.`}
-          </Text>
-        </Alert>
-      )}
-
-      {status === "failed" && (
-        <Alert onConfirm={done}>
-          <Text size="md" weight="regular">
-            {`${jobName} 취소에 실패하였습니다.`}
-          </Text>
-        </Alert>
-      )}
-
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => cancelJob()}>
+      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
         <Text size="md" weight="regular">
-          {jobName}을(를) 정말 취소하시겠습니까?
+          {jobName}이(가) 취소되었습니다.
         </Text>
-      </Confirm>
+      </Dialog>
+
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="regular">
+          {jobName} 취소에 실패하였습니다.
+        </Text>
+      </Dialog>
+
+      <Dialog
+        open={isConfirmOpen}
+        onClose={closeConfirm}
+        onConfirm={() => {
+          cancelJob();
+          closeConfirm();
+        }}
+        onCancel={closeConfirm}
+      >
+        <Text size="sm" weight="medium">
+          {jobName}을(를) 취소하시겠습니까?
+        </Text>
+      </Dialog>
 
       <StyledJobInfoItem>
         <div className="job-info-title-wrapper">

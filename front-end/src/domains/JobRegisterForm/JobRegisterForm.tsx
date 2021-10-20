@@ -1,7 +1,7 @@
 import { FormHTMLAttributes, useState } from "react";
 import { expectedTimeValidator, jobNameValidator, minPerformanceValidator } from "./validator";
 import { getFormProps, getInputProps, useForm, usePostJobRegister } from "../../hooks";
-import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
+import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
 import { StyledForm } from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { Values } from "./JobRegisterForm.type";
@@ -11,7 +11,9 @@ interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
 }
 
 const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
-  const { status, makeRequest, done } = usePostJobRegister({ labId });
+  const { isIdle, isLoading, isFailed, isSucceed, makeRequest, done } = usePostJobRegister({
+    labId,
+  });
   const [key, setKey] = useState(0);
 
   const { state, dispatch, reset } = useForm<Values>({
@@ -23,7 +25,6 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   });
 
   const handleSubmit = ({ jobName, expectedTime, gpuServerId, metaData }: Values) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest({ name: jobName, expectedTime, gpuServerId, metaData });
   };
 
@@ -68,23 +69,19 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   return (
     <>
-      {status === "succeed" && (
-        <Alert onConfirm={handleConfirm}>
-          <Text size="md" weight="bold">
-            Job 등록에 성공하였습니다.
-          </Text>
-        </Alert>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={handleConfirm}>
+        <Text size="md" weight="bold">
+          Job 등록에 성공하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "failed" && (
-        <Alert onConfirm={done}>
-          <Text size="md" weight="bold">
-            Job 등록에 실패하였습니다.
-          </Text>
-        </Alert>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="bold">
+          Job 등록에 실패하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "loading" && (
+      {isLoading && (
         <Dimmer>
           <Loading size="lg" />
         </Dimmer>
@@ -103,7 +100,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={status !== "idle"}>
+        <Button className="submit" color="secondary" disabled={!isIdle}>
           제출
         </Button>
       </StyledForm>

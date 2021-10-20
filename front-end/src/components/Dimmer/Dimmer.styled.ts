@@ -1,8 +1,7 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
+import type { DimmerColor } from "./Dimmer";
 
-type DimmerColor = "transparent" | "light" | "dark";
-
-export interface StyledDimmerProps {
+interface StyledDimmerProps {
   color: DimmerColor;
 }
 
@@ -36,10 +35,24 @@ export const StyledDimmer = styled.div<StyledDimmerProps>`
 
   z-index: 50;
   ${({ color }) => getColorStyle(color)}
-
-  .inner {
-    isolation: isolate;
-  }
 `;
 
-// TODO: z-index 상수화
+const scaleOutAnimation = keyframes`
+50% {
+  transform: scale(1.02);
+}
+100% {
+  transform: scale(1);
+}
+`;
+
+export const Inner = styled.div<{ scaleOut: boolean }>`
+  isolation: isolate;
+  will-change: transform;
+
+  ${({ scaleOut }) =>
+    scaleOut &&
+    css`
+      animation: ${scaleOutAnimation} 0.4s forwards;
+    `}
+`;

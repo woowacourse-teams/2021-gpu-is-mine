@@ -30,7 +30,6 @@ const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps)
   const { data, status, makeRequest } = useGetJobAll({ labId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
   }, [makeRequest]);
 
