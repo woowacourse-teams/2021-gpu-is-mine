@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { Button } from "../../components";
+import { cardStyle } from "../../styles";
 
 export const StyledJobDetailLog = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+
+  ${cardStyle}
 `;
 
 export const LogConsole = styled.div`
