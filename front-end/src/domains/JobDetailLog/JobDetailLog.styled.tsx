@@ -6,13 +6,13 @@ export const StyledJobDetailLog = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
-  height: fit-content;
 
   ${cardStyle}
 `;
 
 export const LogConsole = styled.div`
   width: 100%;
+  height: 100%;
   max-height: 30rem;
   padding: 1.5rem 2rem;
   background-color: var(--primary-900);
