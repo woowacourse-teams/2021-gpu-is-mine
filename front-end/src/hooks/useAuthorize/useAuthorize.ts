@@ -7,15 +7,14 @@ import { useAppDispatch } from "../../app/hooks";
 const useAuthorize = () => {
   const dispatch = useAppDispatch();
 
-  const accessToken = storage.get(STORAGE_KEY.ACCESS_TOKEN);
-
   useEffect(() => {
+    const accessToken = storage.get(STORAGE_KEY.ACCESS_TOKEN);
     const expires = storage.get(STORAGE_KEY.EXPIRES, (_, value: string) => new Date(value));
 
     if (accessToken && expires) {
       dispatch(authorize({ accessToken, expires }));
     }
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 };
 
 export default useAuthorize;
