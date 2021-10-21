@@ -1,22 +1,16 @@
 import axios from "axios";
 import { BASE_URL, STORAGE_KEY } from "../constants";
-import { throwError } from "./error";
 import storage from "../services/Storage";
 import type { RequestConfig } from "../types";
 
 export const httpClient = axios.create({ baseURL: BASE_URL });
 
-export const validateExpires = (expires: Date) => {
-  if (expires.getTime() <= Date.now()) {
-    throwError("AuthorizationError", "유효하지 않은 Token입니다");
-  }
-};
-
 httpClient.interceptors.request.use((config) => {
   const expires = storage.get(STORAGE_KEY.EXPIRES, (_, value: string) => new Date(value));
 
-  if (expires) {
-    validateExpires(expires);
+  if (expires && expires.getTime() <= Date.now()) {
+    storage.remove(STORAGE_KEY.ACCESS_TOKEN);
+    storage.remove(STORAGE_KEY.EXPIRES);
   }
 
   return config;

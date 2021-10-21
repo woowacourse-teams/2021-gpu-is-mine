@@ -12,12 +12,7 @@ const useAuthorize = () => {
     const expires = storage.get(STORAGE_KEY.EXPIRES, (_, value: string) => new Date(value));
 
     if (accessToken && expires) {
-      dispatch(authorize({ accessToken, expires }))
-        .unwrap()
-        .catch(() => {
-          storage.remove(STORAGE_KEY.ACCESS_TOKEN);
-          storage.remove(STORAGE_KEY.EXPIRES);
-        });
+      dispatch(authorize({ accessToken, expires }));
     }
   }, [dispatch]);
 };
