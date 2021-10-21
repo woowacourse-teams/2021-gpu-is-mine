@@ -22,7 +22,7 @@ const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => 
             <Text as="dt" weight="bold">
               Job 이름
             </Text>
-            <Text as="dd">{detail.name}</Text>{" "}
+            <Text as="dd">{detail.name}</Text>
           </>
         )}
         <Text as="dt" weight="bold">
