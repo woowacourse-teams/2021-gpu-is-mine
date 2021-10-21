@@ -2,6 +2,7 @@ import styled from "styled-components";
 import GpuServerDetailSummary from "../GpuServerDetailSummary/GpuServerDetailSummary";
 import GpuServerDetailCurrentJob from "../GpuServerDetailCurrentJob/GpuServerDetailCurrentJob";
 import GpuServerDetailJobTable from "../GpuServerDetailJobTable/GpuServerDetailJobTable";
+import { Text } from "../../components";
 import { cardStyle } from "../../styles";
 
 export const StyledGpuServerDetail = styled.section`
@@ -28,12 +29,14 @@ export const StyledGpuServerDetailCurrentJob = styled(GpuServerDetailCurrentJob)
 
 export const NoCurrentJobCard = styled.div`
   grid-area: current-job;
-
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 
   ${cardStyle};
+`;
+
+export const StyledNoContent = styled(Text)`
+  margin: auto;
 `;
 
 export const StyledGpuServerDetailJobTable = styled(GpuServerDetailJobTable)`

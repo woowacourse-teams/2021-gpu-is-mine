@@ -1,6 +1,7 @@
 import { Text } from "../../components";
-import { StyledJobDetailSummary, SummaryList, Anchor } from "./JobDetailSummary.styled";
+import { StyledJobDetailSummary } from "./JobDetailSummary.styled";
 import { JobViewResponse } from "../../types";
+import JobDetailSummaryContent from "../JobDetailSummaryContent/JobDetailSummaryContent";
 
 interface JobDetailSummaryProps {
   title?: string;
@@ -9,51 +10,23 @@ interface JobDetailSummaryProps {
 }
 
 const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => {
-  const url = `https://hub.docker.com/r/${detail.metaData}`;
+  const { name, status, memberName, gpuServerName, expectedTime, metaData } = detail;
+
+  const detailList = [
+    { title: "Job 이름", content: name, isLink: false },
+    { title: "Job 상태", content: status, isLink: false },
+    { title: "Job 등록자", content: memberName, isLink: false },
+    { title: "할당된 서버", content: gpuServerName, isLink: false },
+    { title: "실행시간(hour)", content: expectedTime, isLink: false },
+    { title: "DockerHub Image", content: metaData, isLink: true },
+  ];
 
   return (
     <StyledJobDetailSummary {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        {title || detail.name}
+        {detail.name}
       </Text>
-      <SummaryList>
-        {title && (
-          <>
-            <Text as="dt" weight="bold">
-              Job 이름
-            </Text>
-            <Text as="dd">{detail.name}</Text>
-          </>
-        )}
-        <Text as="dt" weight="bold">
-          Job 상태
-        </Text>
-        <Text as="dd">{detail.status}</Text>
-
-        <Text as="dt" weight="bold">
-          Job 등록자
-        </Text>
-        <Text as="dd">{detail.memberName}</Text>
-
-        <Text as="dt" weight="bold">
-          할당된 서버
-        </Text>
-        <Text as="dd">{detail.gpuServerName}</Text>
-
-        <Text as="dt" weight="bold">
-          {detail.status === "RUNNING" ? "" : "예상 "}실행시간(hour)
-        </Text>
-        <Text as="dd">{detail.expectedTime}</Text>
-
-        <Text as="dt" weight="bold">
-          DockerHub Image
-        </Text>
-        <Text as="dd">
-          <Anchor target="_blank" href={url} rel="noreferrer">
-            {detail.metaData}
-          </Anchor>
-        </Text>
-      </SummaryList>
+      <JobDetailSummaryContent detailList={detailList} />
     </StyledJobDetailSummary>
   );
 };
