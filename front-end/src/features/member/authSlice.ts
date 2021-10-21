@@ -84,7 +84,7 @@ export const logout = createAsyncThunk<void, void>("auth/logout", () => {
   client.logout();
 });
 
-export const loginUserConfirmed = createAction("auth/login/userConfirmed");
+export const resetAction = createAction("auth/resetAction");
 
 const authSlice = createSlice({
   name: SLICE_NAME.AUTH,
@@ -92,10 +92,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUserConfirmed, (state) => {
-        state.status = STATUS.IDLE;
-        state.error = null;
-      })
+      .addCase(resetAction, () => initialState)
       .addCase(login.pending, (state) => {
         state.status = STATUS.LOADING;
       })

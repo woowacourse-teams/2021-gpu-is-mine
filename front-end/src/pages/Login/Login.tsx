@@ -1,6 +1,6 @@
 import { Alert, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { loginUserConfirmed, selectLoginStatus } from "../../features/member/authSlice";
+import { resetAction, selectLoginStatus } from "../../features/member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { usePathTitle, useAuthorize } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
@@ -12,7 +12,7 @@ const Login = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleConfirm = () => dispatch(loginUserConfirmed());
+  const handleConfirm = () => dispatch(resetAction());
 
   useAuthorize();
 

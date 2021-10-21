@@ -31,7 +31,7 @@ export const signup = createAsyncThunk<void, { email: string; password: string; 
     client.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
 
-export const signupUserConfirmed = createAction("signup/userConfirmed");
+export const resetAction = createAction("signup/resetAction");
 
 const signupSlice = createSlice({
   name: SLICE_NAME.SIGNUP,
@@ -39,10 +39,7 @@ const signupSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(signupUserConfirmed, (state) => {
-        state.status = STATUS.IDLE;
-        state.error = null;
-      })
+      .addCase(resetAction, () => initialState)
       .addCase(signup.pending, (state) => {
         state.status = STATUS.LOADING;
       })

@@ -1,7 +1,7 @@
 import { Alert, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
-import { selectSignupStatus, signupUserConfirmed } from "../../features/member/signupSlice";
+import { selectSignupStatus, resetAction } from "../../features/member/signupSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useMoveToPage, usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";
@@ -14,13 +14,13 @@ const Signup = () => {
   const dispatch = useAppDispatch();
 
   const handleFailedConfirm = () => {
-    dispatch(signupUserConfirmed());
+    dispatch(resetAction());
   };
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
   const handleSucceedConfirm = () => {
-    dispatch(signupUserConfirmed());
+    dispatch(resetAction());
     moveToLoginPage();
   };
 
