@@ -50,23 +50,6 @@ public class Lab extends BaseEntity {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Lab lab = (Lab) o;
-        return id.equals(lab.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     public boolean hasMember(Member member) {
         return member.getLab().equals(this);
     }

@@ -83,9 +83,8 @@ public class JobController {
     @PutMapping("/jobs/{jobId}/cancel")
     public ResponseEntity<Void> cancel(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member) {
-        memberService.checkEditableJob(member.getId(), jobId);
         JobResponse job = jobService.findById(member.getId(), jobId);
-        jobService.cancel(jobId);
+        jobService.cancel(member.getId(), jobId);
         mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
         return ResponseEntity.noContent().build();
     }

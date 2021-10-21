@@ -20,15 +20,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 class JobTest {
     private GpuBoard gpuBoard;
     private Member member;
+    private Member manager;
     private Lab lab;
     private GpuServer gpuServer;
 
     @BeforeEach
     void setUp() {
-        lab = new Lab(1L, "랩1");
+        lab = new Lab("랩1");
         gpuServer = new GpuServer("GPU서버1", true, 1024L, 1024L, lab);
         gpuBoard = new GpuBoard(false, 1000L, "모델1", gpuServer);
-        member = new Member("user", "1234", "userName", MemberType.MANAGER, lab);
+        member = new Member("user", "1234", "userName", MemberType.USER, lab);
+        manager = new Member("manager", "1234", "userName", MemberType.MANAGER, lab);
     }
 
     @DisplayName("생성 테스트 - 정상")
@@ -120,6 +122,64 @@ class JobTest {
 
         Job job = new Job("잡1", null, offBoard, member, "metaData", "333");
         assertThatThrownBy(job::reserve).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("Job 정상 취소 :: 본인 취소")
+    @Test
+    void cancelJob() {
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+        job.cancel(member);
+
+        assertThat(job.getStatus()).isEqualTo(JobStatus.CANCELED);
+    }
+
+    @DisplayName("Job 정상 취소 :: 관리자 취소")
+    @Test
+    void cancelJobByManager() {
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+        job.cancel(manager);
+
+        assertThat(job.getStatus()).isEqualTo(JobStatus.CANCELED);
+    }
+
+    @DisplayName("Job 취소 실패 :: 같은 랩 다른 유저")
+    @Test
+    void cancelJobByOtherUserInSameLab() {
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+        Member other = new Member("other@other.com", "1234", "other", MemberType.USER, lab);
+        assertThatThrownBy(() -> job.cancel(other))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @DisplayName("Job 취소 실패 :: 다른 랩 유저")
+    @Test
+    void cancelJobByOtherUserInOtherLab() {
+        Lab otherLab = new Lab("otherLab");
+        Member otherLabUser = new Member("other@other.com", "1234", "other", MemberType.USER, otherLab);
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+
+        assertThatThrownBy(() -> job.cancel(otherLabUser))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @DisplayName("Job 취소 실패 :: 다른 랩 매니저")
+    @Test
+    void cancelJobByOtherManagerInOtherLab() {
+        Lab otherLab = new Lab("otherLab");
+        Member otherLabManager = new Member("other@other.com", "1234", "other", MemberType.USER, otherLab);
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+
+        assertThatThrownBy(() -> job.cancel(otherLabManager))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @DisplayName("Job 취소 실패")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"RUNNING", "CANCELED", "COMPLETED"})
+    void cancelJobWithInvalidStatus(String status) {
+        Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
+        assertThatThrownBy(() -> job.cancel(member))
+                .isInstanceOf(JobException.NO_WAITING_JOB.getException().getClass());
     }
 
     @DisplayName("Job 정상 실행")

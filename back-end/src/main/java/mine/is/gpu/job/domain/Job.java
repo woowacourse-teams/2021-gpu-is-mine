@@ -131,11 +131,18 @@ public class Job extends BaseEntity {
         this.status = JobStatus.WAITING;
     }
 
-    public void cancel() {
+    public void cancel(Member member) {
+        if (!this.member.equals(member) && !isManagerOfLab(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
         if (!this.status.isWaiting()) {
             throw JobException.NO_WAITING_JOB.getException();
         }
         this.status = JobStatus.CANCELED;
+    }
+
+    private boolean isManagerOfLab(Member member) {
+        return member.isManager() && gpuBoard.canUsedBy(member);
     }
 
     public void start() {

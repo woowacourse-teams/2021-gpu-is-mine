@@ -80,18 +80,6 @@ public class Member extends BaseEntity implements Account {
         return this.lab.equals(other.lab);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Member member = (Member) o;
-        return Objects.equals(id, member.id);
-    }
-
     public void checkMemberOfLab(Lab lab) {
         if (!this.lab.equals(lab)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
@@ -103,11 +91,6 @@ public class Member extends BaseEntity implements Account {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
         checkMemberOfLab(lab);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     public Long getId() {

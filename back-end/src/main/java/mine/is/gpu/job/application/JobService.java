@@ -72,9 +72,10 @@ public class JobService {
     }
 
     @Transactional
-    public void cancel(Long jobId) {
-        Job job = findJobById(jobId);
-        job.cancel();
+    public void cancel(Long memberId, Long jobId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
+        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
+        job.cancel(member);
     }
 
     @Transactional(readOnly = true)
