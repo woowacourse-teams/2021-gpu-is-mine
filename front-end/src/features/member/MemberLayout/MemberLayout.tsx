@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { GpuIcon, Text } from "../../../components";
-import { StyledLayout, LogoContainer } from "./MemberLayout.styled";
+import { GpuIcon } from "../../../components";
+import { StyledLayout, LogoContainer, StyledText } from "./MemberLayout.styled";
 import { PATH } from "../../../constants";
 
 interface MemberLayoutProps {
@@ -17,9 +17,10 @@ const MemberLayout = ({ children, ...rest }: MemberLayoutProps) => (
       <Link to={PATH.MEMBER.LOGIN}>
         <LogoContainer>
           <GpuIcon size="xl" />
-          <Text as="h1" size="xl" weight="bold">
-            GPU 내껀데
-          </Text>
+          <StyledText forwardedAs="h1" size="xl" weight="bold">
+            <span>GPU</span>
+            <span>내껀데</span>
+          </StyledText>
         </LogoContainer>
       </Link>
     }
