@@ -84,7 +84,7 @@ export const logout = createAsyncThunk<void, void>("auth/logout", () => {
   client.logout();
 });
 
-export const authErrorConfirmed = createAction("auth/error/confirmed");
+export const loginErrorUserConfirmed = createAction("auth/loginError/confirmed");
 
 const authSlice = createSlice({
   name: SLICE_NAME.AUTH,
@@ -92,7 +92,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(authErrorConfirmed, (state) => {
+      .addCase(loginErrorUserConfirmed, (state) => {
         state.status = STATUS.IDLE;
         state.error = null;
       })
