@@ -5,7 +5,7 @@ import { cardStyle } from "../../styles";
 export const StyledJobDetailLog = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 0.5rem;
+  row-gap: 1.25rem;
 
   ${cardStyle}
 `;
