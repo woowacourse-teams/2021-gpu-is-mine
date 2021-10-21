@@ -29,7 +29,7 @@ const GpuServerDetail = ({ labId, ...rest }: GpuServerDetailProps) => {
             labId={labId}
             serverId={serverId}
           />
-          {jobId ? (
+          {jobId != null ? (
             <StyledGpuServerDetailCurrentJob detail={gpuServerDetail} labId={labId} jobId={jobId} />
           ) : (
             <NoCurrentJobCard>
