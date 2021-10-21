@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Layout } from "../../../components";
+import { Layout, Text } from "../../../components";
 import { MainContainer, FooterContainer } from "../../../components/Layout/Layout.styled";
 
 export const StyledLayout = styled(Layout)`
@@ -21,4 +21,9 @@ export const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
   column-gap: 1rem;
+`;
+
+export const StyledText = styled(Text)`
+  display: flex;
+  column-gap: 0.25rem;
 `;

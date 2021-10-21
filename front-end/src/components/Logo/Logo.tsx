@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import GpuIcon from "../GpuIcon/GpuIcon";
-import Text from "../Text/Text";
-import { StyledLogo } from "./Logo.styled";
+import { StyledLogo, StyledText } from "./Logo.styled";
 
 interface LogoProps {
   className?: string;
@@ -11,9 +10,10 @@ const Logo = ({ className }: LogoProps) => (
   <Link to="/" className={className}>
     <StyledLogo>
       <GpuIcon size="lg" />
-      <Text size="lg" weight="bold">
-        GPU 내껀데
-      </Text>
+      <StyledText size="lg" weight="bold">
+        <span>GPU</span>
+        <span>내껀데</span>
+      </StyledText>
     </StyledLogo>
   </Link>
 );
