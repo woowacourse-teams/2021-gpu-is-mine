@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import { FormHTMLAttributes, useState } from "react";
 import {
   dockerHubImageValidator,
@@ -5,11 +6,18 @@ import {
   jobNameValidator,
   minPerformanceValidator,
 } from "./validator";
-import { getFormProps, getInputProps, useForm, usePostJobRegister } from "../../hooks";
+import { getFormProps, getInputProps, useForm, usePostJobRegister, useBoolean } from "../../hooks";
 import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
-import { StyledForm } from "./JobRegisterForm.styled";
+import {
+  DockerHubImageSection,
+  SampleImageButton,
+  StyledForm,
+  ToolTipBox,
+  ToolTipContainer,
+} from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { Values } from "./JobRegisterForm.type";
+import { updateValue } from "../../hooks/useForm/useForm";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
@@ -73,6 +81,14 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     done();
   };
 
+  const [isToolTipVisible, openToolTip, closeToolTip] = useBoolean(false);
+
+  const handleSampleImageButtonClick = () => {
+    dispatch(
+      updateValue({ name: "metaData", value: "aprn7950/mnist_test_auto", validationMessage: "" })
+    );
+  };
+
   return (
     <>
       <Dialog open={isSucceed} onClose={done} onConfirm={handleConfirm}>
@@ -97,7 +113,39 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         <Input size="sm" {...jobNameInputProps} />
         <Input size="sm" {...expectedTimeInputProps} />
         <Input size="sm" {...minPerformanceInputProps} />
-        <Input size="sm" {...metaDataInputProps} placeholder="계정명/저장소명:버전" />
+        <DockerHubImageSection>
+          <Input
+            size="sm"
+            list="example-dockerhub-image"
+            {...metaDataInputProps}
+            placeholder="계정명/저장소명:버전"
+          />
+          <datalist id="example-dockerhub-image">
+            <option value="aprn7950/mnist_test_auto" />
+          </datalist>
+
+          <ToolTipContainer onMouseLeave={closeToolTip}>
+            <SampleImageButton
+              type="button"
+              onClick={handleSampleImageButtonClick}
+              onMouseOver={openToolTip}
+              onFocus={openToolTip}
+              onBlur={closeToolTip}
+              onKeyDown={closeToolTip}
+            >
+              <Text as="p" weight="medium" size="sm">
+                샘플 이미지 입력하기
+              </Text>
+            </SampleImageButton>
+            {isToolTipVisible && (
+              <ToolTipBox>
+                <Text as="span" weight="medium" size="sm">
+                  버튼을 클릭하여 미리 준비해둔 샘플 이미지를 등록해보세요 :-)
+                </Text>
+              </ToolTipBox>
+            )}
+          </ToolTipContainer>
+        </DockerHubImageSection>
         <JobRegisterRadioGroup
           labId={labId}
           state={state}
