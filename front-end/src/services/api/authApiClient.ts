@@ -1,13 +1,13 @@
 /* eslint-disable class-methods-use-this */
-import { API_ENDPOINT, STORAGE_KEY } from "../constants";
-import { httpClient, validateExpires } from "../utils";
-import storage from "./Storage";
+import { API_ENDPOINT, STORAGE_KEY } from "../../constants";
+import { httpClient, validateExpires } from "../../utils";
+import storage from "../Storage";
 import type {
   MemberLoginResponse,
   MemberLoginRequest,
   MyInfoResponse,
   MemberSignupRequest,
-} from "../types";
+} from "../../types";
 
 const postLogin = async ({ email, password }: MemberLoginRequest) => {
   const {

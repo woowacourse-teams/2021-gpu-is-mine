@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
-import client from "../../services/Client";
+import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
 
 type SignupState =
@@ -28,7 +28,7 @@ export const selectSignupStatus = (state: RootState) => generateStatusBoolean(st
 export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
   "signup/signup",
   async ({ email, password, name }) =>
-    client.postSignup({ email, password, name, labId: 1, memberType: "USER" })
+    authApiClient.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
 
 export const resetAction = createAction("signup/resetAction");
