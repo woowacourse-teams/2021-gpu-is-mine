@@ -55,17 +55,6 @@ const ManagerNavigation = (props: NavigationProps) => {
           </NavLink>
         </li>
       </ol>
-      <ol className="menu">
-        <Text as="h3" weight="medium" className="menu__title">
-          유저 관리
-        </Text>
-        <li>
-          <Text className="menu__item">조회</Text>
-        </li>
-        <li>
-          <Text className="menu__item">등록</Text>
-        </li>
-      </ol>
 
       <ol className="menu menu-logout">
         <Text as="h3" srOnly>

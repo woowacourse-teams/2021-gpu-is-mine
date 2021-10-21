@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Text from "../Text/Text";
 import {
   StyledLayout,
   HeaderContainer,
@@ -22,7 +23,11 @@ const Layout = ({
   SubHeader,
   Aside,
   Main,
-  Footer = <span>All Rights Reserved gpu-is-mine</span>,
+  Footer = (
+    <Text as="span" size="sm" weight="medium">
+      &copy; 2021 GPU내껀데
+    </Text>
+  ),
   className,
 }: LayoutProps) => (
   <StyledLayout className={className}>
