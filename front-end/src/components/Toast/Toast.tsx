@@ -18,10 +18,18 @@ const Toast = ({ id, type, onClose, title, message, duration = 3_000, ...rest }:
   };
 
   return (
-    <StyledToast type={type} onAnimationEnd={handleAnimationEnd} duration={duration} {...rest}>
+    <StyledToast
+      type={type}
+      onAnimationEnd={handleAnimationEnd}
+      duration={duration}
+      role="alert"
+      {...rest}
+    >
       <ToastTypeIcon type={type} width="36px" height="36px" />
       <Body>
-        <Text weight="medium">{title}</Text>
+        <Text as="h4" weight="medium">
+          {title}
+        </Text>
         {message ? (
           <Text size="sm" weight="light">
             {message}
