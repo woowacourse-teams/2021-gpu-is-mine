@@ -1,5 +1,10 @@
 import { FormHTMLAttributes, useState } from "react";
-import { expectedTimeValidator, jobNameValidator, minPerformanceValidator } from "./validator";
+import {
+  dockerHubImageValidator,
+  expectedTimeValidator,
+  jobNameValidator,
+  minPerformanceValidator,
+} from "./validator";
 import { getFormProps, getInputProps, useForm, usePostJobRegister } from "../../hooks";
 import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
 import { StyledForm } from "./JobRegisterForm.styled";
@@ -58,7 +63,8 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     state,
     dispatch,
     name: "metaData",
-    label: "Docker Hub Url",
+    label: "Docker Hub Image",
+    validator: dockerHubImageValidator,
   });
 
   const handleConfirm = () => {
@@ -91,7 +97,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         <Input size="sm" {...jobNameInputProps} />
         <Input size="sm" {...expectedTimeInputProps} />
         <Input size="sm" {...minPerformanceInputProps} />
-        <Input size="sm" {...metaDataInputProps} />
+        <Input size="sm" {...metaDataInputProps} placeholder="계정명/저장소명:버전" />
         <JobRegisterRadioGroup
           labId={labId}
           state={state}
