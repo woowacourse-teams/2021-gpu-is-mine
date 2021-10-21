@@ -1,13 +1,13 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ENDPOINT, SLICE_NAME, STATUS } from "../../constants";
+import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
+import { SLICE_NAME, STATUS } from "../../constants";
+import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
 
 type SignupState =
   | { status: typeof STATUS.IDLE; error: null }
   | { status: typeof STATUS.LOADING; error: null }
   | { status: typeof STATUS.SUCCEED; error: null }
-  | { status: typeof STATUS.FAILED; error: Error };
+  | { status: typeof STATUS.FAILED; error: SerializedError };
 
 const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
@@ -27,16 +27,11 @@ export const selectSignupStatus = (state: RootState) => generateStatusBoolean(st
 
 export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
   "signup/signup",
-  async ({ email, password, name }) => {
-    await axios.post<never>(API_ENDPOINT.MEMBER.SIGNUP, {
-      email,
-      password,
-      name,
-      labId: 1,
-      memberType: "USER",
-    });
-  }
+  async ({ email, password, name }) =>
+    authApiClient.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
+
+export const resetAction = createAction("signup/resetAction");
 
 const signupSlice = createSlice({
   name: SLICE_NAME.SIGNUP,
@@ -44,14 +39,17 @@ const signupSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(resetAction, () => initialState)
       .addCase(signup.pending, (state) => {
         state.status = STATUS.LOADING;
       })
       .addCase(signup.fulfilled, (state) => {
         state.status = STATUS.SUCCEED;
+        state.error = null;
       })
-      .addCase(signup.rejected, (state) => {
+      .addCase(signup.rejected, (state, action) => {
         state.status = STATUS.FAILED;
+        state.error = action.error;
       });
   },
 });
