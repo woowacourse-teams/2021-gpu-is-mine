@@ -1,4 +1,4 @@
-import { Alert, Loading, Text } from "../../components";
+import { Dialog, Loading, Text } from "../../components";
 import { PATH } from "../../constants";
 import { MemberLayout } from "../../features/member";
 import { selectSignupStatus, resetAction } from "../../features/member/signupSlice";
@@ -7,15 +7,13 @@ import { useMoveToPage, usePathTitle } from "../../hooks";
 import { StyledSignupForm } from "./Signup.styled";
 
 const Signup = () => {
-  const { isLoading, isSucceed, isFailed } = useAppSelector(selectSignupStatus);
+  const { isLoading, isSucceed, isSettled } = useAppSelector(selectSignupStatus);
 
   const heading = usePathTitle();
 
   const dispatch = useAppDispatch();
 
-  const handleFailedConfirm = () => {
-    dispatch(resetAction());
-  };
+  const handleClose = () => dispatch(resetAction());
 
   const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
 
@@ -24,21 +22,22 @@ const Signup = () => {
     moveToLoginPage();
   };
 
+  const DialogText = isSucceed ? "회원가입에 성공하였습니다." : "회원가입에 실패하였습니다.";
+
   return (
     <MemberLayout>
       {isLoading && <Loading size="lg" />}
 
-      {isSucceed && (
-        <Alert onConfirm={handleSucceedConfirm}>
-          <Text>회원가입에 성공하였습니다.</Text>
-        </Alert>
-      )}
-
-      {isFailed && (
-        <Alert onConfirm={handleFailedConfirm}>
-          <Text>회원가입에 실패하였습니다.</Text>
-        </Alert>
-      )}
+      <Dialog
+        open={isSettled}
+        onClose={handleClose}
+        onCancel={handleClose}
+        onConfirm={handleSucceedConfirm}
+      >
+        <Text size="sm" weight="medium">
+          {DialogText}
+        </Text>
+      </Dialog>
 
       <Text as="h2" srOnly>
         {heading}

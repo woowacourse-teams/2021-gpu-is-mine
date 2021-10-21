@@ -40,12 +40,12 @@ describe("pages/Login", () => {
 
     userEvent.click(loginButton);
 
-    const alert = await screen.findByRole("alertdialog");
+    const alert = await screen.findByRole("dialog");
 
     expect(alert).toBeInTheDocument();
     expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
 
-    userEvent.click(screen.getByRole("button", { name: /confirm/ }));
+    userEvent.click(screen.getByRole("button", { name: /확인/ }));
     await waitFor(() => expect(alert).not.toBeInTheDocument());
   });
 
@@ -66,7 +66,7 @@ describe("pages/Login", () => {
 
     userEvent.click(loginButton);
 
-    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     await waitFor(() => expect(screen.queryByText("딥러닝 학습 자동화")).not.toBeInTheDocument());
   });

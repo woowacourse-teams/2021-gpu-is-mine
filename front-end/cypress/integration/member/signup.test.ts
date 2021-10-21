@@ -28,7 +28,7 @@ describe("signup", () => {
     cy.wait("@postSignup");
 
     // 회원가입이 성공하였다는 알럿 창의 확인 버튼을 클릭한다
-    cy.findByRole("button", { name: /confirm/i }).click();
+    cy.findByRole("button", { name: /확인/i }).click();
 
     // 로그인 페이지가 표시되는 것을 확인한다
     cy.findByRole("button", { name: /로그인/i }).should("be.visible");

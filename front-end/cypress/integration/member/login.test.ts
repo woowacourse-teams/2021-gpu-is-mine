@@ -16,6 +16,7 @@ describe("login", () => {
 
     cy.wait("@postLogin");
 
+    // 메인페이지가 표시되는 것을 확인한다
     cy.findByRole("button", { name: /로그아웃/i }).should("be.visible");
   };
 
@@ -29,6 +30,7 @@ describe("login", () => {
     login();
 
     cy.reload();
+    // 메인페이지가 표시되는 것을 확인한다
     cy.findByRole("button", { name: /로그아웃/i }).should("be.visible");
   });
 });

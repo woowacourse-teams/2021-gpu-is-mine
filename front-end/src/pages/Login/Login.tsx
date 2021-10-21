@@ -1,4 +1,4 @@
-import { Alert, Loading, Text } from "../../components";
+import { Dialog, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
 import { resetAction, selectLoginStatus } from "../../features/member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -18,7 +18,11 @@ const Login = () => {
 
   return (
     <>
-      {isFailed && <Alert onConfirm={handleConfirm}>이메일 또는 비밀번호를 확인해주세요</Alert>}
+      <Dialog open={isFailed} onClose={handleConfirm} onConfirm={handleConfirm}>
+        <Text size="sm" weight="medium">
+          이메일 또는 비밀번호를 확인해주세요
+        </Text>
+      </Dialog>
 
       <MemberLayout>
         <Text as="h2" srOnly>
