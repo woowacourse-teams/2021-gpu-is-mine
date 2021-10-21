@@ -145,6 +145,13 @@ public class Job extends BaseEntity {
         return member.isManager() && gpuBoard.canUsedBy(member);
     }
 
+    public void updateName(Member member, String name) {
+        if (!this.member.equals(member) && !isManagerOfLab(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+        setName(name);
+    }
+
     public void start() {
         if (!this.status.isWaiting()) {
             throw JobException.JOB_NOT_WAITING.getException();
@@ -183,5 +190,9 @@ public class Job extends BaseEntity {
 
     public void setCompletedTime(LocalDateTime completedTime) {
         this.completedTime = completedTime;
+    }
+
+    public boolean canReadable(Member member) {
+        return gpuBoard.canUsedBy(member);
     }
 }

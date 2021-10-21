@@ -65,7 +65,7 @@ class JobServiceTest {
         labRepository.save(lab);
 
         serverId = saveGpuServerInLab(lab);
-        memberId = saveMember(lab);
+        memberId = saveMember("email@email.com", lab);
     }
 
     @Test
@@ -104,6 +104,20 @@ class JobServiceTest {
 
         JobResponse jobResponse = jobService.findById(memberId, jobId);
         assertThat(jobResponse).isNotNull();
+    }
+
+    @Test
+    @DisplayName("조회 실패 :: 다른 연구실 멤버")
+    void findByIdByOtherLab() {
+        Lab otherLab = new Lab("other");
+        labRepository.save(otherLab);
+        Long otherMemberId = saveMember("other@other.com", otherLab);
+
+        JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
+        Long jobId = jobService.save(memberId, jobRequest);
+
+        assertThatThrownBy(() -> jobService.findById(otherMemberId, jobId))
+                .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
     }
 
     @Test
@@ -160,8 +174,8 @@ class JobServiceTest {
         return server.getId();
     }
 
-    private Long saveMember(Lab lab) {
-        Member member = new Member("email", "password", "name", MemberType.USER, lab);
+    private Long saveMember(String email, Lab lab) {
+        Member member = new Member(email, "password", "name", MemberType.USER, lab);
         memberRepository.save(member);
         return member.getId();
     }
@@ -235,7 +249,7 @@ class JobServiceTest {
         Long jobId = jobService.save(memberId, jobRequest);
 
         JobUpdateRequest jobUpdateRequest = new JobUpdateRequest("newJob");
-        jobService.update(jobId, jobUpdateRequest);
+        jobService.update(memberId, jobId, jobUpdateRequest);
 
         JobResponse jobResponse = jobService.findById(memberId, jobId);
         Assertions.assertThat(jobResponse.getName()).isEqualTo(jobUpdateRequest.getName());

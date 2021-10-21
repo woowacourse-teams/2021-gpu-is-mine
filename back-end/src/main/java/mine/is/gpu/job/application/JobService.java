@@ -73,16 +73,18 @@ public class JobService {
 
     @Transactional
     public void cancel(Long memberId, Long jobId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
-        Job job = jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
+        Member member = findMemberById(memberId);
+        Job job = findJobById(jobId);
         job.cancel(member);
     }
 
     @Transactional(readOnly = true)
     public JobResponse findById(Long memberId, Long jobId) {
-        memberService.checkReadableJob(memberId, jobId);
-
         Job job = findJobById(jobId);
+        Member member = findMemberById(memberId);
+        if (!job.canReadable(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
         return JobResponse.of(job);
     }
 
@@ -112,9 +114,10 @@ public class JobService {
     }
 
     @Transactional
-    public void update(Long jobId, JobUpdateRequest jobUpdateRequest) {
+    public void update(Long memberId, Long jobId, JobUpdateRequest jobUpdateRequest) {
+        Member member = findMemberById(memberId);
         Job job = findJobById(jobId);
-        job.setName(jobUpdateRequest.getName());
+        job.updateName(member, jobUpdateRequest.getName());
     }
 
     private JobResponses findJobsOfLabByStatus(Long labId, String status, Pageable pageable) {
@@ -199,11 +202,21 @@ public class JobService {
         return new MailDto(member.getEmail(), job.getName());
     }
 
-    public LogsResponse findLogAllById(Long jobId) {
+    public LogsResponse findLogAllById(Long memberId, Long jobId) {
+        Job job = findJobById(jobId);
+        Member member = findMemberById(memberId);
+        if (!job.canReadable(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
         return LogsResponse.of(logRepository.findByJobIdOrderByTime(jobId));
     }
 
-    public ParsedLogResponses findParsedLogById(Long jobId) {
+    public ParsedLogResponses findParsedLogById(Long memberId, Long jobId) {
+        Job job = findJobById(jobId);
+        Member member = findMemberById(memberId);
+        if (!job.canReadable(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
         return ParsedLogResponses.of(parsedLogRepository.findByJobIdOrderByCurrentEpoch(jobId));
     }
 

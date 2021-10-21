@@ -1,7 +1,6 @@
 package mine.is.gpu.job.ui;
 
 import java.net.URI;
-import mine.is.gpu.account.application.MemberService;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.infra.MailDto;
@@ -30,13 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobController {
     private JobService jobService;
     private MailService mailService;
-    private MemberService memberService;
 
-    public JobController(JobService jobService, MailService mailService,
-                         MemberService memberService) {
+    public JobController(JobService jobService, MailService mailService) {
         this.jobService = jobService;
         this.mailService = mailService;
-        this.memberService = memberService;
     }
 
     @PostMapping("/jobs")
@@ -75,8 +71,7 @@ public class JobController {
     public ResponseEntity<Void> update(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member,
                                        @RequestBody JobUpdateRequest jobUpdateRequest) {
-        memberService.checkEditableJob(member.getId(), jobId);
-        jobService.update(jobId, jobUpdateRequest);
+        jobService.update(member.getId(),jobId, jobUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -92,16 +87,14 @@ public class JobController {
     @GetMapping("/jobs/{jobId}/logs")
     public ResponseEntity<LogsResponse> findLogAll(@PathVariable Long jobId,
                                                    @AuthenticationPrincipal Member member) {
-        memberService.checkReadableJob(member.getId(), jobId);
-        LogsResponse logsResponse = jobService.findLogAllById(jobId);
+        LogsResponse logsResponse = jobService.findLogAllById(member.getId(), jobId);
         return ResponseEntity.ok(logsResponse);
     }
 
     @GetMapping("/jobs/{jobId}/logs-graph")
     public ResponseEntity<ParsedLogResponses> findAllParsedLog(@PathVariable Long jobId,
                                                                @AuthenticationPrincipal Member member) {
-        memberService.checkReadableJob(member.getId(), jobId);
-        ParsedLogResponses parsedLogs = jobService.findParsedLogById(jobId);
+        ParsedLogResponses parsedLogs = jobService.findParsedLogById(member.getId(), jobId);
         return ResponseEntity.ok(parsedLogs);
     }
 }
