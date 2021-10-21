@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.account.domain.MemberType;
+import mine.is.gpu.account.exception.MemberException;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.exception.JobException;
@@ -19,11 +20,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 class JobTest {
     private GpuBoard gpuBoard;
     private Member member;
+    private Lab lab;
+    private GpuServer gpuServer;
 
     @BeforeEach
     void setUp() {
-        Lab lab = new Lab("랩1");
-        GpuServer gpuServer = new GpuServer("GPU서버1", false, 1024L, 1024L, lab);
+        lab = new Lab(1L, "랩1");
+        gpuServer = new GpuServer("GPU서버1", true, 1024L, 1024L, lab);
         gpuBoard = new GpuBoard(false, 1000L, "모델1", gpuServer);
         member = new Member("user", "1234", "userName", MemberType.MANAGER, lab);
     }
@@ -47,13 +50,6 @@ class JobTest {
     void 생성_이름_빈문자열() {
         assertThatThrownBy(() -> new Job("", JobStatus.WAITING, gpuBoard, member, "metaData", "10"))
                 .isEqualTo(JobException.INVALID_JOB_NAME.getException());
-    }
-
-    @DisplayName("생성 테스트 - JobStatus가 null")
-    @Test
-    void 생성_JobStatus_null() {
-        assertThatThrownBy(() -> new Job("잡1", null, gpuBoard, member, "metaData", "10"))
-                .isEqualTo(JobException.INVALID_JOB_STATUS.getException());
     }
 
     @DisplayName("생성 테스트 - GpuBoard가 null")
@@ -96,6 +92,34 @@ class JobTest {
     void 생성_expectedTime_빈문자열() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", ""))
                 .isEqualTo(JobException.INVALID_EXPECTED_TIME.getException());
+    }
+
+    @DisplayName("Job 정상 예약")
+    @Test
+    void reserveJob() {
+        Job job = new Job("잡1", null, gpuBoard, member, "metaData", "333");
+        job.reserve();
+
+        assertThat(job.getStatus()).isEqualTo(JobStatus.WAITING);
+    }
+
+    @DisplayName("Job 예약 실패 :: 다른 연구실 멤버")
+    @Test
+    void reserveJobByOtherLabMember() {
+        Lab otherLab = new Lab(2L, "다른랩");
+        Member otherMember = new Member("other@other.com", "1234", "otherName", MemberType.MANAGER, otherLab);
+        Job job = new Job("잡1", null, gpuBoard, otherMember, "metaData", "333");
+        assertThatThrownBy(job::reserve).isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
+    }
+
+    @DisplayName("Job 예약 실패 :: 종료된 서버에 예약")
+    @Test
+    void reserveJobToOffServer() {
+        GpuServer offServer = new GpuServer("다른GPU서버1", false, 1024L, 1024L, lab);
+        GpuBoard offBoard = new GpuBoard(false, 1000L, "모델1", offServer);
+
+        Job job = new Job("잡1", null, offBoard, member, "metaData", "333");
+        assertThatThrownBy(job::reserve).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("Job 정상 실행")

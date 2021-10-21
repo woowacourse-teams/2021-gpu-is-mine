@@ -1,10 +1,12 @@
 package mine.is.gpu.job.ui;
 
+import static mine.is.gpu.worker.ui.WorkerAcceptanceTest.GpuServer_상태변경;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.account.fixture.MemberFixtures;
 import mine.is.gpu.auth.AuthAcceptanceTest;
@@ -17,6 +19,7 @@ import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.fixture.JobFixtures;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.lab.ui.LabAcceptanceTest;
+import mine.is.gpu.worker.dto.WorkerRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -112,6 +115,7 @@ public class JobAcceptanceTest extends AcceptanceTest {
 
         serverId = GpuServerAcceptanceTest
                 .GpuServer_생성후아이디찾기(managerToken, labId, GpuServerFixtures.gpuServerCreationRequest());
+        GpuServer_상태변경(serverId, new WorkerRequest(true, LocalDateTime.now()));
     }
 
     @DisplayName("소속되지 않는 lab에 job을 예약할 수 없다.")

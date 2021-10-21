@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import mine.is.gpu.account.domain.Member;
+import mine.is.gpu.account.exception.MemberException;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
@@ -50,7 +51,7 @@ public class Job extends BaseEntity {
 
     public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
                String metaData, String expectedTime) {
-        validate(name, status, gpuBoard, member, metaData, expectedTime);
+        validate(name, gpuBoard, member, metaData, expectedTime);
         this.name = name;
         this.status = status;
         this.gpuBoard = gpuBoard;
@@ -61,17 +62,13 @@ public class Job extends BaseEntity {
 
     public Job(String name, GpuBoard gpuBoard, Member member, String metaData,
                String expectedTime) {
-        this(name, JobStatus.WAITING, gpuBoard, member, metaData, expectedTime);
+        this(name, null, gpuBoard, member, metaData, expectedTime);
     }
 
-    private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+    private void validate(String name, GpuBoard gpuBoard, Member member,
                           String metaData, String expectedTime) {
         if (Objects.isNull(name) || name.isEmpty()) {
             throw JobException.INVALID_JOB_NAME.getException();
-        }
-
-        if (Objects.isNull(status)) {
-            throw JobException.INVALID_JOB_STATUS.getException();
         }
 
         if (Objects.isNull(gpuBoard)) {
@@ -121,6 +118,17 @@ public class Job extends BaseEntity {
 
     public String getExpectedTime() {
         return expectedTime;
+    }
+
+    public void reserve() {
+        if (!gpuBoard.canUsedBy(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+
+        if (!gpuBoard.isOn()) {
+            throw new IllegalArgumentException("보드가 사용 불가능 합니다.");
+        }
+        this.status = JobStatus.WAITING;
     }
 
     public void cancel() {

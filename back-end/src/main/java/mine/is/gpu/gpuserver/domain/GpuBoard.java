@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.lab.domain.Lab;
 
@@ -86,5 +87,13 @@ public class GpuBoard extends BaseEntity {
 
     public void setModelName(String modelName) {
         this.modelName = modelName;
+    }
+
+    public boolean canUsedBy(Member member) {
+        return gpuServer.canUsedBy(member);
+    }
+
+    public boolean isOn() {
+        return gpuServer.getIsOn();
     }
 }

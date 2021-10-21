@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.lab.domain.Lab;
 
@@ -116,5 +117,9 @@ public class GpuServer extends BaseEntity {
 
     public void updateLastResponse(LocalDateTime lastResponse) {
         this.lastResponse = lastResponse;
+    }
+
+    public boolean canUsedBy(Member member) {
+        return lab.hasMember(member);
     }
 }

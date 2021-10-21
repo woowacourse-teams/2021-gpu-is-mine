@@ -182,41 +182,4 @@ class MemberServiceTest {
                     .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
     }
-
-    @Nested
-    @DisplayName("사용자의 Job 접근 권한을 확인한다.")
-    class CheckPermissionOnJob {
-        private Long user;
-        private Long otherUser;
-
-        private Long jobByUser;
-        private Long jobByOtherUser;
-
-        @BeforeEach
-        void setUp() {
-            user = memberService.save(userCreationRequest(labId));
-            otherUser = memberService.save(userCreationRequest(labId, "user@email.com", "12345"));
-
-            jobByUser = jobService.save(user, jobCreationRequest(gpuServerId));
-            jobByOtherUser = jobService.save(otherUser, jobCreationRequest(gpuServerId));
-        }
-
-        @Test
-        @DisplayName("일반 사용자(User)는 본인의 작업에만 수정 권한을 갖는다.")
-        void checkEditableJobByUser() {
-            memberService.checkEditableJob(user, jobByUser);
-
-            assertThatThrownBy(() -> memberService.checkEditableJob(user, jobByOtherUser))
-                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
-        }
-
-        @Test
-        @DisplayName("관리 사용자(Manager)는 랩의 모든 작업에 수정 권한을 갖는다.")
-        void checkEditableJobByManager() {
-            Long managerId = memberService.save(managerCreationRequest(labId));
-
-            memberService.checkEditableJob(managerId, jobByUser);
-            memberService.checkEditableJob(managerId, jobByOtherUser);
-        }
-    }
 }

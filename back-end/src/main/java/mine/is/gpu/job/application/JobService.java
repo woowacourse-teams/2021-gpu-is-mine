@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import mine.is.gpu.account.application.MemberService;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.account.domain.repository.MemberRepository;
 import mine.is.gpu.account.exception.MemberException;
@@ -42,24 +43,30 @@ public class JobService {
     private final MemberRepository memberRepository;
     private final LogRepository logRepository;
     private final ParsedLogRepository parsedLogRepository;
+    private final MemberService memberService;
+    private final JobMapper jobMapper;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
                       GpuBoardRepository gpuBoardRepository,
                       MemberRepository memberRepository, LogRepository logRepository,
-                      ParsedLogRepository parsedLogRepository) {
+                      ParsedLogRepository parsedLogRepository,
+                      MemberService memberService, JobMapper jobMapper) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
         this.logRepository = logRepository;
         this.parsedLogRepository = parsedLogRepository;
+        this.memberService = memberService;
+        this.jobMapper = jobMapper;
     }
 
     @Transactional
     public Long save(Long memberId, JobRequest jobRequest) {
-        Long serverId = jobRequest.getGpuServerId();
-        Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
+        Job job = jobMapper.mapFrom(memberId, jobRequest);
+
+        job.reserve();
         jobRepository.save(job);
         return job.getId();
     }
@@ -71,7 +78,9 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public JobResponse findById(Long jobId) {
+    public JobResponse findById(Long memberId, Long jobId) {
+        memberService.checkReadableJob(memberId, jobId);
+
         Job job = findJobById(jobId);
         return JobResponse.of(job);
     }

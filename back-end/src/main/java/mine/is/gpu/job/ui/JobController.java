@@ -42,8 +42,6 @@ public class JobController {
     @PostMapping("/jobs")
     public ResponseEntity<Void> save(@PathVariable Long labId, @AuthenticationPrincipal Member member,
                                      @RequestBody JobRequest jobRequest) {
-        memberService.checkMemberOfServer(member.getId(), jobRequest.getGpuServerId());
-
         Long jobId = jobService.save(member.getId(), jobRequest);
         mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
@@ -52,9 +50,7 @@ public class JobController {
 
     @GetMapping("/jobs/{jobId}")
     public ResponseEntity<JobResponse> findById(@PathVariable Long jobId, @AuthenticationPrincipal Member member) {
-        memberService.checkReadableJob(member.getId(), jobId);
-
-        JobResponse jobResponse = jobService.findById(jobId);
+        JobResponse jobResponse = jobService.findById(member.getId(), jobId);
         return ResponseEntity.ok(jobResponse);
     }
 
@@ -88,7 +84,7 @@ public class JobController {
     public ResponseEntity<Void> cancel(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
-        JobResponse job = jobService.findById(jobId);
+        JobResponse job = jobService.findById(member.getId(), jobId);
         jobService.cancel(jobId);
         mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 import mine.is.gpu.lab.exception.LabException;
 
@@ -64,5 +65,9 @@ public class Lab extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean hasMember(Member member) {
+        return member.getLab().equals(this);
     }
 }
