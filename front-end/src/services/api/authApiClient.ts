@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { API_ENDPOINT, STORAGE_KEY } from "../../constants";
-import { httpClient, validateExpires } from "../../utils";
+import { httpClient } from "../../utils";
 import storage from "../Storage";
 import type {
   MemberLoginResponse,
@@ -23,8 +23,6 @@ const postLogin = async ({ email, password }: MemberLoginRequest) => {
 };
 
 const fetchMyInfo = async ({ accessToken, expires }: { accessToken: string; expires: Date }) => {
-  validateExpires(expires);
-
   const { data: myInfo } = await httpClient.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
