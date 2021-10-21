@@ -24,7 +24,7 @@ const Layout = ({
   Aside,
   Main,
   Footer = (
-    <Text as="span" size="sm" weight="medium" color="dark">
+    <Text as="span" size="sm" weight="medium">
       ⓒ 2021 GPU내껀데
     </Text>
   ),
