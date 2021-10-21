@@ -25,7 +25,7 @@ const Layout = ({
   Main,
   Footer = (
     <Text as="span" size="sm" weight="medium">
-      ⓒ 2021 GPU내껀데
+      &copy; 2021 GPU내껀데
     </Text>
   ),
   className,
