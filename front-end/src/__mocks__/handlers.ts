@@ -1,7 +1,7 @@
 import { rest } from "msw";
-import { membersMeResponse, logs } from "../__fixtures__";
+import { membersMeResponse, logs, gpuServersResponses } from "../__fixtures__";
 import { API_ENDPOINT, BASE_URL } from "../constants";
-import { MemberLoginRequest, MemberLoginResponse } from "../types";
+import { GpuServerViewResponses, MemberLoginRequest, MemberLoginResponse } from "../types";
 import { emailValidator, passwordValidator } from "../features/member/validator/validator";
 
 const handlers = [
@@ -18,6 +18,9 @@ const handlers = [
   ),
   rest.get(BASE_URL + API_ENDPOINT.MEMBER.ME, (_, res, ctx) =>
     res(ctx.json(membersMeResponse), ctx.status(200))
+  ),
+  rest.get<GpuServerViewResponses>(`${BASE_URL}/labs/:labId/gpus`, (_, res, ctx) =>
+    res(ctx.json(gpuServersResponses), ctx.status(200))
   ),
   rest.delete(`${BASE_URL}/labs/:labId/gpus/:serverId`, (_, res, ctx) => res(ctx.status(204))),
   rest.get(`${BASE_URL}/labs/:labId/jobs/:jobId/logs`, (_, res, ctx) =>

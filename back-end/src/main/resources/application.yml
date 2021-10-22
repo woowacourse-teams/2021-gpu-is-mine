@@ -69,7 +69,7 @@ spring:
     activate:
       on-profile: dev
 
-    import: ./application-dev-db.properties
+    import: ./application-dev-db.properties, ./application-dev-elk.properties
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -95,7 +95,7 @@ spring:
     activate:
       on-profile: prod
 
-    import: ./application-db.properties
+    import: ./application-db.properties, ./application-elk.properties
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect

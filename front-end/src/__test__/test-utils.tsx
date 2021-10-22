@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import signupReducer from "../features/member/signupSlice";
 import authReducer from "../features/member/authSlice";
 import { ThemeProvider } from "../styles";
+import { ToastProvider } from "../components";
 
 type CustomRender = (
   ui: ReactElement,
@@ -33,7 +34,9 @@ const customRender: CustomRender = (
   const Wrapper: ComponentType = ({ children }) => (
     <Provider store={store}>
       <ThemeProvider>
-        <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+        <ToastProvider>
+          <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+        </ToastProvider>
       </ThemeProvider>
     </Provider>
   );
