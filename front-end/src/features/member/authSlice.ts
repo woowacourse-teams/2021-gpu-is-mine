@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ENDPOINT, SESSION_STORAGE_KEY, SLICE_NAME, STATUS } from "../../constants";
+import { createSlice, createAsyncThunk, SerializedError, createAction } from "@reduxjs/toolkit";
+import { SLICE_NAME, STATUS } from "../../constants";
+import { useAppDispatch } from "../../app/hooks";
+import { authApiClient } from "../../services";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -31,7 +32,7 @@ export type AuthState =
     }
   | {
       status: typeof STATUS.FAILED;
-      error: Error;
+      error: SerializedError;
       myInfo: null;
     };
 
@@ -64,42 +65,26 @@ export const selectMyInfo = (state: RootState) => {
 
 export const selectMemberType = (state: RootState) => selectMyInfo(state).memberType;
 
-export const login = createAsyncThunk<MyInfoResponse, { email: string; password: string }>(
-  "auth/login",
-  async ({ email, password }) => {
-    const {
-      data: { accessToken },
-    } = await axios.post<{ accessToken: string }>(API_ENDPOINT.MEMBER.LOGIN, {
-      email,
-      password,
-    });
-
-    sessionStorage.setItem(SESSION_STORAGE_KEY.ACCESS_TOKEN, accessToken);
-
-    const { data: myInfo } = await axios.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
-
-    return myInfo;
-  }
+export const authorize = createAsyncThunk<MyInfoResponse, { accessToken: string; expires: Date }>(
+  "auth/authorize",
+  async (props) => authApiClient.fetchMyInfo(props)
 );
 
-export const checkAuthorization = createAsyncThunk<MyInfoResponse, void>(
-  "auth/checkAuthorization",
-  async () => {
-    // TODO: deliver accessToken to client
-    // const accessToken = sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
-    //    console.log(accessToken);
-    const { data: myInfo } = await axios.get<MyInfoResponse>(API_ENDPOINT.MEMBER.ME);
-    return myInfo;
-  },
-  {
-    condition: () => Boolean(sessionStorage.getItem(SESSION_STORAGE_KEY.ACCESS_TOKEN)),
-  }
-);
+export const login = createAsyncThunk<
+  void,
+  { email: string; password: string },
+  { dispatch: ReturnType<typeof useAppDispatch> }
+>("auth/login", async ({ email, password }, { dispatch }) => {
+  const { accessToken, expires } = await authApiClient.postLogin({ email, password });
 
-// TODO: logout API 요청하기
-export const logout = createAsyncThunk<void, void>("auth/logout", () => {
-  sessionStorage.removeItem(SESSION_STORAGE_KEY.ACCESS_TOKEN);
+  await dispatch(authorize({ accessToken, expires })).unwrap();
 });
+
+export const logout = createAsyncThunk<void, void>("auth/logout", () => {
+  authApiClient.logout();
+});
+
+export const resetAction = createAction("auth/resetAction");
 
 const authSlice = createSlice({
   name: SLICE_NAME.AUTH,
@@ -107,31 +92,27 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(resetAction, () => initialState)
       .addCase(login.pending, (state) => {
         state.status = STATUS.LOADING;
       })
-      .addCase(login.fulfilled, (state, { payload }) => {
+      .addCase(login.fulfilled, (state) => {
         state.status = STATUS.SUCCEED;
-
-        const {
-          id,
-          email,
-          name,
-          labResponse: { id: labId, name: labName },
-          memberType,
-        } = payload;
-
-        state.myInfo = { memberId: id, email, name, labId, labName, memberType };
+        state.error = null;
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
         state.status = STATUS.FAILED;
-
-        // TODO: Error 메세지 표준화
+        // TODO: Error Handling
+        // email, password가 일치하지 않을 경우
+        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
+        // 500 서버 에러
+        // Network 에러
+        state.error = action.error;
       })
-      .addCase(checkAuthorization.pending, (state) => {
+      .addCase(authorize.pending, (state) => {
         state.status = STATUS.LOADING;
       })
-      .addCase(checkAuthorization.fulfilled, (state, { payload }) => {
+      .addCase(authorize.fulfilled, (state, { payload }) => {
         state.status = STATUS.SUCCEED;
 
         const {
@@ -143,8 +124,17 @@ const authSlice = createSlice({
         } = payload;
 
         state.myInfo = { memberId: id, email, name, labId, labName, memberType };
+        state.error = null;
       })
-      .addCase(checkAuthorization.rejected, (state) => {
+      .addCase(authorize.rejected, (state, action) => {
+        // TODO: Error Handling
+        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
+        // 500 서버 에러
+        // Network 에러
+        state.error = action.error;
+
+        // accessToken이 유효하지 않은 경우에만 STATUS.IDLE
+        // 500 서버, Network에러는 STATUS.FAILED
         state.status = STATUS.IDLE;
       })
       .addCase(logout.fulfilled, (state) => {

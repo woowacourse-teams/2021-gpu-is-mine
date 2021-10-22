@@ -28,3 +28,10 @@ export const textEllipsis = css`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+
+export const cardStyle = css`
+  padding: 1.25rem;
+  background-color: var(--background);
+  border-radius: 1rem;
+  box-shadow: 0px 3px 5px 1px #e9eefa;
+`;

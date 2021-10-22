@@ -1,10 +1,13 @@
 import styled from "styled-components";
+import { cardStyle } from "../../styles";
 
 export const StyledJobDetailGraph = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
   position: relative;
+
+  ${cardStyle}
 `;
 
 export const Graph = styled.div`
