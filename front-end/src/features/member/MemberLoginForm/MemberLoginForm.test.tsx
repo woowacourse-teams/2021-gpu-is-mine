@@ -55,6 +55,12 @@ describe("Member/LoginForm", () => {
       expect(emailInput).toHaveAttribute("autoComplete", "email");
     });
 
+    test("이메일 input의 placeholder 속성은 example@email.com이다", () => {
+      const { emailInput } = setup();
+
+      expect(emailInput).toHaveAttribute("placeholder", "example@email.com");
+    });
+
     test("비밀번호 라벨과 input이 표시된다", () => {
       const { passwordLabel, passwordInput } = setup();
 
