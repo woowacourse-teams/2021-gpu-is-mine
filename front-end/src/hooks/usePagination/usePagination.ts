@@ -16,7 +16,7 @@ const usePagination = ({ count, totalContentsLength }: UsePaginationProps) => {
   const isFirstPage = page === firstPage;
   const isLastPage = page === lastPage;
 
-  const onChangeContentsLengthPerPage = (value: number) => {
+  const changeContentsLengthPerPage = (value: number) => {
     setContentsLengthPerPage(value);
   };
 
@@ -39,7 +39,7 @@ const usePagination = ({ count, totalContentsLength }: UsePaginationProps) => {
     lastPage,
 
     contentsLengthPerPage,
-    onChangeContentsLengthPerPage,
+    changeContentsLengthPerPage,
 
     isFirstPage,
     isLastPage,
