@@ -81,22 +81,6 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public void checkEditableJob(Long memberId, Long jobId) {
-        Member member = findMemberById(memberId);
-        Job job = findJobById(jobId);
-
-        member.checkEditable(job);
-    }
-
-    @Transactional(readOnly = true)
-    public void checkReadableJob(Long memberId, Long jobId) {
-        Member member = findMemberById(memberId);
-        Job job = findJobById(jobId);
-
-        member.checkReadable(job);
-    }
-
-    @Transactional(readOnly = true)
     public void checkMemberOfLab(Long memberId, Lab lab) {
         Member member = findMemberById(memberId);
         member.checkMemberOfLab(lab);
