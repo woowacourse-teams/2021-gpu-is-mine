@@ -18,7 +18,7 @@ const JobDetailSummaryContent = ({ detailList, ...rest }: JobDetailSummaryProps)
     {detailList.map(({ title, content, isLink }) =>
       isLink ? (
         <>
-          <Text as="dt" weight="bold">
+          <Text key={title} as="dt" weight="bold">
             {title}
           </Text>
           <Text as="dd">
@@ -29,7 +29,7 @@ const JobDetailSummaryContent = ({ detailList, ...rest }: JobDetailSummaryProps)
         </>
       ) : (
         <>
-          <Text as="dt" weight="bold">
+          <Text key={title} as="dt" weight="bold">
             {title}
           </Text>
           <Text as="dd">{content}</Text>
