@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { FormHTMLAttributes, useState } from "react";
+import { useState, ChangeEventHandler, FormHTMLAttributes } from "react";
 import {
   dockerHubImageValidator,
   expectedTimeValidator,
@@ -85,7 +85,30 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   const handleSampleImageButtonClick = () => {
     dispatch(
-      updateValue({ name: "metaData", value: "aprn7950/mnist_test_auto", validationMessage: "" })
+      updateValue({
+        name: metaDataInputProps.name,
+        value: "aprn7950/mnist_test_auto",
+        validationMessage: "",
+      })
+    );
+  };
+
+  const handleMetaDataInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const matched = /^\s*docker\s+pull\s+(.*)$/.exec(event.target.value);
+
+    if (!matched) {
+      metaDataInputProps.onChange(event);
+      return;
+    }
+
+    const [, dockerHubImage] = matched;
+
+    dispatch(
+      updateValue({
+        name: metaDataInputProps.name,
+        value: dockerHubImage,
+        validationMessage: dockerHubImageValidator(dockerHubImage) ?? "",
+      })
     );
   };
 
@@ -117,8 +140,9 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           <Input
             size="sm"
             list="example-dockerhub-image"
-            {...metaDataInputProps}
             placeholder="계정명/저장소명:버전"
+            {...metaDataInputProps}
+            onChange={handleMetaDataInputChange}
           />
           <datalist id="example-dockerhub-image">
             <option value="aprn7950/mnist_test_auto" />
