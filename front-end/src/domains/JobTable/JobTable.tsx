@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { addHours, formatDate, pick } from "../../utils";
+import { formatDate, pick } from "../../utils";
 import { Button, Table } from "../../components";
 import { StatusText } from "./JobTable.styled";
 import { Field, JobStatus, JobViewResponse, Row } from "../../types";

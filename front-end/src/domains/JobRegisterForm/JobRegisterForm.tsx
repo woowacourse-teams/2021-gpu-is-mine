@@ -1,30 +1,44 @@
-import { FormHTMLAttributes, useState } from "react";
-import { expectedTimeValidator, jobNameValidator, minPerformanceValidator } from "./validator";
-import { getFormProps, getInputProps, useForm, usePostJobRegister } from "../../hooks";
-import { Alert, Button, Dimmer, Input, Loading, Text } from "../../components";
-import { StyledForm } from "./JobRegisterForm.styled";
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import { useState, ChangeEventHandler, FormHTMLAttributes } from "react";
+import {
+  dockerHubImageValidator,
+  expectedTimeValidator,
+  jobNameValidator,
+  minPerformanceValidator,
+} from "./validator";
+import { getFormProps, getInputProps, useForm, usePostJobRegister, useBoolean } from "../../hooks";
+import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
+import {
+  DockerHubImageSection,
+  SampleImageButton,
+  StyledForm,
+  ToolTipBox,
+  ToolTipContainer,
+} from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { Values } from "./JobRegisterForm.type";
+import { updateValue } from "../../hooks/useForm/useForm";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
 }
 
 const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
-  const { status, makeRequest, done } = usePostJobRegister({ labId });
+  const { isIdle, isLoading, isFailed, isSucceed, makeRequest, done } = usePostJobRegister({
+    labId,
+  });
   const [key, setKey] = useState(0);
 
   const { state, dispatch, reset } = useForm<Values>({
     jobName: "",
     expectedTime: "",
     minPerformance: "" as unknown as number,
-    metaData: "",
+    dockerHubImage: "",
     gpuServerId: "" as unknown as number,
   });
 
-  const handleSubmit = ({ jobName, expectedTime, gpuServerId, metaData }: Values) => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    makeRequest({ name: jobName, expectedTime, gpuServerId, metaData });
+  const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
+    makeRequest({ name: jobName, expectedTime, gpuServerId, metaData: dockerHubImage });
   };
 
   const form = getFormProps({ state, dispatch, handleSubmit });
@@ -53,11 +67,12 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     validator: minPerformanceValidator,
   });
 
-  const metaDataInputProps = getInputProps({
+  const dockerHubImageInputProps = getInputProps({
     state,
     dispatch,
-    name: "metaData",
-    label: "Docker Hub Url",
+    name: "dockerHubImage",
+    label: "Docker Hub Image",
+    validator: dockerHubImageValidator,
   });
 
   const handleConfirm = () => {
@@ -66,25 +81,52 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     done();
   };
 
+  const [isToolTipVisible, openToolTip, closeToolTip] = useBoolean(false);
+
+  const handleSampleImageButtonClick = () => {
+    dispatch(
+      updateValue({
+        name: dockerHubImageInputProps.name,
+        value: "aprn7950/mnist_test_auto",
+        validationMessage: "",
+      })
+    );
+  };
+
+  const handleDockerHubImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const matched = /^\s*docker\s+pull\s+(.*)$/.exec(event.target.value);
+
+    if (!matched) {
+      dockerHubImageInputProps.onChange(event);
+      return;
+    }
+
+    const [, dockerHubImage] = matched;
+
+    dispatch(
+      updateValue({
+        name: dockerHubImageInputProps.name,
+        value: dockerHubImage,
+        validationMessage: dockerHubImageValidator(dockerHubImage) ?? "",
+      })
+    );
+  };
+
   return (
     <>
-      {status === "succeed" && (
-        <Alert onConfirm={handleConfirm}>
-          <Text size="md" weight="bold">
-            Job 등록에 성공하였습니다.
-          </Text>
-        </Alert>
-      )}
+      <Dialog open={isSucceed} onClose={done} onConfirm={handleConfirm}>
+        <Text size="md" weight="bold">
+          Job 등록에 성공하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "failed" && (
-        <Alert onConfirm={done}>
-          <Text size="md" weight="bold">
-            Job 등록에 실패하였습니다.
-          </Text>
-        </Alert>
-      )}
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="md" weight="bold">
+          Job 등록에 실패하였습니다.
+        </Text>
+      </Dialog>
 
-      {status === "loading" && (
+      {isLoading && (
         <Dimmer>
           <Loading size="lg" />
         </Dimmer>
@@ -94,7 +136,40 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         <Input size="sm" {...jobNameInputProps} />
         <Input size="sm" {...expectedTimeInputProps} />
         <Input size="sm" {...minPerformanceInputProps} />
-        <Input size="sm" {...metaDataInputProps} />
+        <DockerHubImageSection>
+          <Input
+            size="sm"
+            list="example-dockerhub-image"
+            placeholder="계정명/저장소명:버전"
+            {...dockerHubImageInputProps}
+            onChange={handleDockerHubImageChange}
+          />
+          <datalist id="example-dockerhub-image">
+            <option value="aprn7950/mnist_test_auto" />
+          </datalist>
+
+          <ToolTipContainer onMouseLeave={closeToolTip}>
+            <SampleImageButton
+              type="button"
+              onClick={handleSampleImageButtonClick}
+              onMouseOver={openToolTip}
+              onFocus={openToolTip}
+              onBlur={closeToolTip}
+              onKeyDown={closeToolTip}
+            >
+              <Text as="p" weight="medium" size="sm">
+                샘플 이미지
+              </Text>
+            </SampleImageButton>
+            {isToolTipVisible && (
+              <ToolTipBox>
+                <Text as="span" weight="medium" size="sm">
+                  버튼을 클릭하여 미리 준비해둔 샘플 이미지를 등록해보세요 :-)
+                </Text>
+              </ToolTipBox>
+            )}
+          </ToolTipContainer>
+        </DockerHubImageSection>
         <JobRegisterRadioGroup
           labId={labId}
           state={state}
@@ -103,7 +178,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={status !== "idle"}>
+        <Button className="submit" color="secondary" disabled={!isIdle}>
           제출
         </Button>
       </StyledForm>

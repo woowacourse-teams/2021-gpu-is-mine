@@ -1,8 +1,8 @@
 package mine.is.gpu.gpuserver.ui;
 
+import static mine.is.gpu.account.fixture.MemberFixtures.managerCreationRequest;
+import static mine.is.gpu.account.fixture.MemberFixtures.userCreationRequest;
 import static mine.is.gpu.auth.AuthAcceptanceTest.회원_등록_및_로그인_후_토큰_발급;
-import static mine.is.gpu.member.fixture.MemberFixtures.managerCreationRequest;
-import static mine.is.gpu.member.fixture.MemberFixtures.userCreationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
@@ -15,7 +15,7 @@ import mine.is.gpu.AcceptanceTest;
 import mine.is.gpu.gpuserver.dto.request.GpuBoardRequest;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
 import mine.is.gpu.gpuserver.dto.response.GpuBoardResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponse;
 import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.lab.ui.LabAcceptanceTest;
 import org.assertj.core.api.Assertions;
@@ -63,8 +63,8 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
 
     public static int GpuServer_전체조회갯수(String token, Long labId) {
         ExtractableResponse<Response> response = GpuServer_전체조회(token, labId);
-        List<GpuServerResponse> gpus = response.jsonPath()
-                .getList("gpuServers", GpuServerResponse.class);
+        List<GpuServerMainPageResponse> gpus = response.jsonPath()
+                .getList("gpuServers", GpuServerMainPageResponse.class);
         return gpus.size();
     }
 
@@ -97,7 +97,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .oauth2(token)
                 .body(gpuServerUpdateRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/api/labs/1/gpus/" + gpuServerId)
+                .when().put("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
@@ -107,7 +107,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
                 .given().log().all()
                 .auth()
                 .oauth2(token)
-                .when().delete("/api/labs/1/gpus/" + gpuServerId)
+                .when().delete("/api/labs/" + labId + "/gpus/" + gpuServerId)
                 .then().log().all()
                 .extract();
     }
@@ -150,7 +150,7 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회(managerToken, labId);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("gpuServers", GpuServerResponse.class))
+        assertThat(response.jsonPath().getList("gpuServers", GpuServerMainPageResponse.class))
                 .hasSize(GpuServerIds.size());
     }
 
@@ -161,9 +161,9 @@ public class GpuServerAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = GpuServer_전체조회_페이지네이션(managerToken, labId, page, GpuServerIds.size());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List<Long> searchedIds = response.jsonPath().getList("gpuServers", GpuServerResponse.class)
+        List<Long> searchedIds = response.jsonPath().getList("gpuServers", GpuServerMainPageResponse.class)
                 .stream()
-                .map(GpuServerResponse::getId)
+                .map(GpuServerMainPageResponse::getId)
                 .collect(Collectors.toList());
         assertThat(searchedIds).usingRecursiveComparison().isEqualTo(GpuServerIds);
     }

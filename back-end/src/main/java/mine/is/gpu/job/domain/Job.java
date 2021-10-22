@@ -10,11 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.exception.JobException;
-import mine.is.gpu.member.domain.Member;
 
 @Entity
 public class Job extends BaseEntity {
@@ -26,7 +26,7 @@ public class Job extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "status")
+    @Column(nullable = false)
     private JobStatus status;
 
     @ManyToOne
@@ -41,9 +41,9 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private String expectedTime;
 
-    private LocalDateTime startedTime = null;
+    private LocalDateTime startedTime;
 
-    private LocalDateTime completedTime = null;
+    private LocalDateTime completedTime;
 
     protected Job() {
     }
@@ -86,13 +86,17 @@ public class Job extends BaseEntity {
             throw JobException.INVALID_META_DATA.getException();
         }
 
-        if (Objects.isNull(expectedTime) || expectedTime.isEmpty()) {
+        if (Objects.isNull(expectedTime) || expectedTime.isEmpty() || !expectedTime.matches("\\d+")) {
             throw JobException.INVALID_EXPECTED_TIME.getException();
         }
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public JobStatus getStatus() {
@@ -126,11 +130,20 @@ public class Job extends BaseEntity {
         this.status = JobStatus.CANCELED;
     }
 
+    public void start() {
+        if (!this.status.isWaiting()) {
+            throw JobException.JOB_NOT_WAITING.getException();
+        }
+        this.status = JobStatus.RUNNING;
+        this.startedTime = LocalDateTime.now();
+    }
+
     public void complete() {
         if (!this.status.isRunning()) {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
+        this.completedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -141,20 +154,16 @@ public class Job extends BaseEntity {
         this.status = status;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDateTime getStartedTime() {
         return startedTime;
     }
 
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
-    }
-
     public void setStartedTime(LocalDateTime startedTime) {
         this.startedTime = startedTime;
+    }
+
+    public LocalDateTime getCompletedTime() {
+        return completedTime;
     }
 
     public void setCompletedTime(LocalDateTime completedTime) {

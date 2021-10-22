@@ -6,15 +6,17 @@ interface UsePaginationProps {
 }
 
 const usePagination = ({ count, totalContentsLength }: UsePaginationProps) => {
-  const [page, setPage] = useState(1);
+  const firstPage = totalContentsLength === 0 ? 0 : 1;
+
+  const [page, setPage] = useState(firstPage);
   const [contentsLengthPerPage, setContentsLengthPerPage] = useState(count);
 
   const lastPage = Math.ceil(totalContentsLength / contentsLengthPerPage);
 
-  const isFirstPage = page === 1;
+  const isFirstPage = page === firstPage;
   const isLastPage = page === lastPage;
 
-  const onChangeContentsLengthPerPage = (value: number) => {
+  const changeContentsLengthPerPage = (value: number) => {
     setContentsLengthPerPage(value);
   };
 
@@ -37,7 +39,7 @@ const usePagination = ({ count, totalContentsLength }: UsePaginationProps) => {
     lastPage,
 
     contentsLengthPerPage,
-    onChangeContentsLengthPerPage,
+    changeContentsLengthPerPage,
 
     isFirstPage,
     isLastPage,

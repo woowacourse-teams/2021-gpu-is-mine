@@ -1,14 +1,13 @@
 package mine.is.gpu.worker.ui;
 
+import mine.is.gpu.infra.MailDto;
+import mine.is.gpu.infra.MailService;
 import mine.is.gpu.job.application.JobService;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.dto.response.JobResponse;
-import mine.is.gpu.mail.MailDto;
-import mine.is.gpu.mail.MailService;
 import mine.is.gpu.worker.application.WorkerService;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -64,9 +63,9 @@ public class WorkerController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("jobs/{jobId}/end")
-    public ResponseEntity<Void> end(@PathVariable Long jobId) {
-        workerService.end(jobId);
+    @PutMapping("jobs/{jobId}/complete")
+    public ResponseEntity<Void> complete(@PathVariable Long jobId) {
+        workerService.complete(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         mailService.sendJobStartMail(mailDto);
         logger.info("job #" + jobId + " is completed");

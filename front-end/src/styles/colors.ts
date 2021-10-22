@@ -26,6 +26,7 @@ const colors = css`
     --secondary-200: #f7cc8a;
     --secondary-100: #fae0b8;
     --secondary-50: #fdf3e2;
+    --secondary-30: #fef7ec;
 
     --surface: #ffffff;
     --background: #ffffff;
@@ -55,6 +56,7 @@ const colors = css`
     --on-secondary-200: var(--text-dark);
     --on-secondary-100: var(--text-dark);
     --on-secondary-50: var(--text-dark);
+    --on-secondary-30: var(--text-dark);
 
     --on-surface: var(--text-dark);
     --on-background: var(--text-dark);

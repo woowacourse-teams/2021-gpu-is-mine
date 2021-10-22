@@ -1,6 +1,6 @@
 import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useAuth, useToggle } from "../../hooks";
+import { useMyInfo, usePathTitle, useToggle } from "../../hooks";
 import { Text } from "../../components";
 import { StyledSubHeader, StyledManagerNavigation } from "./SubHeader.styled";
 
@@ -46,7 +46,7 @@ const useParsePathname = ({
 };
 
 const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
-  const { myInfo } = useAuth();
+  const myInfo = useMyInfo();
   const { pathname } = useLocation();
   const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
   const list = useParsePathname({
@@ -55,17 +55,22 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
     serverId,
   });
 
+  const heading = usePathTitle();
+
   const [isNavVisible, toggleIsNavVisible] = useToggle(false);
 
   return (
     <>
       <StyledSubHeader {...rest}>
+        <Text as="h2" srOnly>
+          {heading}
+        </Text>
         <div className="title">
           {list.map(({ path, name }, index) => (
             <Fragment key={name}>
               {index > 0 && <Text size="md">{">"}</Text>}
               <Link to={path}>
-                <Text className="title__name" size="md">
+                <Text className="title__name" size="md" weight="medium">
                   {name}
                 </Text>
               </Link>
@@ -74,9 +79,9 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
         </div>
 
         <Text className="lab-name" size="md" weight="medium">
-          {myInfo?.labResponse.name}
+          {myInfo.labName}
         </Text>
-        <button type="button" className="down-arrow" onClick={toggleIsNavVisible}>
+        <button type="button" className="down-arrow" onClick={() => toggleIsNavVisible()}>
           {isNavVisible ? "▲" : "▼"}
         </button>
       </StyledSubHeader>

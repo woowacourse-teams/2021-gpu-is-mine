@@ -1,18 +1,19 @@
 import { ReactNode } from "react";
+import Text from "../Text/Text";
 import {
   StyledLayout,
   HeaderContainer,
   SubHeaderContainer,
-  NavContainer,
-  ContentContainer,
+  AsideContainer,
+  MainContainer,
   FooterContainer,
 } from "./Layout.styled";
 
 interface LayoutProps {
   Header: ReactNode;
   SubHeader: ReactNode;
-  Navigation: ReactNode;
-  Content: ReactNode;
+  Aside: ReactNode;
+  Main: ReactNode;
   Footer?: ReactNode;
   className?: string;
 }
@@ -20,16 +21,20 @@ interface LayoutProps {
 const Layout = ({
   Header,
   SubHeader,
-  Navigation,
-  Content,
-  Footer = <span>All Rights Reserved gpu-is-mine</span>,
+  Aside,
+  Main,
+  Footer = (
+    <Text as="span" size="sm" weight="medium">
+      &copy; 2021 GPU내껀데
+    </Text>
+  ),
   className,
 }: LayoutProps) => (
   <StyledLayout className={className}>
     <HeaderContainer>{Header}</HeaderContainer>
     <SubHeaderContainer>{SubHeader}</SubHeaderContainer>
-    <NavContainer>{Navigation}</NavContainer>
-    <ContentContainer>{Content}</ContentContainer>
+    <MainContainer>{Main}</MainContainer>
+    <AsideContainer>{Aside}</AsideContainer>
     <FooterContainer>{Footer}</FooterContainer>
   </StyledLayout>
 );

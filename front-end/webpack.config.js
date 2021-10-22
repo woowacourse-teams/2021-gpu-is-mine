@@ -1,18 +1,20 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const dotenvWebpack = require("dotenv-webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
-const CompressionPlugin = require("compression-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
-module.exports = () => {
-  const isDevelopment = process.env.NODE_ENV !== "production";
+module.exports = (env) => {
+  const isDevelopment = !env.production;
 
   return {
     entry: "./src/index.tsx",
     output: {
-      filename: "[name].bundle.js",
+      filename: "[name].[fullhash].js",
+      chunkFilename: "[name].[chunkhash].js",
       path: path.resolve(__dirname, "build"),
       clean: true,
     },
@@ -45,13 +47,12 @@ module.exports = () => {
       ],
     },
     plugins: [
+      new FaviconsWebpackPlugin({ prefix: "/" }),
       new HtmlWebpackPlugin({
         base: "/",
         template: "public/index.html",
       }),
-      new webpack.DefinePlugin({
-        "process.env.BASE_URL": JSON.stringify(process.env.BASE_URL),
-      }),
+      new dotenvWebpack(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
     ].filter(Boolean),
@@ -62,6 +63,19 @@ module.exports = () => {
       maxEntrypointSize: 500 * 1_024,
       maxAssetSize: 300 * 1_024,
       hints: "warning",
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          defaultVendors: {
+            chunks: "all",
+            test: /[\\/]\.yarn[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+            filename: "vendors.[contenthash].js",
+          },
+        },
+      },
     },
   };
 };

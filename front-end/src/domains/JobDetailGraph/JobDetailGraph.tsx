@@ -18,7 +18,6 @@ const JobDetailGraph = ({ labId, jobId, interval, ...rest }: JobDetailGraphProps
   useInterval(() => makeRequest(), interval ? REFRESH_TIME : null);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
 
     return done;
@@ -27,7 +26,7 @@ const JobDetailGraph = ({ labId, jobId, interval, ...rest }: JobDetailGraphProps
   return (
     <StyledJobDetailGraph {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        그래프
+        Graph
       </Text>
       {isLoading && <Loading />}
       {/* FIXME: parsedLogResponses 의 마지막 행은 제대로 parsing 된 로그가 아니어서,

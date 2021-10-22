@@ -1,15 +1,15 @@
 package mine.is.gpu.gpuserver.ui;
 
 import java.net.URI;
+import mine.is.gpu.account.application.MemberService;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.gpuserver.application.GpuServerService;
 import mine.is.gpu.gpuserver.dto.request.GpuServerRequest;
+import mine.is.gpu.gpuserver.dto.response.GpuServerMainPageResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerResponse;
-import mine.is.gpu.gpuserver.dto.response.GpuServerResponses;
 import mine.is.gpu.gpuserver.dto.response.GpuServerStatusResponse;
-import mine.is.gpu.member.application.MemberService;
-import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.pagination.Pagination;
+import mine.is.gpu.utils.pagination.Pagination;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,13 +53,13 @@ public class GpuServerController {
     }
 
     @GetMapping
-    public ResponseEntity<GpuServerResponses> findAllInLab(@PathVariable Long labId,
-                                                           @Pagination Pageable pageable,
-                                                           @AuthenticationPrincipal Member member) {
+    public ResponseEntity<GpuServerMainPageResponses> findAllInLab(@PathVariable Long labId,
+                                                                  @Pagination Pageable pageable,
+                                                                  @AuthenticationPrincipal Member member) {
         memberService.checkMemberOfLab(member.getId(), labId);
 
-        GpuServerResponses gpuServerResponses = gpuServerService.findAllInLab(labId, pageable);
-        return ResponseEntity.ok(gpuServerResponses);
+        GpuServerMainPageResponses gpuServerMainPageResponses = gpuServerService.findAllInLab(labId, pageable);
+        return ResponseEntity.ok(gpuServerMainPageResponses);
     }
 
     @PutMapping("/{gpuServerId}")

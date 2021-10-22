@@ -35,7 +35,6 @@ const JobRegisterRadioGroup = ({
   const { data, status, makeRequest, done } = useGetGpuServerAll({ labId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
 
     return done;
@@ -61,27 +60,39 @@ const JobRegisterRadioGroup = ({
             .slice()
             .sort(sortByPerformanceDesc)
             .sort(sortByIsOn)
-            .map(({ id, serverName, isOn, gpuBoard: { performance }, jobs }) => (
-              <li key={id}>
-                <Radio
-                  {...getRadioProps({
-                    state,
-                    dispatch,
-                    name,
-                    label: serverName,
-                    value: String(id),
-                  })}
-                  disabled={!isOn || performance < minPerformance}
-                >
-                  <GpuServerSelectItem
-                    serverName={serverName}
-                    isOn={isOn}
-                    performance={performance}
-                    jobs={jobs}
-                  />
-                </Radio>
-              </li>
-            ))}
+            .map(
+              ({
+                id,
+                serverName,
+                isOn,
+                gpuBoard: { performance },
+                runningJobs,
+                waitingJobCount,
+                totalExpectedTime,
+              }) => (
+                <li key={id}>
+                  <Radio
+                    {...getRadioProps({
+                      state,
+                      dispatch,
+                      name,
+                      label: serverName,
+                      value: String(id),
+                    })}
+                    disabled={!isOn || performance < minPerformance}
+                  >
+                    <GpuServerSelectItem
+                      serverName={serverName}
+                      isOn={isOn}
+                      performance={performance}
+                      runningJobs={runningJobs}
+                      waitingJobCount={waitingJobCount}
+                      totalExpectedTime={totalExpectedTime}
+                    />
+                  </Radio>
+                </li>
+              )
+            )}
         </ol>
       )}
     </StyledRadioGroup>

@@ -1,13 +1,17 @@
 import { Flicker, Text } from "../../components";
 import { getCurrentJob, getWaitingJob } from "./useGpuServerDetailSummary";
-import { ServerNameBox, StyledGpuServerDetailSummary } from "./GpuServerDetailSummary.styled";
-import { GpuServer } from "../../types";
+import {
+  ServerNameBox,
+  StyledGpuServerDetailSummary,
+  SummaryList,
+} from "./GpuServerDetailSummary.styled";
+import { GpuServerDetail } from "../../types";
 
 interface GpuServerDetailSummaryProps {
   className?: string;
   labId: number;
   serverId: number;
-  detail: GpuServer;
+  detail: GpuServerDetail;
 }
 
 const GpuServerDetailSummary = ({
@@ -18,7 +22,7 @@ const GpuServerDetailSummary = ({
 }: GpuServerDetailSummaryProps) => (
   <StyledGpuServerDetailSummary {...rest}>
     <ServerNameBox>
-      <Text as="h2" size="lg" weight="bold">
+      <Text as="h3" size="lg" weight="bold">
         {detail.serverName}
       </Text>
       <Flicker
@@ -28,42 +32,37 @@ const GpuServerDetailSummary = ({
         aria-label={`서버 상태: ${detail.isOn ? "ON" : "OFF"}`}
       />
     </ServerNameBox>
-    <div>
-      <Text as="h4" weight="bold">
+    <SummaryList>
+      <Text as="dt" weight="bold">
         RAM 용량
       </Text>
-      <Text>{detail.memorySize}MB</Text>
-    </div>
-    <div>
-      <Text as="h4" weight="bold">
+      <Text as="dd">{detail.memorySize}MB</Text>
+
+      <Text as="dt" weight="bold">
         디스크 용량
       </Text>
-      <Text>{detail.diskSize}MB</Text>
-    </div>
-    <div>
-      <Text as="h4" weight="bold">
+      <Text as="dd">{detail.diskSize}MB</Text>
+
+      <Text as="dt" weight="bold">
         GPU 장치명
       </Text>
-      <Text>{detail.gpuBoard.modelName}</Text>
-    </div>
-    <div>
-      <Text as="h4" weight="bold">
+      <Text as="dd">{detail.gpuBoard.modelName}</Text>
+
+      <Text as="dt" weight="bold">
         성능(TFLOPS)
       </Text>
-      <Text>{detail.gpuBoard.performance}</Text>
-    </div>
-    <div>
-      <Text as="h4" weight="bold">
+      <Text as="dd">{detail.gpuBoard.performance}</Text>
+
+      <Text as="dt" weight="bold">
         현재 실행중인 Job
       </Text>
-      <Text>{getCurrentJob(detail)?.name ?? "N/A"}</Text>
-    </div>
-    <div>
-      <Text as="h4" weight="bold">
+      <Text as="dd">{getCurrentJob(detail)?.name ?? "N/A"}</Text>
+
+      <Text as="dt" weight="bold">
         대기 중인 Job 개수
       </Text>
-      <Text>{`${getWaitingJob(detail)?.length}개` ?? "N/A"}</Text>
-    </div>
+      <Text as="dd">{`${getWaitingJob(detail)?.length}개` ?? "N/A"}</Text>
+    </SummaryList>
   </StyledGpuServerDetailSummary>
 );
 

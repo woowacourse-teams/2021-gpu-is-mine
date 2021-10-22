@@ -9,7 +9,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
@@ -39,10 +39,6 @@ dependencies {
 
     // elasticSearch
     implementation  'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    
-    // logging to cloudwatch
-    implementation("ca.pjer:logback-awslogs-appender:1.4.0")
-    implementation("org.codehaus.janino:janino:3.0.7")
 
     testRuntimeOnly 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'

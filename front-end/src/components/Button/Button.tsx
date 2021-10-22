@@ -1,9 +1,21 @@
 import { ButtonHTMLAttributes } from "react";
-import { StyledButton, StyledButtonProps } from "./Button.styled";
+import { StyledButton } from "./Button.styled";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & StyledButtonProps;
+export type Color =
+  | "primary"
+  | "primary-light"
+  | "primary-dark"
+  | "secondary-light"
+  | "secondary-dark"
+  | "secondary"
+  | "error"
+  | "inherit";
 
-const Button = ({ color, children, ...rest }: ButtonProps) => (
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  color?: Color;
+}
+
+const Button = ({ color = "inherit", children, ...rest }: ButtonProps) => (
   <StyledButton color={color} {...rest}>
     {children}
   </StyledButton>

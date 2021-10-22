@@ -1,6 +1,8 @@
 package mine.is.gpu.lab.application;
 
 import java.util.List;
+import mine.is.gpu.account.application.MemberService;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.application.GpuServerService;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.lab.domain.Lab;
@@ -9,8 +11,6 @@ import mine.is.gpu.lab.dto.LabRequest;
 import mine.is.gpu.lab.dto.LabResponse;
 import mine.is.gpu.lab.dto.LabResponses;
 import mine.is.gpu.lab.exception.LabException;
-import mine.is.gpu.member.application.MemberService;
-import mine.is.gpu.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

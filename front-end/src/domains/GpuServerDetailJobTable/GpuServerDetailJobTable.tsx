@@ -1,7 +1,7 @@
 import { JobViewResponse } from "../../types";
 import { Text } from "../../components";
 import JobTable from "../JobTable/JobTable";
-import { StyledGpuServerDetailJobTable } from "./GpuServerDetailJobTable.styled";
+import { StyledGpuServerDetailJobTable, EmptyJobContainer } from "./GpuServerDetailJobTable.styled";
 
 interface GpuServerDetailJobTableProps {
   jobs: Readonly<JobViewResponse[]>;
@@ -10,10 +10,16 @@ interface GpuServerDetailJobTableProps {
 
 const GpuServerDetailJobTable = ({ jobs, ...rest }: GpuServerDetailJobTableProps) => (
   <StyledGpuServerDetailJobTable {...rest}>
-    <Text weight="bold" size="lg">
+    <Text as="h3" weight="bold" size="lg">
       Job 목록
     </Text>
-    <JobTable jobs={jobs} rowCountPerPage={10} />
+    {jobs.length ? (
+      <JobTable jobs={jobs} rowCountPerPage={10} />
+    ) : (
+      <EmptyJobContainer>
+        <Text size="md">Job이 존재하지 않습니다. Job을 추가해주세요.</Text>
+      </EmptyJobContainer>
+    )}
   </StyledGpuServerDetailJobTable>
 );
 

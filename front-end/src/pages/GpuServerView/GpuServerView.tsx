@@ -1,19 +1,20 @@
-import { useMyInfo } from "../../hooks";
 import { Layout } from "../../components";
 import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
 import { GpuServerInfoList } from "../../domains/GpuServer";
+import { useAppSelector } from "../../app/hooks";
+import { selectMyInfo } from "../../features/member/authSlice";
 
 const GpuServerView = () => {
-  const { labId, labName, memberType } = useMyInfo();
+  const { labId, labName, memberType } = useAppSelector(selectMyInfo);
 
   return (
     <Layout
-      Header={<Header labName={labName} />}
+      Header={<Header as="div" labName={labName} />}
       SubHeader={<SubHeader />}
-      Navigation={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
-      Content={<GpuServerInfoList labId={labId} memberType={memberType} />}
+      Aside={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
+      Main={<GpuServerInfoList labId={labId} memberType={memberType} />}
     />
   );
 };

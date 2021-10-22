@@ -1,9 +1,9 @@
 package mine.is.gpu.job.dto.request;
 
 import java.util.Random;
+import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.job.domain.Job;
-import mine.is.gpu.member.domain.Member;
 
 public class JobRequest {
     private Long gpuServerId;

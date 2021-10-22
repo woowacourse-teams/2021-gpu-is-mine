@@ -1,60 +1,32 @@
 import { Text } from "../../components";
-import { StyledJobDetailSummary, Anchor } from "./JobDetailSummary.styled";
+import { StyledJobDetailSummary } from "./JobDetailSummary.styled";
 import { JobViewResponse } from "../../types";
+import JobDetailSummaryContent from "../JobDetailSummaryContent/JobDetailSummaryContent";
 
 interface JobDetailSummaryProps {
+  title?: string;
   className?: string;
   detail: JobViewResponse;
 }
 
-const JobDetailSummary = ({ detail, ...rest }: JobDetailSummaryProps) => {
-  const url = `https://hub.docker.com/${detail.metaData}`;
+const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => {
+  const { name, status, memberName, gpuServerName, expectedTime, metaData } = detail;
+
+  const detailList = [
+    { title: "Job 이름", content: name, isLink: false },
+    { title: "Job 상태", content: status, isLink: false },
+    { title: "Job 등록자", content: memberName, isLink: false },
+    { title: "할당된 서버", content: gpuServerName, isLink: false },
+    { title: "실행시간(hour)", content: expectedTime, isLink: false },
+    { title: "DockerHub Image", content: metaData, isLink: true },
+  ];
 
   return (
     <StyledJobDetailSummary {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        요약 정보
+        {detail.name}
       </Text>
-      <div>
-        <Text as="h4" weight="bold">
-          Job 이름
-        </Text>
-        <Text>{detail.name}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
-          Job 상태
-        </Text>
-        <Text>{detail.status}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
-          Job 등록자
-        </Text>
-        <Text>{detail.memberName}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
-          할당된 서버
-        </Text>
-        <Text>{detail.gpuServerName}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
-          {detail.status === "RUNNING" ? "" : "예상 "}실행시간
-        </Text>
-        <Text>{detail.expectedTime}</Text>
-      </div>
-      <div>
-        <Text as="h4" weight="bold">
-          DockerHub URL
-        </Text>
-        <Text>
-          <Anchor target="_blank" href={url} rel="noreferrer">
-            {url}
-          </Anchor>
-        </Text>
-      </div>
+      <JobDetailSummaryContent detailList={detailList} />
     </StyledJobDetailSummary>
   );
 };

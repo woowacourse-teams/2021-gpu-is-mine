@@ -45,7 +45,7 @@ const createInitialState = <T>(vals: T) => {
 
 const showAllValidationMessage = () => ({ type: "showAllValidationMessage" } as const);
 
-const updateValue = <T>({
+export const updateValue = <T>({
   name,
   value,
   validationMessage,
@@ -125,7 +125,6 @@ export const getFormProps = <T>({
     dispatch(showAllValidationMessage());
 
     if (state.isFormValid) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       handleSubmit(state.values);
     }
   };

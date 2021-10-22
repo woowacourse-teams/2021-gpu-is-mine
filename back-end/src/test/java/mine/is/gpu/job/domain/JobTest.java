@@ -1,17 +1,20 @@
 package mine.is.gpu.job.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import mine.is.gpu.account.domain.Member;
+import mine.is.gpu.account.domain.MemberType;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.lab.domain.Lab;
-import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.domain.MemberType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class JobTest {
     private GpuBoard gpuBoard;
@@ -93,5 +96,59 @@ class JobTest {
     void 생성_expectedTime_빈문자열() {
         assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", ""))
                 .isEqualTo(JobException.INVALID_EXPECTED_TIME.getException());
+    }
+
+    @DisplayName("Job 정상 실행")
+    @Test
+    void startJob() {
+        Job job = new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", "333");
+        job.start();
+
+        assertThat(job.getStartedTime()).isNotNull();
+        assertThat(job.getStatus()).isEqualTo(JobStatus.RUNNING);
+    }
+
+    @DisplayName("Job 실행 실패")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"RUNNING", "CANCELED", "COMPLETED"})
+    void startJobFailure(String status) {
+        Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
+
+        assertThatThrownBy(job::start).isEqualTo(JobException.JOB_NOT_WAITING.getException());
+    }
+
+    @DisplayName("Job 정상 완료")
+    @Test
+    void completeJob() {
+        Job job = new Job("잡1", JobStatus.RUNNING, gpuBoard, member, "metaData", "333");
+        job.complete();
+
+        assertThat(job.getCompletedTime()).isNotNull();
+        assertThat(job.getStatus()).isEqualTo(JobStatus.COMPLETED);
+    }
+
+    @DisplayName("Job 완료 실패")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"WAITING", "CANCELED", "COMPLETED"})
+    void completeJobFailure(String status) {
+        Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
+
+        assertThatThrownBy(job::complete).isEqualTo(JobException.JOB_NOT_RUNNING.getException());
+    }
+
+    @DisplayName("Job 예상 시간 검증 - 실패 케이스")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"-1", "0.5", "abc"})
+    void expectedTimeFailure(String expectedTime) {
+        assertThatThrownBy(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", expectedTime))
+                .isEqualTo(JobException.INVALID_EXPECTED_TIME.getException());
+    }
+
+    @DisplayName("Job 예상 시간 검증 - 성공 케이스")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"0", "1", "700"})
+    void expectedTimeSuccess(String expectedTime) {
+        assertThatCode(() -> new Job("잡1", JobStatus.WAITING, gpuBoard, member, "metaData", expectedTime))
+                .doesNotThrowAnyException();
     }
 }

@@ -1,6 +1,10 @@
 package mine.is.gpu;
 
 import java.time.LocalDateTime;
+import mine.is.gpu.account.application.MemberService;
+import mine.is.gpu.account.domain.Member;
+import mine.is.gpu.account.domain.repository.MemberRepository;
+import mine.is.gpu.account.dto.request.MemberRequest;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -10,10 +14,6 @@ import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
-import mine.is.gpu.member.application.MemberService;
-import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.domain.repository.MemberRepository;
-import mine.is.gpu.member.dto.request.MemberRequest;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

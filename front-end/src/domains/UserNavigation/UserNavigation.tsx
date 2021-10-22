@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks";
+import { Text } from "../../components";
 import {
   StyledUserNavigation,
   Menu,
@@ -9,53 +9,56 @@ import {
   MenuItem,
 } from "./UserNavigation.styled";
 import { PATH } from "../../constants";
+import { useAppDispatch } from "../../app/hooks";
+import { logout } from "../../features/member/authSlice";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 
 const UserNavigation = (props: NavigationProps) => {
-  const { logout } = useAuth();
+  const dispatch = useAppDispatch();
+  const onLogout = () => dispatch(logout());
 
   return (
     <StyledUserNavigation {...props}>
-      <Menu>
-        <MenuTitle forwardedAs="div" weight="medium">
+      <Text as="h2" srOnly>
+        서비스 목록
+      </Text>
+
+      <Menu forwardedAs="ol">
+        <MenuTitle forwardedAs="h3" weight="medium">
           GPU 서버 관리
         </MenuTitle>
-        <NavLink to={PATH.GPU_SERVER.VIEW}>
-          <MenuItem forwardedAs="div" aria-label="gpu-server-view">
-            조회
-          </MenuItem>
-        </NavLink>
+        <li>
+          <NavLink to={PATH.GPU_SERVER.VIEW}>
+            <MenuItem aria-label="gpu-server-view">조회</MenuItem>
+          </NavLink>
+        </li>
       </Menu>
-      <Menu>
-        <MenuTitle forwardedAs="div" weight="medium">
+      <Menu forwardedAs="ol">
+        <MenuTitle forwardedAs="h3" weight="medium">
           나의 Job
         </MenuTitle>
-        <NavLink to={PATH.JOB.VIEW}>
-          <MenuItem forwardedAs="div" aria-label="job-view">
-            조회
-          </MenuItem>
-        </NavLink>
-        <NavLink to={PATH.JOB.REGISTER}>
-          <MenuItem forwardedAs="div" aria-label="job-register">
-            등록
-          </MenuItem>
-        </NavLink>
-      </Menu>
-      <Menu>
-        <MenuTitle forwardedAs="div" weight="medium">
-          내 정보
-        </MenuTitle>
-        <MenuItem forwardedAs="div">조회</MenuItem>
-        <MenuItem forwardedAs="div">수정</MenuItem>
+        <li>
+          <NavLink to={PATH.JOB.VIEW}>
+            <MenuItem aria-label="job-view">조회</MenuItem>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to={PATH.JOB.REGISTER}>
+            <MenuItem aria-label="job-register">등록</MenuItem>
+          </NavLink>
+        </li>
       </Menu>
 
-      <LogoutMenu>
-        <button type="button" onClick={logout}>
-          <MenuItem forwardedAs="div" weight="medium">
-            로그아웃
-          </MenuItem>
-        </button>
+      <LogoutMenu forwardedAs="ol">
+        <Text as="h3" srOnly>
+          로그아웃
+        </Text>
+        <li>
+          <button type="button" onClick={onLogout}>
+            <MenuItem weight="medium">로그아웃</MenuItem>
+          </button>
+        </li>
       </LogoutMenu>
     </StyledUserNavigation>
   );

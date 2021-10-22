@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  ignorePatterns: ["*.js"],
+  ignorePatterns: ["*.js", "storybook-static", "build"],
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -23,7 +23,7 @@ module.exports = {
     },
     ecmaVersion: 12,
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: ["./tsconfig.lint.json", "./cypress/tsconfig.json"],
   },
   plugins: [
     "react",
@@ -45,9 +45,7 @@ module.exports = {
   overrides: [
     {
       files: ["**/*.stories.tsx", "src/__test__/**/*"],
-      rules: {
-        "import/no-extraneous-dependencies": "off",
-      },
+      rules: { "import/no-extraneous-dependencies": "off" },
     },
     {
       files: "./src/types/**/*.{ts,tsx}",
@@ -58,15 +56,19 @@ module.exports = {
     },
     {
       files: "**/*.styled.ts",
-      rules: {
-        "import/prefer-default-export": "off",
-      },
+      rules: { "import/prefer-default-export": "off" },
     },
     {
       files: "**/*.tsx",
-      rules: {
-        "react/require-default-props": "off",
-      },
+      rules: { "react/require-default-props": "off" },
+    },
+    {
+      files: ["./src/**/*.tsx", "./src/**/*Slice.ts", "./src/**/use*.ts"],
+      rules: { "@typescript-eslint/no-floating-promises": "off" },
+    },
+    {
+      files: ["./src/**/*Slice.ts"],
+      rules: { "no-param-reassign": "off" },
     },
   ],
 };

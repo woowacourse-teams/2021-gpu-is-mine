@@ -8,10 +8,14 @@ export interface MemberSignupRequest {
   password: string;
 }
 
-export type MemberLoginRequest = Pick<MemberSignupRequest, "email" | "password">;
+export interface MemberLoginRequest {
+  email: string;
+  password: string;
+}
 
 export interface MemberLoginResponse {
   accessToken: string;
+  expires: number;
 }
 
 export interface MyInfoResponse {

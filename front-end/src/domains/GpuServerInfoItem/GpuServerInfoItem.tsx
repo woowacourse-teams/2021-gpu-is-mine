@@ -1,23 +1,15 @@
 import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
-import {
-  Flicker,
-  Text,
-  VerticalBox,
-  ServerIcon,
-  Button,
-  Confirm,
-  Alert,
-  Loading,
-  Dimmer,
-} from "../../components";
+import { Flicker, Text, VerticalBox, ServerIcon, Button, Loading, Dimmer } from "../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { GpuServerViewResponse, MemberType } from "../../types";
+import { SimpleGpuServer, MemberType } from "../../types";
 import { PATH } from "../../constants";
+import Dialog from "../../components/Dialog/Dialog";
 
-interface GpuServerInfoItemProps extends GpuServerViewResponse {
+interface GpuServerInfoItemProps extends SimpleGpuServer {
   memberType: MemberType;
   labId: number;
   refresh: () => Promise<unknown>;
+  className?: string;
 }
 
 const GpuServerInfoItem = ({
@@ -25,13 +17,14 @@ const GpuServerInfoItem = ({
   serverName,
   isOn,
   gpuBoard: { performance },
-  jobs,
+  runningJobs,
   labId,
   memberType,
+  waitingJobCount,
   refresh,
+  className,
 }: GpuServerInfoItemProps) => {
-  const currentJobName = jobs.find((job) => job.status === "RUNNING")?.name ?? "N/A";
-  const waitingJobCount = jobs.filter((job) => job.status === "WAITING").length;
+  const runningJobName = runningJobs[0]?.name || "N/A";
 
   const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
     labId,
@@ -42,6 +35,11 @@ const GpuServerInfoItem = ({
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
+  const handleConfirmConfirmed = () => {
+    makeRequest();
+    closeConfirm();
+  };
+
   return (
     <>
       {isLoading && (
@@ -50,29 +48,33 @@ const GpuServerInfoItem = ({
         </Dimmer>
       )}
 
-      {isSucceed && (
-        <Alert onConfirm={refresh}>
-          <Text size="md" weight="regular">
-            {`${serverName}을(를) 삭제하였습니다.`}
-          </Text>
-        </Alert>
-      )}
-
-      {isFailed && (
-        <Alert onConfirm={done}>
-          <Text size="md" weight="regular">
-            {`${serverName} 삭제에 실패하였습니다.`}
-          </Text>
-        </Alert>
-      )}
-
-      <Confirm isOpen={isConfirmOpen} close={closeConfirm} onConfirm={() => makeRequest()}>
-        <Text size="md" weight="regular">
-          {serverName}을(를) 정말 삭제하시겠습니까?
+      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
+        <Text size="sm" weight="medium">
+          {`${serverName}을(를) 삭제하였습니다.`}
         </Text>
-      </Confirm>
+      </Dialog>
 
-      <StyledGpuServerInfoItem>
+      <Dialog open={isFailed} onClose={done} onConfirm={done}>
+        <Text size="sm" weight="medium">
+          {
+            /* TODO: 에러에 따라 구체적인 디렉션 추가 */
+            `${serverName} 삭제에 실패하였습니다.`
+          }
+        </Text>
+      </Dialog>
+
+      <Dialog
+        open={isConfirmOpen}
+        onClose={closeConfirm}
+        onConfirm={handleConfirmConfirmed}
+        onCancel={closeConfirm}
+      >
+        <Text size="sm" weight="medium">
+          {serverName}을(를) 삭제하시겠습니까?
+        </Text>
+      </Dialog>
+
+      <StyledGpuServerInfoItem className={className}>
         <div className="gpu-server-title-wrapper">
           <ServerIcon className="gpu-server-icon" />
           <Text className="gpu-server-title" size="md" weight="bold">
@@ -94,7 +96,7 @@ const GpuServerInfoItem = ({
               현재 실행중인 Job
             </Text>
             <Text size="sm" weight="medium">
-              {currentJobName}
+              {runningJobName}
             </Text>
           </div>
           <div className="detail">

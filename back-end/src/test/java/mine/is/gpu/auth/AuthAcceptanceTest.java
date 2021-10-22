@@ -6,12 +6,13 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import mine.is.gpu.AcceptanceTest;
+import mine.is.gpu.account.dto.request.MemberRequest;
+import mine.is.gpu.account.ui.MemberAcceptanceTest;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.lab.dto.LabRequest;
-import mine.is.gpu.member.dto.request.MemberRequest;
-import mine.is.gpu.member.ui.MemberAcceptanceTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -140,7 +141,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     void myInfoWithWrongBearerAuth() {
-        LoginResponse loginResponse = new LoginResponse("invalid_token");
+        LoginResponse loginResponse = new LoginResponse("invalid_token", 3600000L);
 
         RestAssured
                 .given()
@@ -183,6 +184,25 @@ public class AuthAcceptanceTest extends AcceptanceTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/api/labs/" + Long.MAX_VALUE)
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Disabled
+    @DisplayName("권한이 있는 사용자가 만료된 토큰으로 접근한다.")
+    @Test
+    void expiredToken() throws InterruptedException {
+        회원_등록되어_있음(memberRequest);
+        LoginResponse loginResponse = 로그인되어_있음(EMAIL, PASSWORD);
+        Thread.sleep(3600000);
+
+        RestAssured
+                .given()
+                .auth()
+                .oauth2(loginResponse.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/labs/" + memberRequest.getLabId())
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }

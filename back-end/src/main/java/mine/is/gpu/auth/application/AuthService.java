@@ -1,16 +1,16 @@
 package mine.is.gpu.auth.application;
 
 import java.util.Optional;
-import mine.is.gpu.admin.Account;
-import mine.is.gpu.admin.Administrator;
-import mine.is.gpu.admin.AdministratorRepository;
+import mine.is.gpu.account.domain.Account;
+import mine.is.gpu.account.domain.Administrator;
+import mine.is.gpu.account.domain.Member;
+import mine.is.gpu.account.domain.repository.AdministratorRepository;
+import mine.is.gpu.account.domain.repository.MemberRepository;
 import mine.is.gpu.auth.dto.LoginRequest;
 import mine.is.gpu.auth.dto.LoginResponse;
 import mine.is.gpu.auth.exception.AuthorizationException;
 import mine.is.gpu.auth.infrastructure.JwtTokenProvider;
-import mine.is.gpu.encryption.Encrypt;
-import mine.is.gpu.member.domain.Member;
-import mine.is.gpu.member.domain.repository.MemberRepository;
+import mine.is.gpu.utils.encrypt.Encrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,8 @@ public class AuthService {
         }
 
         String token = jwtTokenProvider.createToken(request.getEmail());
-        return new LoginResponse(token);
+        Long validityInMilliseconds = jwtTokenProvider.getValidityInMilliseconds();
+        return new LoginResponse(token, validityInMilliseconds);
     }
 
     private Account findUser(LoginRequest request) {

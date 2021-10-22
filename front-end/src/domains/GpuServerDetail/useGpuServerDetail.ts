@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useParseParams, useGetGpuServerById } from "../../hooks";
 
-// eslint-disable-next-line import/prefer-default-export
 export const useServerId = () => {
   const serverId = useParseParams("serverId");
 
@@ -16,7 +15,6 @@ export const useGpuServerDetail = ({ labId, serverId }: { labId: number; serverI
   const { data, makeRequest, done, ...rest } = useGetGpuServerById({ labId, serverId });
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     makeRequest();
 
     return done;
