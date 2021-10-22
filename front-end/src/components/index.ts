@@ -14,5 +14,7 @@ export { default as Radio } from "./Radio/Radio";
 export { default as RadioGroup } from "./RadioGroup/RadioGroup";
 export { default as ServerIcon } from "./ServerIcon/ServerIcon";
 export { default as Table } from "./Table/Table";
+export { default as Toast } from "./Toast/Toast";
+export { default as ToastProvider, useToast } from "./Toast/ToastProvider";
 export { default as Text } from "./Text/Text";
 export { default as VerticalBox } from "./VerticalBox/VerticalBox";

@@ -81,10 +81,10 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
 
   return (
     <StyledForm {...formProps} {...rest} aria-label="signup-form">
-      <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gmail.com" />
+      <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@email.com" />
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
-      <Input size="sm" {...nameProps} autoComplete="name" placeholder="김동동" />
+      <Input size="sm" {...nameProps} autoComplete="name" />
       <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={disabled}>
         제출
       </SubmitButton>

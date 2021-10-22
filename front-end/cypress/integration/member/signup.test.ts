@@ -49,12 +49,16 @@ describe("signup", () => {
     cy.findByRole("button", { name: /로그아웃/i }).should("be.visible");
   };
 
-  it("이메일, 비밀번호를 입력하면 로그인이 된다", () => {
+  it("이메일, 비밀번호, 이름을 입력하여 회원가입을 한다", () => {
     setup();
 
     cy.findByText(/아직 회원이 아니신가요\?/i).click();
 
     signup();
+  });
+
+  it("회원가입한 이메일 과 비밀번호로 로그인을 할 수 있다", () => {
+    setup();
 
     login();
   });
