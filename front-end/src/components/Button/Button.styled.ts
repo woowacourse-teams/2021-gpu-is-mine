@@ -1,17 +1,5 @@
 import styled, { css } from "styled-components";
-
-type Color =
-  | "primary"
-  | "primary-light"
-  | "primary-dark"
-  | "secondary-light"
-  | "secondary-dark"
-  | "secondary"
-  | "error";
-
-export interface StyledButtonProps {
-  color: Color;
-}
+import type { Color } from "./Button";
 
 const getColorStyle = (color: Color) => {
   const style = {
@@ -43,13 +31,17 @@ const getColorStyle = (color: Color) => {
       background-color: var(--error);
       color: var(--on-error);
     `,
+    inherit: css`
+      background-color: inherit;
+      color: inherit;
+    `,
   };
 
   return style[color];
 };
 
-export const StyledButton = styled.button`
-  ${({ color }: StyledButtonProps) => getColorStyle(color)}
+export const StyledButton = styled.button<{ color: Color }>`
+  ${({ color }) => getColorStyle(color)}
 
   width: 100%;
   height: 100%;

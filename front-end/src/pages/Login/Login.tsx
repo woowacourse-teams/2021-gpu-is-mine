@@ -1,37 +1,28 @@
-import { useEffect } from "react";
-import { Alert, Loading, Text } from "../../components";
+import { Dialog, Loading, Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { checkAuthorization, selectLoginStatus } from "../../features/member/authSlice";
+import { resetAction, selectLoginStatus } from "../../features/member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useBoolean, usePathTitle } from "../../hooks";
+import { usePathTitle, useAuthorize } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
-
-const useAutoLogin = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(checkAuthorization());
-  }, [dispatch]);
-};
 
 const Login = () => {
   const { isLoading, isFailed } = useAppSelector(selectLoginStatus);
 
-  const [isOpenAlert, openAlert, closeAlert] = useBoolean(false);
-
-  useEffect(() => {
-    if (isFailed) {
-      openAlert();
-    }
-  }, [isFailed, openAlert]);
-
   const heading = usePathTitle();
 
-  useAutoLogin();
+  const dispatch = useAppDispatch();
+
+  const handleConfirm = () => dispatch(resetAction());
+
+  useAuthorize();
 
   return (
     <>
-      {isOpenAlert && <Alert onConfirm={closeAlert}>이메일 또는 비밀번호를 확인해주세요</Alert>}
+      <Dialog open={isFailed} onClose={handleConfirm} onConfirm={handleConfirm}>
+        <Text size="sm" weight="medium">
+          이메일 또는 비밀번호를 확인해주세요
+        </Text>
+      </Dialog>
 
       <MemberLayout>
         <Text as="h2" srOnly>
