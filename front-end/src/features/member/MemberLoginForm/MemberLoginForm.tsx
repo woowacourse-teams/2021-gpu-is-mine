@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useForm, getInputProps, getFormProps } from "../../../hooks";
 import { Input, Loading, Text, useToast } from "../../../components";
@@ -18,6 +19,8 @@ type Values = {
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const { isLoading } = useAppSelector(selectLoginStatus);
 
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
+
   const appDispatch = useAppDispatch();
 
   const showToast = useToast();
@@ -31,6 +34,9 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
         message: "이메일 또는 비밀번호를 확인해주세요",
         type: "error",
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      emailInputRef.current!.focus();
     }
   };
 
@@ -55,7 +61,13 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   return (
     <StyledForm {...formProps} aria-label="로그인" className={className}>
       {isLoading && <Loading size="lg" />}
-      <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
+      <Input
+        size="sm"
+        {...emailInputProps}
+        autoComplete="email"
+        placeholder="example@gamil.com"
+        ref={emailInputRef}
+      />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
       <SubmitButton color="secondary" disabled={isLoading}>
         로그인
