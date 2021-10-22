@@ -33,12 +33,12 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     jobName: "",
     expectedTime: "",
     minPerformance: "" as unknown as number,
-    metaData: "",
+    dockerHubImage: "",
     gpuServerId: "" as unknown as number,
   });
 
-  const handleSubmit = ({ jobName, expectedTime, gpuServerId, metaData }: Values) => {
-    makeRequest({ name: jobName, expectedTime, gpuServerId, metaData });
+  const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
+    makeRequest({ name: jobName, expectedTime, gpuServerId, metaData: dockerHubImage });
   };
 
   const form = getFormProps({ state, dispatch, handleSubmit });
@@ -67,10 +67,10 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     validator: minPerformanceValidator,
   });
 
-  const metaDataInputProps = getInputProps({
+  const dockerHubImageInputProps = getInputProps({
     state,
     dispatch,
-    name: "metaData",
+    name: "dockerHubImage",
     label: "Docker Hub Image",
     validator: dockerHubImageValidator,
   });
@@ -86,18 +86,18 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   const handleSampleImageButtonClick = () => {
     dispatch(
       updateValue({
-        name: metaDataInputProps.name,
+        name: dockerHubImageInputProps.name,
         value: "aprn7950/mnist_test_auto",
         validationMessage: "",
       })
     );
   };
 
-  const handleMetaDataInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleDockerHubImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const matched = /^\s*docker\s+pull\s+(.*)$/.exec(event.target.value);
 
     if (!matched) {
-      metaDataInputProps.onChange(event);
+      dockerHubImageInputProps.onChange(event);
       return;
     }
 
@@ -105,7 +105,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
     dispatch(
       updateValue({
-        name: metaDataInputProps.name,
+        name: dockerHubImageInputProps.name,
         value: dockerHubImage,
         validationMessage: dockerHubImageValidator(dockerHubImage) ?? "",
       })
@@ -141,8 +141,8 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
             size="sm"
             list="example-dockerhub-image"
             placeholder="계정명/저장소명:버전"
-            {...metaDataInputProps}
-            onChange={handleMetaDataInputChange}
+            {...dockerHubImageInputProps}
+            onChange={handleDockerHubImageChange}
           />
           <datalist id="example-dockerhub-image">
             <option value="aprn7950/mnist_test_auto" />
