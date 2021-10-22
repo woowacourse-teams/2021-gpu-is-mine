@@ -65,7 +65,7 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
         size="sm"
         {...emailInputProps}
         autoComplete="email"
-        placeholder="example@gamil.com"
+        placeholder="example@email.com"
         ref={emailInputRef}
       />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
