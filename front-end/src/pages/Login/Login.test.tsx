@@ -24,7 +24,7 @@ describe("pages/Login", () => {
     };
   };
 
-  test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
+  test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Toast로 유효하지 않음을 알려준다", async () => {
     const { emailInput, passwordInput, loginButton } = setup();
 
     const validEmail = "test@dd.com";
@@ -40,13 +40,10 @@ describe("pages/Login", () => {
 
     userEvent.click(loginButton);
 
-    const alert = await screen.findByRole("dialog");
+    const alert = await screen.findByRole("alert");
 
     expect(alert).toBeInTheDocument();
     expect(alert).toHaveTextContent("이메일 또는 비밀번호를 확인해주세요");
-
-    userEvent.click(screen.getByRole("button", { name: /확인/ }));
-    await waitFor(() => expect(alert).not.toBeInTheDocument());
   });
 
   test("유효한 이메일과 비밀번호를 입력하여 로그인이 되면, PublicRoute에 의해 로그인 페이지에 머물러 있을 수 없다", async () => {
@@ -65,8 +62,6 @@ describe("pages/Login", () => {
     userEvent.tab();
 
     userEvent.click(loginButton);
-
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     await waitFor(() => expect(screen.queryByText("딥러닝 학습 자동화")).not.toBeInTheDocument());
   });
