@@ -26,7 +26,7 @@ const JobDetailGraph = ({ labId, jobId, interval, ...rest }: JobDetailGraphProps
   return (
     <StyledJobDetailGraph {...rest}>
       <Text as="h3" weight="bold" size="lg">
-        그래프
+        Graph
       </Text>
       {isLoading && <Loading />}
       {/* FIXME: parsedLogResponses 의 마지막 행은 제대로 parsing 된 로그가 아니어서,
