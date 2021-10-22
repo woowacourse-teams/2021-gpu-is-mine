@@ -36,8 +36,6 @@ public class Job extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    // private Long memberId; -> fk 가 없다.
-
     @Column(nullable = false)
     private String metaData;
 
