@@ -1,32 +1,29 @@
 package mine.is.gpu.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 
+@Profile("dev|prod")
 @Configuration
-@PropertySource(value = {"classpath:application-elk.properties"})
 public class ElasticClientConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${elasticsearch.host}")
-    private String host;
-    @Value("${elasticsearch.username}")
-    private String userName;
-    @Value("${elasticsearch.password}")
-    private String password;
+    private final ElasticSearchProperties properties;
+
+    public ElasticClientConfig(ElasticSearchProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
-
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo(host)
-                .withBasicAuth(userName, password)
+                .connectedTo(properties.getHost())
+                .withBasicAuth(properties.getUserName(), properties.getPassword())
                 .build();
 
         return RestClients.create(clientConfiguration).rest();
