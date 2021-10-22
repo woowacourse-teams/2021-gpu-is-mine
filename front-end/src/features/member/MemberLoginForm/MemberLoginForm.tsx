@@ -1,6 +1,7 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useForm, getInputProps, getFormProps } from "../../../hooks";
-import { Input, Text } from "../../../components";
+import { Input, Loading, Text, useToast } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 import { PATH } from "../../../constants";
 import { login, selectLoginStatus } from "../authSlice";
@@ -16,12 +17,27 @@ type Values = {
 };
 
 const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
-  const appDispatch = useAppDispatch();
-
   const { isLoading } = useAppSelector(selectLoginStatus);
 
-  const handleSubmit = ({ email, password }: Values) => {
-    appDispatch(login({ email, password }));
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
+
+  const appDispatch = useAppDispatch();
+
+  const showToast = useToast();
+
+  const handleSubmit = async ({ email, password }: Values) => {
+    try {
+      await appDispatch(login({ email, password })).unwrap();
+    } catch (error) {
+      showToast({
+        title: `Login Failed`,
+        message: "이메일 또는 비밀번호를 확인해주세요",
+        type: "error",
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      emailInputRef.current!.focus();
+    }
   };
 
   const { state, dispatch } = useForm<Values>({ email: "", password: "" });
@@ -44,7 +60,14 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
 
   return (
     <StyledForm {...formProps} aria-label="로그인" className={className}>
-      <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@gamil.com" />
+      {isLoading && <Loading size="lg" />}
+      <Input
+        size="sm"
+        {...emailInputProps}
+        autoComplete="email"
+        placeholder="example@gamil.com"
+        ref={emailInputRef}
+      />
       <Input size="sm" {...passwordInputProps} autoComplete="current-password" type="password" />
       <SubmitButton color="secondary" disabled={isLoading}>
         로그인
