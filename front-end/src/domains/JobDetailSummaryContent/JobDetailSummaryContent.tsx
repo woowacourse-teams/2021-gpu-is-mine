@@ -1,3 +1,6 @@
+/* eslint-disable react/no-array-index-key */
+
+import { Fragment } from "react";
 import { Text } from "../../components";
 import { SummaryList, Anchor } from "./JobDetailSummaryContent.styled";
 
@@ -15,10 +18,10 @@ interface JobDetailSummaryProps {
 
 const JobDetailSummaryContent = ({ detailList, ...rest }: JobDetailSummaryProps) => (
   <SummaryList {...rest}>
-    {detailList.map(({ title, content, isLink }) =>
+    {detailList.map(({ title, content, isLink }, idx) =>
       isLink ? (
-        <>
-          <Text key={title} as="dt" weight="bold">
+        <Fragment key={`${title}-${idx}`}>
+          <Text as="dt" weight="bold">
             {title}
           </Text>
           <Text as="dd">
@@ -26,14 +29,14 @@ const JobDetailSummaryContent = ({ detailList, ...rest }: JobDetailSummaryProps)
               {content}
             </Anchor>
           </Text>
-        </>
+        </Fragment>
       ) : (
-        <>
-          <Text key={title} as="dt" weight="bold">
+        <Fragment key={`${title}-${idx}`}>
+          <Text as="dt" weight="bold">
             {title}
           </Text>
           <Text as="dd">{content}</Text>
-        </>
+        </Fragment>
       )
     )}
   </SummaryList>
