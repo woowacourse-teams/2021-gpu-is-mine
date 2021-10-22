@@ -8,8 +8,7 @@ describe("pages/Login", () => {
     render(
       <PublicRoute exact path="/">
         <Login />
-      </PublicRoute>,
-      { initialEntries: ["/"] }
+      </PublicRoute>
     );
 
     const emailInput = screen.getByLabelText("이메일");

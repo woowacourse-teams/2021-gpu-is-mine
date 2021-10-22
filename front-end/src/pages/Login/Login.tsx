@@ -1,23 +1,12 @@
-import { useEffect } from "react";
 import { Text } from "../../components";
 import { MemberLayout } from "../../features/member";
-import { checkAuthorization } from "../../features/member/authSlice";
-import { useAppDispatch } from "../../app/hooks";
-import { usePathTitle } from "../../hooks";
+import { useAuthorize, usePathTitle } from "../../hooks";
 import { Container, Paragraph, StyledMemberLoginForm } from "./Login.styled";
-
-const useAutoLogin = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(checkAuthorization());
-  }, [dispatch]);
-};
 
 const Login = () => {
   const heading = usePathTitle();
 
-  useAutoLogin();
+  useAuthorize();
 
   return (
     <MemberLayout>
