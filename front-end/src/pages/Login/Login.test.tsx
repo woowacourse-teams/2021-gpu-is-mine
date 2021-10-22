@@ -24,7 +24,7 @@ describe("pages/Login", () => {
     };
   };
 
-  test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Alert로 유효하지 않음을 알려준다", async () => {
+  test("유효하지 않은 이메일 또는 비밀번호를 입력한 경우, Toast로 유효하지 않음을 알려준다", async () => {
     const { emailInput, passwordInput, loginButton } = setup();
 
     const validEmail = "test@dd.com";
@@ -64,10 +64,5 @@ describe("pages/Login", () => {
     userEvent.click(loginButton);
 
     await waitFor(() => expect(screen.queryByText("딥러닝 학습 자동화")).not.toBeInTheDocument());
-
-    const alert = await screen.findByRole("alert");
-
-    expect(alert).toBeInTheDocument();
-    expect(alert).toHaveTextContent("Login Success");
   });
 });
