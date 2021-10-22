@@ -19,18 +19,12 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const { isLoading } = useAppSelector(selectLoginStatus);
 
   const appDispatch = useAppDispatch();
+
   const showToast = useToast();
 
   const handleSubmit = async ({ email, password }: Values) => {
     try {
-      const { name } = await appDispatch(login({ email, password })).unwrap();
-
-      showToast({
-        title: `Login Success`,
-        message: `${name}님 반갑습니다. Have a good day!`,
-        type: "success",
-        duration: 2_000,
-      });
+      await appDispatch(login({ email, password })).unwrap();
     } catch (error) {
       showToast({
         title: `Login Failed`,
