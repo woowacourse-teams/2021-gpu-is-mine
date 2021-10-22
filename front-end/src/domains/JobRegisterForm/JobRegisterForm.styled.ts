@@ -62,7 +62,9 @@ export const ToolTipBox = styled.span`
 export const SampleImageButton = styled(Button)`
   background-color: var(--primary-500);
   color: var(--on-primary-500);
-  width: 6rem;
+  width: max-content;
+  transform: translateY(4px);
+  padding: 7px;
 
   &:focus {
     box-shadow: 0 0 0 2px var(--primary-700);

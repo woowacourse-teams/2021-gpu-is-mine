@@ -158,7 +158,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
               onKeyDown={closeToolTip}
             >
               <Text as="p" weight="medium" size="sm">
-                샘플 이미지 입력하기
+                샘플 이미지
               </Text>
             </SampleImageButton>
             {isToolTipVisible && (
