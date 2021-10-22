@@ -45,3 +45,4 @@ logs
 /src/main/resources/sonarqube.properties
 /src/main/resources/application-elk.properties
 /src/main/resources/application-dev-db.properties
+/src/main/resources/application-dev-elk.properties
