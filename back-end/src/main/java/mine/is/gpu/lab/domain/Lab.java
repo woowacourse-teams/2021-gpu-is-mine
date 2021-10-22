@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.gpuserver.domain.BaseEntity;
+import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.lab.exception.LabException;
 
 @Entity
@@ -52,5 +53,9 @@ public class Lab extends BaseEntity {
 
     public boolean hasMember(Member member) {
         return member.getLab().equals(this);
+    }
+
+    public boolean hasServer(GpuServer server) {
+        return server.getLab().equals(this);
     }
 }

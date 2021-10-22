@@ -97,7 +97,7 @@ class JobServiceTest {
     }
 
     @Test
-    @DisplayName("정상 조회")
+    @DisplayName("정상 단일 조회")
     void findById() {
         JobRequest jobRequest = new JobRequest(serverId, "job", "metadata", "12");
         Long jobId = jobService.save(memberId, jobRequest);
@@ -107,7 +107,7 @@ class JobServiceTest {
     }
 
     @Test
-    @DisplayName("조회 실패 :: 다른 연구실 멤버")
+    @DisplayName("단일 조회 실패 :: 다른 연구실 멤버")
     void findByIdByOtherLab() {
         Lab otherLab = new Lab("other");
         labRepository.save(otherLab);
@@ -191,7 +191,9 @@ class JobServiceTest {
     class FindAll {
 
         Lab lab = new Lab("labA");
+        Lab otherLab = new Lab("labB");
         Long memberId;
+        Long otherLabMemberId;
         Long serverId;
 
         @BeforeEach
@@ -199,6 +201,9 @@ class JobServiceTest {
             labRepository.save(lab);
             memberId = saveMember(lab, "email2");
             serverId = saveGpuServerInLab(lab, "server2");
+
+            labRepository.save(otherLab);
+            otherLabMemberId = saveMember(otherLab, "other@other.com");
         }
 
         @Test
@@ -217,8 +222,18 @@ class JobServiceTest {
             Long jobId1 = jobService.save(saveMember(lab, "email3"), jobCreationRequest(serverId));
             Long jobId2 = jobService.save(saveMember(lab, "email4"), jobCreationRequest(serverId));
 
-            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), serverId, null, null), jobId1,
+            assertJobIdsFromJobResponses(jobService.findJobs(memberId, lab.getId(), serverId, null, null), jobId1,
                     jobId2);
+        }
+
+        @Test
+        @DisplayName("다른 연구실 멤버가 서버를 기준으로 작성한 Job을 조회시 실패")
+        void findAllByServerByOtherLabMember() {
+            jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server3")));
+            jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server4")));
+
+            assertThatThrownBy(() -> jobService.findJobs(otherLabMemberId, lab.getId(), serverId, null, null))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         @Test
@@ -229,8 +244,18 @@ class JobServiceTest {
             Long jobId2 = jobService
                     .save(saveMember(lab, "email4"), jobCreationRequest(saveGpuServerInLab(lab, "server4")));
 
-            assertJobIdsFromJobResponses(jobService.findJobs(lab.getId(), null, null, null), jobId1,
+            assertJobIdsFromJobResponses(jobService.findJobs(memberId, lab.getId(), null, null, null), jobId1,
                     jobId2);
+        }
+
+        @Test
+        @DisplayName("다른 연구실 멤버가 서버를 기준으로 작성한 Job을 조회시 실패")
+        void findAllByLabByOtherLabMember() {
+            jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server3")));
+            jobService.save(memberId, jobCreationRequest(saveGpuServerInLab(lab, "server4")));
+
+            assertThatThrownBy(() -> jobService.findJobs(otherLabMemberId, lab.getId(), null, null, null))
+                    .isInstanceOf(MemberException.UNAUTHORIZED_MEMBER.getException().getClass());
         }
 
         private void assertJobIdsFromJobResponses(JobResponses responses, Long... jobIds) {
@@ -276,7 +301,7 @@ class JobServiceTest {
         @Test
         @DisplayName("랩별 잡 조회 시 페이지네이션 적용을 확인한다.")
         void findJobs() {
-            JobResponses searched = jobService.findJobs(lab.getId(), null, null, pageable);
+            JobResponses searched = jobService.findJobs(memberId, lab.getId(), null, null, pageable);
             List<String> searchedNames = searched.getJobResponses().stream()
                     .map(JobResponse::getName)
                     .collect(Collectors.toList());

@@ -120,7 +120,7 @@ public class JobControllerTest {
 
         private int numberOfWaitingJobs() {
             ResponseEntity<JobResponses> beforeReponses = jobController
-                    .findAll(lab.getId(), serverInLab.getId(), "WAITING", null);
+                    .findAll(lab.getId(), userInLab, serverInLab.getId(), "WAITING", null);
             return beforeReponses.getBody().getJobResponses().size();
         }
     }
@@ -182,7 +182,7 @@ public class JobControllerTest {
             jobRepository.save(jobInLab);
             jobRepository.save(jobInOtherLab);
 
-            compareSearchedAndExpected(jobController.findAll(lab.getId(), null, null, null), jobInLab);
+            compareSearchedAndExpected(jobController.findAll(lab.getId(), userInLab, null, null, null), jobInLab);
         }
 
         @DisplayName("서버를 기준으로 작업 목록을 확인할 수 있다.")
@@ -195,25 +195,23 @@ public class JobControllerTest {
             jobRepository.save(myJob);
             jobRepository.save(jobFromOtherServer);
 
-            compareSearchedAndExpected(jobController.findAll(lab.getId(), serverInLab.getId(), null, null), myJob);
+            compareSearchedAndExpected(jobController.findAll(lab.getId(), userInLab, serverInLab.getId(), null, null),
+                    myJob);
         }
 
         @DisplayName("서버를 기준으로 작업 목록을 조회할 때 url path의 labId와 serverId를 검증한다.")
         @Test
         void findJobsByServerWithMeaninglessLabId() {
-            assertThatThrownBy(() -> {
-                jobController.findAll(lab.getId(), serverInOtherLab.getId(), null, null);
-            }).isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
+            assertThatThrownBy(
+                    () -> jobController.findAll(lab.getId(), userInLab, serverInOtherLab.getId(), null, null))
+                    .isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
         }
 
         private void compareSearchedAndExpected(ResponseEntity<JobResponses> jobResponse, Job... expected) {
-            List<Long> ids = jobResponse.getBody().getJobResponses().stream()
-                    .map(job -> job.getId())
+            List<Long> ids = jobResponse.getBody().getJobResponses().stream().map(JobResponse::getId)
                     .collect(Collectors.toList());
 
-            List<Long> expectedIds = Arrays.stream(expected)
-                    .map(job -> job.getId())
-                    .collect(Collectors.toList());
+            List<Long> expectedIds = Arrays.stream(expected).map(Job::getId).collect(Collectors.toList());
 
             assertThat(ids).usingRecursiveComparison().isEqualTo(expectedIds);
         }
@@ -266,7 +264,8 @@ public class JobControllerTest {
         @DisplayName("사용자의 랩이 아닌 다른 랩의 서버를 기준으로 작업 목록을 확인할 수 없다.")
         @Test
         void findJobsByServerWithoutPermission() {
-            assertThatThrownBy(() -> jobController.findAll(jobInOtherLab.getId(), serverInOtherLab.getId(), null, null))
+            assertThatThrownBy(
+                    () -> jobController.findAll(lab.getId(), userInLab, serverInOtherLab.getId(), null, null))
                     .isInstanceOf(GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException().getClass());
         }
 

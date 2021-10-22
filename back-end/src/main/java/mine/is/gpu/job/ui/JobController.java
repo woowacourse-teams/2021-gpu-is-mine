@@ -60,10 +60,11 @@ public class JobController {
 
     @GetMapping("/jobs")
     public ResponseEntity<JobResponses> findAll(@PathVariable Long labId,
+                                                @AuthenticationPrincipal Member member,
                                                 @RequestParam(required = false) Long serverId,
                                                 @RequestParam(required = false) String status,
                                                 @Pagination Pageable pageable) {
-        JobResponses jobResponses = jobService.findJobs(labId, serverId, status, pageable);
+        JobResponses jobResponses = jobService.findJobs(member.getId(), labId, serverId, status, pageable);
         return ResponseEntity.ok(jobResponses);
     }
 
@@ -71,7 +72,7 @@ public class JobController {
     public ResponseEntity<Void> update(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member,
                                        @RequestBody JobUpdateRequest jobUpdateRequest) {
-        jobService.update(member.getId(),jobId, jobUpdateRequest);
+        jobService.update(member.getId(), jobId, jobUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 

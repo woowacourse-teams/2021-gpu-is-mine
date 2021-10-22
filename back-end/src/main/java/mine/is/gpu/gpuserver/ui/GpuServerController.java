@@ -1,6 +1,7 @@
 package mine.is.gpu.gpuserver.ui;
 
 import java.net.URI;
+import javax.validation.Valid;
 import mine.is.gpu.account.application.MemberService;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;

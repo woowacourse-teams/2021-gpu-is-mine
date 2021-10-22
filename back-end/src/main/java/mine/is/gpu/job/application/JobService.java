@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import mine.is.gpu.account.application.MemberService;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.account.domain.repository.MemberRepository;
 import mine.is.gpu.account.exception.MemberException;
@@ -28,6 +27,9 @@ import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.dto.response.LogsResponse;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
 import mine.is.gpu.job.exception.JobException;
+import mine.is.gpu.lab.domain.Lab;
+import mine.is.gpu.lab.domain.repository.LabRepository;
+import mine.is.gpu.lab.exception.LabException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,24 +43,25 @@ public class JobService {
     private final GpuServerRepository gpuServerRepository;
     private final GpuBoardRepository gpuBoardRepository;
     private final MemberRepository memberRepository;
+    private final LabRepository labRepository;
     private final LogRepository logRepository;
     private final ParsedLogRepository parsedLogRepository;
-    private final MemberService memberService;
     private final JobMapper jobMapper;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
                       GpuBoardRepository gpuBoardRepository,
-                      MemberRepository memberRepository, LogRepository logRepository,
+                      MemberRepository memberRepository, LabRepository labRepository,
+                      LogRepository logRepository,
                       ParsedLogRepository parsedLogRepository,
-                      MemberService memberService, JobMapper jobMapper) {
+                      JobMapper jobMapper) {
         this.jobRepository = jobRepository;
         this.gpuServerRepository = gpuServerRepository;
         this.gpuBoardRepository = gpuBoardRepository;
         this.memberRepository = memberRepository;
+        this.labRepository = labRepository;
         this.logRepository = logRepository;
         this.parsedLogRepository = parsedLogRepository;
-        this.memberService = memberService;
         this.jobMapper = jobMapper;
     }
 
@@ -89,16 +92,26 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public JobResponses findJobs(Long labId, Long serverId, String status, Pageable pageable) {
-        if (Objects.isNull(serverId)) {
+    public JobResponses findJobs(Long memberId, Long labId, Long serverId, String status, Pageable pageable) {
+        Member member = findMemberById(memberId);
+        Lab lab = findLabById(labId);
 
+        if (!lab.hasMember(member)) {
+            throw MemberException.UNAUTHORIZED_MEMBER.getException();
+        }
+
+        if (Objects.isNull(serverId)) {
             if (StringUtils.hasText(status)) {
                 return findJobsOfLabByStatus(labId, status, pageable);
             }
             return findAllJobsOfLab(labId, pageable);
         }
 
-        checkServerInLab(serverId, labId);
+        GpuServer gpuServer = findGpuServerById(serverId);
+        if (!lab.hasServer(gpuServer)) {
+            throw GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException();
+        }
+
         if (StringUtils.hasText(status)) {
             return findJobsOfServerByStatus(serverId, status, pageable);
         }
@@ -175,9 +188,18 @@ public class JobService {
         return JobResponses.of(jobRepository.findAllByMemberIdAndStatus(memberId, jobStatus, pageable));
     }
 
+    private Lab findLabById(Long labId) {
+        return labRepository.findById(labId).orElseThrow(LabException.LAB_NOT_FOUND::getException);
+    }
+
     private GpuBoard findBoardByServerId(Long gpuServerId) {
         return gpuBoardRepository.findByGpuServerId(gpuServerId)
                 .orElseThrow(GpuBoardException.GPU_BOARD_NOT_FOUND::getException);
+    }
+
+    private GpuServer findGpuServerById(Long serverId) {
+        return gpuServerRepository.findById(serverId)
+                .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
     }
 
     private Job findJobById(Long id) {
@@ -188,12 +210,6 @@ public class JobService {
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(MemberException.MEMBER_NOT_FOUND::getException);
-    }
-
-    public void checkServerInLab(Long serverId, Long labId) {
-        gpuServerRepository
-                .findByIdAndLabId(serverId, labId)
-                .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
     }
 
     public MailDto mailDtoOfJob(Long jobId) {

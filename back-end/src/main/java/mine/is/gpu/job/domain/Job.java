@@ -36,6 +36,8 @@ public class Job extends BaseEntity {
     @ManyToOne
     private Member member;
 
+    // private Long memberId; -> fk 가 없다.
+
     @Column(nullable = false)
     private String metaData;
 
@@ -192,7 +194,7 @@ public class Job extends BaseEntity {
         this.completedTime = completedTime;
     }
 
-    public boolean canReadable(Member member) {
+    public boolean  canReadable(Member member) {
         return gpuBoard.canUsedBy(member);
     }
 }
