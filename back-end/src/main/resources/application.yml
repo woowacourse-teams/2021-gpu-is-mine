@@ -113,7 +113,7 @@ spring:
     enabled: true
 
 request:
-  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+  origins: https://gpuismine.com, https://www.gpuismine.com
 
 swagger:
   host: api.gpuismine.com
@@ -143,7 +143,7 @@ spring:
     enabled: true
 
 request:
-  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+  origins: https://gpuismine.com, https://www.gpuismine.com
 
 server:
   port: 8081
@@ -176,7 +176,7 @@ spring:
     enabled: true
 
 request:
-  origins: https://gpu-is-mine.netlify.app, https://www.gpuismine.com
+  origins: https://gpuismine.com, https://www.gpuismine.com
 
 server:
   port: 8082
