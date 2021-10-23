@@ -8,7 +8,7 @@ import {
   StyledNoContent,
 } from "./GpuServerDetail.styled";
 import { getCurrentJob } from "../GpuServerDetailSummary/useGpuServerDetailSummary";
-import { Text } from "../../components";
+import { Text } from "../../../components";
 
 interface GpuServerDetailProps {
   className?: string;

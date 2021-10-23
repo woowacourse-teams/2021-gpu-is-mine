@@ -1,6 +1,6 @@
-import { render, screen } from "../../__test__/test-utils";
+import { render, screen } from "../../../__test__/test-utils";
 import GpuServerDetailSummary from "./GpuServerDetailSummary";
-import { gpuServerDetailResponse } from "../../__fixtures__";
+import { gpuServerDetailResponse } from "../../../__fixtures__";
 
 describe("GpuServerDetailSummary", () => {
   test("data", () => {

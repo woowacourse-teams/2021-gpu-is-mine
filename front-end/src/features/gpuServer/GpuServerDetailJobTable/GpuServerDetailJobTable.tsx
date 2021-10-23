@@ -1,6 +1,6 @@
-import { JobViewResponse } from "../../types";
-import { Text } from "../../components";
-import JobTable from "../JobTable/JobTable";
+import type { JobViewResponse } from "../../../types";
+import { Text } from "../../../components";
+import JobTable from "../../../domains/JobTable/JobTable";
 import { StyledGpuServerDetailJobTable, EmptyJobContainer } from "./GpuServerDetailJobTable.styled";
 
 interface GpuServerDetailJobTableProps {

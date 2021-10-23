@@ -1,8 +1,8 @@
-import { GpuServerDetail } from "../../types";
-import { useJobDetail } from "../JobDetail/useJobDetail";
+import type { GpuServerDetail } from "../../../types";
+import { useJobDetail } from "../../../domains/JobDetail/useJobDetail";
 import { StyledJobDetailSummary } from "./GpuServerDetailCurrentJob.styled";
-import JobDetailSummaryContent from "../JobDetailSummaryContent/JobDetailSummaryContent";
-import { Text } from "../../components";
+import JobDetailSummaryContent from "../../../domains/JobDetailSummaryContent/JobDetailSummaryContent";
+import { Text } from "../../../components";
 
 interface GpuServerDetailCurrentJobProps {
   className?: string;

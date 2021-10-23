@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParseParams, useGetGpuServerById } from "../../hooks";
+import { useParseParams, useGetGpuServerById } from "../../../hooks";
 
 export const useServerId = () => {
   const serverId = useParseParams("serverId");

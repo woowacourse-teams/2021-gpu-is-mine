@@ -1,11 +1,11 @@
-import { Flicker, Text } from "../../components";
+import { Flicker, Text } from "../../../components";
 import { getCurrentJob, getWaitingJob } from "./useGpuServerDetailSummary";
 import {
   ServerNameBox,
   StyledGpuServerDetailSummary,
   SummaryList,
 } from "./GpuServerDetailSummary.styled";
-import { GpuServerDetail } from "../../types";
+import type { GpuServerDetail } from "../../../types";
 
 interface GpuServerDetailSummaryProps {
   className?: string;

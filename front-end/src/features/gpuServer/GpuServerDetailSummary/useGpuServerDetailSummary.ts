@@ -1,4 +1,4 @@
-import { GpuServerDetail, JobViewResponse } from "../../types";
+import type { GpuServerDetail, JobViewResponse } from "../../../types";
 
 export const getCurrentJob = (server: GpuServerDetail): JobViewResponse | undefined =>
   server.jobs.find((job) => job.status === "RUNNING");

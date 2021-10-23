@@ -3,7 +3,7 @@ import { Layout } from "../../components";
 import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
-import { GpuServerDetail } from "../../domains/GpuServer";
+import { GpuServerDetail } from "../../features/gpuServer";
 
 const GpuServerViewDetail = () => {
   const { labId, labName, memberType } = useMyInfo();
