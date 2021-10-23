@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
-import { client } from "../../services";
+import { gpuServerApiClient } from "../../services";
 import { SimpleGpuServer } from "../../types";
 import { throwError } from "../../utils";
 import { generateStatusBoolean, selectMemberType, selectMyInfo } from "../member/authSlice";
@@ -98,7 +98,7 @@ export const fetchAllGpuServer = createAsyncThunk<SimpleGpuServer[], void, { sta
 
     const {
       data: { gpuServers },
-    } = await client.fetchGpuServerAll(labId);
+    } = await gpuServerApiClient.fetchGpuServerAll(labId);
 
     return gpuServers;
   }
@@ -119,7 +119,7 @@ export const registerGpuServer = createAsyncThunk<
   async ({ memorySize, diskSize, serverName, performance, modelName }, { getState }) => {
     const { labId } = selectMyInfo(getState());
 
-    await client.postGpuServer(labId, {
+    await gpuServerApiClient.postGpuServer(labId, {
       memorySize,
       diskSize,
       serverName,
@@ -137,7 +137,7 @@ export const deleteGpuServerById = createAsyncThunk<
 >("gpuServer/deleteById", async (serverId, { getState }) => {
   const { labId } = selectMyInfo(getState());
 
-  await client.deleteGpuServerById({ labId, serverId });
+  await gpuServerApiClient.deleteGpuServerById({ labId, serverId });
 
   // dispatch(fetchAllGpuServer());
 
