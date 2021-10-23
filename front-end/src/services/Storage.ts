@@ -1,7 +1,7 @@
 const Storage = class {
   constructor(private storage: globalThis.Storage) {}
 
-  get<T = string>(key: string, reviver?: (this: unknown, key: string, value: any) => T) {
+  get<T = string, U = never>(key: string, reviver?: (this: void, key: string, value: U) => T) {
     const savedItem = this.storage.getItem(key);
 
     return savedItem === null ? null : (JSON.parse(savedItem, reviver) as T);
@@ -10,7 +10,7 @@ const Storage = class {
   set<T>(
     key: string,
     value: T,
-    replacer?: (this: unknown, key: string, value: T) => unknown,
+    replacer?: (this: void, key: string, value: T) => unknown,
     space?: string | number
   ) {
     this.storage.setItem(key, JSON.stringify(value, replacer, space));

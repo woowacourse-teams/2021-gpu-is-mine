@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
-import client from "../../services/Client";
+import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
 
 type SignupState =
@@ -28,12 +28,10 @@ export const selectSignupStatus = (state: RootState) => generateStatusBoolean(st
 export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
   "signup/signup",
   async ({ email, password, name }) =>
-    client.postSignup({ email, password, name, labId: 1, memberType: "USER" })
+    authApiClient.postSignup({ email, password, name, labId: 1, memberType: "USER" })
 );
 
-export const signupErrorConfirmed = createAction("signup/error/confirmed");
-
-export const signupSucceedConfirmed = createAction("signup/succeed/confirmed");
+export const resetAction = createAction("signup/resetAction");
 
 const signupSlice = createSlice({
   name: SLICE_NAME.SIGNUP,
@@ -41,13 +39,7 @@ const signupSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(signupSucceedConfirmed, (state) => {
-        state.status = STATUS.IDLE;
-      })
-      .addCase(signupErrorConfirmed, (state) => {
-        state.status = STATUS.IDLE;
-        state.error = null;
-      })
+      .addCase(resetAction, () => initialState)
       .addCase(signup.pending, (state) => {
         state.status = STATUS.LOADING;
       })

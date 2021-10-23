@@ -32,3 +32,6 @@ export const minPerformanceValidator = (value: string) => {
 
   return null;
 };
+
+export const dockerHubImageValidator = (value: string) =>
+  /^[\w-]+\/[\w-]+(:[\w.-]+)?$/.test(value) ? null : "계정명/저장소명:버전을 기입해주세요";

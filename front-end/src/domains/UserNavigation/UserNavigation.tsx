@@ -50,18 +50,6 @@ const UserNavigation = (props: NavigationProps) => {
         </li>
       </Menu>
 
-      <Menu forwardedAs="ol">
-        <MenuTitle forwardedAs="h3" weight="medium">
-          내 정보
-        </MenuTitle>
-        <li>
-          <MenuItem>조회</MenuItem>
-        </li>
-        <li>
-          <MenuItem>수정</MenuItem>
-        </li>
-      </Menu>
-
       <LogoutMenu forwardedAs="ol">
         <Text as="h3" srOnly>
           로그아웃

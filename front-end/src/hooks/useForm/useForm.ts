@@ -45,7 +45,7 @@ const createInitialState = <T>(vals: T) => {
 
 const showAllValidationMessage = () => ({ type: "showAllValidationMessage" } as const);
 
-const updateValue = <T>({
+export const updateValue = <T>({
   name,
   value,
   validationMessage,

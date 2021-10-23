@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, SerializedError, createAction } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
 import { useAppDispatch } from "../../app/hooks";
-import { client } from "../../services";
+import { authApiClient } from "../../services";
 import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
 
@@ -67,7 +67,7 @@ export const selectMemberType = (state: RootState) => selectMyInfo(state).member
 
 export const authorize = createAsyncThunk<MyInfoResponse, { accessToken: string; expires: Date }>(
   "auth/authorize",
-  async (props) => client.fetchMyInfo(props)
+  async (props) => authApiClient.fetchMyInfo(props)
 );
 
 export const login = createAsyncThunk<
@@ -75,16 +75,16 @@ export const login = createAsyncThunk<
   { email: string; password: string },
   { dispatch: ReturnType<typeof useAppDispatch> }
 >("auth/login", async ({ email, password }, { dispatch }) => {
-  const { accessToken, expires } = await client.postLogin({ email, password });
+  const { accessToken, expires } = await authApiClient.postLogin({ email, password });
 
   await dispatch(authorize({ accessToken, expires })).unwrap();
 });
 
 export const logout = createAsyncThunk<void, void>("auth/logout", () => {
-  client.logout();
+  authApiClient.logout();
 });
 
-export const authErrorConfirmed = createAction("auth/error/confirmed");
+export const resetAction = createAction("auth/resetAction");
 
 const authSlice = createSlice({
   name: SLICE_NAME.AUTH,
@@ -92,10 +92,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(authErrorConfirmed, (state) => {
-        state.status = STATUS.IDLE;
-        state.error = null;
-      })
+      .addCase(resetAction, () => initialState)
       .addCase(login.pending, (state) => {
         state.status = STATUS.LOADING;
       })
