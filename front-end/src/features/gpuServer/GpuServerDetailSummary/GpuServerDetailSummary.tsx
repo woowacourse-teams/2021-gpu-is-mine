@@ -22,7 +22,7 @@ const GpuServerDetailSummary = ({ serverId, ...rest }: GpuServerDetailSummaryPro
     performance,
     runningJobName,
     waitingJobCount,
-  } = useAppSelector((state) => selectGpuServerById(state, serverId));
+  } = useAppSelector((state) => selectGpuServerById(state, serverId))!;
 
   return (
     <StyledGpuServerDetailSummary {...rest}>

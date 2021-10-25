@@ -13,7 +13,7 @@ interface GpuServerInfoItemProps {
 
 const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
   const { memberType, serverName, isOn, performance, runningJobName, waitingJobCount } =
-    useAppSelector((state: RootState) => selectGpuServerById(state, serverId));
+    useAppSelector((state: RootState) => selectGpuServerById(state, serverId))!;
 
   const { isLoading, isSucceed } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, deleteGpuServerById)

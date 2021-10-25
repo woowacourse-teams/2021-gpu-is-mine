@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
 import { gpuServerApiClient } from "../../services";
-import { throwError } from "../../utils";
 import { generateStatusBoolean, selectMemberType, selectMyInfo } from "../member/authSlice";
 import { add } from "../job/jobSlice";
 import { useAppDispatch } from "../../app/hooks";
@@ -58,7 +57,7 @@ export const selectGpuServerById = (state: RootState, targetServerId: number) =>
   const targetGpuServer = state.gpuServer.entities.find(({ id }) => id === targetServerId);
 
   if (targetGpuServer == null) {
-    return throwError("GpuServerNotFoundError", `존재하지 않는 serverId입니다: ${targetServerId}`);
+    return null;
   }
 
   const { id: serverId, jobs, runningJob, ...rest } = targetGpuServer;
@@ -148,7 +147,7 @@ export const deleteGpuServerById = createAsyncThunk<
   return serverId;
 });
 
-const gpuServer = createSlice({
+const gpuServerSlice = createSlice({
   name: "gpuServer",
   initialState,
   reducers: {},
@@ -216,7 +215,7 @@ const gpuServer = createSlice({
         const index =
           state.entities.findIndex(({ id }) => id === payload.id) ?? state.entities.length;
 
-        state.entities[index] = {
+        const gpuServer = {
           ...rest,
           ...gpuBoard,
           jobs: jobIds,
@@ -224,6 +223,12 @@ const gpuServer = createSlice({
           waitingJobCount,
           totalExpectedTime,
         };
+
+        if (index > -1) {
+          state.entities[index] = gpuServer;
+        } else {
+          state.entities.push(gpuServer);
+        }
       })
       .addCase(fetchGpuServerById.rejected, (state, action) => {
         state[fetchGpuServerById.typePrefix].status = STATUS.FAILED;
@@ -232,6 +237,6 @@ const gpuServer = createSlice({
   },
 });
 
-const gpuServerReducer = gpuServer.reducer;
+const gpuServerReducer = gpuServerSlice.reducer;
 
 export default gpuServerReducer;

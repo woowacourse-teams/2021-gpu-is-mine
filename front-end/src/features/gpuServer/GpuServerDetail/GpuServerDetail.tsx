@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   StyledGpuServerDetail,
   StyledGpuServerDetailCurrentJob,
@@ -6,9 +7,9 @@ import {
   StyledNoContent,
   NoCurrentJobCard,
 } from "./GpuServerDetail.styled";
-import { Text } from "../../../components";
-import { useAppSelector } from "../../../app/hooks";
-import { selectGpuServerById } from "../gpuServerSlice";
+import { Loading, Text } from "../../../components";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchGpuServerById, selectGpuServerById } from "../gpuServerSlice";
 
 interface GpuServerDetailProps {
   serverId: number;
@@ -16,9 +17,19 @@ interface GpuServerDetailProps {
 }
 
 const GpuServerDetail = ({ serverId, ...rest }: GpuServerDetailProps) => {
-  const { runningJob, jobs: jobIds } = useAppSelector((state) =>
-    selectGpuServerById(state, serverId)
-  );
+  const gpuServer = useAppSelector((state) => selectGpuServerById(state, serverId));
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchGpuServerById(serverId));
+  }, [dispatch, serverId]);
+
+  if (gpuServer == null) {
+    return <Loading />;
+  }
+
+  const { runningJob, jobs: jobIds } = gpuServer;
 
   return (
     <StyledGpuServerDetail {...rest}>
