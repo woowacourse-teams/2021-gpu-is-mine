@@ -1,12 +1,12 @@
 import { useHistory } from "react-router-dom";
-import { formatDate, pick } from "../../utils";
 import { Button, Table } from "../../components";
 import { StatusText } from "./JobTable.styled";
-import { Field, JobStatus, JobViewResponse, Row } from "../../types";
+import { Field, JobStatus } from "../../types";
 import { PATH } from "../../constants";
+import type { Job } from "../../features/job/jobSlice";
 
 interface JobTableProps {
-  jobs: Readonly<JobViewResponse[]>;
+  jobs: Job[];
   className?: string;
   rowCountPerPage?: number;
 }
@@ -16,7 +16,7 @@ const jobFields: Field[] = [
   { name: "Job 이름", selector: "name", isSortable: true },
   { name: "작업 소요 시간(h)", selector: "expectedTime", isSortable: true },
   { name: "(예상) 시작 시간", selector: "startTime", isSortable: true },
-  { name: "(예상) 완료 시간", selector: "completedTime", isSortable: true },
+  { name: "(예상) 완료 시간", selector: "endTime", isSortable: true },
   { name: "등록자", selector: "memberName", isSortable: true },
   { name: "기타", selector: "etc", isSortable: false },
 ];
@@ -68,53 +68,26 @@ const getJobStatusCell = (status: JobStatus) => {
 
 const JobTable = ({ jobs, rowCountPerPage = 5, ...rest }: JobTableProps) => {
   const history = useHistory();
-
   const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
 
-  const fieldSelectors = ["id", "name", "status", "memberName", "expectedTime", "calculatedTime"];
-
-  const rows = jobs
-    .map((job) => pick(job, fieldSelectors))
-    .map(({ calculatedTime, ...job }) => ({
-      ...job,
-      ...calculatedTime,
-    }))
-    .map(
-      ({
-        expectedTime,
-        startedTime,
-        expectedStartedTime,
-        completedTime,
-        expectedCompletedTime,
-        ...obj
-      }) => ({
-        ...obj,
-        expectedTime,
-        startTime: startedTime || expectedStartedTime || Date.now(),
-        completedTime:
-          completedTime ||
-          expectedCompletedTime ||
-          Date.now() + Number(expectedTime) * 1_000 * 3_600,
-      })
-    )
-    .map(({ id, name, status, memberName, expectedTime, startTime, completedTime }) => ({
-      id,
-      data: {
-        status: getJobStatusCell(status),
-        name: { value: name },
-        expectedTime: { value: expectedTime },
-        startTime: { value: startTime && formatDate(new Date(startTime)) },
-        completedTime: { value: completedTime && formatDate(new Date(completedTime)) },
-        memberName: { value: memberName },
-        etc: {
-          value: (
-            <Button color="primary" onClick={() => goToJobDetail(id)}>
-              상세
-            </Button>
-          ),
-        },
+  const rows = jobs.map(({ id, name, status, memberName, expectedTime, startTime, endTime }) => ({
+    id,
+    data: {
+      status: getJobStatusCell(status),
+      name: { value: name },
+      expectedTime: { value: expectedTime },
+      startedTime: { value: startTime },
+      completedTime: { value: endTime },
+      memberName: { value: memberName },
+      etc: {
+        value: (
+          <Button color="primary" onClick={() => goToJobDetail(id)}>
+            상세
+          </Button>
+        ),
       },
-    })) as Row[];
+    },
+  }));
 
   return <Table fields={jobFields} rows={rows} rowCountPerPage={rowCountPerPage} {...rest} />;
 };

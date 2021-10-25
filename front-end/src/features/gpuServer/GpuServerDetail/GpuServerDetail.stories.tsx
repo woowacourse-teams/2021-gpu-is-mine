@@ -10,6 +10,4 @@ const Template: ComponentStory<typeof GpuServerDetail> = (args) => <GpuServerDet
 
 export const Default = Template.bind({});
 
-Default.args = {
-  labId: 1,
-};
+Default.args = {};

@@ -1,9 +1,5 @@
 import { PATH } from "../../../constants";
-import {
-  selectGpuServerInfoById,
-  selectGpuServerStatus,
-  deleteGpuServerById,
-} from "../gpuServerSlice";
+import { selectGpuServerById, selectGpuServerStatus, deleteGpuServerById } from "../gpuServerSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useBoolean, useMoveToPage } from "../../../hooks";
 import { Flicker, Text, VerticalBox, ServerIcon, Button, Dialog } from "../../../components";
@@ -17,7 +13,7 @@ interface GpuServerInfoItemProps {
 
 const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
   const { memberType, serverName, isOn, performance, runningJobName, waitingJobCount } =
-    useAppSelector((state: RootState) => selectGpuServerInfoById(state, serverId));
+    useAppSelector((state: RootState) => selectGpuServerById(state, serverId));
 
   const { isLoading, isSucceed } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, deleteGpuServerById)

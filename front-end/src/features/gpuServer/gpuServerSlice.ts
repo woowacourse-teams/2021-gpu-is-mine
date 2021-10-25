@@ -1,11 +1,13 @@
-import { createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
 import { gpuServerApiClient } from "../../services";
-import { SimpleGpuServer } from "../../types";
+import type { GpuServerViewDetailResponse, SimpleGpuServer } from "../../types";
 import { throwError } from "../../utils";
 import { generateStatusBoolean, selectMemberType, selectMyInfo } from "../member/authSlice";
 import type { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hooks";
+import { add } from "../job/jobSlice";
 
 interface RunningJob {
   id: number;
@@ -22,7 +24,7 @@ interface GpuServer {
   diskSize: number;
   performance: number;
   modelName: string;
-  // jobs: Job[];
+  jobs?: number[];
   runningJob: RunningJob | undefined;
   waitingJobCount: number;
   totalExpectedTime: number;
@@ -39,7 +41,11 @@ type GpuServerSliceState = {
 
 export const selectGpuServerStatus = (
   state: RootState,
-  thunk: typeof fetchAllGpuServer | typeof registerGpuServer | typeof deleteGpuServerById
+  thunk:
+    | typeof fetchAllGpuServer
+    | typeof registerGpuServer
+    | typeof deleteGpuServerById
+    | typeof fetchGpuServerById
 ) => ({
   ...generateStatusBoolean(state.gpuServer[thunk.typePrefix].status),
   error: state.gpuServer[thunk.typePrefix].error,
@@ -48,11 +54,12 @@ export const selectGpuServerStatus = (
 export const selectAllGpuServerIds = (state: RootState) =>
   state.gpuServer.entities.map(({ id }) => id);
 
-export const selectGpuServerInfoById = (state: RootState, targetServerId: number) => {
+export const selectGpuServerById = (state: RootState, targetServerId: number) => {
   const targetGpuServer = state.gpuServer.entities.find(({ id }) => id === targetServerId);
 
   if (targetGpuServer == null) {
     return throwError("GpuServerNotFoundError", `존재하지 않는 serverId입니다: ${targetServerId}`);
+    // return null;
   }
 
   const {
@@ -63,6 +70,7 @@ export const selectGpuServerInfoById = (state: RootState, targetServerId: number
     diskSize,
     performance,
     modelName,
+    jobs,
     runningJob, // TODO: reselect 사용 고려
     waitingJobCount, // TODO: reselect 사용 고려
     totalExpectedTime, // TODO: reselect 사용 고려
@@ -76,6 +84,7 @@ export const selectGpuServerInfoById = (state: RootState, targetServerId: number
     diskSize,
     performance,
     modelName,
+    jobs: jobs ?? [],
     runningJob,
     runningJobName: runningJob?.name ?? "N/A",
     waitingJobCount,
@@ -86,6 +95,7 @@ export const selectGpuServerInfoById = (state: RootState, targetServerId: number
 
 const initialState = {
   "gpuServer/fetchAll": { status: "idle", error: null },
+  "gpuServer/fetchById": { status: "idle", error: null },
   "gpuServer/register": { status: "idle", error: null },
   "gpuServer/deleteById": { status: "idle", error: null },
   entities: [],
@@ -103,6 +113,22 @@ export const fetchAllGpuServer = createAsyncThunk<SimpleGpuServer[], void, { sta
     return gpuServers;
   }
 );
+
+export const fetchGpuServerById = createAsyncThunk<
+  GpuServerViewDetailResponse,
+  number,
+  { state: RootState; dispatch: ReturnType<typeof useAppDispatch> }
+>("gpuServer/fetchById", async (serverId, { getState, dispatch }) => {
+  const { labId } = selectMyInfo(getState());
+
+  const { data } = await gpuServerApiClient.fetchGpuServerById({ labId, serverId });
+
+  const { jobs } = data;
+
+  dispatch(add(jobs));
+
+  return data;
+});
 
 export const registerGpuServer = createAsyncThunk<
   void,
@@ -192,6 +218,46 @@ const gpuServer = createSlice({
       .addCase(deleteGpuServerById.rejected, (state, action) => {
         state[deleteGpuServerById.typePrefix].status = STATUS.FAILED;
         state[deleteGpuServerById.typePrefix].error = action.error;
+      })
+      .addCase(fetchGpuServerById.pending, (state) => {
+        state[fetchGpuServerById.typePrefix].status = STATUS.LOADING;
+      })
+      .addCase(fetchGpuServerById.fulfilled, (state, action) => {
+        state[fetchGpuServerById.typePrefix].status = STATUS.SUCCEED;
+        const index = state.entities.findIndex(({ id }) => id === action.payload.id);
+
+        const runningJob = action.payload.jobs.find((job) => job.status === "RUNNING") as
+          | RunningJob
+          | undefined;
+        const waitingJobs = action.payload.jobs.filter((job) => job.status === "WAITING");
+        const waitingJobCount = waitingJobs.length;
+        const totalExpectedTime = waitingJobs
+          .map(
+            ({ calculatedTime: { expectedStartedTime, expectedCompletedTime } }) =>
+              Number(expectedCompletedTime ?? 0) - Number(expectedStartedTime ?? 0)
+          )
+          .reduce((a, b) => a + b, 0);
+
+        const { gpuBoard, jobs, ...rest } = action.payload;
+        const jobIds = jobs.map(({ id }) => id);
+
+        const obj = {
+          ...gpuBoard,
+          jobs: jobIds,
+          ...rest,
+          runningJob,
+          waitingJobCount,
+          totalExpectedTime,
+        };
+
+        if (index > -1) {
+          state.entities[index] = obj;
+        } else {
+          state.entities.push(obj);
+        }
+      })
+      .addCase(fetchGpuServerById.rejected, (state) => {
+        state[fetchGpuServerById.typePrefix].status = STATUS.FAILED;
       });
   },
 });
