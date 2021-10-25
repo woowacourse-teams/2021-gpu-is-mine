@@ -14,7 +14,7 @@ export interface GpuServerDetail {
   memorySize: number;
   diskSize: number;
   gpuBoard: GpuBoard;
-  jobs: Readonly<JobViewResponse[]>;
+  jobs: JobViewResponse[];
 }
 
 export type GpuServerViewRequest = Pick<
@@ -33,7 +33,7 @@ export type SimpleGpuServer = {
   memorySize: number;
   diskSize: number;
   gpuBoard: GpuBoard;
-  runningJobs: Readonly<RunningJob[]>;
+  runningJobs: RunningJob[];
   waitingJobCount: number;
   totalExpectedTime: number;
 };
