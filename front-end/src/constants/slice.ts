@@ -9,4 +9,5 @@ export const STATUS = {
 export const SLICE_NAME = {
   AUTH: "auth",
   SIGNUP: "signup",
+  JOB: "job",
 } as const;
