@@ -10,4 +10,5 @@ export const SLICE_NAME = {
   AUTH: "auth",
   SIGNUP: "signup",
   GPU_SERVER: "gpuServer",
+  JOB: "job",
 } as const;
