@@ -1,10 +1,17 @@
 import type { AxiosError } from "axios";
 import { API_ENDPOINT } from "../../constants";
 import { httpClient, throwError } from "../../utils";
-import type { GpuServerRegisterRequest, GpuServerViewResponses } from "../../types";
+import type {
+  GpuServerRegisterRequest,
+  GpuServerViewDetailResponse,
+  GpuServerViewResponses,
+} from "../../types";
 
 const fetchGpuServerAll = async (labId: number) =>
   httpClient.get<GpuServerViewResponses>(API_ENDPOINT.LABS(labId).GPUS);
+
+const fetchGpuServerById = async ({ labId, serverId }: { labId: number; serverId: number }) =>
+  httpClient.get<GpuServerViewDetailResponse>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`);
 
 const postGpuServer = async (labId: number, body: GpuServerRegisterRequest) => {
   try {
@@ -24,6 +31,11 @@ const deleteGpuServerById = async ({ labId, serverId }: { labId: number; serverI
   await httpClient.delete<never>(`${API_ENDPOINT.LABS(labId).GPUS}/${serverId}`);
 };
 
-const gpuServerApiClient = { fetchGpuServerAll, postGpuServer, deleteGpuServerById };
+const gpuServerApiClient = {
+  fetchGpuServerAll,
+  fetchGpuServerById,
+  postGpuServer,
+  deleteGpuServerById,
+};
 
 export default gpuServerApiClient;
