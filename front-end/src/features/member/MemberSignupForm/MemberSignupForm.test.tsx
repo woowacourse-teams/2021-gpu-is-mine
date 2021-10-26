@@ -1,4 +1,4 @@
-import { render, screen, userEvent } from "../../../__test__/test-utils";
+import { render, screen, userEvent, waitFor } from "../../../__test__/test-utils";
 import MemberSignupForm from "./MemberSignupForm";
 
 describe("Member/SignupForm", () => {
@@ -125,6 +125,9 @@ describe("Member/SignupForm", () => {
         passwordConfirm: validPassword,
         name: validName,
       });
+
+      await waitFor(() => expect(screen.getByRole("alert")).toBeInTheDocument());
+      expect(screen.getByRole("alert")).toHaveTextContent(/회원가입에 성공하였습니다/);
     });
   });
 });
