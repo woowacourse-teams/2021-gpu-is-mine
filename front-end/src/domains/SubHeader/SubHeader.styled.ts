@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
-import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
 
 export const StyledSubHeader = styled.header`
   background-color: var(--primary-700);
@@ -36,19 +35,5 @@ export const StyledSubHeader = styled.header`
     ${up("tablet")} {
       display: inherit;
     }
-  }
-
-  .down-arrow {
-    display: inherit;
-
-    ${up("tablet")} {
-      display: none;
-    }
-  }
-`;
-
-export const StyledManagerNavigation = styled(ManagerNavigation)`
-  ${up("mobile")} {
-    display: none;
   }
 `;
