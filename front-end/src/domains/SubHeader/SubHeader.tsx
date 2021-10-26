@@ -1,8 +1,10 @@
 import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useMyInfo, usePathTitle, useToggle } from "../../hooks";
+import { useBreakpoints, useMyInfo, usePathTitle, useToggle } from "../../hooks";
 import { Text } from "../../components";
-import { StyledSubHeader, StyledManagerNavigation } from "./SubHeader.styled";
+import { StyledSubHeader } from "./SubHeader.styled";
+import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
+import UserNavigation from "../UserNavigation/UserNavigation";
 
 type SubHeaderProps = HTMLAttributes<HTMLElement>;
 
@@ -46,7 +48,7 @@ const useParsePathname = ({
 };
 
 const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
-  const myInfo = useMyInfo();
+  const { labName, memberType } = useMyInfo();
   const { pathname } = useLocation();
   const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
   const list = useParsePathname({
@@ -56,6 +58,8 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
   });
 
   const heading = usePathTitle();
+
+  const { isMobile } = useBreakpoints();
 
   const [isNavVisible, toggleIsNavVisible] = useToggle(false);
 
@@ -78,14 +82,19 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
           ))}
         </div>
 
-        <Text className="lab-name" size="md" weight="medium">
-          {myInfo.labName}
-        </Text>
-        <button type="button" className="down-arrow" onClick={() => toggleIsNavVisible()}>
-          {isNavVisible ? "▲" : "▼"}
-        </button>
+        {!isMobile && (
+          <Text size="md" weight="medium">
+            {labName}
+          </Text>
+        )}
+        {isMobile && (
+          <button type="button" onClick={() => toggleIsNavVisible()}>
+            {isNavVisible ? "▲" : "▼"}
+          </button>
+        )}
       </StyledSubHeader>
-      {isNavVisible && <StyledManagerNavigation />}
+      {isMobile && isNavVisible && memberType === "MANAGER" && <ManagerNavigation />}
+      {isMobile && isNavVisible && memberType === "USER" && <UserNavigation />}
     </>
   );
 };

@@ -1,7 +1,8 @@
 import { HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
-import { useForm, getFormProps, getInputProps } from "../../../hooks";
-import { Input, Text } from "../../../components";
+import { SerializedError } from "@reduxjs/toolkit";
+import { useForm, getFormProps, getInputProps, useMoveToPage } from "../../../hooks";
+import { Input, Loading, Text, useToast } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
 import { PATH } from "../../../constants";
 import {
@@ -23,17 +24,40 @@ type Values = {
 };
 
 const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
-  const appDispatch = useAppDispatch();
   const { isLoading } = useAppSelector(selectSignupStatus);
 
-  const handleSubmit = ({ email, password, name }: Values) => {
-    appDispatch(
-      signup({
-        email,
-        password,
-        name,
-      })
-    );
+  const appDispatch = useAppDispatch();
+
+  const moveToLoginPage = useMoveToPage(PATH.MEMBER.LOGIN);
+
+  const showToast = useToast();
+
+  const handleSubmit = async ({ email, password, name }: Values) => {
+    try {
+      await appDispatch(
+        signup({
+          email,
+          password,
+          name,
+        })
+      ).unwrap();
+
+      showToast({
+        type: "success",
+        title: "회원가입에 성공하였습니다",
+        message: `${name}님! 반갑습니다 :)`,
+      });
+
+      moveToLoginPage();
+    } catch (err) {
+      const error = err as SerializedError;
+
+      showToast({
+        type: "error",
+        title: error.name!,
+        message: error.message,
+      });
+    }
   };
 
   const { state, dispatch } = useForm<Values>({
@@ -81,6 +105,8 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
 
   return (
     <StyledForm {...formProps} {...rest} aria-label="signup-form">
+      {isLoading && <Loading size="lg" />}
+
       <Input size="sm" {...emailInputProps} autoComplete="email" placeholder="example@email.com" />
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
