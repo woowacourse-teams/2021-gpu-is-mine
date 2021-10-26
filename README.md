@@ -106,7 +106,10 @@
 - [Yarn Berry 도입기](https://velog.io/@bigsaigon333/Yarn-berry-%EB%8F%84%EC%9E%85%EA%B8%B0)
 
 #### BE
-
+- [GM 에뮬레이터 동작 방법](https://github.com/woowacourse-teams/2021-gpu-is-mine/wiki/%5B%EC%9E%91%EC%84%B1%EC%A4%91%5D-GM-%EC%97%90%EB%AE%AC%EB%A0%88%EC%9D%B4%ED%84%B0-%EB%8F%99%EC%9E%91-%EB%B0%A9%EB%B2%95)
+- [private configuration 설정파일 정보](https://github.com/woowacourse-teams/2021-gpu-is-mine/wiki/private-configuration-%EC%84%A4%EC%A0%95%ED%8C%8C%EC%9D%BC-%EC%A0%95%EB%B3%B4)
+- [GM 로그 관리를 위한 ELK Stack 설정 방법
+](https://github.com/woowacourse-teams/2021-gpu-is-mine/wiki/GM-%EB%A1%9C%EA%B7%B8-%EA%B4%80%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-ELK-Stack-%EC%84%A4%EC%A0%95-%EB%B0%A9%EB%B2%95)
 - [배럴, 완태의 Elastic Stack 적용기](https://nauni.tistory.com/283)
 - [PageableHandlerMethodArgumentResolver Customize 하기 by 완태](https://github.com/woowacourse-teams/2021-gpu-is-mine/wiki/PageableHandlerMethodArgumentResolver-Cusomize-%ED%95%98%EA%B8%B0-by-%EC%99%84%ED%83%9C)
 - [젠킨스 jdk 11로 버전 업그레이드 해왔어요!!!](https://ecsimsw.tistory.com/entry/젠킨스-jdk-버전-11로-올리는-방법)
