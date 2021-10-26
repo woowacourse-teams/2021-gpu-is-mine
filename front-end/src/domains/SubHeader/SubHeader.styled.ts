@@ -28,12 +28,4 @@ export const StyledSubHeader = styled.header`
   .title__name:hover {
     color: var(--secondary-600);
   }
-
-  .lab-name {
-    display: none;
-
-    ${up("tablet")} {
-      display: inherit;
-    }
-  }
 `;

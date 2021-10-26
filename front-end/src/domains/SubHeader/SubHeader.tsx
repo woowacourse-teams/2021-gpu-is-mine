@@ -82,11 +82,13 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
           ))}
         </div>
 
-        <Text className="lab-name" size="md" weight="medium">
-          {labName}
-        </Text>
+        {!isMobile && (
+          <Text size="md" weight="medium">
+            {labName}
+          </Text>
+        )}
         {isMobile && (
-          <button type="button" className="down-arrow" onClick={() => toggleIsNavVisible()}>
+          <button type="button" onClick={() => toggleIsNavVisible()}>
             {isNavVisible ? "▲" : "▼"}
           </button>
         )}
