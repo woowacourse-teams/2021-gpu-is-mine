@@ -4,12 +4,13 @@ import { StyledText } from "./JobDetailLogConent.styled";
 
 interface JobDetailLogContentProps {
   logs?: string[];
+  maxOneLineLength: number;
   className?: string;
 }
 
-const maxOneLineLength = 150;
+const JobDetailLogContent = ({ logs, maxOneLineLength, ...rest }: JobDetailLogContentProps) => {
+  console.log(maxOneLineLength);
 
-const JobDetailLogContent = ({ logs, ...rest }: JobDetailLogContentProps) => {
   if (logs == null || logs.length === 0) {
     return <Text size="sm">로그 데이터가 존재하지 않습니다.</Text>;
   }
