@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
 import { gpuServerApiClient } from "../../services";
-import { generateStatusBoolean, selectMemberType, selectMyInfo } from "../member/authSlice";
+import { generateStatusBoolean, selectMyInfo } from "../member/authSlice";
 import { add } from "../job/jobSlice";
 import { useAppDispatch } from "../../app/hooks";
 import type { RootState } from "../../app/store";
@@ -29,7 +29,7 @@ interface GpuServer {
   totalExpectedTime: number;
 }
 
-type GpuServerSliceState = {
+export type GpuServerSliceState = {
   [key: string]: {
     status: "idle" | "loading" | "succeed" | "failed";
     error: SerializedError | null;
@@ -68,7 +68,6 @@ export const selectGpuServerById = (state: RootState, targetServerId: number) =>
     jobs: jobs ?? [],
     runningJob,
     runningJobName: runningJob?.name ?? "N/A",
-    memberType: selectMemberType(state),
   };
 };
 

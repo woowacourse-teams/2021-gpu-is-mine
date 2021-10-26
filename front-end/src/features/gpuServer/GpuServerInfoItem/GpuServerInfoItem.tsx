@@ -1,8 +1,18 @@
+import type { SerializedError } from "@reduxjs/toolkit";
 import { PATH } from "../../../constants";
 import { selectGpuServerById, selectGpuServerStatus, deleteGpuServerById } from "../gpuServerSlice";
+import { selectMemberType } from "../../member/authSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useBoolean, useMoveToPage } from "../../../hooks";
-import { Flicker, Text, VerticalBox, ServerIcon, Button, Dialog } from "../../../components";
+import {
+  Flicker,
+  Text,
+  VerticalBox,
+  ServerIcon,
+  Button,
+  Dialog,
+  useToast,
+} from "../../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
 import type { RootState } from "../../../app/store";
 
@@ -12,10 +22,12 @@ interface GpuServerInfoItemProps {
 }
 
 const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
-  const { memberType, serverName, isOn, performance, runningJobName, waitingJobCount } =
-    useAppSelector((state: RootState) => selectGpuServerById(state, serverId))!;
+  const gpuServer = useAppSelector((state: RootState) => selectGpuServerById(state, serverId));
 
-  const { isLoading, isSucceed } = useAppSelector((state: RootState) =>
+  const { serverName, isOn, performance, runningJobName, waitingJobCount } = gpuServer! ?? {};
+  const memberType = useAppSelector(selectMemberType);
+
+  const { isLoading } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, deleteGpuServerById)
   );
 
@@ -23,27 +35,29 @@ const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
+  const showToast = useToast();
 
   const handleDelete = async () => {
-    await dispatch(deleteGpuServerById(serverId)).unwrap();
-    openDialog();
+    try {
+      closeConfirm();
+      await dispatch(deleteGpuServerById(serverId)).unwrap();
+
+      showToast({ type: "success", title: `${serverName}을(를) 삭제하였습니다.` });
+    } catch (err) {
+      const error = err as SerializedError;
+
+      showToast({
+        type: "error",
+        title: `${serverName} 삭제에 실패하였습니다.`,
+        message: error.message,
+      });
+    }
   };
 
   const moveToDetailPage = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
 
   return (
     <>
-      <Dialog open={isDialogOpen} onClose={closeDialog} onConfirm={closeDialog}>
-        <Text size="md" weight="regular">
-          {
-            isSucceed
-              ? `${serverName}을(를) 삭제하였습니다.`
-              : `${serverName} 삭제에 실패하였습니다.` /* TODO: 에러에 따라 구체적인 디렉션 추가 */
-          }
-        </Text>
-      </Dialog>
-
       <Dialog
         open={isConfirmOpen}
         onClose={closeConfirm}
