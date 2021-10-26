@@ -140,7 +140,7 @@ public class Job extends BaseEntity {
             throw JobException.NO_WAITING_JOB.getException();
         }
         this.status = JobStatus.CANCELED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public void start() {
@@ -157,7 +157,7 @@ public class Job extends BaseEntity {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -194,6 +194,8 @@ public class Job extends BaseEntity {
 
     public void setCompletedTime(LocalDateTime completedTime) {
         this.completedTime = completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 
     public void calculateExpectation(Optional<Job> last) {

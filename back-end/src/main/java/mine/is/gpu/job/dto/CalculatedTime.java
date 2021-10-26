@@ -34,8 +34,8 @@ public class CalculatedTime {
         return expectedStartedTime;
     }
 
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 
     public LocalDateTime getExpectedCompletedTime() {
