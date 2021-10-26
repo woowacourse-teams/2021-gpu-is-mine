@@ -21,7 +21,9 @@ const jobFields: Field[] = [
   { name: "기타", selector: "etc", isSortable: false },
 ];
 
+// eslint-disable-next-line consistent-return
 const getJobStatusCell = (status: JobStatus) => {
+  // eslint-disable-next-line default-case
   switch (status) {
     case "RUNNING":
       return {
@@ -59,10 +61,6 @@ const getJobStatusCell = (status: JobStatus) => {
           </StatusText>
         ),
       };
-    default:
-      return {
-        value: null,
-      };
   }
 };
 
@@ -70,24 +68,26 @@ const JobTable = ({ jobs, rowCountPerPage = 5, ...rest }: JobTableProps) => {
   const history = useHistory();
   const goToJobDetail = (id: number | string) => history.push(`${PATH.JOB.VIEW}/${id}`);
 
-  const rows = jobs.map(({ id, name, status, memberName, expectedTime, startTime, endTime }) => ({
-    id,
-    data: {
-      status: getJobStatusCell(status),
-      name: { value: name },
-      expectedTime: { value: expectedTime },
-      startedTime: { value: startTime },
-      completedTime: { value: endTime },
-      memberName: { value: memberName },
-      etc: {
-        value: (
-          <Button color="primary" onClick={() => goToJobDetail(id)}>
-            상세
-          </Button>
-        ),
+  const rows = jobs
+    .map(({ id, name, status, memberName, expectedTime, startTime, endTime }) => ({
+      id,
+      data: {
+        status: getJobStatusCell(status),
+        name: { value: name },
+        expectedTime: { value: expectedTime },
+        startedTime: { value: startTime },
+        completedTime: { value: endTime },
+        memberName: { value: memberName },
+        etc: {
+          value: (
+            <Button color="primary" onClick={() => goToJobDetail(id)}>
+              상세
+            </Button>
+          ),
+        },
       },
-    },
-  }));
+    }))
+    .sort((a, b) => a.data.status.priority - b.data.status.priority);
 
   return <Table fields={jobFields} rows={rows} rowCountPerPage={rowCountPerPage} {...rest} />;
 };
