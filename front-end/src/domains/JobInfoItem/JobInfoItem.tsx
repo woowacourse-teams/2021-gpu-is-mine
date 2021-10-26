@@ -18,17 +18,17 @@ const statusName = {
 } as const;
 
 const startTimeLabel = {
-  WAITING: "예상 시작 시간",
+  WAITING: "시작 시간",
   RUNNING: "시작 시간",
   COMPLETED: "시작 시간",
-  CANCELED: "예상 시작 시간",
+  CANCELED: "시작 시간",
 } as const;
 
 const endTimeLabel = {
-  WAITING: "예상 완료 시간",
-  RUNNING: "예상 완료 시간",
+  WAITING: "완료 시간",
+  RUNNING: "완료 시간",
   COMPLETED: "완료 시간",
-  CANCELED: "취소 시간",
+  CANCELED: "완료 시간", // TODO: 취소 시간으로 바꾸기
 } as const;
 
 const JobInfoItem = ({
@@ -38,7 +38,7 @@ const JobInfoItem = ({
   status: jobStatus,
   gpuServerName,
   memberName,
-  calculatedTime: { expectedStartedTime, startedTime, completedTime, expectedCompletedTime },
+  calculatedTime: { createdTime, startedTime, completedTime },
   refresh,
 }: JobInfoItemProps) => {
   const {
@@ -53,11 +53,11 @@ const JobInfoItem = ({
 
   const handleDetailClick = useMoveToPage(`${PATH.JOB.VIEW}/${jobId}`);
 
-  const startTime = startedTime || expectedStartedTime;
-  const formattedStartTime = startTime && formatDate(new Date(startTime));
+  const startTime = startedTime ?? createdTime;
+  const formattedStartTime = startTime ? formatDate(new Date(startTime)) : "-";
 
-  const endTime = completedTime || expectedCompletedTime;
-  const formattedEndTime = endTime && formatDate(new Date(endTime));
+  const endTime = completedTime;
+  const formattedEndTime = endTime ? formatDate(new Date(endTime)) : "-";
 
   const details = [
     { label: "할당 서버", content: gpuServerName },
