@@ -8,6 +8,10 @@ export const jobNameValidator = (value: string) => {
     return `${min}글자 이상 ${max}글자 이하만 가능합니다.`;
   }
 
+  if (value.trim() === "") {
+    return "Job이름으로 공백문자를 등록할 수 없습니다";
+  }
+
   return null;
 };
 
