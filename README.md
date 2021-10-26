@@ -11,7 +11,8 @@
 
 ## 서비스 소개
 
-[![동영상](https://img.youtube.com/vi/HAwgCvtSZ_o/maxresdefault.jpg)](https://www.youtube.com/watch?v=HAwgCvtSZ_o)
+[![동영상](https://user-images.githubusercontent.com/66905013/138879027-97de3696-eeab-4337-8b09-fd7f44ac9ad8.png)](https://www.youtube.com/watch?v=HAwgCvtSZ_o)
+
 ### 기존현황
 
 - 딥러닝 학습의 경우, 기존 학습의 종료를 사람이 확인하고 다음 학습을 실행
@@ -27,8 +28,6 @@
 ---
 
 ## 사용방법
-
-<!-- [gif 넣을 예정] -->
 
 1. 회원가입을 통해 로그인을 한다.
 2. 기존 등록되어 있는 GpuServer 에 학습을 진행하고 싶은 job 을 등록할 수 있다.
@@ -88,14 +87,13 @@
 
 ### 서비스 플로우
 
-- Github Actions 를 통한 CI 환경을 구축하였다.
-- jenkins 를 통한 자동배포를 구축하였다.
-  ![자동배포](./docs/images/img.jpeg)
-- 프론트 서버, 백 서버, GpuManager, ELK 사이에서 데이터가 흐른다.
-  ![전체데이터흐름](./docs/images/whole_diagram.jpeg)
-- 백 서버와 GpuManager 사이에서 job 에 대한 상태는 http 통신을 통해 이루어진다.
+- Github Actions 를 통한 CI, jenkins 를 통한 CD를 구축
+  ![자동배포](https://user-images.githubusercontent.com/66905013/138879570-d013f8be-c611-47dd-8dec-37bd1385a138.jpeg)
+- 프론트 서버, 백 서버, GpuManager, ELK 통신 흐름
+  ![전체데이터흐름](https://user-images.githubusercontent.com/66905013/138879622-21e3c09d-79b3-4735-9f49-7cdeb106bfb4.jpeg)
+- 백 서버와 GpuManager 사이에서 job 에 대한 상태에 대한 http 통신
   ![job통신](./docs/images/gm.jpeg)
-- ELK 를 도입하여 job 에 대한 로그관리를 한다.
+- ELK 를 도입하여 job 에 대한 로그관리
   ![logs](./docs/images/elk_log.jpeg)
 
 ### TechLogs
