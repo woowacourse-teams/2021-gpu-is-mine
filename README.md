@@ -11,7 +11,7 @@
 
 ## 서비스 소개
 
-[![동영상](https://img.youtube.com/vi/HAwgCvtSZ_o/maxresdefault.jpg)](https://img.youtube.com/vi/HAwgCvtSZ_o/hqdefault.jpg)
+[![동영상](https://img.youtube.com/vi/HAwgCvtSZ_o/maxresdefault.jpg)](https://www.youtube.com/watch?v=HAwgCvtSZ_o)
 ### 기존현황
 
 - 딥러닝 학습의 경우, 기존 학습의 종료를 사람이 확인하고 다음 학습을 실행
