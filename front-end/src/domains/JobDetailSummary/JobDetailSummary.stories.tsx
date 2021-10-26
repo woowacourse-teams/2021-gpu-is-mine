@@ -1,5 +1,4 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { JobResponseMock } from "../../__fixtures__";
 import JobDetailSummary from "./JobDetailSummary";
 
 export default {
@@ -12,5 +11,20 @@ const Template: ComponentStory<typeof JobDetailSummary> = (args) => <JobDetailSu
 export const Default = Template.bind({});
 
 Default.args = {
-  detail: JobResponseMock,
+  detail: {
+    id: 10,
+    name: "string",
+    status: "RUNNING",
+
+    memberId: 1,
+    memberName: "string",
+    gpuServerId: 2,
+    gpuServerName: "string",
+
+    dockerHubImage: "string/string",
+    expectedTime: "string",
+    createdTime: "string",
+    startTime: "string",
+    endTime: "string",
+  },
 };

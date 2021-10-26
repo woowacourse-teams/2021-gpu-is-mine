@@ -1,16 +1,16 @@
 import { Text } from "../../components";
 import { StyledJobDetailSummary } from "./JobDetailSummary.styled";
-import { JobViewResponse } from "../../types";
 import JobDetailSummaryContent from "../JobDetailSummaryContent/JobDetailSummaryContent";
+import { Job } from "../../features/job/jobSlice";
 
 interface JobDetailSummaryProps {
   title?: string;
   className?: string;
-  detail: JobViewResponse;
+  detail: Job;
 }
 
 const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => {
-  const { name, status, memberName, gpuServerName, expectedTime, metaData } = detail;
+  const { name, status, memberName, gpuServerName, expectedTime, dockerHubImage } = detail;
 
   const detailList = [
     { title: "Job 이름", content: name, isLink: false },
@@ -18,7 +18,7 @@ const JobDetailSummary = ({ title, detail, ...rest }: JobDetailSummaryProps) => 
     { title: "Job 등록자", content: memberName, isLink: false },
     { title: "할당된 서버", content: gpuServerName, isLink: false },
     { title: "실행시간(hour)", content: expectedTime, isLink: false },
-    { title: "DockerHub Image", content: metaData, isLink: true },
+    { title: "DockerHub Image", content: dockerHubImage, isLink: true },
   ];
 
   return (

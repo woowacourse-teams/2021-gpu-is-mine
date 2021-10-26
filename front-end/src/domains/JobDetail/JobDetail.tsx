@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { useGoToPage } from "../../hooks";
-import { useJobId, useJobDetail } from "./useJobDetail";
+import { useJobId } from "./useJobDetail";
 import { Loading, Text, Dialog } from "../../components";
 import {
   StyledJobDetail,
@@ -7,6 +8,13 @@ import {
   StyledJobDetailGraph,
   StyledJobDetailLog,
 } from "./JobDetail.styled";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  getJobById,
+  resetJobActionState,
+  selectJobActionState,
+  selectJobById,
+} from "../../features/job/jobSlice";
 
 interface JobDetailProps {
   className?: string;
@@ -16,19 +24,33 @@ interface JobDetailProps {
 const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
   const jobId = useJobId();
 
-  const { done, isFailed, isLoading, isSucceed, detail, isRunning, isWaiting } = useJobDetail({
-    labId,
-    jobId,
-  });
+  const appDispatch = useAppDispatch();
+
+  const detail = useAppSelector(selectJobById(jobId));
+
+  const { isLoading, isFailed, isSucceed, error } = useAppSelector(
+    selectJobActionState(getJobById)
+  );
+
+  const isRunning = detail?.status === "RUNNING";
+  const isWaiting = detail?.status === "WAITING";
 
   const goToPreviousPage = useGoToPage(-1);
+
+  const done = () => {
+    appDispatch(resetJobActionState(getJobById.typePrefix));
+  };
+
+  useEffect(() => {
+    appDispatch(getJobById({ jobId }));
+  }, [appDispatch, jobId]);
 
   return (
     <>
       {isLoading && <Loading size="lg" />}
 
       <Dialog open={isFailed} onClose={done} onConfirm={goToPreviousPage}>
-        <Text>Job 상세 조회에 실패했습니다.</Text>
+        <Text>존재 하지 않은 Job입니다. {error?.message}</Text>
       </Dialog>
 
       {isSucceed && detail && (

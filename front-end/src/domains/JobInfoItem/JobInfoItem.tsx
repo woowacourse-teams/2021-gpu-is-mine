@@ -1,13 +1,17 @@
-import { formatDate } from "../../utils";
-import { useBoolean, useCancelJob, useMoveToPage } from "../../hooks";
-import { Button, CalendarIcon, Dialog, Text, VerticalBox } from "../../components";
+import { useBoolean, useMoveToPage } from "../../hooks";
+import { Button, CalendarIcon, Dialog, Text, useToast, VerticalBox } from "../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
-import { JobViewResponse } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  cancelJobById,
+  Job,
+  // resetJobActionState,
+  selectJobActionState,
+} from "../../features/job/jobSlice";
 
-interface JobInfoItemProps extends JobViewResponse {
-  labId: number;
-  refresh: () => Promise<unknown>;
+interface JobInfoItemProps extends Job {
+  className?: string;
 }
 
 const statusName = {
@@ -33,36 +37,46 @@ const endTimeLabel = {
 
 const JobInfoItem = ({
   id: jobId,
-  labId,
   name: jobName,
   status: jobStatus,
   gpuServerName,
   memberName,
-  calculatedTime: { expectedStartedTime, startedTime, completedTime, expectedCompletedTime },
-  refresh,
+  startTime,
+  endTime,
+  ...rest
 }: JobInfoItemProps) => {
-  const {
-    isSucceed,
-    isFailed,
-    status,
-    makeRequest: cancelJob,
-    done,
-  } = useCancelJob({ labId, jobId });
+  const appDispatch = useAppDispatch();
+  const showToast = useToast();
+
+  const { isLoading, error } = useAppSelector(selectJobActionState(cancelJobById));
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
+  const onConfirm = async () => {
+    try {
+      await appDispatch(cancelJobById({ jobId })).unwrap();
+      showToast({
+        title: "취소 성공",
+        type: "success",
+        message: `${jobName}이(가) 취소되었습니다.`,
+      });
+    } catch {
+      showToast({
+        title: "취소 실패",
+        type: "error",
+        message: `${jobName}이(가) 취소에 실패하였습니다. ${error?.message ?? ""}`,
+      });
+    } finally {
+      closeConfirm();
+    }
+  };
+
   const handleDetailClick = useMoveToPage(`${PATH.JOB.VIEW}/${jobId}`);
-
-  const startTime = startedTime || expectedStartedTime;
-  const formattedStartTime = startTime && formatDate(new Date(startTime));
-
-  const endTime = completedTime || expectedCompletedTime;
-  const formattedEndTime = endTime && formatDate(new Date(endTime));
 
   const details = [
     { label: "할당 서버", content: gpuServerName },
-    { label: startTimeLabel[jobStatus], content: formattedStartTime },
-    { label: endTimeLabel[jobStatus], content: formattedEndTime },
+    { label: startTimeLabel[jobStatus], content: startTime },
+    { label: endTimeLabel[jobStatus], content: endTime },
     { label: "예약자", content: memberName },
   ];
 
@@ -70,25 +84,10 @@ const JobInfoItem = ({
 
   return (
     <>
-      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
-        <Text size="md" weight="regular">
-          {jobName}이(가) 취소되었습니다.
-        </Text>
-      </Dialog>
-
-      <Dialog open={isFailed} onClose={done} onConfirm={done}>
-        <Text size="md" weight="regular">
-          {jobName} 취소에 실패하였습니다.
-        </Text>
-      </Dialog>
-
       <Dialog
         open={isConfirmOpen}
         onClose={closeConfirm}
-        onConfirm={() => {
-          cancelJob();
-          closeConfirm();
-        }}
+        onConfirm={onConfirm}
         onCancel={closeConfirm}
       >
         <Text size="sm" weight="medium">
@@ -96,7 +95,7 @@ const JobInfoItem = ({
         </Text>
       </Dialog>
 
-      <StyledJobInfoItem>
+      <StyledJobInfoItem {...rest}>
         <div className="job-info-title-wrapper">
           <VerticalBox>
             <CalendarIcon className="job-info-title-wrapper__status" size="md" status={jobStatus} />
@@ -129,7 +128,7 @@ const JobInfoItem = ({
           <Button
             className="job-info-button-wrapper__button"
             color="error"
-            disabled={!isCancelable || status === "loading"}
+            disabled={!isCancelable || isLoading}
             onClick={openConfirm}
           >
             취소

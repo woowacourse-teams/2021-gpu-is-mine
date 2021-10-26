@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useGetJobAll } from "../../hooks";
 import { Text, Loading } from "../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
 import { MESSAGE } from "../../constants";
-import { JobViewResponse, MemberType } from "../../types";
+import { MemberType } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getJobAll, Job, selectJobActionState, selectJobAll } from "../../features/job/jobSlice";
 
 interface JobInfoListProps {
   className?: string;
@@ -20,32 +21,34 @@ const priority = {
   CANCELED: 3, // lowest
 } as const;
 
-const sortByResponse = (a: JobViewResponse, b: JobViewResponse) =>
-  priority[a.status] - priority[b.status];
+const sortByResponse = (a: Job, b: Job) => priority[a.status] - priority[b.status];
 
-const filterByMember = (response: JobViewResponse, memberType: MemberType, memberId: number) =>
+const filterByMember = (response: Job, memberType: MemberType, memberId: number) =>
   memberType === "MANAGER" || response.memberId === memberId;
 
 const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps) => {
-  const { data, status, makeRequest } = useGetJobAll({ labId });
+  const appDispatch = useAppDispatch();
+
+  const { isLoading, isSucceed, isFailed } = useAppSelector(selectJobActionState(getJobAll));
+
+  const jobs = useAppSelector(selectJobAll);
 
   useEffect(() => {
-    makeRequest();
-  }, [makeRequest]);
+    appDispatch(getJobAll());
+  }, [appDispatch]);
 
-  const filteredJobList =
-    data?.jobResponses.filter((res) => filterByMember(res, memberType, memberId)) ?? [];
+  const filteredJobList = jobs?.filter((res) => filterByMember(res, memberType, memberId)) ?? [];
 
   return (
     <>
-      {status === "loading" && <Loading size="lg" />}
-      {status === "failed" && (
+      {isLoading && <Loading size="lg" />}
+      {isFailed && (
         <Text size="lg" weight="bold">
           {MESSAGE.ERROR.SERVER}
         </Text>
       )}
 
-      {status === "succeed" && data && (
+      {isSucceed && jobs && (
         <StyledJobInfoList {...rest}>
           {filteredJobList.length === 0 ? (
             <Text size="lg" weight="bold">
@@ -55,9 +58,7 @@ const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps)
             filteredJobList
               .slice()
               .sort(sortByResponse)
-              .map((res) => (
-                <JobInfoItem key={res.id} refresh={() => makeRequest()} labId={labId} {...res} />
-              ))
+              .map((res) => <JobInfoItem key={res.id} {...res} />)
           )}
         </StyledJobInfoList>
       )}

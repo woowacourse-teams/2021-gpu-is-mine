@@ -1,4 +1,10 @@
-import { createSlice, createAsyncThunk, SerializedError, createAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  SerializedError,
+  createAction,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../app/hooks";
 import type { JobRegisterRequest, JobStatus } from "../../types";
 import type { RootState } from "../../app/store";
@@ -54,6 +60,7 @@ type JobSliceState = {
   [key: string]: ApiState;
 } & {
   entities: Job[];
+  filtered: number[];
 };
 
 const GET_JOB_ALL = "job/getAll" as const;
@@ -67,9 +74,38 @@ const initialState = {
   [REGISTER_JOB]: { status: STATUS.IDLE, error: null },
   [CANCEL_JOB_BY_ID]: { status: STATUS.IDLE, error: null },
   entities: [],
+  filtered: [],
 } as unknown as JobSliceState;
 
-type JobThunk = typeof getJobAll | typeof registerJob | typeof cancelJobById;
+const convertJobResponse = (response: JobViewResponse): Job => {
+  const {
+    status,
+    metaData: dockerHubImage,
+    expectedTime,
+    calculatedTime: {
+      createdTime,
+      expectedStartedTime,
+      expectedCompletedTime,
+      startedTime,
+      completedTime,
+    },
+    ...rest
+  } = response;
+
+  return {
+    ...rest,
+    status,
+    expectedTime,
+    dockerHubImage,
+    createdTime: createdTime ?? formatDate(new Date()),
+    startTime: (status === "WAITING" ? expectedStartedTime : startedTime) ?? formatDate(new Date()),
+    endTime:
+      (status === "COMPLETED" ? completedTime : expectedCompletedTime) ??
+      formatDate(new Date(Date.now() + Number(expectedTime) * 1_000 * 3_600)),
+  };
+};
+
+type JobThunk = typeof getJobAll | typeof getJobById | typeof registerJob | typeof cancelJobById;
 
 export const selectJobActionState = (thunk: JobThunk) => (state: RootState) => ({
   ...generateStatusBoolean(state.job[thunk.typePrefix].status),
@@ -80,6 +116,9 @@ export const selectJobAll = (state: RootState) => state.job.entities;
 
 export const selectJobById = (jobId: number) => (state: RootState) =>
   state.job.entities.find((job) => job.id === jobId);
+
+export const selectJobsById = (jobIds: number[]) => (state: RootState) =>
+  state.job.entities.find((job) => jobIds.includes(job.id));
 
 export const resetJobActionState = createAction<string>("job/reset");
 
@@ -133,7 +172,15 @@ export const cancelJobById = createAsyncThunk<
 export const jobSlice = createSlice({
   name: SLICE_NAME.JOB,
   initialState,
-  reducers: {},
+  reducers: {
+    add: (state, action: PayloadAction<JobViewResponse[]>) => {
+      const ids = action.payload.map(({ id }) => id);
+
+      const Jobs = action.payload.map(convertJobResponse);
+
+      state.entities = state.entities.filter(({ id }) => !ids.includes(id)).concat([...Jobs]);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(resetJobActionState, (state, { payload }) => {
@@ -148,35 +195,31 @@ export const jobSlice = createSlice({
         state[getJobAll.typePrefix].status = STATUS.SUCCEED;
         state[getJobAll.typePrefix].error = null;
 
-        const jobs = payload.map(
-          ({
-            metaData,
-            calculatedTime: {
-              createdTime,
-              startedTime,
-              expectedStartedTime,
-              completedTime,
-              expectedCompletedTime,
-            },
-            ...job
-          }) => ({
-            ...job,
-            dockerHubImage: metaData,
-            createdTime: createdTime ?? formatDate(new Date()),
-            startTime:
-              (job.status === "WAITING" ? expectedStartedTime : startedTime) ??
-              formatDate(new Date()),
-            endTime:
-              (job.status === "COMPLETED" ? completedTime : expectedCompletedTime) ??
-              formatDate(new Date(Date.now() + Number(job.expectedTime) * 1_000 * 3_600)),
-          })
-        ) as Job[];
+        const jobs = payload.map(convertJobResponse);
 
         state.entities = jobs;
       })
-      .addCase(getJobAll.rejected, (state, action) => {
-        state[getJobAll.typePrefix].status = STATUS.FAILED;
-        state[getJobAll.typePrefix].error = action.error;
+      .addCase(getJobById.pending, (state) => {
+        state[getJobById.typePrefix].status = STATUS.LOADING;
+        state[getJobById.typePrefix].error = null;
+      })
+      .addCase(getJobById.fulfilled, (state, { payload }) => {
+        state[getJobById.typePrefix].status = STATUS.SUCCEED;
+        state[getJobById.typePrefix].error = null;
+
+        const data = convertJobResponse(payload);
+
+        const index = state.entities.findIndex(({ id }) => id === payload.id);
+
+        if (index > -1) {
+          state.entities[index] = data;
+        } else {
+          state.entities.push(data);
+        }
+      })
+      .addCase(getJobById.rejected, (state, action) => {
+        state[getJobById.typePrefix].status = STATUS.FAILED;
+        state[getJobById.typePrefix].error = action.error;
       })
       .addCase(registerJob.pending, (state) => {
         state[registerJob.typePrefix].status = STATUS.LOADING;
@@ -205,4 +248,8 @@ export const jobSlice = createSlice({
   },
 });
 
-export default jobSlice.reducer;
+const jobReducer = jobSlice.reducer;
+
+export const { add } = jobSlice.actions;
+
+export default jobReducer;
