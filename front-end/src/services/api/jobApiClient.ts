@@ -16,7 +16,7 @@ type RequestJobById = {
 const getJobAll = async ({ labId }: { labId: number }) => {
   const { data } = await httpClient.get<JobViewResponses>(API_ENDPOINT.LABS(labId).JOBS);
 
-  return data.jobResponses;
+  return data;
 };
 
 const getJobById = async ({ labId, jobId }: RequestJobById) => {
