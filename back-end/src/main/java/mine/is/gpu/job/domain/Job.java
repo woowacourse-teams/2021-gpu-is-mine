@@ -49,7 +49,7 @@ public class Job extends BaseEntity {
     }
 
     public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
-            String metaData, String expectedTime, LocalDateTime startedTime, LocalDateTime endedTime) {
+               String metaData, String expectedTime, LocalDateTime startedTime, LocalDateTime endedTime) {
         validate(name, status, gpuBoard, member, metaData, expectedTime);
         this.name = name;
         this.status = status;
