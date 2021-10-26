@@ -1,6 +1,6 @@
 import { ComponentProps, useEffect, Dispatch } from "react";
 import { useGetGpuServerAll, getRadioProps } from "../../hooks";
-import { FormAction, FormState } from "../../hooks/useForm/useForm";
+import { FormAction, FormState, updateValue } from "../../hooks/useForm/useForm";
 import { RadioGroup, Loading, Text, Radio } from "../../components";
 import GpuServerSelectItem from "../GpuServerSelectItem/GpuServerSelectItem";
 import { StyledRadioGroup } from "./JobRegisterRadioGroup.styled";
@@ -40,8 +40,16 @@ const JobRegisterRadioGroup = ({
     return done;
   }, [makeRequest, done]);
 
+  const validationMessage = state.areValidationMessagesVisible[name]
+    ? state.validationMessages[name]
+    : "";
+
+  useEffect(() => {
+    dispatch(updateValue({ name, value: "", validationMessage: "GPU 서버를 선택해주세요" }));
+  }, [dispatch, name]);
+
   return (
-    <StyledRadioGroup {...rest}>
+    <StyledRadioGroup validationMessage={validationMessage} {...rest}>
       {status === "loading" && (
         <div className="loading-container">
           <Loading />
