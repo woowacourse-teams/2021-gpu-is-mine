@@ -60,7 +60,7 @@ describe("Member/SignupForm", () => {
 
     await waitFor(() => expect(screen.getByRole("progressbar")).toBeInTheDocument());
     await waitFor(() => expect(screen.queryByRole("progressbar")).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
-    expect(screen.getByRole("dialog")).toHaveTextContent("회원가입에 성공하였습니다.");
+    await waitFor(() => expect(screen.getByRole("alert")).toBeInTheDocument());
+    expect(screen.getByRole("alert")).toHaveTextContent(/회원가입에 성공하였습니다/);
   });
 });
