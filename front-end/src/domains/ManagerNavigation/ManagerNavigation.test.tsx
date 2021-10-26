@@ -6,23 +6,11 @@ import { PrivateRoute } from "../../routes";
 import ManagerNavigation from "./ManagerNavigation";
 import { PATH } from "../../constants";
 import authReducer from "../../features/member/authSlice";
+import { succeedAuthState } from "../../__fixtures__";
 
 const store = configureStore({
   reducer: { auth: authReducer },
-  preloadedState: {
-    auth: {
-      status: "succeed",
-      error: null,
-      myInfo: {
-        memberId: 2,
-        email: "test@test.com",
-        name: "name",
-        labId: 1,
-        labName: "GIM Lab - woowacourse",
-        memberType: "MANAGER",
-      },
-    },
-  },
+  preloadedState: { auth: succeedAuthState },
 });
 
 describe("ManagerNavigation", () => {
