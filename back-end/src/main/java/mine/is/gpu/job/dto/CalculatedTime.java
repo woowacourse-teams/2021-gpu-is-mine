@@ -1,25 +1,24 @@
-package mine.is.gpu.job.dto;
+package mine.is.gpu.job.domain;
 
 import java.time.LocalDateTime;
-import mine.is.gpu.job.domain.Job;
 
 public class CalculatedTime {
 
-    private LocalDateTime createdTime;
-    private LocalDateTime startedTime;
-    private LocalDateTime expectedStartedTime;
-    private LocalDateTime completedTime;
-    private LocalDateTime expectedCompletedTime;
+    private LocalDateTime createdTime = null;
+    private LocalDateTime startedTime = null;
+    private LocalDateTime expectedStartedTime = null;
+    private LocalDateTime endedTime = null;
+    private LocalDateTime expectedCompletedTime = null;
 
     public CalculatedTime() {
     }
 
-    public CalculatedTime(Job job) {
+    public CalculatedTime(Job job, Long usageTime, String expectedTime) {
         this.createdTime = job.getCreatedAt();
         this.startedTime = job.getStartedTime();
-        this.completedTime = job.getCompletedTime();
-        this.expectedStartedTime = job.getExpectedStartedTime();
-        this.expectedCompletedTime = job.getExpectedCompletedTime();
+        this.endedTime = job.getEndedTime();
+        this.expectedStartedTime = createdTime.plusHours(usageTime);
+        this.expectedCompletedTime = expectedStartedTime.plusHours(Long.parseLong(expectedTime));
     }
 
     public LocalDateTime getCreatedTime() {
@@ -34,8 +33,8 @@ public class CalculatedTime {
         return expectedStartedTime;
     }
 
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 
     public LocalDateTime getExpectedCompletedTime() {

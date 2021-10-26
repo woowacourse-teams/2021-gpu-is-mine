@@ -2,7 +2,6 @@ package mine.is.gpu.job.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,38 +41,38 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private String expectedTime;
 
-    @Column(nullable = false)
-    private LocalDateTime expectedStartedTime;
     private LocalDateTime startedTime;
-    private LocalDateTime completedTime;
-    private LocalDateTime expectedCompletedTime;
+
+    private LocalDateTime endedTime;
 
     protected Job() {
     }
 
-    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member, String metaData,
-               String expectedTime, LocalDateTime expectedStartedTime) {
-        validate(name, status, gpuBoard, member, metaData, expectedTime, expectedStartedTime);
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+            String metaData, String expectedTime, LocalDateTime startedTime, LocalDateTime endedTime) {
+        validate(name, status, gpuBoard, member, metaData, expectedTime);
         this.name = name;
         this.status = status;
         this.gpuBoard = gpuBoard;
         this.member = member;
         this.metaData = metaData;
         this.expectedTime = expectedTime;
-        this.expectedStartedTime = expectedStartedTime;
-        this.expectedCompletedTime = this.expectedStartedTime.plusHours(Long.parseLong(expectedTime));
+        this.startedTime = startedTime;
+        this.endedTime = endedTime;
     }
 
-    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member, String metaData, String expectedTime) {
-        this(name, status, gpuBoard, member, metaData, expectedTime, LocalDateTime.now());
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+               String metaData, String expectedTime) {
+        this(name, status, gpuBoard, member, metaData, expectedTime, null, null);
     }
 
-    public Job(String name, GpuBoard gpuBoard, Member member, String metaData, String expectedTime) {
+    public Job(String name, GpuBoard gpuBoard, Member member, String metaData,
+               String expectedTime) {
         this(name, JobStatus.WAITING, gpuBoard, member, metaData, expectedTime);
     }
 
     private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member,
-                          String metaData, String expectedTime, LocalDateTime expectedStartedTime) {
+                          String metaData, String expectedTime) {
         if (Objects.isNull(name) || name.isEmpty()) {
             throw JobException.INVALID_JOB_NAME.getException();
         }
@@ -96,10 +95,6 @@ public class Job extends BaseEntity {
 
         if (Objects.isNull(expectedTime) || expectedTime.isEmpty() || !expectedTime.matches("\\d+")) {
             throw JobException.INVALID_EXPECTED_TIME.getException();
-        }
-
-        if (Objects.isNull(expectedStartedTime)) {
-            throw JobException.INVALID_EXPECTED_STARTED_TIME.getException();
         }
     }
 
@@ -140,7 +135,7 @@ public class Job extends BaseEntity {
             throw JobException.NO_WAITING_JOB.getException();
         }
         this.status = JobStatus.CANCELED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public void start() {
@@ -149,7 +144,6 @@ public class Job extends BaseEntity {
         }
         this.status = JobStatus.RUNNING;
         this.startedTime = LocalDateTime.now();
-        this.expectedCompletedTime = startedTime.plusHours(Long.parseLong(expectedTime));
     }
 
     public void complete() {
@@ -157,7 +151,7 @@ public class Job extends BaseEntity {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -168,47 +162,11 @@ public class Job extends BaseEntity {
         this.status = status;
     }
 
-    public boolean isWaiting() {
-        return this.status.isWaiting();
-    }
-
     public LocalDateTime getStartedTime() {
         return startedTime;
     }
 
-    public void setStartedTime(LocalDateTime startedTime) {
-        this.startedTime = startedTime;
-    }
-
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
-    }
-
-    public LocalDateTime getExpectedStartedTime() {
-        return expectedStartedTime;
-    }
-
-    public LocalDateTime getExpectedCompletedTime() {
-        return expectedCompletedTime;
-    }
-
-    public void setCompletedTime(LocalDateTime completedTime) {
-        this.completedTime = completedTime;
-    }
-
-    public void calculateExpectation(Optional<Job> last) {
-        if (last.isPresent()) {
-            Job lastJob = last.get();
-            if (lastJob.getStatus() == JobStatus.RUNNING || lastJob.getStatus() == JobStatus.WAITING) {
-                updateExpectedStartedTime(lastJob.getExpectedCompletedTime());
-                return;
-            }
-        }
-        updateExpectedStartedTime(LocalDateTime.now());
-    }
-
-    public void updateExpectedStartedTime(LocalDateTime expectedStartedTime) {
-        this.expectedStartedTime = expectedStartedTime;
-        this.expectedCompletedTime = this.expectedStartedTime.plusHours(Long.parseLong(expectedTime));
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 }
