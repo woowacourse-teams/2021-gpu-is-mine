@@ -11,8 +11,7 @@
 
 ## 서비스 소개
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/HAwgCvtSZ_o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+[![동영상](https://www.youtube.com/embed/HAwgCvtSZ_o)](https://www.youtube.com/embed/HAwgCvtSZ_o)
 ### 기존현황
 
 - 딥러닝 학습의 경우, 기존 학습의 종료를 사람이 확인하고 다음 학습을 실행
