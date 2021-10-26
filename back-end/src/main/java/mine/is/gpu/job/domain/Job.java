@@ -43,13 +43,13 @@ public class Job extends BaseEntity {
 
     private LocalDateTime startedTime;
 
-    private LocalDateTime completedTime;
+    private LocalDateTime endedTime;
 
     protected Job() {
     }
 
     public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
-               String metaData, String expectedTime) {
+            String metaData, String expectedTime, LocalDateTime startedTime, LocalDateTime endedTime) {
         validate(name, status, gpuBoard, member, metaData, expectedTime);
         this.name = name;
         this.status = status;
@@ -57,6 +57,13 @@ public class Job extends BaseEntity {
         this.member = member;
         this.metaData = metaData;
         this.expectedTime = expectedTime;
+        this.startedTime = startedTime;
+        this.endedTime = endedTime;
+    }
+
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member,
+               String metaData, String expectedTime) {
+        this(name, status, gpuBoard, member, metaData, expectedTime, null, null);
     }
 
     public Job(String name, GpuBoard gpuBoard, Member member, String metaData,
@@ -128,6 +135,7 @@ public class Job extends BaseEntity {
             throw JobException.NO_WAITING_JOB.getException();
         }
         this.status = JobStatus.CANCELED;
+        this.endedTime = LocalDateTime.now();
     }
 
     public void start() {
@@ -143,7 +151,7 @@ public class Job extends BaseEntity {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -158,15 +166,7 @@ public class Job extends BaseEntity {
         return startedTime;
     }
 
-    public void setStartedTime(LocalDateTime startedTime) {
-        this.startedTime = startedTime;
-    }
-
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
-    }
-
-    public void setCompletedTime(LocalDateTime completedTime) {
-        this.completedTime = completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 }

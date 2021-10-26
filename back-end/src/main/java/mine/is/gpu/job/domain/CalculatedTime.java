@@ -7,7 +7,7 @@ public class CalculatedTime {
     private LocalDateTime createdTime = null;
     private LocalDateTime startedTime = null;
     private LocalDateTime expectedStartedTime = null;
-    private LocalDateTime completedTime = null;
+    private LocalDateTime endedTime = null;
     private LocalDateTime expectedCompletedTime = null;
 
     public CalculatedTime() {
@@ -16,7 +16,7 @@ public class CalculatedTime {
     public CalculatedTime(Job job, Long usageTime, String expectedTime) {
         this.createdTime = job.getCreatedAt();
         this.startedTime = job.getStartedTime();
-        this.completedTime = job.getCompletedTime();
+        this.endedTime = job.getEndedTime();
         this.expectedStartedTime = createdTime.plusHours(usageTime);
         this.expectedCompletedTime = expectedStartedTime.plusHours(Long.parseLong(expectedTime));
     }
@@ -33,8 +33,8 @@ public class CalculatedTime {
         return expectedStartedTime;
     }
 
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 
     public LocalDateTime getExpectedCompletedTime() {
