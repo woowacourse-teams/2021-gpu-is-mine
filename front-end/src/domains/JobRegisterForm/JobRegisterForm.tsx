@@ -6,7 +6,7 @@ import {
   jobNameValidator,
   minPerformanceValidator,
 } from "./validator";
-import { getFormProps, getInputProps, useForm, usePostJobRegister, useBoolean } from "../../hooks";
+import { getFormProps, getInputProps, useForm, useBoolean } from "../../hooks";
 import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
 import {
   DockerHubImageSection,
@@ -18,16 +18,31 @@ import {
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import { Values } from "./JobRegisterForm.type";
 import { updateValue } from "../../hooks/useForm/useForm";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { registerJob, selectJobActionState } from "../../features/job/jobSlice";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
 }
 
 const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
-  const { isIdle, isLoading, isFailed, isSucceed, makeRequest, done } = usePostJobRegister({
-    labId,
-  });
+  const appDispatch = useAppDispatch();
+
   const [key, setKey] = useState(0);
+
+  const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
+
+  const { isSucceed, isFailed, isLoading, error } = useAppSelector(
+    selectJobActionState(registerJob)
+  );
+
+  const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
+    appDispatch(
+      registerJob({ name: jobName, expectedTime, gpuServerId, metaData: dockerHubImage })
+    );
+
+    openDialog();
+  };
 
   const { state, dispatch, reset } = useForm<Values>({
     jobName: "",
@@ -36,10 +51,6 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     dockerHubImage: "",
     gpuServerId: "" as unknown as number,
   });
-
-  const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
-    makeRequest({ name: jobName, expectedTime, gpuServerId, metaData: dockerHubImage });
-  };
 
   const form = getFormProps({ state, dispatch, handleSubmit });
 
@@ -78,7 +89,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
   const handleConfirm = () => {
     reset();
     setKey((k) => k + 1);
-    done();
+    closeDialog();
   };
 
   const [isToolTipVisible, openToolTip, closeToolTip] = useBoolean(false);
@@ -114,17 +125,22 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   return (
     <>
-      <Dialog open={isSucceed} onClose={done} onConfirm={handleConfirm}>
-        <Text size="md" weight="bold">
-          Job 등록에 성공하였습니다.
-        </Text>
-      </Dialog>
+      {isDialogOpen && (
+        <>
+          <Dialog open={isSucceed} onClose={closeDialog} onConfirm={handleConfirm}>
+            <Text size="md" weight="bold">
+              Job 등록에 성공하였습니다.
+            </Text>
+          </Dialog>
 
-      <Dialog open={isFailed} onClose={done} onConfirm={done}>
-        <Text size="md" weight="bold">
-          Job 등록에 실패하였습니다.
-        </Text>
-      </Dialog>
+          <Dialog open={isFailed} onClose={closeDialog} onConfirm={closeDialog}>
+            <Text size="md" weight="bold">
+              Job 등록에 실패하였습니다.
+              {error?.message}
+            </Text>
+          </Dialog>
+        </>
+      )}
 
       {isLoading && (
         <Dimmer>
@@ -178,7 +194,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={!isIdle}>
+        <Button className="submit" color="secondary" disabled={isLoading}>
           제출
         </Button>
       </StyledForm>
