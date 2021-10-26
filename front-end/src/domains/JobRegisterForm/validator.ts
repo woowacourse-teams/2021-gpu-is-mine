@@ -9,7 +9,7 @@ export const jobNameValidator = (value: string) => {
   }
 
   if (value.trim() === "") {
-    return "공백문자만 등록할 수 없습니다";
+    return "Job이름으로 공백문자를 등록할 수 없습니다";
   }
 
   return null;

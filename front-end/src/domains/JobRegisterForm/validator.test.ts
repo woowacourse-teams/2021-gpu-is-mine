@@ -3,11 +3,7 @@ import { dockerHubImageValidator, jobNameValidator } from "./validator";
 describe("JobRegisterForm Validator", () => {
   describe("jobName Validator", () => {
     test("공백문자만 등록할 수 없다", () => {
-      expect(jobNameValidator("  ")).toBe("공백문자만 등록할 수 없습니다");
-    });
-
-    test("공백문자만 등록할 수 없다", () => {
-      expect(jobNameValidator("  ")).toBe("공백문자만 등록할 수 없습니다");
+      expect(jobNameValidator("  ")).toBe("Job이름으로 공백문자를 등록할 수 없습니다");
     });
 
     const min = 1;
