@@ -6,10 +6,6 @@ export const StyledRadioGroup = styled(RadioGroup)`
     position: relative;
   }
 
-  .validation-message {
-    color: var(--error);
-  }
-
   .job-register-radio-group__list {
     display: flex;
     flex-direction: column;
