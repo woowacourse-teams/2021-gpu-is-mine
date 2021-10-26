@@ -45,7 +45,9 @@
 
 ## 업데이트 로그
 
-- [v1.0.0](https://github.com/woowacourse-teams/2021-gpu-is-mine/releases)
+- v1.1.0
+- v1.0.0
+- [업데이트 로그](https://github.com/woowacourse-teams/2021-gpu-is-mine/releases)
 
 ---
 
@@ -97,8 +99,6 @@
   ![logs](./docs/images/elk_log.jpeg)
 
 ### TechLogs
-
-- [✨gpu내껀데 QuickStart]()
 
 #### FE
 
