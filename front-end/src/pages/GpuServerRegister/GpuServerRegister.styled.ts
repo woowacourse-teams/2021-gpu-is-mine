@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
-import { GpuServerRegisterForm } from "../../domains/GpuServer";
+import { GpuServerRegisterForm } from "../../features/gpuServer";
 
 export const StyledRegisterForm = styled(GpuServerRegisterForm)`
   background-color: white;

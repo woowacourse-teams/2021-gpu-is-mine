@@ -1,8 +1,10 @@
-import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
+import { defaultError } from "../../utils";
 import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
+import type { CustomError } from "../../utils";
 
 type SignupState =
   | { status: typeof STATUS.IDLE; error: null }
@@ -41,30 +43,16 @@ export const signup = createAsyncThunk<
       memberType: "USER",
     });
   } catch (err) {
-    const error = err as AxiosError<{ message: string }>;
+    const error = err as CustomError;
 
-    // Network Error
-    if (error.message === "Network Error") {
-      return rejectWithValue({
-        name: "Network Error 발생",
-        message: "잠시 후 다시 시도해주세요",
-      });
-    }
-
-    // 400 대
-    if (/^4/.test(error.response!.status.toString())) {
-      return rejectWithValue({
-        name: "회원가입 실패",
-        message: error.response!.data.message,
-      });
-    }
-
-    // 500 대
-    if (/^5/.test(error.response!.status.toString())) {
-      return rejectWithValue({
-        name: "알 수 없는 에러 발생",
-        message: "관리자에게 문의해주세요",
-      });
+    switch (error.name) {
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "회원가입 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
     }
   }
 });

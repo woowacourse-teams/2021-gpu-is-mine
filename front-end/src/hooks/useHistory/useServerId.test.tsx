@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import { MemoryRouter, Route } from "react-router-dom";
+import type { ReactNode } from "react";
 import { renderHook } from "@testing-library/react-hooks/dom";
-import { useServerId } from "./useGpuServerDetail";
+import { MemoryRouter, Route } from "react-router-dom";
+import { useServerId } from "./useHistory";
 
 const Wrapper = ({ path, children }: { path: string; children?: ReactNode }) => (
   <MemoryRouter initialEntries={[path]}>
@@ -13,7 +13,7 @@ const Wrapper = ({ path, children }: { path: string; children?: ReactNode }) => 
 
 describe("useServerId", () => {
   test("serverId Params가 path와 일치하는 경우, number로 변환하여 반환한다. ", () => {
-    const serverId = 35;
+    const serverId = 77;
     const { result } = renderHook(() => useServerId(), {
       initialProps: { path: `/${serverId}` },
       wrapper: Wrapper,
