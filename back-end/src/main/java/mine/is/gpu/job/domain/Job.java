@@ -40,9 +40,7 @@ public class Job extends BaseEntity {
 
     @Column(nullable = false)
     private String expectedTime;
-
     private LocalDateTime startedTime;
-
     private LocalDateTime endedTime;
 
     protected Job() {
