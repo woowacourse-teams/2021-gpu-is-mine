@@ -1,6 +1,5 @@
 package mine.is.gpu.worker.application;
 
-import java.util.List;
 import mine.is.gpu.gpuserver.domain.GpuBoard;
 import mine.is.gpu.gpuserver.domain.GpuServer;
 import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
@@ -9,6 +8,7 @@ import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
+import mine.is.gpu.job.domain.WaitingJobs;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.exception.JobException;
@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkerService {
-    private static final int ONE = 1;
-    private static final int FIRST = 0;
     private final JobRepository jobRepository;
     private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
@@ -44,12 +42,15 @@ public class WorkerService {
         Job job = findJobById(jobId);
         if (workerJobRequest.getJobStatus().isRunning()) {
             job.start();
+            WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
+            jobs.syncExpectation(job.getExpectedCompletedTime());
             return;
         }
         if (workerJobRequest.getJobStatus().isCompleted()) {
             job.complete();
             return;
         }
+
         throw JobException.UNSUPPORTED_JOB_STATUS_UPDATE.getException();
     }
 
@@ -65,15 +66,12 @@ public class WorkerService {
     }
 
     private JobResponse findFirstWaitingJob(GpuBoard gpuBoard) {
-        List<Job> jobs = waitingJobsInGpuBoard(gpuBoard);
-        if (jobs.size() < ONE) {
-            throw JobException.NO_WAITING_JOB.getException();
-        }
-        return JobResponse.of(jobs.get(FIRST));
+        WaitingJobs waitingJobs = waitingJobsInGpuBoard(gpuBoard);
+        return JobResponse.of(waitingJobs.getFirst());
     }
 
-    private List<Job> waitingJobsInGpuBoard(GpuBoard gpuBoard) {
-        return jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING);
+    private WaitingJobs waitingJobsInGpuBoard(GpuBoard gpuBoard) {
+        return new WaitingJobs(jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING));
     }
 
     private GpuBoard findGpuBoardByGpuServerId(Long serverId) {
@@ -90,11 +88,8 @@ public class WorkerService {
     public void start(Long jobId) {
         Job job = findJobById(jobId);
         job.start();
-        Job prev = job;
-        for (Job waiting : waitingJobsInGpuBoard(job.getGpuBoard())) {
-            waiting.updateExpectedStartedTime(prev.getExpectedCompletedTime());
-            prev = waiting;
-        }
+        WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
+        jobs.syncExpectation(job.getExpectedCompletedTime());
     }
 
     @Transactional

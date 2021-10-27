@@ -1,14 +1,15 @@
-package mine.is.gpu.job.domain;
+package mine.is.gpu.job.dto;
 
 import java.time.LocalDateTime;
+import mine.is.gpu.job.domain.Job;
 
 public class CalculatedTime {
 
-    private LocalDateTime createdTime = null;
-    private LocalDateTime startedTime = null;
-    private LocalDateTime expectedStartedTime = null;
-    private LocalDateTime completedTime = null;
-    private LocalDateTime expectedCompletedTime = null;
+    private LocalDateTime createdTime;
+    private LocalDateTime startedTime;
+    private LocalDateTime expectedStartedTime;
+    private LocalDateTime completedTime;
+    private LocalDateTime expectedCompletedTime;
 
     public CalculatedTime() {
     }

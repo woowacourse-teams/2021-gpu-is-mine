@@ -2,7 +2,7 @@ package mine.is.gpu.job.dto.response;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import mine.is.gpu.job.domain.CalculatedTime;
+import mine.is.gpu.job.dto.CalculatedTime;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 

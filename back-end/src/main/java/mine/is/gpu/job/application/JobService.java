@@ -18,6 +18,7 @@ import mine.is.gpu.gpuserver.exception.GpuServerException;
 import mine.is.gpu.infra.MailDto;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
+import mine.is.gpu.job.domain.WaitingJobs;
 import mine.is.gpu.job.domain.repository.JobRepository;
 import mine.is.gpu.job.domain.repository.LogRepository;
 import mine.is.gpu.job.domain.repository.ParsedLogRepository;
@@ -70,32 +71,13 @@ public class JobService {
     public void cancel(Long jobId) {
         Job canceled = findJobById(jobId);
         canceled.cancel();
-
-        Optional<Job> firstNextWaitingJob = findFirstNextWaitingJob(canceled);
-        if (firstNextWaitingJob.isEmpty()) {
-            return;
-        }
-
-        Job next = firstNextWaitingJob.get();
-        next.updateExpectedStartedTime(canceled.getExpectedStartedTime());
-
-        Job prev = next;
-        for (Job waiting : waitingJobsInGpuBoard(canceled.getGpuBoard())) {
-            if (next.getId() < waiting.getId()) {
-                waiting.updateExpectedStartedTime(prev.getExpectedCompletedTime());
-                prev = waiting;
-            }
-        }
+        GpuBoard gpuBoard = canceled.getGpuBoard();
+        Optional<Job> runningJob = jobRepository.findFirstByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.RUNNING);
+        runningJob.ifPresent(it -> waitingJobsInGpuBoard(gpuBoard).syncExpectation(it.getExpectedCompletedTime()));
     }
 
-    private Optional<Job> findFirstNextWaitingJob(Job job) {
-        return waitingJobsInGpuBoard(job.getGpuBoard()).stream()
-                .filter(waiting -> waiting.getId() > job.getId())
-                .findFirst();
-    }
-
-    private List<Job> waitingJobsInGpuBoard(GpuBoard gpuBoard) {
-        return jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING);
+    private WaitingJobs waitingJobsInGpuBoard(GpuBoard gpuBoard) {
+        return new WaitingJobs(jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING));
     }
 
     @Transactional(readOnly = true)
@@ -107,7 +89,6 @@ public class JobService {
     @Transactional(readOnly = true)
     public JobResponses findJobs(Long labId, Long serverId, String status, Pageable pageable) {
         if (Objects.isNull(serverId)) {
-
             if (StringUtils.hasText(status)) {
                 return findJobsOfLabByStatus(labId, status, pageable);
             }
