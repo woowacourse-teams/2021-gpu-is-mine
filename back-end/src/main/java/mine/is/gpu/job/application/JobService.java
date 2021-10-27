@@ -62,17 +62,23 @@ public class JobService {
     public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
-        Optional<Job> last = jobRepository.findFirstByGpuBoardIdOrderByIdDesc(job.getGpuBoard().getId());
-        job.calculateExpectation(last);
+        job.calculateExpectation(findLastInGpuBoard(job.getGpuBoard()));
         jobRepository.save(job);
         return job.getId();
     }
 
+    private Optional<Job> findLastInGpuBoard(GpuBoard gpuBoard) {
+        return jobRepository.findFirstByGpuBoardIdOrderByIdDesc(gpuBoard.getId());
+    }
+
     @Transactional
     public void cancel(Long jobId) {
-        Job canceled = findJobById(jobId);
-        canceled.cancel();
-        GpuBoard gpuBoard = canceled.getGpuBoard();
+        Job job = findJobById(jobId);
+        job.cancel();
+        updateJobExpectations(job.getGpuBoard());
+    }
+
+    private void updateJobExpectations(GpuBoard gpuBoard) {
         Optional<Job> runningJob = jobRepository.findFirstByGpuBoardIdAndStatus(gpuBoard.getId(), JobStatus.RUNNING);
         runningJob.ifPresent(it -> waitingJobsInGpuBoard(gpuBoard).syncExpectation(it.getExpectedCompletedTime()));
     }

@@ -39,15 +39,12 @@ public class WorkerService {
 
     @Transactional
     public void updateJobStatus(Long jobId, WorkerJobRequest workerJobRequest) {
-        Job job = findJobById(jobId);
         if (workerJobRequest.getJobStatus().isRunning()) {
-            job.start();
-            WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
-            jobs.syncExpectation(job.getExpectedCompletedTime());
+            start(jobId);
             return;
         }
         if (workerJobRequest.getJobStatus().isCompleted()) {
-            job.complete();
+            complete(jobId);
             return;
         }
 

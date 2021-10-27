@@ -168,6 +168,10 @@ public class Job extends BaseEntity {
         this.status = status;
     }
 
+    public boolean isWaiting() {
+        return this.status.isWaiting();
+    }
+
     public LocalDateTime getStartedTime() {
         return startedTime;
     }

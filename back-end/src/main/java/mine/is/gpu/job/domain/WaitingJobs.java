@@ -9,10 +9,8 @@ public class WaitingJobs {
     private final List<Job> jobs;
 
     public WaitingJobs(List<Job> jobs) {
-        for (Job job : jobs) {
-            if (!job.getStatus().isWaiting()) {
-                throw new IllegalArgumentException();
-            }
+        if (!jobs.stream().allMatch(Job::isWaiting)) {
+            throw new IllegalArgumentException("Waiting 상태가 아닌 Job이 존재합니다.");
         }
         this.jobs = jobs;
     }
@@ -26,22 +24,16 @@ public class WaitingJobs {
         firstWaitingJob.updateExpectedStartedTime(firstExpectedStartedTime);
 
         Job prev = firstWaitingJob;
-        for (Job job : jobs) {
-            if (!prev.getId().equals(job.getId())) {
-                job.updateExpectedStartedTime(prev.getExpectedCompletedTime());
-                prev = job;
-            }
+        for (Job job : jobs.subList(1, jobs.size())) {
+            job.updateExpectedStartedTime(prev.getExpectedCompletedTime());
+            prev = job;
         }
     }
 
     public Job getFirst() {
-        validateHasValue();
-        return jobs.get(FIRST);
-    }
-
-    private void validateHasValue() {
         if (jobs.isEmpty()) {
             throw JobException.NO_WAITING_JOB.getException();
         }
+        return jobs.get(FIRST);
     }
 }
