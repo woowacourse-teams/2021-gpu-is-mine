@@ -37,3 +37,13 @@ export const useParseParams = (key: string) => {
 
   return parsed[key];
 };
+
+export const useServerId = () => {
+  const serverId = useParseParams("serverId");
+
+  if (Number.isNaN(Number(serverId))) {
+    throw Error(`Invalid serverId in params: ${serverId}`);
+  }
+
+  return Number(serverId);
+};

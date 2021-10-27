@@ -1,12 +1,14 @@
 import { ComponentType, ReactElement } from "react";
 import { render, RenderOptions } from "@testing-library/react";
-import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { AnyAction, configureStore, Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import signupReducer from "../features/member/signupSlice";
 import authReducer from "../features/member/authSlice";
 import { ThemeProvider } from "../styles";
 import { ToastProvider } from "../components";
+import gpuServerReducer from "../features/gpuServer/gpuServerSlice";
+import jobReducer from "../features/job/jobSlice";
 
 type CustomRender = (
   ui: ReactElement,
@@ -15,7 +17,7 @@ type CustomRender = (
     initialEntries,
     ...renderOptions
   }?: {
-    store?: EnhancedStore;
+    store?: Store<unknown, AnyAction>;
     initialEntries?: string[];
     renderOptions?: Omit<RenderOptions, "wrapper">;
   }
@@ -25,7 +27,12 @@ const customRender: CustomRender = (
   ui,
   {
     store = configureStore({
-      reducer: { auth: authReducer, signup: signupReducer },
+      reducer: {
+        auth: authReducer,
+        signup: signupReducer,
+        gpuServer: gpuServerReducer,
+        job: jobReducer,
+      },
     }),
     initialEntries = ["/"],
     ...renderOptions
