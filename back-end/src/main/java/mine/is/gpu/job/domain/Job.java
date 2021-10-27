@@ -149,7 +149,7 @@ public class Job extends BaseEntity {
         if (!this.member.equals(member) && !isManagerOfLab(member)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
-        setName(name);
+        this.name = name;
     }
 
     public void start() {
@@ -192,7 +192,7 @@ public class Job extends BaseEntity {
         this.completedTime = completedTime;
     }
 
-    public boolean  canReadable(Member member) {
+    public boolean canReadable(Member member) {
         return gpuBoard.canUsedBy(member);
     }
 }
