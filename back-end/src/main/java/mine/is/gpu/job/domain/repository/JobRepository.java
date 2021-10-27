@@ -1,5 +1,6 @@
 package mine.is.gpu.job.domain.repository;
 
+import java.util.Optional;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import java.util.List;
@@ -24,6 +25,10 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findAllByMemberIdAndStatus(Long memberId, JobStatus jobStatus);
 
     List<Job> findAllByMemberIdAndStatus(Long memberId, JobStatus jobStatus, Pageable pageable);
+
+    Optional<Job> findFirstByGpuBoardIdAndStatus(Long boardId, JobStatus jobStatus);
+
+    Optional<Job> findFirstByGpuBoardIdOrderByIdDesc(Long boardId);
 
     @Query("SELECT j FROM Job j WHERE j.gpuBoard.id = :boardId AND j.status = :status ORDER BY j.id ASC")
     List<Job> findAllByBoardIdAndStatusOrderById(@Param("boardId") Long boardId, @Param("status") JobStatus status);
