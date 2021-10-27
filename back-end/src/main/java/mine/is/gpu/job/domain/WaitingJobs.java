@@ -16,17 +16,10 @@ public class WaitingJobs {
     }
 
     public void syncExpectation(LocalDateTime firstExpectedStartedTime) {
-        if (jobs.isEmpty()) {
-            return;
-        }
-
-        Job firstWaitingJob = getFirst();
-        firstWaitingJob.updateExpectedStartedTime(firstExpectedStartedTime);
-
-        Job prev = firstWaitingJob;
-        for (Job job : jobs.subList(1, jobs.size())) {
-            job.updateExpectedStartedTime(prev.getExpectedCompletedTime());
-            prev = job;
+        LocalDateTime time = firstExpectedStartedTime;
+        for (Job job : jobs) {
+            job.updateExpectedStartedTime(time);
+            time = job.getExpectedCompletedTime();
         }
     }
 
