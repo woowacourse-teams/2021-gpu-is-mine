@@ -1,13 +1,7 @@
 import type { AxiosError } from "axios";
 import type { SerializedError } from "@reduxjs/toolkit";
 
-type ErrorName =
-  | "AuthorizationError"
-  | "GpuServerNotFoundError"
-  | "NetworkError"
-  | "BadRequestError"
-  | "InternalError"
-  | "UnknownError";
+type ErrorName = "NetworkError" | "BadRequestError" | "InternalError" | "UnknownError";
 
 export interface CustomError extends SerializedError {
   name: ErrorName;
