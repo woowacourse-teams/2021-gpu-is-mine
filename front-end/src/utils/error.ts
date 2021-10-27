@@ -1,5 +1,4 @@
 import { miniSerializeError } from "@reduxjs/toolkit";
-import type { SerializedError } from "@reduxjs/toolkit";
 import type { AxiosError } from "axios";
 
 type ErrorName =
@@ -9,9 +8,8 @@ type ErrorName =
   | "InternalError"
   | "UnknownError";
 
-export interface CustomError extends SerializedError {
+export interface CustomError extends Error {
   name: ErrorName;
-  message: string;
 }
 
 export const ERROR_NAME: Record<ErrorName, string> = {
@@ -29,7 +27,7 @@ export const throwError = (name: ErrorName, message: string) => {
   const error = new Error(message);
   error.name = name;
 
-  throw error;
+  throw error as CustomError;
 };
 
 export const defaultError = (error: CustomError) => ({
