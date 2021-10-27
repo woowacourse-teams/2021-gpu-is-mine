@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { GpuServerInfoItem } from "../../domains/GpuServer";
-import { gpuServersResponses } from "../../__fixtures__";
+import { GpuServerInfoItem } from "../../features/gpuServer";
+import { simpleGpuServer } from "../../__fixtures__";
 import Text from "../Text/Text";
 import Radio from "./Radio";
 
@@ -32,14 +32,7 @@ LargeTextRadio.args = {
 export const ServerInfoItemRadio = Template.bind({});
 
 ServerInfoItemRadio.args = {
-  children: (
-    <GpuServerInfoItem
-      {...gpuServersResponses.gpuServers[0]}
-      memberType="MANAGER"
-      labId={1}
-      refresh={() => new Promise(() => {})}
-    />
-  ),
+  children: <GpuServerInfoItem serverId={simpleGpuServer.id} />,
 };
 
 export const DisabledRadio = Template.bind({});

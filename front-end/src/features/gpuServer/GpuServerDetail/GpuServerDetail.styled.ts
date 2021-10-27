@@ -2,8 +2,8 @@ import styled from "styled-components";
 import GpuServerDetailSummary from "../GpuServerDetailSummary/GpuServerDetailSummary";
 import GpuServerDetailCurrentJob from "../GpuServerDetailCurrentJob/GpuServerDetailCurrentJob";
 import GpuServerDetailJobTable from "../GpuServerDetailJobTable/GpuServerDetailJobTable";
-import { Text } from "../../components";
-import { cardStyle } from "../../styles";
+import { Text } from "../../../components";
+import { cardStyle } from "../../../styles";
 
 export const StyledGpuServerDetail = styled.section`
   width: 100%;
