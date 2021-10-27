@@ -27,8 +27,10 @@ public class WaitingJobs {
 
         Job prev = firstWaitingJob;
         for (Job job : jobs) {
-            job.updateExpectedStartedTime(prev.getExpectedCompletedTime());
-            prev = job;
+            if (!prev.getId().equals(job.getId())) {
+                job.updateExpectedStartedTime(prev.getExpectedCompletedTime());
+                prev = job;
+            }
         }
     }
 
@@ -37,18 +39,9 @@ public class WaitingJobs {
         return jobs.get(FIRST);
     }
 
-    public Job getLast() {
-        validateHasValue();
-        return jobs.get(jobs.size() - 1);
-    }
-
     private void validateHasValue() {
         if (jobs.isEmpty()) {
             throw JobException.NO_WAITING_JOB.getException();
         }
-    }
-
-    public boolean isEmpty() {
-        return jobs.isEmpty();
     }
 }
