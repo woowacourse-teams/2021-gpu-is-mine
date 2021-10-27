@@ -96,7 +96,7 @@ public class JobService {
         Member member = findMemberById(memberId);
         Lab lab = findLabById(labId);
 
-        if (!lab.hasMember(member)) {
+        if (!member.isIn(lab)) {
             throw MemberException.UNAUTHORIZED_MEMBER.getException();
         }
 
@@ -108,7 +108,7 @@ public class JobService {
         }
 
         GpuServer gpuServer = findGpuServerById(serverId);
-        if (!lab.hasServer(gpuServer)) {
+        if (!gpuServer.ownedBy(lab)) {
             throw GpuServerException.UNMATCHED_SERVER_WITH_LAB.getException();
         }
 

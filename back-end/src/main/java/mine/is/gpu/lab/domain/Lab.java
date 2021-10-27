@@ -50,12 +50,4 @@ public class Lab extends BaseEntity {
     public void setName(String name) {
         this.name = name;
     }
-
-    public boolean hasMember(Member member) {
-        return member.getLab().equals(this);
-    }
-
-    public boolean hasServer(GpuServer server) {
-        return server.getLab().equals(this);
-    }
 }

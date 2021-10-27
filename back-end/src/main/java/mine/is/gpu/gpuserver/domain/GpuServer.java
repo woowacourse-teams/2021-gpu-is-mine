@@ -120,6 +120,10 @@ public class GpuServer extends BaseEntity {
     }
 
     public boolean canUsedBy(Member member) {
-        return lab.hasMember(member);
+        return member.isIn(lab);
+    }
+
+    public boolean ownedBy(Lab lab) {
+        return this.lab.equals(lab);
     }
 }

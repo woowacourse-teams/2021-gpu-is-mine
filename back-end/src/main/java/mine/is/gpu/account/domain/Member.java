@@ -141,4 +141,8 @@ public class Member extends BaseEntity implements Account {
     public boolean isManager() {
         return memberType.isManager();
     }
+
+    public boolean isIn(Lab lab) {
+        return this.lab.equals(lab);
+    }
 }
