@@ -51,7 +51,7 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
       {isLoading && <Loading size="lg" />}
 
       <Dialog open={isFailed} onClose={done} onConfirm={goToPreviousPage}>
-        <Text>존재 하지 않은 Job입니다. {error?.message}</Text>
+        <Text>{error?.message}</Text>
       </Dialog>
 
       {isSucceed && detail && (

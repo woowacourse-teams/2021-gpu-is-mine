@@ -1,12 +1,11 @@
 import { Text, Flicker } from "../../components";
 import { StyledItem } from "./GpuServerSelectItem.styled";
-import { GpuServerViewResponse, GpuBoard } from "../../types";
+import { GpuServer } from "../../features/gpuServer/gpuServerSlice";
 
 type GpuServerSelectItemProps = Pick<
-  GpuServerViewResponse,
-  "serverName" | "isOn" | "runningJobs" | "waitingJobCount" | "totalExpectedTime"
-> &
-  Pick<GpuBoard, "performance">;
+  GpuServer,
+  "serverName" | "isOn" | "waitingJobCount" | "totalExpectedTime" | "performance"
+>;
 
 const GpuServerSelectItem = ({
   serverName,

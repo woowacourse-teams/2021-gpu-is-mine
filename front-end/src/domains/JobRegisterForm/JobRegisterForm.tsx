@@ -7,7 +7,7 @@ import {
   minPerformanceValidator,
 } from "./validator";
 import { getFormProps, getInputProps, useForm, useBoolean } from "../../hooks";
-import { Dialog, Button, Dimmer, Input, Loading, Text } from "../../components";
+import { Button, Dimmer, Input, Loading, Text, useToast } from "../../components";
 import {
   DockerHubImageSection,
   SampleImageButton,
@@ -21,6 +21,7 @@ import { updateValue } from "../../hooks/useForm/useForm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { registerJob, selectJobActionState } from "../../features/job/jobSlice";
 import { RootState } from "../../app/store";
+import { CustomError } from "../../utils";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
@@ -31,19 +32,11 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   const [key, setKey] = useState(0);
 
-  const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
+  const showToast = useToast();
 
-  const { isSucceed, isFailed, isLoading, error } = useAppSelector((state: RootState) =>
+  const { isLoading } = useAppSelector((state: RootState) =>
     selectJobActionState(state, registerJob)
   );
-
-  const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
-    appDispatch(
-      registerJob({ name: jobName, expectedTime, gpuServerId, metaData: dockerHubImage })
-    );
-
-    openDialog();
-  };
 
   const { state, dispatch, reset } = useForm<Values>({
     jobName: "",
@@ -52,6 +45,36 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     dockerHubImage: "",
     gpuServerId: "" as unknown as number,
   });
+
+  const handleSubmit = async ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {
+    try {
+      await appDispatch(
+        registerJob({
+          name: jobName,
+          expectedTime,
+          gpuServerId,
+          metaData: dockerHubImage,
+        })
+      ).unwrap();
+
+      reset();
+      setKey((k) => k + 1);
+
+      showToast({
+        type: "success",
+        title: "Job 등록에 성공하였습니다",
+        message: `${jobName}이(가) 성공적으로 등록되었습니다`,
+      });
+    } catch (err) {
+      const error = err as CustomError;
+
+      showToast({
+        type: "error",
+        title: error.name,
+        message: error.message,
+      });
+    }
+  };
 
   const form = getFormProps({ state, dispatch, handleSubmit });
 
@@ -87,19 +110,13 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     validator: dockerHubImageValidator,
   });
 
-  const handleConfirm = () => {
-    reset();
-    setKey((k) => k + 1);
-    closeDialog();
-  };
-
   const [isToolTipVisible, openToolTip, closeToolTip] = useBoolean(false);
 
   const handleSampleImageButtonClick = () => {
     dispatch(
       updateValue({
         name: dockerHubImageInputProps.name,
-        value: "aprn7950/mnist_test_auto",
+        value: "aprn7950/mnist_test_100_auto",
         validationMessage: "",
       })
     );
@@ -126,23 +143,6 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   return (
     <>
-      {isDialogOpen && (
-        <>
-          <Dialog open={isSucceed} onClose={closeDialog} onConfirm={handleConfirm}>
-            <Text size="md" weight="bold">
-              Job 등록에 성공하였습니다.
-            </Text>
-          </Dialog>
-
-          <Dialog open={isFailed} onClose={closeDialog} onConfirm={closeDialog}>
-            <Text size="md" weight="bold">
-              Job 등록에 실패하였습니다.
-              {error?.message}
-            </Text>
-          </Dialog>
-        </>
-      )}
-
       {isLoading && (
         <Dimmer>
           <Loading size="lg" />
@@ -162,7 +162,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
             onChange={handleDockerHubImageChange}
           />
           <datalist id="example-dockerhub-image">
-            <option value="aprn7950/mnist_test_auto" />
+            <option value="aprn7950/mnist_test_100_auto" />
           </datalist>
 
           <ToolTipContainer onMouseLeave={closeToolTip}>
