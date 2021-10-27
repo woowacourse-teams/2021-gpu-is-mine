@@ -60,7 +60,7 @@ const initialState = {
   "job/register": { status: "idle", error: null },
   // "job/deleteById": { status: "idle", error: null },
   entities: [],
-} as unknown as GpuServerSliceState;
+} as unknown as JobSliceState;
 
 const jobSlice = createSlice({
   name: "job",
