@@ -9,10 +9,11 @@ import {
 } from "./validator";
 import { registerGpuServer, selectGpuServerStatus } from "../gpuServerSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { useBoolean, useMoveToPage, useForm, getInputProps, getFormProps } from "../../../hooks";
-import { Input, Text, Dialog, Loading, Dimmer } from "../../../components";
+import { useMoveToPage, useForm, getInputProps, getFormProps } from "../../../hooks";
+import { Input, Loading, Dimmer, useToast } from "../../../components";
 import { StyledForm, StyledButton } from "./GpuServerRegisterForm.styled";
 import { RootState } from "../../../app/store";
+import { CustomError } from "../../../utils";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -25,7 +26,7 @@ export type Values = {
 };
 
 const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
-  const { isLoading, isSucceed, isFailed, error } = useAppSelector((state: RootState) =>
+  const { isLoading } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, registerGpuServer)
   );
 
@@ -33,17 +34,7 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
 
   const moveToGpuServerView = useMoveToPage(PATH.GPU_SERVER.VIEW);
 
-  const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
-
-  const handleSuccessConfirm = () => {
-    moveToGpuServerView();
-    closeDialog();
-  };
-
-  const handleSubmit = async (values: Values) => {
-    await appDispatch(registerGpuServer(values));
-    openDialog();
-  };
+  const showToast = useToast();
 
   const { state, dispatch } = useForm<Values>({
     memorySize: "" as unknown as number,
@@ -52,6 +43,28 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
     performance: "" as unknown as number,
     modelName: "",
   });
+
+  const handleSubmit = async (values: Values) => {
+    try {
+      await appDispatch(registerGpuServer(values)).unwrap();
+
+      showToast({
+        type: "success",
+        title: "서버 등록에 성공하였습니다",
+        message: `${state.values.serverName}가 성공적으로 등록되었습니다`,
+      });
+
+      moveToGpuServerView();
+    } catch (e) {
+      const err = e as CustomError;
+
+      showToast({
+        type: "error",
+        title: err.name,
+        message: err.message,
+      });
+    }
+  };
 
   const form = getFormProps({ state, dispatch, handleSubmit });
 
@@ -97,26 +110,6 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
 
   return (
     <>
-      {isDialogOpen && (
-        <>
-          <Dialog open={isSucceed} onClose={closeDialog} onConfirm={handleSuccessConfirm}>
-            <Text size="md" weight="bold">
-              서버 등록에 성공하였습니다.
-            </Text>
-          </Dialog>
-
-          <Dialog open={isFailed} onClose={closeDialog} onConfirm={closeDialog}>
-            <Text size="md" weight="bold">
-              서버 등록에 실패하였습니다.
-            </Text>
-            <Text size="sm" weight="medium">
-              {/* TODO: 왜 서버 등록에 실패하였는지 기술. 디렉션 제공 */}
-              {error?.message}
-            </Text>
-          </Dialog>
-        </>
-      )}
-
       {isLoading && (
         <Dimmer>
           <Loading size="lg" />

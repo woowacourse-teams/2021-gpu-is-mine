@@ -1,6 +1,5 @@
-import type { AxiosError } from "axios";
 import { API_ENDPOINT } from "../../constants";
-import { httpClient, throwError } from "../../utils";
+import { httpClient, isAxiosError, throwError } from "../../utils";
 import type {
   GpuServerRegisterRequest,
   GpuServerViewDetailResponse,
@@ -16,14 +15,25 @@ const fetchGpuServerById = async ({ labId, serverId }: { labId: number; serverId
 const postGpuServer = async (labId: number, body: GpuServerRegisterRequest) => {
   try {
     await httpClient.post<{ message?: string }>(API_ENDPOINT.LABS(labId).GPUS, body);
-  } catch (e) {
-    const error = e as AxiosError<{ message: string }>;
-
-    if (error?.response?.status === 400) {
-      throwError("BadRequestError", error.response.data.message);
+  } catch (error) {
+    if (!isAxiosError<{ message: string }>(error)) {
+      console.error(error);
+      throwError("UnknownError", "관리자에게 문의해주세요");
+      throw error;
     }
 
-    throw error;
+    // Network Error
+    if (error.message === "Network Error") {
+      throwError("NetworkError", "잠시 후 다시 시도해주세요");
+    }
+
+    if (/^4/.test(error.response?.status.toString() ?? "")) {
+      throwError("BadRequestError", error.response!.data.message);
+    }
+
+    if (/^5/.test(error.response?.status.toString() ?? "")) {
+      throwError("InternalError", "관리자에게 문의해주세요");
+    }
   }
 };
 
