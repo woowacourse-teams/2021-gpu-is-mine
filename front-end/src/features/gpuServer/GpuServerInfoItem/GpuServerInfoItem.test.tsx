@@ -137,7 +137,7 @@ describe("GpuServer/InfoItem", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
     // 삭제에 실패하였다는 메세지를 가진 토스트가 표시된다
-    const alert = await screen.findByText(`${gpuServer.serverName} 삭제에 실패하였습니다.`);
+    const alert = await screen.findByText(`GPU 서버 삭제 실패`);
     expect(alert).toBeInTheDocument();
   });
 });
