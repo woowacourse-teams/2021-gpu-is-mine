@@ -40,7 +40,7 @@ type JobViewResponse = {
   };
 };
 
-type GpuServerSliceState = {
+type JobSliceState = {
   [key: string]: {
     status: "idle" | "loading" | "succeed" | "failed";
     error: SerializedError | null;
