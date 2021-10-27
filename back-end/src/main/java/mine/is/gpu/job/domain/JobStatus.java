@@ -4,7 +4,7 @@ import java.util.Locale;
 import mine.is.gpu.job.exception.JobException;
 
 public enum JobStatus {
-    WAITING, RUNNING, COMPLETED, CANCELED;
+    WAITING, RUNNING, COMPLETED, CANCELED, FAILED;
 
     public static JobStatus ignoreCaseValueOf(String input) {
         try {
@@ -24,5 +24,9 @@ public enum JobStatus {
 
     public boolean isCompleted() {
         return this.equals(COMPLETED);
+    }
+
+    public boolean isFailed() {
+        return this.equals(FAILED);
     }
 }

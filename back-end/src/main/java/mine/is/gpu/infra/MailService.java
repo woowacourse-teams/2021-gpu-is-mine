@@ -51,11 +51,20 @@ public class MailService {
     }
 
     @Async("mailExecutor")
-    public void sendJobEndMail(MailDto mailDto) {
+    public void sendJobCompleteMail(MailDto mailDto) {
         Context context = new Context();
         context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 종료 알림 메일";
         String body = templateEngine.process("job-end.html", context);
+        sendMail(mailDto.getEmail(), subject, body);
+    }
+
+    @Async("mailExecutor")
+    public void sendJobFailMail(MailDto mailDto) {
+        Context context = new Context();
+        context.setVariable("jobName", mailDto.getJobName());
+        String subject = "[GPU-IS_MINE] Job 시작 실패 알림 메일";
+        String body = templateEngine.process("job-fail.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
 

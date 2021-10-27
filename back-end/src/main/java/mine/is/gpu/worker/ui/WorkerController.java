@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,12 +50,15 @@ public class WorkerController {
             mailService.sendJobStartMail(mailDto);
         }
         if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
-            mailService.sendJobEndMail(mailDto);
+            mailService.sendJobCompleteMail(mailDto);
+        }
+        if (workerJobRequest.getJobStatus() == JobStatus.FAILED) {
+            mailService.sendJobFailMail(mailDto);
         }
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("jobs/{jobId}/start")
+    @PostMapping("jobs/{jobId}/start")
     public ResponseEntity<Void> start(@PathVariable Long jobId) {
         workerService.start(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
@@ -63,11 +67,20 @@ public class WorkerController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("jobs/{jobId}/complete")
+    @PostMapping("jobs/{jobId}/complete")
     public ResponseEntity<Void> complete(@PathVariable Long jobId) {
         workerService.complete(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobStartMail(mailDto);
+        mailService.sendJobCompleteMail(mailDto);
+        logger.info("job #" + jobId + " is completed");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("jobs/{jobId}/fail")
+    public ResponseEntity<Void> fail(@PathVariable Long jobId) {
+        workerService.fail(jobId);
+        MailDto mailDto = jobService.mailDtoOfJob(jobId);
+        mailService.sendJobFailMail(mailDto);
         logger.info("job #" + jobId + " is completed");
         return ResponseEntity.ok().build();
     }
