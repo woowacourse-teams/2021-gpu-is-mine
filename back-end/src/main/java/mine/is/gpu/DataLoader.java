@@ -85,11 +85,11 @@ public class DataLoader implements CommandLineRunner {
         jobRepository.save(job1);
 
         Job job2 = new Job("가짜 뉴스 검증을 위한 댓글 분류 학습", JobStatus.RUNNING, gpuBoard1, member1,
-                "myagya/fake_news", "50", LocalDateTime.now(), null);
+                "myagya/fake_news", "50", LocalDateTime.now());
         jobRepository.save(job2);
 
         Job job3 = new Job("신경망을 이용한 스포츠 경기 비디오와 텍스트 요약", JobStatus.COMPLETED, gpuBoard1, member1,
-                "better/sports_analysis", "60", LocalDateTime.now().minusHours(60), LocalDateTime.now());
+                "better/sports_analysis", "60", LocalDateTime.now().minusHours(60), LocalDateTime.now().minusHours(34));
         jobRepository.save(job3);
 
         Job job4 = new Job("보스턴 주택 가격 예측과 k-겹 검증", JobStatus.COMPLETED, gpuBoard1, member1,
@@ -101,7 +101,7 @@ public class DataLoader implements CommandLineRunner {
         jobRepository.save(job5);
 
         Job job6 = new Job("교통 표지판 분류 학습", JobStatus.CANCELED, gpuBoard2, member2,
-                "corgi/traffic_signs", "30");
+                "corgi/traffic_signs", "30", null, LocalDateTime.now().minusHours(32));
         jobRepository.save(job6);
 
         Job job7 = new Job("CNN 모델을 활용한 마스크 인식 학습", JobStatus.WAITING, gpuBoard2, member1,
@@ -109,7 +109,7 @@ public class DataLoader implements CommandLineRunner {
         jobRepository.save(job7);
 
         Job job8 = new Job("자연어 처리 : 문자-단위 RNN으로 이름 생성하기", JobStatus.RUNNING, gpuBoard3, member1,
-                "danny/natural_language", "100", LocalDateTime.now(), null);
+                "danny/natural_language", "100", LocalDateTime.now());
         jobRepository.save(job8);
 
         Job job9 = new Job("유튜브 댓글 긍정도 평가 학습", JobStatus.WAITING, gpuBoard4, member2,
@@ -117,7 +117,7 @@ public class DataLoader implements CommandLineRunner {
         jobRepository.save(job9);
 
         Job job10 = new Job("망막 이미지 분류, 망막 질환 진단 학습", JobStatus.RUNNING, gpuBoard4, member2,
-                "better/retina_classification", "10", LocalDateTime.now(), null);
+                "better/retina_classification", "10", LocalDateTime.now());
         jobRepository.save(job10);
     }
 }
