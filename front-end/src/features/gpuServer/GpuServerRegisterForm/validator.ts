@@ -1,4 +1,4 @@
-import { isLength, isNumber } from "../../utils";
+import { isLength, isNumber } from "../../../utils";
 
 export const serverNameValidator = (value: string) => {
   if (!isLength(value, { min: 1, max: 15 })) {
