@@ -15,7 +15,7 @@ interface GpuServerInfoListProps {
 const GpuServerInfoList = ({ ...rest }: GpuServerInfoListProps) => {
   const { isMobile } = useBreakpoints();
 
-  const { isLoading } = useAppSelector((state: RootState) =>
+  const { isLoading, isSucceed, isSettled } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, fetchAllGpuServer)
   );
 
@@ -40,9 +40,11 @@ const GpuServerInfoList = ({ ...rest }: GpuServerInfoListProps) => {
       {isLoading && <Loading size="lg" />}
 
       <StyledInfoList {...rest}>
-        {!isLoading && serverIds.length === 0 ? (
+        {isSettled && serverIds.length === 0 ? (
           <Text size={isMobile ? "md" : "lg"} weight="bold">
-            🚫 등록된 GPU 서버가 존재하지 않습니다.
+            {isSucceed
+              ? "🚫 등록된 GPU 서버가 존재하지 않습니다."
+              : "GPU 서버를 가져오는데 실패하였습니다 😞"}
           </Text>
         ) : (
           serverIds.map((serverId: number) => (
