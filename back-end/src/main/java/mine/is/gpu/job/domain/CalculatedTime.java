@@ -13,12 +13,12 @@ public class CalculatedTime {
     public CalculatedTime() {
     }
 
-    public CalculatedTime(Job job, Long usageTime, String expectedTime) {
+    public CalculatedTime(Job job) {
         this.createdTime = job.getCreatedAt();
         this.startedTime = job.getStartedTime();
         this.completedTime = job.getCompletedTime();
-        this.expectedStartedTime = createdTime.plusHours(usageTime);
-        this.expectedCompletedTime = expectedStartedTime.plusHours(Long.parseLong(expectedTime));
+        this.expectedStartedTime = job.getExpectedStartedTime();
+        this.expectedCompletedTime = job.getExpectedCompletedTime();
     }
 
     public LocalDateTime getCreatedTime() {

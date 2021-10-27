@@ -47,22 +47,7 @@ public class JobResponse {
                 job.getGpuServer().getName(),
                 job.getMetaData(),
                 job.getExpectedTime(),
-                new CalculatedTime()
-        );
-    }
-
-    public static JobResponse of(Job job, CalculatedTime calculatedTime) {
-        return new JobResponse(
-                job.getId(),
-                job.getName(),
-                job.getStatus(),
-                job.getMember().getId(),
-                job.getMember().getName(),
-                job.getGpuServer().getId(),
-                job.getGpuServer().getName(),
-                job.getMetaData(),
-                job.getExpectedTime(),
-                calculatedTime
+                new CalculatedTime(job)
         );
     }
 

@@ -60,6 +60,7 @@ public class JobService {
     public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
+        job.calculateExpectingTime(waitingJobsInGpuBoard(job.getGpuBoard()));
         jobRepository.save(job);
         return job.getId();
     }
@@ -68,6 +69,19 @@ public class JobService {
     public void cancel(Long jobId) {
         Job job = findJobById(jobId);
         job.cancel();
+
+        Job prev = job;
+        for (Job waiting : waitingJobsInGpuBoard(job.getGpuBoard())) {
+            if (waiting.getId() <= job.getId()) {
+                continue;
+            }
+            waiting.updateExpectedStartedTime(prev.getExpectedStartedTime());
+            prev = waiting;
+        }
+    }
+
+    private List<Job> waitingJobsInGpuBoard(GpuBoard gpuBoard) {
+        return jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING);
     }
 
     @Transactional(readOnly = true)

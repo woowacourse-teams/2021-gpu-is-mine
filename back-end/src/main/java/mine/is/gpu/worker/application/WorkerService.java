@@ -36,8 +36,7 @@ public class WorkerService {
     @Transactional(readOnly = true)
     public JobResponse popJobByServerId(Long serverId) {
         GpuBoard gpuBoard = findGpuBoardByGpuServerId(serverId);
-        Long gpuBoardId = gpuBoard.getId();
-        return findFirstWaitingJob(gpuBoardId);
+        return findFirstWaitingJob(gpuBoard);
     }
 
     @Transactional
@@ -65,13 +64,16 @@ public class WorkerService {
         return jobRepository.findById(jobId).orElseThrow(JobException.JOB_NOT_FOUND::getException);
     }
 
-    private JobResponse findFirstWaitingJob(Long gpuBoardId) {
-        List<Job> jobs = jobRepository
-                .findAllByBoardIdAndStatusOrderById(gpuBoardId, JobStatus.WAITING);
+    private JobResponse findFirstWaitingJob(GpuBoard gpuBoard) {
+        List<Job> jobs = waitingJobsInGpuBoard(gpuBoard);
         if (jobs.size() < ONE) {
             throw JobException.NO_WAITING_JOB.getException();
         }
         return JobResponse.of(jobs.get(FIRST));
+    }
+
+    private List<Job> waitingJobsInGpuBoard(GpuBoard gpuBoard) {
+        return jobRepository.findAllByBoardIdAndStatusOrderById(gpuBoard.getId(), JobStatus.WAITING);
     }
 
     private GpuBoard findGpuBoardByGpuServerId(Long serverId) {
@@ -88,6 +90,11 @@ public class WorkerService {
     public void start(Long jobId) {
         Job job = findJobById(jobId);
         job.start();
+        Job prev = job;
+        for (Job waiting : waitingJobsInGpuBoard(job.getGpuBoard())) {
+            waiting.updateExpectedStartedTime(prev.getExpectedCompletedTime());
+            prev = waiting;
+        }
     }
 
     @Transactional
