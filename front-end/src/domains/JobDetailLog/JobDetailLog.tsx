@@ -48,7 +48,7 @@ const JobDetailLog = ({ labId, jobId, interval, ...rest }: JobDetailLogProps) =>
 
   const logConsoleRef = useRef<HTMLDivElement>(null);
 
-  const maxOneLineLength = Math.floor(useClientWidth(logConsoleRef) / 7);
+  const width = useClientWidth(logConsoleRef);
 
   const refreshLog = () => makeRequest();
 
@@ -79,7 +79,11 @@ const JobDetailLog = ({ labId, jobId, interval, ...rest }: JobDetailLogProps) =>
         </LogRefreshPanel>
       </LogHeader>
       <LogConsole ref={logConsoleRef}>
-        <JobDetailLogContent logs={data?.logs} maxOneLineLength={maxOneLineLength} />
+        {data?.logs == null || data?.logs.length === 0 ? (
+          <Text size="sm">로그 데이터가 존재하지 않습니다.</Text>
+        ) : (
+          <JobDetailLogContent logs={data.logs} width={width} />
+        )}
       </LogConsole>
     </StyledJobDetailLog>
   );
