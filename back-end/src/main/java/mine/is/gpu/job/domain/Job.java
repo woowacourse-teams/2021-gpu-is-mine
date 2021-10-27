@@ -98,7 +98,7 @@ public class Job extends BaseEntity {
             throw JobException.INVALID_EXPECTED_TIME.getException();
         }
 
-        if(Objects.isNull(expectedStartedTime)){
+        if (Objects.isNull(expectedStartedTime)) {
             throw JobException.INVALID_EXPECTED_STARTED_TIME.getException();
         }
     }
