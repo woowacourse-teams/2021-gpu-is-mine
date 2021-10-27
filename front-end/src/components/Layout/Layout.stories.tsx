@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { up } from "styled-breakpoints";
 import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
-import { GpuServerRegisterForm } from "../../domains/GpuServer";
+import { GpuServerRegisterForm } from "../../features/gpuServer";
 import Layout from "./Layout";
 
 export default {

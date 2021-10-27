@@ -1,7 +1,10 @@
-import { createSlice, createAsyncThunk, createAction, SerializedError } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
+import { defaultError } from "../../utils";
 import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
+import type { CustomError } from "../../utils";
 
 type SignupState =
   | { status: typeof STATUS.IDLE; error: null }
@@ -25,11 +28,34 @@ const initialState = {
 
 export const selectSignupStatus = (state: RootState) => generateStatusBoolean(state.signup.status);
 
-export const signup = createAsyncThunk<void, { email: string; password: string; name: string }>(
-  "signup/signup",
-  async ({ email, password, name }) =>
-    authApiClient.postSignup({ email, password, name, labId: 1, memberType: "USER" })
-);
+export const signup = createAsyncThunk<
+  void,
+  { email: string; password: string; name: string },
+  { rejectValue: SerializedError }
+  // eslint-disable-next-line consistent-return
+>("signup/signup", async ({ email, password, name }, { rejectWithValue }) => {
+  try {
+    return await authApiClient.postSignup({
+      email,
+      password,
+      name,
+      labId: 1,
+      memberType: "USER",
+    });
+  } catch (err) {
+    const error = err as CustomError;
+
+    switch (error.name) {
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "회원가입 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
+});
 
 export const resetAction = createAction("signup/resetAction");
 
@@ -49,7 +75,7 @@ const signupSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = STATUS.FAILED;
-        state.error = action.error;
+        state.error = action.payload!;
       });
   },
 });

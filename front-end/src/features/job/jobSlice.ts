@@ -112,13 +112,13 @@ export const selectJobActionState = (thunk: JobThunk) => (state: RootState) => (
   error: state.job[thunk.typePrefix].error,
 });
 
+export const selectJobByIds = (state: RootState, ids: number[]) =>
+  state.job.entities.filter(({ id }) => ids.includes(id));
+
+export const selectJobById = (state: RootState, targetId: number) =>
+  state.job.entities.find(({ id }) => id === targetId);
+
 export const selectJobAll = (state: RootState) => state.job.entities;
-
-export const selectJobById = (jobId: number) => (state: RootState) =>
-  state.job.entities.find((job) => job.id === jobId);
-
-export const selectJobsById = (jobIds: number[]) => (state: RootState) =>
-  state.job.entities.find((job) => jobIds.includes(job.id));
 
 export const resetJobActionState = createAction<string>("job/reset");
 
