@@ -123,7 +123,7 @@ class JobTest {
         Job job = new Job("잡1", JobStatus.RUNNING, gpuBoard, member, "metaData", "333");
         job.complete();
 
-        assertThat(job.getCompletedTime()).isNotNull();
+        assertThat(job.getEndedTime()).isNotNull();
         assertThat(job.getStatus()).isEqualTo(JobStatus.COMPLETED);
     }
 
