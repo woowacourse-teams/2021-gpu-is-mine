@@ -3,13 +3,9 @@ import { Button, CalendarIcon, Dialog, Text, useToast, VerticalBox } from "../..
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../constants";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  cancelJobById,
-  Job,
-  // resetJobActionState,
-  selectJobActionState,
-} from "../../features/job/jobSlice";
+import { cancelJobById, Job, selectJobActionState } from "../../features/job/jobSlice";
 import { RootState } from "../../app/store";
+import { CustomError } from "../../utils";
 
 interface JobInfoItemProps extends Job {
   className?: string;
@@ -49,7 +45,7 @@ const JobInfoItem = ({
   const appDispatch = useAppDispatch();
   const showToast = useToast();
 
-  const { isLoading, error } = useAppSelector((state: RootState) =>
+  const { isLoading } = useAppSelector((state: RootState) =>
     selectJobActionState(state, cancelJobById)
   );
 
@@ -59,15 +55,17 @@ const JobInfoItem = ({
     try {
       await appDispatch(cancelJobById({ jobId })).unwrap();
       showToast({
-        title: "취소 성공",
         type: "success",
+        title: "Job 취소 성공",
         message: `${jobName}이(가) 취소되었습니다.`,
       });
-    } catch {
+    } catch (err) {
+      const error = err as CustomError;
+
       showToast({
-        title: "취소 실패",
         type: "error",
-        message: `${jobName}이(가) 취소에 실패하였습니다. ${error?.message ?? ""}`,
+        title: error.name,
+        message: error.message,
       });
     } finally {
       closeConfirm();
