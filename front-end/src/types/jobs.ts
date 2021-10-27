@@ -33,7 +33,7 @@ export type JobViewResponse = {
 };
 
 export interface JobViewResponses {
-  jobResponses: Readonly<JobViewResponse[]>;
+  jobResponses: JobViewResponse[];
 }
 
 export type JobDetailResponse = JobViewResponse;

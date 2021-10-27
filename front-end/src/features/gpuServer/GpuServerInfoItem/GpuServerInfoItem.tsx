@@ -1,75 +1,74 @@
-import { useBoolean, useDeleteGpuServer, useMoveToPage } from "../../hooks";
-import { Flicker, Text, VerticalBox, ServerIcon, Button, Loading, Dimmer } from "../../components";
+import type { SerializedError } from "@reduxjs/toolkit";
+import { PATH } from "../../../constants";
+import { selectGpuServerById, selectGpuServerStatus, deleteGpuServerById } from "../gpuServerSlice";
+import { selectMemberType } from "../../member/authSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useBoolean, useMoveToPage } from "../../../hooks";
+import {
+  Flicker,
+  Text,
+  VerticalBox,
+  ServerIcon,
+  Button,
+  Dialog,
+  useToast,
+} from "../../../components";
 import { StyledGpuServerInfoItem } from "./GpuServerInfoItem.styled";
-import { SimpleGpuServer, MemberType } from "../../types";
-import { PATH } from "../../constants";
-import Dialog from "../../components/Dialog/Dialog";
+import type { RootState } from "../../../app/store";
 
-interface GpuServerInfoItemProps extends SimpleGpuServer {
-  memberType: MemberType;
-  labId: number;
-  refresh: () => Promise<unknown>;
+interface GpuServerInfoItemProps {
   className?: string;
+  serverId: number;
 }
 
-const GpuServerInfoItem = ({
-  id: serverId,
-  serverName,
-  isOn,
-  gpuBoard: { performance },
-  runningJobs,
-  labId,
-  memberType,
-  waitingJobCount,
-  refresh,
-  className,
-}: GpuServerInfoItemProps) => {
-  const runningJobName = runningJobs[0]?.name || "N/A";
+const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
+  const gpuServer = useAppSelector((state: RootState) => selectGpuServerById(state, serverId));
 
-  const { makeRequest, done, isLoading, isSucceed, isFailed } = useDeleteGpuServer({
-    labId,
-    serverId,
-  });
+  const { serverName, isOn, performance, runningJobName, waitingJobCount } = gpuServer! ?? {};
+  const memberType = useAppSelector(selectMemberType);
 
-  const handleDetailClick = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
+  const { isLoading } = useAppSelector((state: RootState) =>
+    selectGpuServerStatus(state, deleteGpuServerById)
+  );
+
+  const dispatch = useAppDispatch();
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
-  const handleConfirmConfirmed = () => {
-    makeRequest();
-    closeConfirm();
+  const showToast = useToast();
+
+  const handleDelete = async () => {
+    try {
+      closeConfirm();
+      await dispatch(deleteGpuServerById(serverId)).unwrap();
+
+      showToast({
+        type: "success",
+        title: `GPU 서버 삭제 성공`,
+        message: `${serverName}을(를) 삭제하였습니다.`,
+      });
+    } catch (err) {
+      const error = err as SerializedError;
+
+      showToast({
+        type: "error",
+        title: error.name!,
+        message: error.message,
+      });
+    }
   };
+
+  const moveToDetailPage = useMoveToPage(`${PATH.GPU_SERVER.VIEW}/${serverId}`);
 
   return (
     <>
-      {isLoading && (
-        <Dimmer>
-          <Loading size="lg" />
-        </Dimmer>
-      )}
-
-      <Dialog open={isSucceed} onClose={done} onConfirm={refresh}>
-        <Text size="sm" weight="medium">
-          {`${serverName}을(를) 삭제하였습니다.`}
-        </Text>
-      </Dialog>
-
-      <Dialog open={isFailed} onClose={done} onConfirm={done}>
-        <Text size="sm" weight="medium">
-          {
-            /* TODO: 에러에 따라 구체적인 디렉션 추가 */
-            `${serverName} 삭제에 실패하였습니다.`
-          }
-        </Text>
-      </Dialog>
-
       <Dialog
         open={isConfirmOpen}
         onClose={closeConfirm}
-        onConfirm={handleConfirmConfirmed}
         onCancel={closeConfirm}
+        onConfirm={handleDelete}
       >
-        <Text size="sm" weight="medium">
+        <Text size="md" weight="regular">
           {serverName}을(를) 삭제하시겠습니까?
         </Text>
       </Dialog>
@@ -110,7 +109,7 @@ const GpuServerInfoItem = ({
         </VerticalBox>
 
         <div className="button-wrapper">
-          <Button className="button" color="primary" onClick={handleDetailClick}>
+          <Button className="button" color="primary" onClick={moveToDetailPage}>
             상세
           </Button>
 
