@@ -56,16 +56,17 @@ class JobServiceTest {
     @Autowired
     private GpuServerRepository gpuServerRepository;
 
+    private Lab lab;
     private Long serverId;
     private Long memberId;
 
     @BeforeEach
     void setUp() {
-        Lab lab = new Lab("lab");
+        lab = new Lab("lab");
         labRepository.save(lab);
 
-        serverId = saveGpuServerInLab(lab);
-        memberId = saveMember(lab);
+        serverId = saveGpuServerInLab(lab, "server");
+        memberId = saveMember(lab, "email1");
     }
 
     @Test
@@ -149,16 +150,6 @@ class JobServiceTest {
                 .isEqualTo(JobException.JOB_NOT_FOUND.getException());
     }
 
-    private Long saveGpuServerInLab(Lab lab) {
-        GpuServer server = new GpuServer("server", true, 1024L, 1024L, lab);
-        gpuServerRepository.save(server);
-
-        GpuBoard board = new GpuBoard(false, 600L, "nvdia", server);
-        gpuBoardRepository.save(board);
-
-        return server.getId();
-    }
-
     private Long saveGpuServerInLab(Lab lab, String name) {
         GpuServer server = new GpuServer(name, true, 1024L, 1024L, lab);
         gpuServerRepository.save(server);
@@ -167,12 +158,6 @@ class JobServiceTest {
         gpuBoardRepository.save(board);
 
         return server.getId();
-    }
-
-    private Long saveMember(Lab lab) {
-        Member member = new Member("email", "password", "name", MemberType.USER, lab);
-        memberRepository.save(member);
-        return member.getId();
     }
 
     private Long saveMember(Lab lab, String email) {
@@ -185,13 +170,8 @@ class JobServiceTest {
     @DisplayName("멤버, 서버, 랩을 기준으로 Job을 조회한다.")
     class FindAll {
 
-        Lab lab = new Lab("labA");
-        Long memberId;
-        Long serverId;
-
         @BeforeEach
         void setUp() {
-            labRepository.save(lab);
             memberId = saveMember(lab, "email2");
             serverId = saveGpuServerInLab(lab, "server2");
         }
@@ -254,15 +234,11 @@ class JobServiceTest {
     @DisplayName("다중 조회 시 페이지네이션을 적용한다.")
     class FindAllWithPagination {
 
-        Lab lab = new Lab("labA");
-        Long memberId;
-        Long serverId;
         String jobBaseName = "job";
         Pageable pageable = PageRequest.of(2, 3);
 
         @BeforeEach
         void setUp() {
-            labRepository.save(lab);
             memberId = saveMember(lab, "email2");
             serverId = saveGpuServerInLab(lab, "server2");
             saveDummyJobs(30);
