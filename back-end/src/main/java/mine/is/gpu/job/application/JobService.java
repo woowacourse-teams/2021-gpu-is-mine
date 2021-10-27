@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.account.domain.repository.MemberRepository;
@@ -67,17 +68,30 @@ public class JobService {
 
     @Transactional
     public void cancel(Long jobId) {
-        Job job = findJobById(jobId);
-        job.cancel();
+        Job canceled = findJobById(jobId);
+        canceled.cancel();
 
-        Job prev = job;
-        for (Job waiting : waitingJobsInGpuBoard(job.getGpuBoard())) {
-            if (waiting.getId() <= job.getId()) {
-                continue;
-            }
-            waiting.updateExpectedStartedTime(prev.getExpectedStartedTime());
-            prev = waiting;
+        Optional<Job> firstNextWaitingJob = findFirstNextWaitingJob(canceled);
+        if (firstNextWaitingJob.isEmpty()) {
+            return;
         }
+
+        Job next = firstNextWaitingJob.get();
+        next.updateExpectedStartedTime(canceled.getExpectedStartedTime());
+
+        Job prev = next;
+        for (Job waiting : waitingJobsInGpuBoard(canceled.getGpuBoard())) {
+            if (next.getId() < waiting.getId()) {
+                waiting.updateExpectedStartedTime(prev.getExpectedCompletedTime());
+                prev = waiting;
+            }
+        }
+    }
+
+    private Optional<Job> findFirstNextWaitingJob(Job job) {
+        return waitingJobsInGpuBoard(job.getGpuBoard()).stream()
+                .filter(waiting -> waiting.getId() > job.getId())
+                .findFirst();
     }
 
     private List<Job> waitingJobsInGpuBoard(GpuBoard gpuBoard) {
