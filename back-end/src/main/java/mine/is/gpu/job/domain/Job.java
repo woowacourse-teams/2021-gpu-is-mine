@@ -2,6 +2,7 @@ package mine.is.gpu.job.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -191,13 +192,15 @@ public class Job extends BaseEntity {
         this.completedTime = completedTime;
     }
 
-    public void calculateExpectingTime(WaitingJobs prevWaitingJobs) {
-        if (prevWaitingJobs.isEmpty()) {
-            updateExpectedStartedTime(LocalDateTime.now());
-            return;
+    public void calculateExpectation(Optional<Job> last) {
+        if (last.isPresent()) {
+            Job lastJob = last.get();
+            if (lastJob.getStatus() == JobStatus.RUNNING || lastJob.getStatus() == JobStatus.WAITING) {
+                updateExpectedStartedTime(lastJob.getExpectedCompletedTime());
+                return;
+            }
         }
-        Job last = prevWaitingJobs.getLast();
-        updateExpectedStartedTime(last.getExpectedCompletedTime());
+        updateExpectedStartedTime(LocalDateTime.now());
     }
 
     public void updateExpectedStartedTime(LocalDateTime expectedStartedTime) {
