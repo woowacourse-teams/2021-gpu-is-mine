@@ -1,5 +1,6 @@
 package mine.is.gpu.job.application;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,18 @@ public class JobService {
     public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
-        job.calculateExpectingTime(waitingJobsInGpuBoard(job.getGpuBoard()));
+
+        List<Job> allJobs = jobRepository.findAllByBoardIdOrderById(job.getGpuBoard().getId());
+        if (!allJobs.isEmpty()) {
+            Job last = allJobs.get(allJobs.size() - 1);
+            if (last.getStatus() == JobStatus.RUNNING || last.getStatus() == JobStatus.WAITING) {
+                job.updateExpectedStartedTime(last.getExpectedCompletedTime());
+                jobRepository.save(job);
+                return job.getId();
+            }
+        }
+
+        job.updateExpectedStartedTime(LocalDateTime.now());
         jobRepository.save(job);
         return job.getId();
     }
