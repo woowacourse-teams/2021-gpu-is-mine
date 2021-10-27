@@ -20,6 +20,7 @@ import { Values } from "./JobRegisterForm.type";
 import { updateValue } from "../../hooks/useForm/useForm";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { registerJob, selectJobActionState } from "../../features/job/jobSlice";
+import { RootState } from "../../app/store";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
@@ -32,8 +33,8 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   const [isDialogOpen, openDialog, closeDialog] = useBoolean(false);
 
-  const { isSucceed, isFailed, isLoading, error } = useAppSelector(
-    selectJobActionState(registerJob)
+  const { isSucceed, isFailed, isLoading, error } = useAppSelector((state: RootState) =>
+    selectJobActionState(state, registerJob)
   );
 
   const handleSubmit = ({ jobName, expectedTime, gpuServerId, dockerHubImage }: Values) => {

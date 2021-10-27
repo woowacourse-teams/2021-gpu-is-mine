@@ -9,6 +9,7 @@ import {
   // resetJobActionState,
   selectJobActionState,
 } from "../../features/job/jobSlice";
+import { RootState } from "../../app/store";
 
 interface JobInfoItemProps extends Job {
   className?: string;
@@ -48,7 +49,9 @@ const JobInfoItem = ({
   const appDispatch = useAppDispatch();
   const showToast = useToast();
 
-  const { isLoading, error } = useAppSelector(selectJobActionState(cancelJobById));
+  const { isLoading, error } = useAppSelector((state: RootState) =>
+    selectJobActionState(state, cancelJobById)
+  );
 
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 

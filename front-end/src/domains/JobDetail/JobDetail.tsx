@@ -15,6 +15,7 @@ import {
   selectJobActionState,
   selectJobById,
 } from "../../features/job/jobSlice";
+import { RootState } from "../../app/store";
 
 interface JobDetailProps {
   className?: string;
@@ -26,10 +27,10 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
 
   const appDispatch = useAppDispatch();
 
-  const detail = useAppSelector(selectJobById(jobId));
+  const detail = useAppSelector((state: RootState) => selectJobById(state, jobId));
 
-  const { isLoading, isFailed, isSucceed, error } = useAppSelector(
-    selectJobActionState(getJobById)
+  const { isLoading, isFailed, isSucceed, error } = useAppSelector((state: RootState) =>
+    selectJobActionState(state, getJobById)
   );
 
   const isRunning = detail?.status === "RUNNING";

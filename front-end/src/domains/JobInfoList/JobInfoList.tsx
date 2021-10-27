@@ -6,6 +6,7 @@ import { MESSAGE } from "../../constants";
 import { MemberType } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getJobAll, Job, selectJobActionState, selectJobAll } from "../../features/job/jobSlice";
+import { RootState } from "../../app/store";
 
 interface JobInfoListProps {
   className?: string;
@@ -29,7 +30,9 @@ const filterByMember = (response: Job, memberType: MemberType, memberId: number)
 const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps) => {
   const appDispatch = useAppDispatch();
 
-  const { isLoading, isSucceed, isFailed } = useAppSelector(selectJobActionState(getJobAll));
+  const { isLoading, isSucceed, isFailed } = useAppSelector((state: RootState) =>
+    selectJobActionState(state, getJobAll)
+  );
 
   const jobs = useAppSelector(selectJobAll);
 

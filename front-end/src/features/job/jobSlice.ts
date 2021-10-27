@@ -107,7 +107,7 @@ const convertJobResponse = (response: JobViewResponse): Job => {
 
 type JobThunk = typeof getJobAll | typeof getJobById | typeof registerJob | typeof cancelJobById;
 
-export const selectJobActionState = (thunk: JobThunk) => (state: RootState) => ({
+export const selectJobActionState = (state: RootState, thunk: JobThunk) => ({
   ...generateStatusBoolean(state.job[thunk.typePrefix].status),
   error: state.job[thunk.typePrefix].error,
 });
