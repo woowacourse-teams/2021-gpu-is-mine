@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button } from "../../components";
+import { Button } from "../../../components";
 
 export const StyledForm = styled.form`
   width: 100%;

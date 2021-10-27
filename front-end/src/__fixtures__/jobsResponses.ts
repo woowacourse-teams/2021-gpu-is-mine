@@ -183,7 +183,7 @@ export const jobsResponsesMock: JobViewResponses = {
       },
     },
   ],
-} as const;
+};
 
 export const JobResponseMock = jobsResponsesMock.jobResponses[0];
 
