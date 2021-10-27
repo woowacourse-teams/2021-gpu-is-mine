@@ -30,7 +30,14 @@ export const throwError = (name: ErrorName, message: string) => {
   throw error as CustomError;
 };
 
-export const defaultError = (error: CustomError) => ({
+export type DefaultError = {
+  name: string;
+  message?: string | undefined;
+  stack?: string | undefined;
+  code?: string | undefined;
+};
+
+export const defaultError = (error: CustomError): DefaultError => ({
   ...miniSerializeError(error),
   name: ERROR_NAME[error.name] ?? "알 수 없는 에러 발생",
 });
