@@ -42,13 +42,17 @@ const GpuServerInfoItem = ({ serverId, className }: GpuServerInfoItemProps) => {
       closeConfirm();
       await dispatch(deleteGpuServerById(serverId)).unwrap();
 
-      showToast({ type: "success", title: `${serverName}을(를) 삭제하였습니다.` });
+      showToast({
+        type: "success",
+        title: `GPU 서버 삭제 성공`,
+        message: `${serverName}을(를) 삭제하였습니다.`,
+      });
     } catch (err) {
       const error = err as SerializedError;
 
       showToast({
         type: "error",
-        title: `${serverName} 삭제에 실패하였습니다.`,
+        title: error.name!,
         message: error.message,
       });
     }

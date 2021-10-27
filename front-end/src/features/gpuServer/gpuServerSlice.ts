@@ -1,12 +1,11 @@
 /* eslint-disable consistent-return */
-import type { AxiosError } from "axios";
-import { createAsyncThunk, createSlice, miniSerializeError } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
+import { defaultError } from "../../utils";
 import { gpuServerApiClient } from "../../services";
-import { generateStatusBoolean, selectMyInfo } from "../member/authSlice";
+import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
 import { add } from "../job/jobSlice";
-import { useAppDispatch } from "../../app/hooks";
 import type { RootState } from "../../app/store";
 import type { GpuServerViewDetailResponse, SimpleGpuServer } from "../../types";
 import type { CustomError } from "../../utils";
@@ -86,7 +85,7 @@ export const fetchAllGpuServer = createAsyncThunk<
   SimpleGpuServer[],
   void,
   { state: RootState; rejectValue: SerializedError }
->("gpuServer/fetchAll", async (_, { getState, rejectWithValue }) => {
+>("gpuServer/fetchAll", async (_, { getState, rejectWithValue, dispatch }) => {
   const { labId } = selectMyInfo(getState());
 
   try {
@@ -96,48 +95,56 @@ export const fetchAllGpuServer = createAsyncThunk<
 
     return gpuServers;
   } catch (err) {
-    const error = err as AxiosError<{ message: string }>;
+    const error = err as CustomError;
 
-    // Network Error
-    if (error.message === "Network Error") {
-      return rejectWithValue({
-        name: "Network Error 발생",
-        message: "잠시 후 다시 시도해주세요",
-      });
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "GpuServer 정보 불러오기 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
     }
-
-    // 400 대
-    if (/^4/.test(error.response!.status.toString())) {
-      return rejectWithValue({
-        name: "GpuServer 정보 불러오기 실패",
-        message: error.response!.data.message,
-      });
-    }
-
-    // 500 대
-    if (/^5/.test(error.response!.status.toString())) {
-      return rejectWithValue({
-        name: "알 수 없는 에러 발생",
-        message: "관리자에게 문의해주세요",
-      });
-    }
-
-    return rejectWithValue(miniSerializeError(error));
   }
 });
 
 export const fetchGpuServerById = createAsyncThunk<
   GpuServerViewDetailResponse,
   number,
-  { state: RootState; dispatch: ReturnType<typeof useAppDispatch> }
->("gpuServer/fetchById", async (serverId, { getState, dispatch }) => {
+  { state: RootState }
+>("gpuServer/fetchById", async (serverId, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
+  try {
+    const { data } = await gpuServerApiClient.fetchGpuServerById({ labId, serverId });
 
-  const { data } = await gpuServerApiClient.fetchGpuServerById({ labId, serverId });
+    dispatch(add(data.jobs));
+    return data;
+  } catch (err) {
+    const error = err as CustomError;
 
-  dispatch(add(data.jobs));
-
-  return data;
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "GpuServer 정보 불러오기 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
 });
 
 export const registerGpuServer = createAsyncThunk<
@@ -149,7 +156,7 @@ export const registerGpuServer = createAsyncThunk<
     performance: number;
     modelName: string;
   },
-  { state: RootState; dispatch: ReturnType<typeof useAppDispatch>; rejectValue: SerializedError }
+  { state: RootState; rejectValue: SerializedError }
 >(
   "gpuServer/register",
   async (
@@ -168,16 +175,11 @@ export const registerGpuServer = createAsyncThunk<
       const error = err as CustomError;
 
       switch (error.name) {
-        case "InternalError":
-        case "UnknownError":
+        case "AuthorizationError":
+          dispatch(logout());
           return rejectWithValue({
-            name: "알 수 없는 에러가 발생하였습니다",
-            message: "관리자에게 문의해주세요",
-          });
-        case "NetworkError":
-          return rejectWithValue({
-            name: "Network 연결이 원활하지 않습니다",
-            message: "잠시후 다시 시도해주세요",
+            name: "Authorization Error",
+            message: error.message,
           });
         case "BadRequestError":
           return rejectWithValue({
@@ -185,7 +187,7 @@ export const registerGpuServer = createAsyncThunk<
             message: error.message,
           });
         default:
-          return rejectWithValue(miniSerializeError(error));
+          return rejectWithValue(defaultError(error));
       }
     }
 
@@ -196,13 +198,33 @@ export const registerGpuServer = createAsyncThunk<
 export const deleteGpuServerById = createAsyncThunk<
   number,
   number,
-  { state: RootState; dispatch: ReturnType<typeof useAppDispatch> }
->("gpuServer/deleteById", async (serverId, { getState, dispatch }) => {
+  { state: RootState; rejectValue: SerializedError }
+>("gpuServer/deleteById", async (serverId, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
 
-  await gpuServerApiClient.deleteGpuServerById({ labId, serverId });
+  try {
+    await gpuServerApiClient.deleteGpuServerById({ labId, serverId });
+    dispatch(fetchAllGpuServer());
+  } catch (err) {
+    const error = err as CustomError;
 
-  dispatch(fetchAllGpuServer());
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        dispatch(fetchAllGpuServer());
+        return rejectWithValue({
+          name: "GPU 서버 삭제 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
 
   return serverId;
 });
@@ -251,7 +273,7 @@ const gpuServerSlice = createSlice({
       })
       .addCase(deleteGpuServerById.rejected, (state, action) => {
         state[deleteGpuServerById.typePrefix].status = STATUS.FAILED;
-        state[deleteGpuServerById.typePrefix].error = action.error;
+        state[deleteGpuServerById.typePrefix].error = action.payload!;
       })
       .addCase(fetchGpuServerById.pending, (state) => {
         state[fetchGpuServerById.typePrefix].status = STATUS.LOADING;

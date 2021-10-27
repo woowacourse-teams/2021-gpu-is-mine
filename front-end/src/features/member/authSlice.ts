@@ -1,9 +1,12 @@
-import { createSlice, createAsyncThunk, SerializedError, createAction } from "@reduxjs/toolkit";
+/* eslint-disable consistent-return */
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
-import { useAppDispatch } from "../../app/hooks";
+import { defaultError } from "../../utils";
 import { authApiClient } from "../../services";
-import type { MemberType, MyInfoResponse } from "../../types";
 import type { RootState } from "../../app/store";
+import type { MemberType, MyInfoResponse } from "../../types";
+import type { CustomError } from "../../utils";
 
 interface MyInfo {
   memberId: number;
@@ -73,11 +76,28 @@ export const authorize = createAsyncThunk<MyInfoResponse, { accessToken: string;
 export const login = createAsyncThunk<
   void,
   { email: string; password: string },
-  { dispatch: ReturnType<typeof useAppDispatch> }
->("auth/login", async ({ email, password }, { dispatch }) => {
-  const { accessToken, expires } = await authApiClient.postLogin({ email, password });
+  { rejectValue: SerializedError }
+>("auth/login", async ({ email, password }, { dispatch, rejectWithValue }) => {
+  let loginResponse: { accessToken: string; expires: Date };
 
-  await dispatch(authorize({ accessToken, expires })).unwrap();
+  try {
+    loginResponse = await authApiClient.postLogin({ email, password });
+  } catch (err) {
+    const error = err as CustomError;
+
+    switch (error.name) {
+      case "AuthorizationError":
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "로그인 실패",
+          message: "이메일 또는 비밀번호를 확인해주세요",
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
+
+  await dispatch(authorize(loginResponse)).unwrap();
 });
 
 export const logout = createAsyncThunk<void, void>("auth/logout", () => {
@@ -102,12 +122,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.status = STATUS.FAILED;
-        // TODO: Error Handling
-        // email, password가 일치하지 않을 경우
-        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
-        // 500 서버 에러
-        // Network 에러
-        state.error = action.error;
+        state.error = action.payload!;
       })
       .addCase(authorize.pending, (state) => {
         state.status = STATUS.LOADING;
@@ -127,15 +142,13 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(authorize.rejected, (state, action) => {
-        // TODO: Error Handling
-        // AccessToken이 유효하지 않은 경우: 방금 accessToken을 발급받았기 때문에 현실적으로 존재할 가능성 매우 낮다고 판단됨
-        // 500 서버 에러
-        // Network 에러
         state.error = action.error;
 
-        // accessToken이 유효하지 않은 경우에만 STATUS.IDLE
-        // 500 서버, Network에러는 STATUS.FAILED
-        state.status = STATUS.IDLE;
+        if (action.error.name === "AuthorizationError") {
+          state.status = STATUS.IDLE;
+        } else {
+          state.status = STATUS.FAILED;
+        }
       })
       .addCase(logout.fulfilled, (state) => {
         state.myInfo = null;
