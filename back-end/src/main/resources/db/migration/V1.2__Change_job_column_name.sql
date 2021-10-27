@@ -1,2 +1,2 @@
 alter table job
-    rename column completed_time to ended_time;
+    change completed_time ended_time datetime;
