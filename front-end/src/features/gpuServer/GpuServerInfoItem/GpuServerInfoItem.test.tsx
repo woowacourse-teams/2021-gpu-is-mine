@@ -1,4 +1,4 @@
-import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { rest } from "msw";
 import { render, screen, userEvent } from "../../../__test__/test-utils";
 import { BASE_URL, PATH } from "../../../constants";
@@ -15,7 +15,7 @@ jest.mock("../../../hooks/useHistory/useHistory.ts", () => ({
   useMoveToPage: jest.fn<void, [string]>(),
 }));
 
-const store: EnhancedStore = configureStore({
+const store = configureStore({
   reducer: { gpuServer: gpuServerReducer, auth: authReducer },
   preloadedState: {
     auth: succeedAuthState,
