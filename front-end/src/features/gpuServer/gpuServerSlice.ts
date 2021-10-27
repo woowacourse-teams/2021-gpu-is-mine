@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { AxiosError } from "axios";
+import { createAsyncThunk, createSlice, miniSerializeError } from "@reduxjs/toolkit";
 import type { SerializedError } from "@reduxjs/toolkit";
 import { STATUS } from "../../constants";
 import { gpuServerApiClient } from "../../services";
@@ -79,18 +80,50 @@ const initialState = {
   entities: [],
 } as unknown as GpuServerSliceState;
 
-export const fetchAllGpuServer = createAsyncThunk<SimpleGpuServer[], void, { state: RootState }>(
-  "gpuServer/fetchAll",
-  async (_, { getState }) => {
-    const { labId } = selectMyInfo(getState());
+export const fetchAllGpuServer = createAsyncThunk<
+  SimpleGpuServer[],
+  void,
+  { state: RootState; rejectValue: SerializedError }
+  // eslint-disable-next-line consistent-return
+>("gpuServer/fetchAll", async (_, { getState, rejectWithValue }) => {
+  const { labId } = selectMyInfo(getState());
 
+  try {
     const {
       data: { gpuServers },
     } = await gpuServerApiClient.fetchGpuServerAll(labId);
 
     return gpuServers;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+
+    // Network Error
+    if (error.message === "Network Error") {
+      return rejectWithValue({
+        name: "Network Error 발생",
+        message: "잠시 후 다시 시도해주세요",
+      });
+    }
+
+    // 400 대
+    if (/^4/.test(error.response!.status.toString())) {
+      return rejectWithValue({
+        name: "GpuServer 정보 불러오기 실패",
+        message: error.response!.data.message,
+      });
+    }
+
+    // 500 대
+    if (/^5/.test(error.response!.status.toString())) {
+      return rejectWithValue({
+        name: "알 수 없는 에러 발생",
+        message: "관리자에게 문의해주세요",
+      });
+    }
+
+    return rejectWithValue(miniSerializeError(error));
   }
-);
+});
 
 export const fetchGpuServerById = createAsyncThunk<
   GpuServerViewDetailResponse,
@@ -167,7 +200,7 @@ const gpuServerSlice = createSlice({
       })
       .addCase(fetchAllGpuServer.rejected, (state, action) => {
         state[fetchAllGpuServer.typePrefix].status = STATUS.FAILED;
-        state[fetchAllGpuServer.typePrefix].error = action.error;
+        state[fetchAllGpuServer.typePrefix].error = action.payload!;
       })
       .addCase(registerGpuServer.pending, (state) => {
         state[registerGpuServer.typePrefix].status = STATUS.LOADING;

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { MESSAGE } from "../../../constants";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { fetchAllGpuServer, selectAllGpuServerIds, selectGpuServerStatus } from "../gpuServerSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useBreakpoints } from "../../../hooks";
-import { Text, Loading } from "../../../components";
+import { Text, Loading, useToast } from "../../../components";
 import GpuServerInfoItem from "../GpuServerInfoItem/GpuServerInfoItem";
 import { StyledInfoList } from "./GpuServerInfoList.styled";
 import type { RootState } from "../../../app/store";
@@ -15,7 +15,7 @@ interface GpuServerInfoListProps {
 const GpuServerInfoList = ({ ...rest }: GpuServerInfoListProps) => {
   const { isMobile } = useBreakpoints();
 
-  const { isLoading, isSucceed, isFailed } = useAppSelector((state: RootState) =>
+  const { isLoading } = useAppSelector((state: RootState) =>
     selectGpuServerStatus(state, fetchAllGpuServer)
   );
 
@@ -23,22 +23,24 @@ const GpuServerInfoList = ({ ...rest }: GpuServerInfoListProps) => {
 
   const dispatch = useAppDispatch();
 
+  const showToast = useToast();
+
   useEffect(() => {
-    dispatch(fetchAllGpuServer());
-  }, [dispatch]);
+    dispatch(fetchAllGpuServer())
+      .unwrap()
+      .catch((err) => {
+        const error = err as SerializedError;
+
+        showToast({ type: "error", title: error.name!, message: error.message });
+      });
+  }, [dispatch, showToast]);
 
   return (
     <>
       {isLoading && <Loading size="lg" />}
 
-      {isFailed && (
-        <Text size={isMobile ? "md" : "lg"} weight="bold">
-          {MESSAGE.ERROR.SERVER}
-        </Text>
-      )}
-
       <StyledInfoList {...rest}>
-        {isSucceed && serverIds.length === 0 ? (
+        {!isLoading && serverIds.length === 0 ? (
           <Text size={isMobile ? "md" : "lg"} weight="bold">
             🚫 등록된 GPU 서버가 존재하지 않습니다.
           </Text>
