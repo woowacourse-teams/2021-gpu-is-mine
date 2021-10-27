@@ -23,8 +23,11 @@ export const Inner = styled.div`
 
 export const Body = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+
+  row-gap: 1rem;
 
   word-break: break-all;
   padding: 0.5rem 2rem;

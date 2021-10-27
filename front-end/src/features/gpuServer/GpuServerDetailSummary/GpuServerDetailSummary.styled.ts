@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { cardStyle } from "../../styles";
+import { cardStyle } from "../../../styles";
 
 export const ServerNameBox = styled.div`
   display: flex;
