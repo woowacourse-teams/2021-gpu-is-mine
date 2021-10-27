@@ -9,9 +9,7 @@ interface GpuServerDetailCurrentJobProps {
 }
 
 const GpuServerDetailCurrentJob = ({ jobId, ...rest }: GpuServerDetailCurrentJobProps) => {
-  const Job = useAppSelector((state) => selectJobById(state, jobId));
-
-  const { name, status, memberName, gpuServerName, expectedTime, dockerHubImage } = Job ?? {};
+  const { name, status, memberName, gpuServerName, expectedTime, dockerHubImage } = useAppSelector((state) => selectJobById(state, jobId))!;
 
   return (
     <StyledJobDetailSummary {...rest}>
