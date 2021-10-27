@@ -120,7 +120,7 @@ class WorkerServiceTest {
 
         workerService.updateJobStatus(job1.getId(), new WorkerJobRequest(JobStatus.COMPLETED));
 
-        assertThat(job1.getCompletedTime()).isNotNull();
+        assertThat(job1.getEndedTime()).isNotNull();
     }
 
     @DisplayName("job 이 완료되면 해당 job은 모든 시간값이 입력되어 있다")
@@ -133,7 +133,7 @@ class WorkerServiceTest {
 
         assertThat(job2.getCreatedAt()).isNotNull();
         assertThat(job2.getStartedTime()).isNotNull();
-        assertThat(job2.getCompletedTime()).isNotNull();
+        assertThat(job2.getEndedTime()).isNotNull();
     }
 
     @DisplayName("허용되지 않는 job status update 요청")

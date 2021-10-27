@@ -45,7 +45,7 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime expectedStartedTime;
     private LocalDateTime startedTime;
-    private LocalDateTime completedTime;
+    private LocalDateTime endedTime;
     private LocalDateTime expectedCompletedTime;
 
     protected Job() {
@@ -70,6 +70,13 @@ public class Job extends BaseEntity {
 
     public Job(String name, GpuBoard gpuBoard, Member member, String metaData, String expectedTime) {
         this(name, JobStatus.WAITING, gpuBoard, member, metaData, expectedTime);
+    }
+
+    public Job(String name, JobStatus status, GpuBoard gpuBoard, Member member, String metaData, String expectedTime,
+            LocalDateTime startedTime, LocalDateTime endedTime) {
+        this(name, status, gpuBoard, member, metaData, expectedTime);
+        this.startedTime = startedTime;
+        this.endedTime = endedTime;
     }
 
     private void validate(String name, JobStatus status, GpuBoard gpuBoard, Member member,
@@ -140,7 +147,7 @@ public class Job extends BaseEntity {
             throw JobException.NO_WAITING_JOB.getException();
         }
         this.status = JobStatus.CANCELED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public void start() {
@@ -157,7 +164,7 @@ public class Job extends BaseEntity {
             throw JobException.JOB_NOT_RUNNING.getException();
         }
         this.status = JobStatus.COMPLETED;
-        this.completedTime = LocalDateTime.now();
+        this.endedTime = LocalDateTime.now();
     }
 
     public GpuServer getGpuServer() {
@@ -176,12 +183,8 @@ public class Job extends BaseEntity {
         return startedTime;
     }
 
-    public void setStartedTime(LocalDateTime startedTime) {
-        this.startedTime = startedTime;
-    }
-
-    public LocalDateTime getCompletedTime() {
-        return completedTime;
+    public LocalDateTime getEndedTime() {
+        return endedTime;
     }
 
     public LocalDateTime getExpectedStartedTime() {
@@ -190,10 +193,6 @@ public class Job extends BaseEntity {
 
     public LocalDateTime getExpectedCompletedTime() {
         return expectedCompletedTime;
-    }
-
-    public void setCompletedTime(LocalDateTime completedTime) {
-        this.completedTime = completedTime;
     }
 
     public void calculateExpectation(Optional<Job> last) {

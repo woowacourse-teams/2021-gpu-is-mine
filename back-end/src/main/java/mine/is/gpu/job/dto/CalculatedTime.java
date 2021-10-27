@@ -17,7 +17,7 @@ public class CalculatedTime {
     public CalculatedTime(Job job) {
         this.createdTime = job.getCreatedAt();
         this.startedTime = job.getStartedTime();
-        this.completedTime = job.getCompletedTime();
+        this.completedTime = job.getEndedTime();
         this.expectedStartedTime = job.getExpectedStartedTime();
         this.expectedCompletedTime = job.getExpectedCompletedTime();
     }
