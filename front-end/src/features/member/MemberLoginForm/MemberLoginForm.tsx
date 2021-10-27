@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { useForm, getInputProps, getFormProps } from "../../../hooks";
-import { Input, Loading, Text, useToast } from "../../../components";
-import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
+import type { SerializedError } from "@reduxjs/toolkit";
 import { PATH } from "../../../constants";
 import { login, selectLoginStatus } from "../authSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useForm, getInputProps, getFormProps } from "../../../hooks";
+import { Input, Loading, Text, useToast } from "../../../components";
+import { StyledForm, SubmitButton } from "./MemberLoginForm.styled";
 
 interface MemberLoginFormProps {
   className?: string;
@@ -28,10 +29,12 @@ const MemberLoginForm = ({ className }: MemberLoginFormProps) => {
   const handleSubmit = async ({ email, password }: Values) => {
     try {
       await appDispatch(login({ email, password })).unwrap();
-    } catch (error) {
+    } catch (err) {
+      const error = err as SerializedError;
+
       showToast({
-        title: `Login Failed`,
-        message: "이메일 또는 비밀번호를 확인해주세요",
+        title: error.name!,
+        message: error.message,
         type: "error",
       });
 
