@@ -23,6 +23,8 @@ httpClient.interceptors.response.use(
   // eslint-disable-next-line consistent-return
   (error) => {
     if (!isAxiosError<{ message: string }>(error)) {
+      console.error(error); // sentry.io
+
       return throwError("UnknownError", "관리자에게 문의해주세요");
     }
 
@@ -42,6 +44,9 @@ httpClient.interceptors.response.use(
     if (/^5/.test(error.response?.status.toString() ?? "")) {
       return throwError("InternalError", "관리자에게 문의해주세요");
     }
+
+    console.error(error); // sentry.io
+    return throwError("UnknownError", "관리자에게 문의해주세요");
   }
 );
 
