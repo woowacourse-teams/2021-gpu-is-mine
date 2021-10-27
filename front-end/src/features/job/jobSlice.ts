@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import {
   createSlice,
   createAsyncThunk,
@@ -8,10 +9,11 @@ import {
 import { useAppDispatch } from "../../app/hooks";
 import type { JobRegisterRequest, JobStatus } from "../../types";
 import type { RootState } from "../../app/store";
+import type { CustomError, DefaultError } from "../../utils/error";
 import { jobApiClient } from "../../services";
 import { SLICE_NAME, STATUS } from "../../constants";
-import { generateStatusBoolean, selectMyInfo } from "../member/authSlice";
-import { formatDate } from "../../utils";
+import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
+import { defaultError, formatDate } from "../../utils";
 
 export interface Job {
   id: number;
@@ -60,8 +62,12 @@ type JobSliceState = {
   [key: string]: ApiState;
 } & {
   entities: Job[];
-  filtered: number[];
 };
+
+interface RejectValueError {
+  name: string;
+  message: string;
+}
 
 const GET_JOB_ALL = "job/getAll" as const;
 const GET_JOB_BY_ID = "job/getById" as const;
@@ -74,7 +80,6 @@ const initialState = {
   [REGISTER_JOB]: { status: STATUS.IDLE, error: null },
   [CANCEL_JOB_BY_ID]: { status: STATUS.IDLE, error: null },
   entities: [],
-  filtered: [],
 } as unknown as JobSliceState;
 
 const convertJobResponse = (response: JobViewResponse): Job => {
@@ -92,16 +97,17 @@ const convertJobResponse = (response: JobViewResponse): Job => {
     ...rest
   } = response;
 
+  const startTimeOrNull = status === "WAITING" ? expectedStartedTime : startedTime;
+  const endTimeOrNull = status === "COMPLETED" ? completedTime : expectedCompletedTime;
+
   return {
     ...rest,
     status,
     expectedTime,
     dockerHubImage,
-    createdTime: createdTime ?? formatDate(new Date()),
-    startTime: (status === "WAITING" ? expectedStartedTime : startedTime) ?? formatDate(new Date()),
-    endTime:
-      (status === "COMPLETED" ? completedTime : expectedCompletedTime) ??
-      formatDate(new Date(Date.now() + Number(expectedTime) * 1_000 * 3_600)),
+    createdTime: createdTime == null ? "-" : formatDate(new Date(createdTime)),
+    startTime: startTimeOrNull == null ? "-" : formatDate(new Date(startTimeOrNull)),
+    endTime: endTimeOrNull == null ? "-" : formatDate(new Date(endTimeOrNull)),
   };
 };
 
@@ -122,51 +128,144 @@ export const selectJobAll = (state: RootState) => state.job.entities;
 
 export const resetJobActionState = createAction<string>("job/reset");
 
-export const getJobAll = createAsyncThunk<JobViewResponse[], void, { state: RootState }>(
-  GET_JOB_ALL,
-  async (_, { getState }) => {
-    const { labId } = selectMyInfo(getState());
+export const getJobAll = createAsyncThunk<
+  JobViewResponse[],
+  void,
+  { state: RootState; rejectValue: RejectValueError | DefaultError }
+>(GET_JOB_ALL, async (_, { getState, dispatch, rejectWithValue }) => {
+  const { labId } = selectMyInfo(getState());
 
+  try {
     const { jobResponses: data } = await jobApiClient.getJobAll({ labId });
 
     return data;
+  } catch (err) {
+    const error = err as CustomError;
+
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "Job 정보 불러오기 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
   }
-);
+});
 
 export const getJobById = createAsyncThunk<
   JobViewResponse,
   { jobId: number },
-  { state: RootState }
->(GET_JOB_BY_ID, async ({ jobId }, { getState }) => {
+  { state: RootState; rejectValue: RejectValueError | DefaultError }
+>(GET_JOB_BY_ID, async ({ jobId }, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
 
-  const data = await jobApiClient.getJobById({ labId, jobId });
+  try {
+    const data = await jobApiClient.getJobById({ labId, jobId });
 
-  return data;
+    return data;
+  } catch (err) {
+    const error = err as CustomError;
+
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "Job 정보 불러오기 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
 });
 
 export const registerJob = createAsyncThunk<
   void,
   JobRegisterRequest,
-  { state: RootState; dispatch: ReturnType<typeof useAppDispatch> }
->(REGISTER_JOB, async ({ name, gpuServerId, expectedTime, metaData }, { getState, dispatch }) => {
-  const { labId } = selectMyInfo(getState());
+  {
+    state: RootState;
+    dispatch: ReturnType<typeof useAppDispatch>;
+    rejectValue: RejectValueError | DefaultError;
+  }
+>(
+  REGISTER_JOB,
+  async (
+    { name, gpuServerId, expectedTime, metaData },
+    { getState, dispatch, rejectWithValue }
+  ) => {
+    const { labId } = selectMyInfo(getState());
 
-  await jobApiClient.postJob({ labId, name, gpuServerId, expectedTime, metaData });
+    try {
+      await jobApiClient.postJob({ labId, name, gpuServerId, expectedTime, metaData });
+      dispatch(getJobAll());
+    } catch (err) {
+      const error = err as CustomError;
 
-  dispatch(getJobAll());
-});
+      switch (error.name) {
+        case "AuthorizationError":
+          dispatch(logout());
+          return rejectWithValue({
+            name: "Authorization Error",
+            message: error.message,
+          });
+        case "BadRequestError":
+          return rejectWithValue({
+            name: "Job 등록 실패",
+            message: error.message,
+          });
+        default:
+          return rejectWithValue(defaultError(error));
+      }
+    }
+  }
+);
 
 export const cancelJobById = createAsyncThunk<
   void,
   { jobId: number },
-  { state: RootState; dispatch: ReturnType<typeof useAppDispatch> }
->(CANCEL_JOB_BY_ID, async ({ jobId }, { getState, dispatch }) => {
+  {
+    state: RootState;
+    dispatch: ReturnType<typeof useAppDispatch>;
+    rejectValue: RejectValueError | DefaultError;
+  }
+>(CANCEL_JOB_BY_ID, async ({ jobId }, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
 
-  await jobApiClient.putJobById({ labId, jobId });
+  try {
+    await jobApiClient.putJobById({ labId, jobId });
+    dispatch(getJobAll());
+  } catch (err) {
+    const error = err as CustomError;
 
-  dispatch(getJobAll());
+    switch (error.name) {
+      case "AuthorizationError":
+        dispatch(logout());
+        return rejectWithValue({
+          name: "Authorization Error",
+          message: error.message,
+        });
+      case "BadRequestError":
+        return rejectWithValue({
+          name: "Job 취소 실패",
+          message: error.message,
+        });
+      default:
+        return rejectWithValue(defaultError(error));
+    }
+  }
 });
 
 export const jobSlice = createSlice({
@@ -199,6 +298,10 @@ export const jobSlice = createSlice({
 
         state.entities = jobs;
       })
+      .addCase(getJobAll.rejected, (state, action) => {
+        state[getJobAll.typePrefix].status = STATUS.SUCCEED;
+        state[getJobAll.typePrefix].error = action.payload!;
+      })
       .addCase(getJobById.pending, (state) => {
         state[getJobById.typePrefix].status = STATUS.LOADING;
         state[getJobById.typePrefix].error = null;
@@ -219,7 +322,7 @@ export const jobSlice = createSlice({
       })
       .addCase(getJobById.rejected, (state, action) => {
         state[getJobById.typePrefix].status = STATUS.FAILED;
-        state[getJobById.typePrefix].error = action.error;
+        state[getJobById.typePrefix].error = action.payload!;
       })
       .addCase(registerJob.pending, (state) => {
         state[registerJob.typePrefix].status = STATUS.LOADING;
@@ -231,7 +334,7 @@ export const jobSlice = createSlice({
       })
       .addCase(registerJob.rejected, (state, action) => {
         state[registerJob.typePrefix].status = STATUS.FAILED;
-        state[registerJob.typePrefix].error = action.error;
+        state[registerJob.typePrefix].error = action.payload!;
       })
       .addCase(cancelJobById.pending, (state) => {
         state[cancelJobById.typePrefix].status = STATUS.LOADING;
@@ -243,7 +346,7 @@ export const jobSlice = createSlice({
       })
       .addCase(cancelJobById.rejected, (state, action) => {
         state[cancelJobById.typePrefix].status = STATUS.FAILED;
-        state[cancelJobById.typePrefix].error = action.error;
+        state[cancelJobById.typePrefix].error = action.payload!;
       });
   },
 });
