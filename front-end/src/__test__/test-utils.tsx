@@ -1,6 +1,6 @@
 import { ComponentType, ReactElement } from "react";
 import { render, RenderOptions } from "@testing-library/react";
-import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { AnyAction, configureStore, Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import signupReducer from "../features/member/signupSlice";
@@ -15,7 +15,7 @@ type CustomRender = (
     initialEntries,
     ...renderOptions
   }?: {
-    store?: EnhancedStore;
+    store?: Store<any, AnyAction>;
     initialEntries?: string[];
     renderOptions?: Omit<RenderOptions, "wrapper">;
   }
