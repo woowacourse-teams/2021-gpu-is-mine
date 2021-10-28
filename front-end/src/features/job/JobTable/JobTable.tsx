@@ -61,6 +61,15 @@ const getJobStatusCell = (status: JobStatus) => {
           </StatusText>
         ),
       };
+    case "FAILED":
+      return {
+        priority: 5,
+        value: (
+          <StatusText size="md" weight="bold" status={status}>
+            실패함
+          </StatusText>
+        ),
+      };
   }
 };
 
@@ -75,8 +84,8 @@ const JobTable = ({ jobs, rowCountPerPage = 5, ...rest }: JobTableProps) => {
         status: getJobStatusCell(status),
         name: { value: name },
         expectedTime: { value: expectedTime },
-        startedTime: { value: startTime },
-        completedTime: { value: endTime },
+        startTime: { value: startTime },
+        endTime: { value: endTime },
         memberName: { value: memberName },
         etc: {
           value: (
