@@ -52,7 +52,7 @@ export const selectGpuServerStatus = (
   error: state.gpuServer[thunk.typePrefix].error,
 });
 
-export const selectAllGpuServer = (state: RootState) => state.gpuServer.entities;
+export const selectAllGpuServer = (state: RootState) => state.gpuServer.entities.slice();
 
 export const selectAllGpuServerIds = (state: RootState) =>
   state.gpuServer.entities.map(({ id }) => id);

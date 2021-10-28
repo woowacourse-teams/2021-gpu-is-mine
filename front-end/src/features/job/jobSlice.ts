@@ -103,7 +103,7 @@ export const selectJobByIds = (state: RootState, ids: number[]) =>
 export const selectJobById = (state: RootState, targetId: number) =>
   state.job.entities.find(({ id }) => id === targetId);
 
-export const selectJobAll = (state: RootState) => state.job.entities;
+export const selectJobAll = (state: RootState) => state.job.entities.slice();
 
 export const selectJobByMember = (state: RootState, memberId: number) =>
   state.job.entities.filter((job) => job.memberId === memberId);
