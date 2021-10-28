@@ -117,7 +117,7 @@ const JobInfoItem = ({
                 {label}
               </Text>
               <Text size="sm" weight="medium" className="job-info-details-wrapper__text">
-                {content || "N/A"}
+                {content || "-"}
               </Text>
             </div>
           ))}
