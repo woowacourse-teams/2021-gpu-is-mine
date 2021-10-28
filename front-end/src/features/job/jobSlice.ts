@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, SerializedError } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store";
-import type { JobStatus } from "../../types";
+import type { JobStatus, JobViewResponse } from "../../types";
 import { formatDate } from "../../utils";
 
 export interface Job {
@@ -19,26 +19,6 @@ export interface Job {
   startTime: string;
   endTime: string;
 }
-
-type JobViewResponse = {
-  id: number;
-  name: string;
-  status: JobStatus;
-
-  memberId: number;
-  memberName: string;
-  gpuServerId: number;
-  gpuServerName: string;
-  expectedTime: string;
-  metaData: string;
-  calculatedTime: {
-    createdTime: string | null;
-    startedTime: string | null;
-    expectedStartedTime: string | null;
-    completedTime: string | null;
-    expectedCompletedTime: string | null;
-  };
-};
 
 type JobSliceState = {
   [key: string]: {
@@ -83,25 +63,22 @@ const jobSlice = createSlice({
           },
         } = job;
 
+        const startTimeOrNull = status === "WAITING" ? expectedStartedTime : startedTime;
+        const endTimeOrNull = status === "COMPLETED" ? completedTime : expectedCompletedTime;
+
         return {
           ...job,
           expectedTime,
           dockerHubImage,
           createdTime: createdTime ?? formatDate(new Date()),
-          startTime:
-            (status === "WAITING" ? expectedStartedTime : startedTime) ?? formatDate(new Date()),
-          endTime:
-            (status === "COMPLETED" ? completedTime : expectedCompletedTime) ??
-            formatDate(new Date(Date.now() + Number(expectedTime) * 1_000 * 3_600)),
+          startTime: startTimeOrNull == null ? "-" : formatDate(new Date(startTimeOrNull)),
+          endTime: endTimeOrNull == null ? "-" : formatDate(new Date(endTimeOrNull)),
         };
       });
 
       state.entities = state.entities.filter(({ id }) => !ids.includes(id)).concat([...Jobs]);
     },
   },
-  // extraReducers: (builder) => {
-  // builder.addcase();
-  // },
 });
 
 export const { add } = jobSlice.actions;
