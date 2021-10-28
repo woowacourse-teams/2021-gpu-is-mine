@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { REFRESH_TIME } from "../../constants";
 import { useGetJobDetailLog, useInterval } from "../../hooks";
 import { Loading, Text } from "../../components";
@@ -18,11 +18,37 @@ interface JobDetailLogProps {
   interval: boolean;
 }
 
+const useClientWidth = (ref: RefObject<HTMLElement>) => {
+  const [clientWidth, setClientWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const element = ref.current;
+
+      if (element) {
+        setClientWidth(element.clientWidth);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [ref]);
+
+  return clientWidth;
+};
+
 const JobDetailLog = ({ labId, jobId, interval, ...rest }: JobDetailLogProps) => {
   const { data, makeRequest, done, isFailed, isLoading } = useGetJobDetailLog({
     labId,
     jobId,
   });
+
+  const logConsoleRef = useRef<HTMLDivElement>(null);
+
+  const width = useClientWidth(logConsoleRef);
 
   const refreshLog = () => makeRequest();
 
@@ -52,8 +78,12 @@ const JobDetailLog = ({ labId, jobId, interval, ...rest }: JobDetailLogProps) =>
           </RefreshButton>
         </LogRefreshPanel>
       </LogHeader>
-      <LogConsole>
-        <JobDetailLogContent logs={data?.logs} />
+      <LogConsole ref={logConsoleRef}>
+        {data?.logs == null || data?.logs.length === 0 ? (
+          <Text size="sm">로그 데이터가 존재하지 않습니다.</Text>
+        ) : (
+          <JobDetailLogContent logs={data.logs} width={width} />
+        )}
       </LogConsole>
     </StyledJobDetailLog>
   );
