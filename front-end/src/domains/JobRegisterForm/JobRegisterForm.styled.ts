@@ -54,24 +54,29 @@ export const ToolTipBox = styled.span`
   box-shadow: 2px 2px 4px 2px var(--secondary-100);
   border-radius: 0.25rem;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(-100%);
+  right: 0;
+  transform: translateY(-100%);
   width: 14rem;
 `;
 
 export const SampleImageButton = styled(Button)`
-  background-color: var(--primary-500);
-  color: var(--on-primary-500);
-  width: max-content;
-  transform: translateY(4px);
-  padding: 7px;
+  transform: translateY(5px);
+  padding: 1px;
+  border-radius: 9999px;
+
+  &:hover {
+    background-color: var(--secondary-50);
+  }
 
   &:focus {
-    box-shadow: 0 0 0 2px var(--primary-700);
+    box-shadow: inset 0 0 0 2px var(--secondary-300);
+    background-color: var(--secondary-50);
   }
 
   &:active {
-    box-shadow: 0 0 0 4px var(--primary-700);
+    box-shadow: inset 0 0 0 4px var(--secondary-300);
+    background-color: var(--secondary-100);
+
     filter: brightness(1.1);
   }
 `;
