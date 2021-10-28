@@ -26,9 +26,11 @@ public class MailService {
     @Async("mailExecutor")
     public void sendJobReserveMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("title", "예약이 완료 되었습니다.");
+        String subject = "[GPU-IS_MINE] Job 예약 알림";
+        context.setVariable("title", subject);
         context.setVariable("jobName", mailDto.getJobName());
-        String subject = "[GPU-IS_MINE] Job 예약 완료 메일";
+        context.setVariable("content", "예약 되었습니다.");
+        context.setVariable("url","https://www.gpuismine.com/job/view/188");
         String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
@@ -36,9 +38,11 @@ public class MailService {
     @Async("mailExecutor")
     public void sendJobCancelMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("title", "예약이 취소 되었습니다.");
+        String subject = "[GPU-IS_MINE] Job 취소 알림";
+        context.setVariable("title", subject);
         context.setVariable("jobName", mailDto.getJobName());
-        String subject = "[GPU-IS_MINE] Job 취소 완료 메일";
+        context.setVariable("content", "취소 되었습니다.");
+        context.setVariable("url","https://www.gpuismine.com/job/view/188");
         String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
@@ -46,9 +50,11 @@ public class MailService {
     @Async("mailExecutor")
     public void sendJobStartMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("title", "학습이 시작 되었습니다.");
+        String subject = "[GPU-IS_MINE] Job 시작 알림";
+        context.setVariable("title", subject);
         context.setVariable("jobName", mailDto.getJobName());
-        String subject = "[GPU-IS_MINE] Job 시작 알림 메일";
+        context.setVariable("content", "시작 되었습니다.");
+        context.setVariable("url","https://www.gpuismine.com/job/view/188");
         String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
@@ -58,7 +64,9 @@ public class MailService {
         Context context = new Context();
         String subject = "[GPU-IS_MINE] Job 종료 알림";
         context.setVariable("title", subject);
-        context.setVariable("content", mailDto.getJobName() + "가 종료 되었습니다.");
+        context.setVariable("jobName", mailDto.getJobName());
+        context.setVariable("content", "종료 되었습니다.");
+        context.setVariable("url","https://www.gpuismine.com/job/view/188");
         String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }

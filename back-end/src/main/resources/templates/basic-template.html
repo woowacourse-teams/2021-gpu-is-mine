@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title th:remove="all">이메일</title>
+  <title th:remove="all">이메일 템플릿</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 <table
+    class="root"
     border="0"
     cellpadding="0"
     cellspacing="0"
     width="100%"
-    style="color: #333333; padding: 0; font-size: 16px"
+    style="
+        font-family: sans-serif;
+        color: #333333;
+        padding: 0;
+        font-size: 16px;
+      "
 >
   <tr style="color: #333333; padding: 0; font-size: 16px">
     <td align="center" style="color: #333333; padding: 0; font-size: 16px">
@@ -27,14 +33,19 @@
                 border="0"
                 cellpadding="0"
                 cellspacing="0"
-                style="color: #333333; padding: 0; font-size: 16px"
+                style="
+                    width: 100%;
+                    color: #333333;
+                    padding: 0;
+                    font-size: 16px;
+                  "
             >
               <tr style="color: #333333; padding: 0; font-size: 16px">
                 <td
                     id="title"
                     align="center"
                     style="
-                        color: #333333;
+                        color: #222E3D;
                         padding: 0;
                         font-size: 24px;
                         font-weight: bold;
@@ -44,6 +55,22 @@
                   <span th:text="${title}"></span>
                 </td>
               </tr>
+              </tr>
+              <tr style="color: #333333; padding: 0; font-size: 16px">
+                <td
+                    id="jobName"
+                    style="
+                        color: #E58129;
+                        padding: 0;
+                        font-weight: bold;
+                        font-size: 24px;
+                        padding-top: 48px;
+                        text-align: center;
+                      "
+                >
+                  <span th:text="${jobName}"></span>
+                </td>
+              </tr>
               <tr style="color: #333333; padding: 0; font-size: 16px">
                 <td
                     id="content"
@@ -51,13 +78,47 @@
                         color: #333333;
                         padding: 0;
                         font-size: 16px;
-                        padding-top: 32px;
-                        padding-bottom: 48px;
-                        padding-left: 8px;
-                        padding-right: 8px;
+                        padding-top: 48px;
+                        text-align: center;
                       "
                 >
-                    <span th:text="${content}"></span>
+                <span th:text="${content}"></span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                    style="
+                        padding: 0;
+                        font-size: 16px;
+                        padding-top: 64px;
+                        padding-bottom: 64px;
+                        text-align: center;
+                      "
+                >
+                  <table align="center">
+                    <tr>
+                      <td>
+                        <a
+                            class="link"
+                            th:href="${url}"
+                            target="_blank"
+                            style="
+                                background-color: #222E3D;
+                                color: #F5B85E;
+                                display: block;
+                                width: 243px;
+                                height: 37px;
+                                line-height: 37px;
+                                text-align: center;
+                                border-radius: 4px;
+                                cursor: pointer;
+                              "
+                        >
+                          페이지로 이동
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
@@ -86,22 +147,10 @@
             >
               <tr style="color: #333333; padding: 0; font-size: 16px">
                 <td
-                    id="link"
-                    style="
-                        padding: 0;
-                        color: #666666;
-                        font-size: 12px;
-                        padding-bottom: 28px;
-                      "
-                >
-                </td>
-              </tr>
-              <tr style="color: #333333; padding: 0; font-size: 16px">
-                <td
                     id="copyright"
                     style="padding: 0; color: #666666; font-size: 12px"
                 >
-                 2021 GPU내껀데
+                  2021 GPU내껀데
                 </td>
               </tr>
             </table>
@@ -111,7 +160,5 @@
     </td>
   </tr>
 </table>
-
-</div>
 </body>
 </html>
