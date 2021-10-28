@@ -6,13 +6,13 @@ import {
   createAction,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import type { JobRegisterRequest, JobStatus, JobViewResponse } from "../../types";
 import type { RootState } from "../../app/store";
 import type { CustomError, DefaultError } from "../../utils/error";
 import { jobApiClient } from "../../services";
 import { SLICE_NAME, STATUS } from "../../constants";
 import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
 import { defaultError, formatDate } from "../../utils";
+import type { JobRegisterRequest, JobStatus, JobViewResponse } from "../../types";
 
 export interface Job {
   id: number;

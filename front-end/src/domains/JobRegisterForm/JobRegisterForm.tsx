@@ -8,6 +8,7 @@ import {
 } from "./validator";
 import { getFormProps, getInputProps, useForm, useBoolean } from "../../hooks";
 import { Button, Dimmer, Input, Loading, Text, useToast } from "../../components";
+import InfoIcon from "../../components/Toast/ToastTypeIcon/info.svg";
 import {
   DockerHubImageSection,
   SampleImageButton,
@@ -112,16 +113,6 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
 
   const [isToolTipVisible, openToolTip, closeToolTip] = useBoolean(false);
 
-  const handleSampleImageButtonClick = () => {
-    dispatch(
-      updateValue({
-        name: dockerHubImageInputProps.name,
-        value: "aprn7950/mnist_test_100_auto",
-        validationMessage: "",
-      })
-    );
-  };
-
   const handleDockerHubImageChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const matched = /^\s*docker\s+pull\s+(.*)$/.exec(event.target.value);
 
@@ -160,28 +151,28 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
             placeholder="계정명/저장소명:버전"
             {...dockerHubImageInputProps}
             onChange={handleDockerHubImageChange}
+            onFocus={openToolTip}
+            onBlur={closeToolTip}
           />
           <datalist id="example-dockerhub-image">
-            <option value="aprn7950/mnist_test_100_auto" />
+            <option value="aprn7950/mnist_epoch_30_auto" />
+            <option value="aprn7950/mnist_epoch_50_auto" />
+            <option value="aprn7950/mnist_epoch_100_auto" />
           </datalist>
-
           <ToolTipContainer onMouseLeave={closeToolTip}>
             <SampleImageButton
               type="button"
-              onClick={handleSampleImageButtonClick}
               onMouseOver={openToolTip}
               onFocus={openToolTip}
               onBlur={closeToolTip}
               onKeyDown={closeToolTip}
             >
-              <Text as="p" weight="medium" size="sm">
-                샘플 이미지
-              </Text>
+              <InfoIcon width="36px" height="36px" fill="#de7326" />
             </SampleImageButton>
             {isToolTipVisible && (
               <ToolTipBox>
                 <Text as="span" weight="medium" size="sm">
-                  버튼을 클릭하여 미리 준비해둔 샘플 이미지를 등록해보세요 :-)
+                  Input을 클릭하면 샘플 이미지를 선택할 수 있어요 :-)
                 </Text>
               </ToolTipBox>
             )}
