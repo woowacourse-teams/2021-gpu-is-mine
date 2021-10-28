@@ -1,22 +1,22 @@
 import { render, screen } from "../../__test__/test-utils";
 import JobDetailSummary from "./JobDetailSummary";
-import { JobResponseMock } from "../../__fixtures__";
+import { jobReduxMock } from "../../__fixtures__";
 
 describe("JobDetail", () => {
   const setup = async () => {
-    render(<JobDetailSummary detail={JobResponseMock} />);
+    render(<JobDetailSummary detail={jobReduxMock} />);
 
-    const jobNameRegex = new RegExp(JobResponseMock.name, "i");
+    const jobNameRegex = new RegExp(jobReduxMock.name, "i");
     const jobNameHeading = screen.getByRole("heading", {
       level: 3,
       name: jobNameRegex,
     });
     const jobStatusHeading = screen.getByText("Job 상태");
-    const jobStatus = screen.getByText(JobResponseMock.status);
+    const jobStatus = screen.getByText(jobReduxMock.status);
     const jobOwnerHeading = screen.getByText("Job 등록자");
-    const jobOwner = screen.getByText(JobResponseMock.memberName);
+    const jobOwner = screen.getByText(jobReduxMock.memberName);
     const assignedServerHeading = screen.getByText("할당된 서버");
-    const assignedServer = screen.getByText(JobResponseMock.gpuServerName);
+    const assignedServer = screen.getByText(jobReduxMock.gpuServerName);
 
     return {
       jobNameHeading,

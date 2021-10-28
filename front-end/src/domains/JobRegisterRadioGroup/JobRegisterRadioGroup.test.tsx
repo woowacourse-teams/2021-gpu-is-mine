@@ -1,12 +1,12 @@
-import { gpuServersResponses } from "../../__fixtures__";
+import { gpuServersRedux } from "../../__fixtures__";
 import { sortByIsOn, sortByPerformanceDesc } from "./JobRegisterRadioGroup";
 
 describe("sort", () => {
   test("sortByPerformanceDesc", () => {
-    gpuServersResponses.gpuServers
+    gpuServersRedux
       .slice()
       .sort(sortByPerformanceDesc)
-      .map(({ gpuBoard: { performance } }) => performance)
+      .map(({ performance }) => performance)
       .reduce((prev, curr) => {
         expect(prev).toBeGreaterThan(curr);
 
@@ -15,7 +15,7 @@ describe("sort", () => {
   });
 
   test("sortByIsOn: On-Server comes earlier than Off-Server", () => {
-    const sorted = gpuServersResponses.gpuServers
+    const sorted = gpuServersRedux
       .slice()
       .sort(sortByIsOn)
       .map(({ isOn }) => isOn);
