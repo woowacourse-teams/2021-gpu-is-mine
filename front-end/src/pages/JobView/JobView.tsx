@@ -3,7 +3,7 @@ import { Layout } from "../../components";
 import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
-import { JobInfoList } from "../../domains/Job";
+import { JobInfoList } from "../../features/job";
 
 const JobView = () => {
   const { labId, labName, memberType, memberId } = useMyInfo();
