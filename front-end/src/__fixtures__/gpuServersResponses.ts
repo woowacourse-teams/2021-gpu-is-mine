@@ -1,3 +1,4 @@
+import { GpuServer } from "../features/gpuServer/gpuServerSlice";
 import {
   GpuServerViewDetailResponse,
   GpuServerViewResponse,
@@ -209,4 +210,76 @@ export const gpuServerDetailResponse: GpuServerViewDetailResponse = {
       },
     },
   ],
+};
+
+export const gpuServersRedux: GpuServer[] = [
+  {
+    id: 1,
+    serverName: "serverA",
+    isOn: true,
+    memorySize: 1024,
+    diskSize: 1024,
+    performance: 600,
+    modelName: "NVIDIA42",
+    runningJob: {
+      id: 16,
+      name: "35",
+      status: "RUNNING",
+      memberId: 2,
+    },
+    waitingJobCount: 0,
+    totalExpectedTime: 0,
+  },
+  {
+    id: 2,
+    serverName: "serverB",
+    memorySize: 1024,
+    diskSize: 1024,
+    isOn: true,
+    modelName: "NVIDIA Titan V",
+    performance: 700,
+    runningJob: {
+      id: 7,
+      name: "CNN 모델을 활용한 마스크 인식 학습",
+      status: "RUNNING",
+      memberId: 1,
+    },
+    waitingJobCount: 5,
+    totalExpectedTime: 45,
+  },
+  {
+    id: 3,
+    serverName: "serverC",
+    memorySize: 1024,
+    diskSize: 1024,
+    isOn: true,
+    modelName: "RTX 6000",
+    performance: 670,
+    runningJob: {
+      id: 8,
+      name: "자연어 처리 : 문자-단위 RNN으로 이름 생성하기",
+      status: "RUNNING",
+      memberId: 1,
+    },
+    waitingJobCount: 3,
+    totalExpectedTime: 10,
+  },
+];
+
+export const gpuServerRedux: GpuServer = {
+  id: 1,
+  serverName: "serverA",
+  memorySize: 1024,
+  modelName: "NVIDIA42",
+  diskSize: 4096,
+  isOn: true,
+  performance: 600,
+  runningJob: {
+    id: 2,
+    name: "가짜 뉴스 검증을 위한 댓글 분류 학습",
+    status: "RUNNING",
+    memberId: 1,
+  },
+  waitingJobCount: 4,
+  totalExpectedTime: 100,
 };

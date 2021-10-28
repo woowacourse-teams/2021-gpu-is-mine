@@ -1,8 +1,8 @@
 import { Text } from "../../../components";
-import JobTable from "../../../domains/JobTable/JobTable";
 import { StyledGpuServerDetailJobTable, EmptyJobContainer } from "./GpuServerDetailJobTable.styled";
 import { useAppSelector } from "../../../app/hooks";
 import { selectJobByIds } from "../../job/jobSlice";
+import { JobTable } from "../../job";
 
 interface GpuServerDetailJobTableProps {
   jobIds: number[];

@@ -17,7 +17,7 @@ interface RunningJob {
   memberId: number;
 }
 
-interface GpuServer {
+export interface GpuServer {
   id: number;
   serverName: string;
   isOn: boolean;
@@ -51,6 +51,8 @@ export const selectGpuServerStatus = (
   ...generateStatusBoolean(state.gpuServer[thunk.typePrefix].status),
   error: state.gpuServer[thunk.typePrefix].error,
 });
+
+export const selectAllGpuServer = (state: RootState) => state.gpuServer.entities;
 
 export const selectAllGpuServerIds = (state: RootState) =>
   state.gpuServer.entities.map(({ id }) => id);
@@ -118,7 +120,7 @@ export const fetchAllGpuServer = createAsyncThunk<
 export const fetchGpuServerById = createAsyncThunk<
   GpuServerViewDetailResponse,
   number,
-  { state: RootState }
+  { state: RootState; rejectValue: SerializedError }
 >("gpuServer/fetchById", async (serverId, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
   try {
@@ -171,6 +173,7 @@ export const registerGpuServer = createAsyncThunk<
         serverName,
         gpuBoardRequest: { performance, modelName },
       });
+      dispatch(fetchAllGpuServer());
     } catch (err) {
       const error = err as CustomError;
 
@@ -190,8 +193,6 @@ export const registerGpuServer = createAsyncThunk<
           return rejectWithValue(defaultError(error));
       }
     }
-
-    dispatch(fetchAllGpuServer());
   }
 );
 
@@ -242,11 +243,13 @@ const gpuServerSlice = createSlice({
       .addCase(fetchAllGpuServer.fulfilled, (state, { payload }) => {
         state[fetchAllGpuServer.typePrefix].status = STATUS.SUCCEED;
 
-        state.entities = payload.map(({ gpuBoard, runningJobs, ...rest }) => ({
-          ...rest,
-          ...gpuBoard,
-          runningJob: runningJobs[0],
-        }));
+        state.entities = payload.map(
+          ({ gpuBoard: { isWorking, id, ...board }, runningJobs, ...rest }) => ({
+            ...rest,
+            ...board,
+            runningJob: runningJobs[0],
+          })
+        );
       })
       .addCase(fetchAllGpuServer.rejected, (state, action) => {
         state[fetchAllGpuServer.typePrefix].status = STATUS.FAILED;
@@ -281,7 +284,11 @@ const gpuServerSlice = createSlice({
       .addCase(fetchGpuServerById.fulfilled, (state, { payload }) => {
         state[fetchGpuServerById.typePrefix].status = STATUS.SUCCEED;
 
-        const { gpuBoard, jobs, ...rest } = payload;
+        const {
+          gpuBoard: { isWorking, id: boardId, ...board },
+          jobs,
+          ...rest
+        } = payload;
 
         const jobIds = jobs.map(({ id }) => id);
         const runningJob = jobs.find((job) => job.status === "RUNNING") as RunningJob | undefined;
@@ -299,7 +306,7 @@ const gpuServerSlice = createSlice({
 
         const gpuServer = {
           ...rest,
-          ...gpuBoard,
+          ...board,
           jobs: jobIds,
           runningJob,
           waitingJobCount,
@@ -314,7 +321,7 @@ const gpuServerSlice = createSlice({
       })
       .addCase(fetchGpuServerById.rejected, (state, action) => {
         state[fetchGpuServerById.typePrefix].status = STATUS.FAILED;
-        state[fetchGpuServerById.typePrefix].error = action.error;
+        state[fetchGpuServerById.typePrefix].error = action.payload!;
       });
   },
 });
