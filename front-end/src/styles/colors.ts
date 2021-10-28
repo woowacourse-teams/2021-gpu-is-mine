@@ -34,6 +34,8 @@ const colors = css`
     --disabled: rgba(34, 46, 61, 0.3);
     --active: #90dd53;
     --warning: #f86565;
+    --running: #106edb;
+    --failed: black;
 
     --on-primary-900: var(--text-light);
     --on-primary-800: var(--text-light);

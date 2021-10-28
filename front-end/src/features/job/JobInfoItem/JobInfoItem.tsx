@@ -6,30 +6,34 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { cancelJobById, Job, selectJobActionState } from "../jobSlice";
 import type { RequiredSerializedError } from "../jobSlice";
 import type { RootState } from "../../../app/store";
+import type { JobStatus } from "../../../types";
 
 interface JobInfoItemProps extends Job {
   className?: string;
 }
 
-const statusName = {
+const statusName: Record<JobStatus, string> = {
   WAITING: "대기중",
   RUNNING: "진행중",
   COMPLETED: "완료됨",
   CANCELED: "취소됨",
+  FAILED: "실패함",
 } as const;
 
-const startTimeLabel = {
+const startTimeLabel: Record<JobStatus, string> = {
   WAITING: "예상 시작 시간",
   RUNNING: "시작 시간",
   COMPLETED: "시작 시간",
   CANCELED: "예상 시작 시간",
+  FAILED: "시작 시간",
 } as const;
 
-const endTimeLabel = {
+const endTimeLabel: Record<JobStatus, string> = {
   WAITING: "예상 완료 시간",
   RUNNING: "예상 완료 시간",
   COMPLETED: "완료 시간",
   CANCELED: "취소 시간",
+  FAILED: "실패 시간",
 } as const;
 
 const JobInfoItem = ({

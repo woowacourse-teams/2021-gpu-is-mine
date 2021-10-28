@@ -3,10 +3,10 @@ import CalendarCancel from "./calendar-cancel.svg";
 import CalendarCheck from "./calendar-check.svg";
 import CalendarRun from "./calendar-run.svg";
 import CalendarWait from "./calendar-wait.svg";
+import CalendarFailed from "./calendar-failed.svg";
+import type { Size } from "./CalendarIcon";
 
-export type Size = "sm" | "md" | "lg";
-
-export interface StyledCalendarIconProps {
+interface StyledCalendarIconProps {
   size: Size;
 }
 
@@ -41,10 +41,15 @@ export const StyledCalendarCheckIcon = styled(CalendarCheck)`
 
 export const StyledCalendarRunIcon = styled(CalendarRun)`
   ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
-  fill: var(--primary-900);
+  fill: var(--running);
 `;
 
 export const StyledCalendarWaitIcon = styled(CalendarWait)`
   ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
   fill: var(--secondary-700);
+`;
+
+export const StyledCalendarFailedIcon = styled(CalendarFailed)`
+  ${({ size }: StyledCalendarIconProps) => getSizeStyle(size)};
+  fill: var(--failed);
 `;

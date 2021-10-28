@@ -19,7 +19,10 @@ const getStatusStyle = (status: JobStatus) => {
       color: var(--error);
     `,
     RUNNING: css`
-      color: var(--primary-900);
+      color: var(--running);
+    `,
+    FAILED: css`
+      color: black;
     `,
   };
 
