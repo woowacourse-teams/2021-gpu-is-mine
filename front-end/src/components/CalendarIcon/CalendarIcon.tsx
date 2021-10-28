@@ -5,13 +5,15 @@ import {
   StyledCalendarCancelIcon,
   StyledCalendarRunIcon,
   StyledCalendarWaitIcon,
-  StyledCalendarIconProps,
+  StyledCalendarFailedIcon,
 } from "./CalendarIcon.styled";
 
-type CalendarIconProps = Partial<StyledCalendarIconProps> &
-  HTMLAttributes<HTMLOrSVGElement> & {
-    status: JobStatus;
-  };
+export type Size = "sm" | "md" | "lg";
+
+interface CalendarIconProps extends HTMLAttributes<HTMLOrSVGElement> {
+  status: JobStatus;
+  size?: Size;
+}
 
 const CalendarIcon = ({ size = "sm", status, ...rest }: CalendarIconProps) => {
   switch (status) {
@@ -23,6 +25,8 @@ const CalendarIcon = ({ size = "sm", status, ...rest }: CalendarIconProps) => {
       return <StyledCalendarRunIcon size={size} {...rest} />;
     case "WAITING":
       return <StyledCalendarWaitIcon size={size} {...rest} />;
+    case "FAILED":
+      return <StyledCalendarFailedIcon size={size} {...rest} />;
     default:
       return null;
   }

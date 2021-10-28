@@ -47,8 +47,32 @@ public class WorkerService {
             complete(jobId);
             return;
         }
+        if (workerJobRequest.getJobStatus().isFailed()) {
+            fail(jobId);
+            return;
+        }
 
         throw JobException.UNSUPPORTED_JOB_STATUS_UPDATE.getException();
+    }
+
+    @Transactional
+    public void start(Long jobId) {
+        Job job = findJobById(jobId);
+        job.start();
+        WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
+        jobs.syncExpectation(job.getExpectedCompletedTime());
+    }
+
+    @Transactional
+    public void complete(Long jobId) {
+        Job job = findJobById(jobId);
+        job.complete();
+    }
+
+    @Transactional
+    public void fail(Long jobId) {
+        Job job = findJobById(jobId);
+        job.fail();
     }
 
     @Transactional
@@ -79,19 +103,5 @@ public class WorkerService {
     private GpuServer findGpuServerById(Long serverId) {
         return serverRepository.findById(serverId)
                 .orElseThrow(GpuServerException.GPU_SERVER_NOT_FOUND::getException);
-    }
-
-    @Transactional
-    public void start(Long jobId) {
-        Job job = findJobById(jobId);
-        job.start();
-        WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
-        jobs.syncExpectation(job.getExpectedCompletedTime());
-    }
-
-    @Transactional
-    public void complete(Long jobId) {
-        Job job = findJobById(jobId);
-        job.complete();
     }
 }

@@ -1,4 +1,4 @@
-export type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING";
+export type JobStatus = "WAITING" | "COMPLETED" | "CANCELED" | "RUNNING" | "FAILED";
 
 export interface Job {
   id: number;
