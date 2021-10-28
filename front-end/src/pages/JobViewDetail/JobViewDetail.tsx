@@ -6,14 +6,14 @@ import { UserNavigation } from "../../domains/User";
 import { JobDetail } from "../../features/job";
 
 const JobViewDetail = () => {
-  const { labId, labName, memberType } = useMyInfo();
+  const { labName, memberType } = useMyInfo();
 
   return (
     <Layout
       Header={<Header as="div" labName={labName} />}
       SubHeader={<SubHeader />}
       Aside={memberType === "MANAGER" ? <ManagerNavigation /> : <UserNavigation />}
-      Main={<JobDetail labId={labId} />}
+      Main={<JobDetail />}
     />
   );
 };

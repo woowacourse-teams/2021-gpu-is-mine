@@ -108,7 +108,9 @@ export const selectJobAll = (state: RootState) => state.job.entities;
 export const selectJobByMember = (state: RootState, memberId: number) =>
   state.job.entities.filter((job) => job.memberId === memberId);
 
-export const resetJobActionState = createAction<string>("job/reset");
+export const resetJobActionState = createAction("job/reset", (thunk: JobThunk) => ({
+  payload: thunk.typePrefix,
+}));
 
 export const fetchJobAll = createAsyncThunk<
   JobViewResponse[],
