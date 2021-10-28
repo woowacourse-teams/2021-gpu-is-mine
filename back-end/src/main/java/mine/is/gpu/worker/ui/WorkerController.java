@@ -58,33 +58,6 @@ public class WorkerController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("jobs/{jobId}/start")
-    public ResponseEntity<Void> start(@PathVariable Long jobId) {
-        workerService.start(jobId);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.RUNNING, mailDto);
-        logger.info("job #" + jobId + " is started");
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("jobs/{jobId}/complete")
-    public ResponseEntity<Void> complete(@PathVariable Long jobId) {
-        workerService.complete(jobId);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.COMPLETED, mailDto);
-        logger.info("job #" + jobId + " is completed");
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("jobs/{jobId}/fail")
-    public ResponseEntity<Void> fail(@PathVariable Long jobId) {
-        workerService.fail(jobId);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.FAILED, mailDto);
-        logger.info("job #" + jobId + " is completed");
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("gpus/{serverId}/status")
     public ResponseEntity<Void> updateWorkerStatus(@PathVariable Long serverId,
                                                    @RequestBody WorkerRequest workerRequest) {
