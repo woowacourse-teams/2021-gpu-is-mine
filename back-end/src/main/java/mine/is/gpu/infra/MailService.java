@@ -26,10 +26,10 @@ public class MailService {
         mailContentMapper.put(JobStatus.COMPLETED, new MailComponent("[GPU-IS-MINE] Job 종료 알림", "종료 되었습니다."));
     }
 
-    @Value("${spring.mail.from}")
-    private String fromEmail;
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+    @Value("${spring.mail.from}")
+    private String fromEmail;
 
     public MailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
