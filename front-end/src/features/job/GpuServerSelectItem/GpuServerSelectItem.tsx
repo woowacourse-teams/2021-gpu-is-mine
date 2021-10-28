@@ -1,5 +1,5 @@
 import { Text, Flicker } from "../../../components";
-import { StyledItem } from "./GpuServerSelectItem.styled";
+import { Column, ColumnTitle, ServerColumn, StyledItem } from "./GpuServerSelectItem.styled";
 import { GpuServer } from "../../gpuServer/gpuServerSlice";
 
 type GpuServerSelectItemProps = Pick<
@@ -15,34 +15,34 @@ const GpuServerSelectItem = ({
   totalExpectedTime,
 }: GpuServerSelectItemProps) => (
   <StyledItem>
-    <div className="column">
+    <ServerColumn>
       <Flicker size="xs" status={isOn ? "ON" : "OFF"} />
       <Text size="sm">{serverName}</Text>
-    </div>
-    <div className="column">
-      <Text as="span" size="xs" className="column__title">
+    </ServerColumn>
+    <Column>
+      <ColumnTitle forwardedAs="span" size="xs">
         성능
-      </Text>
+      </ColumnTitle>
       <Text as="span" size="xs">
         {performance} TFLOPS
       </Text>
-    </div>
-    <div className="column">
-      <Text as="span" size="xs" className="column__title">
+    </Column>
+    <Column>
+      <ColumnTitle forwardedAs="span" size="xs">
         남은 Job 개수
-      </Text>
+      </ColumnTitle>
       <Text as="span" size="xs">
         {waitingJobCount} 개
       </Text>
-    </div>
-    <div className="column">
-      <Text as="span" size="xs" className="column__title">
+    </Column>
+    <Column>
+      <ColumnTitle forwardedAs="span" size="xs">
         총 잔여 시간
-      </Text>
+      </ColumnTitle>
       <Text as="span" size="xs">
         {totalExpectedTime} 시간
       </Text>
-    </div>
+    </Column>
   </StyledItem>
 );
 

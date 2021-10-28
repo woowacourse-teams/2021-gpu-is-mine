@@ -80,3 +80,7 @@ export const SampleImageButton = styled(Button)`
     filter: brightness(1.1);
   }
 `;
+
+export const StyledButton = styled(Button)`
+  min-width: 5rem;
+`;

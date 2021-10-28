@@ -1,4 +1,6 @@
+import { up } from "styled-breakpoints";
 import styled from "styled-components";
+import { Text } from "../../../components";
 
 export const StyledItem = styled.div`
   display: grid;
@@ -7,15 +9,27 @@ export const StyledItem = styled.div`
   column-gap: 0.5rem;
   border-bottom: 2px solid var(--primary-50);
   background-color: inherit;
+`;
 
-  .column {
-    display: flex;
+export const Column = styled.div`
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+
+  column-gap: 0.25rem;
+  color: var(--on-primary-400);
+
+  ${up("tablet")} {
+    flex-direction: row;
     align-items: center;
-    column-gap: 0.25rem;
-    color: var(--on-primary-400);
   }
+`;
 
-  .column__title {
-    color: var(--primary-400);
-  }
+export const ServerColumn = styled(Column)`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ColumnTitle = styled(Text)`
+  color: var(--primary-400);
 `;

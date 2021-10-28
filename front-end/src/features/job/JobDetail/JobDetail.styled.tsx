@@ -24,7 +24,7 @@ export const StyledJobDetail = styled.section`
       "summary   graph"
       "log       log  ";
 
-    grid-template-columns: auto 1fr;
+    grid-template-columns: minmax(auto, 25rem) 1fr;
     grid-template-rows: max-content;
   }
 

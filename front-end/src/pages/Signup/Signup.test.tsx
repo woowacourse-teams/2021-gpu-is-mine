@@ -1,5 +1,6 @@
 import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import Signup from "./Signup";
+import "../../__mocks__/matchMedia";
 
 describe("Member/SignupForm", () => {
   const setup = () => {
