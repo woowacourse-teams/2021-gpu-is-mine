@@ -59,17 +59,10 @@ export const StyledGpuServerInfoItem = styled.li`
   }
 
   .button-wrapper {
-    /* TODO: test 환경에서 display:none 이 적용되어 접근성 트리에서 버튼이 제거되는 에러 있음.
-     * 현재는 hidden: true 옵션을 주어서 하고 있으나, 반응형 디자인 개편시에 대응이 필요하다
-     */
-    display: none;
-
-    ${up("tablet")} {
-      display: flex;
-      flex-direction: row;
-      column-gap: 0.5rem;
-      justify-content: flex-end;
-    }
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+    justify-content: flex-end;
 
     ${up("laptop")} {
       justify-content: flex-start;
