@@ -93,7 +93,7 @@ const JobInfoList = ({ ...rest }: JobInfoListProps) => {
         {isSettled && jobs.length === 0 ? (
           <Text size="lg" weight="bold">
             {isSucceed
-              ? "🚫 등록된 Job이 존재하지 않습니다."
+              ? `🚫 등록된 ${memberType === "USER" ? "나의 Job" : "Job"}이 존재하지 않습니다`
               : "Job을 가져오는데 실패하였습니다 😞"}
           </Text>
         ) : (
