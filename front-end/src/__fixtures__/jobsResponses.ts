@@ -1,3 +1,4 @@
+import { Job } from "../features/job/jobSlice";
 import { JobViewResponses, ParsedLog, ParsedLogResponse } from "../types";
 
 export const jobsResponsesMock: JobViewResponses = {
@@ -186,6 +187,109 @@ export const jobsResponsesMock: JobViewResponses = {
 };
 
 export const JobResponseMock = jobsResponsesMock.jobResponses[0];
+
+export const jobsReduxMock: Job[] = [
+  {
+    id: 3,
+    name: "신경망을 이용한 스포츠 경기 비디오와 텍스트 요약",
+    memberId: 1,
+    memberName: "name",
+    gpuServerId: 1,
+    gpuServerName: "serverA",
+    status: "COMPLETED",
+    expectedTime: "60",
+    dockerHubImage: "better/sports_analysis",
+    createdTime: "2021-10-27 23:25",
+    startTime: "2021-10-25 11:25",
+    endTime: "2021-10-26 13:25",
+  },
+  {
+    id: 4,
+    name: "보스턴 주택 가격 예측과 k-겹 검증",
+    memberId: 1,
+    memberName: "name",
+    gpuServerId: 1,
+    gpuServerName: "serverA",
+    status: "COMPLETED",
+    expectedTime: "70",
+    dockerHubImage: "ed/housing_prices",
+    createdTime: "2021-10-27 23:25",
+    startTime: "2021-10-25 11:25",
+    endTime: "2021-10-27 23:25",
+  },
+  {
+    id: 6,
+    name: "교통 표지판 분류 학습",
+    memberId: 2,
+    memberName: "name",
+    gpuServerId: 2,
+    gpuServerName: "serverB",
+    status: "CANCELED",
+    expectedTime: "30",
+    dockerHubImage: "corgi/traffic_signs",
+    createdTime: "2021-10-27 23:25",
+    startTime: "-",
+    endTime: "2021-10-29 05:25",
+  },
+  {
+    id: 20,
+    name: "NLP를 사용한 비즈니스 회의 요약 생성",
+    memberId: 2,
+    memberName: "name",
+    gpuServerId: 2,
+    gpuServerName: "serverB",
+    status: "RUNNING",
+    expectedTime: "2",
+    dockerHubImage: "aprn7950/mnist_test_auto",
+    createdTime: "2021-10-28 07:20",
+    startTime: "2021-10-28 07:20",
+    endTime: "2021-10-28 09:20",
+  },
+  {
+    id: 21,
+    name: "NLP를 사용한 회의 요약 학습",
+    memberId: 2,
+    memberName: "name",
+    gpuServerId: 2,
+    gpuServerName: "serverB",
+    status: "COMPLETED",
+    expectedTime: "100",
+    dockerHubImage: "aprn7950/mnist_test_100_auto",
+    createdTime: "2021-10-28 07:50",
+    startTime: "2021-10-28 07:50",
+    endTime: "2021-10-28 07:55",
+  },
+  {
+    id: 24,
+    name: "NLP를 사용한 회의 요약 학습",
+    memberId: 2,
+    memberName: "name",
+    gpuServerId: 2,
+    gpuServerName: "serverB",
+    status: "COMPLETED",
+    expectedTime: "100",
+    dockerHubImage: "aprn7950/mnist_test_100_auto",
+    createdTime: "2021-10-28 08:53",
+    startTime: "2021-10-28 08:53",
+    endTime: "2021-10-28 08:58",
+  },
+  {
+    id: 19,
+    name: "JOB등록테스트",
+    memberId: 2,
+    memberName: "name",
+    gpuServerId: 3,
+    gpuServerName: "serverC",
+    status: "RUNNING",
+    expectedTime: "100",
+    dockerHubImage: "aprn7950/mnist_test_auto",
+    createdTime: "2021-10-28 07:20",
+    startTime: "2021-10-28 07:20",
+    endTime: "2021-11-01 11:20",
+  },
+];
+
+export const jobReduxMock = jobsReduxMock[0];
 
 export const logs = {
   logs: [

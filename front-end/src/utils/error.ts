@@ -1,5 +1,6 @@
 import { miniSerializeError } from "@reduxjs/toolkit";
 import type { AxiosError } from "axios";
+import type { RequiredSerializedError } from "../features/job/jobSlice";
 
 type ErrorName =
   | "AuthorizationError"
@@ -30,7 +31,8 @@ export const throwError = (name: ErrorName, message: string) => {
   throw error as CustomError;
 };
 
-export const defaultError = (error: CustomError) => ({
-  ...miniSerializeError(error),
-  name: ERROR_NAME[error.name] ?? "알 수 없는 에러 발생",
-});
+export const defaultError = (error: CustomError) =>
+  ({
+    ...miniSerializeError(error),
+    name: ERROR_NAME[error.name] ?? "알 수 없는 에러 발생",
+  } as RequiredSerializedError);

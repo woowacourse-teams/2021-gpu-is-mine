@@ -12,8 +12,8 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useMoveToPage, useForm, getInputProps, getFormProps } from "../../../hooks";
 import { Input, Loading, Dimmer, useToast } from "../../../components";
 import { StyledForm, StyledButton } from "./GpuServerRegisterForm.styled";
-import { RootState } from "../../../app/store";
-import { CustomError } from "../../../utils";
+import type { RootState } from "../../../app/store";
+import type { RequiredSerializedError } from "../../job/jobSlice";
 
 type GpuServerRegisterFormProps = FormHTMLAttributes<HTMLFormElement>;
 
@@ -55,13 +55,13 @@ const GpuServerRegisterForm = (props: GpuServerRegisterFormProps) => {
       });
 
       moveToGpuServerView();
-    } catch (e) {
-      const err = e as CustomError;
+    } catch (err) {
+      const error = err as RequiredSerializedError;
 
       showToast({
         type: "error",
-        title: err.name,
-        message: err.message,
+        title: error.name,
+        message: error.message,
       });
     }
   };

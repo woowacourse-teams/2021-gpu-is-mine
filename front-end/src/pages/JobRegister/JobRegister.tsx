@@ -3,7 +3,7 @@ import { Layout } from "../../components";
 import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
-import { JobRegisterForm } from "../../domains/Job";
+import { JobRegisterForm } from "../../features/job";
 
 const JobRegister = () => {
   const { labId, labName, memberType } = useMyInfo();
