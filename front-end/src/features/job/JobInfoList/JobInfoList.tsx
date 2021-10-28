@@ -8,7 +8,7 @@ import { fetchJobAll, selectJobActionState, selectJobAll, selectJobByMember } fr
 import { selectMyInfo } from "../../member/authSlice";
 import type { Job, RequiredSerializedError } from "../jobSlice";
 import type { RootState } from "../../../app/store";
-import { JobStatus } from "../../../types";
+import type { JobStatus } from "../../../types";
 
 interface JobInfoListProps {
   className?: string;
@@ -38,7 +38,7 @@ const sortByResponse = (a: Job, b: Job) => {
   const startTimeDiff = parseDate(b.startTime) - parseDate(a.startTime);
 
   if (startTimeDiff !== 0) {
-    return diffStatus;
+    return startTimeDiff;
   }
 
   const endDiff = parseDate(b.endTime) - parseDate(a.endTime);
