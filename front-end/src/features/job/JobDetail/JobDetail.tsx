@@ -9,24 +9,31 @@ import {
   StyledJobDetailLog,
 } from "./JobDetail.styled";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { getJobById, resetJobActionState, selectJobActionState, selectJobById } from "../jobSlice";
+import {
+  selectJobActionState,
+  selectJobById,
+  fetchJobById,
+  resetJobActionState,
+} from "../jobSlice";
 import { RootState } from "../../../app/store";
+import { selectMyInfo } from "../../member/authSlice";
 
 interface JobDetailProps {
   className?: string;
-  labId: number;
 }
 
-const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
+const JobDetail = ({ ...rest }: JobDetailProps) => {
   const jobId = useJobId();
 
-  const appDispatch = useAppDispatch();
+  const { labId } = useAppSelector(selectMyInfo);
 
   const detail = useAppSelector((state: RootState) => selectJobById(state, jobId));
 
-  const { isLoading, isFailed, isSucceed, error } = useAppSelector((state: RootState) =>
-    selectJobActionState(state, getJobById)
+  const { isLoading, isFailed, error } = useAppSelector((state: RootState) =>
+    selectJobActionState(state, fetchJobById)
   );
+
+  const dispatch = useAppDispatch();
 
   const isRunning = detail?.status === "RUNNING";
   const isWaiting = detail?.status === "WAITING";
@@ -34,12 +41,12 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
   const goToPreviousPage = useGoToPage(-1);
 
   const done = () => {
-    appDispatch(resetJobActionState(getJobById.typePrefix));
+    dispatch(resetJobActionState(fetchJobById));
   };
 
   useEffect(() => {
-    appDispatch(getJobById({ jobId }));
-  }, [appDispatch, jobId]);
+    dispatch(fetchJobById({ jobId }));
+  }, [dispatch, jobId]);
 
   return (
     <>
@@ -49,7 +56,7 @@ const JobDetail = ({ labId, ...rest }: JobDetailProps) => {
         <Text>{error?.message}</Text>
       </Dialog>
 
-      {isSucceed && detail && (
+      {detail && (
         <StyledJobDetail {...rest}>
           <StyledJobDetailSummary detail={detail} />
           <StyledJobDetailGraph labId={labId} jobId={jobId} interval={isRunning || isWaiting} />

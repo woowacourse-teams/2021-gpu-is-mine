@@ -86,7 +86,11 @@ const convertJobResponse = (response: JobViewResponse): Job => {
   };
 };
 
-type JobThunk = typeof getJobAll | typeof getJobById | typeof registerJob | typeof cancelJobById;
+type JobThunk =
+  | typeof fetchJobAll
+  | typeof fetchJobById
+  | typeof registerJob
+  | typeof cancelJobById;
 
 export const selectJobActionState = (state: RootState, thunk: JobThunk) => ({
   ...generateStatusBoolean(state.job[thunk.typePrefix].status),
@@ -101,9 +105,14 @@ export const selectJobById = (state: RootState, targetId: number) =>
 
 export const selectJobAll = (state: RootState) => state.job.entities;
 
-export const resetJobActionState = createAction<string>("job/reset");
+export const selectJobByMember = (state: RootState, memberId: number) =>
+  state.job.entities.filter((job) => job.memberId === memberId);
 
-export const getJobAll = createAsyncThunk<
+export const resetJobActionState = createAction("job/reset", (thunk: JobThunk) => ({
+  payload: thunk.typePrefix,
+}));
+
+export const fetchJobAll = createAsyncThunk<
   JobViewResponse[],
   void,
   { state: RootState; rejectValue: RequiredSerializedError }
@@ -135,7 +144,7 @@ export const getJobAll = createAsyncThunk<
   }
 });
 
-export const getJobById = createAsyncThunk<
+export const fetchJobById = createAsyncThunk<
   JobViewResponse,
   { jobId: number },
   { state: RootState; rejectValue: RequiredSerializedError }
@@ -184,7 +193,7 @@ export const registerJob = createAsyncThunk<
 
     try {
       await jobApiClient.postJob({ labId, name, gpuServerId, expectedTime, metaData });
-      dispatch(getJobAll());
+      dispatch(fetchJobAll());
     } catch (err) {
       const error = err as CustomError;
 
@@ -219,7 +228,7 @@ export const cancelJobById = createAsyncThunk<
 
   try {
     await jobApiClient.putJobById({ labId, jobId });
-    dispatch(getJobAll());
+    dispatch(fetchJobAll());
   } catch (err) {
     const error = err as CustomError;
 
@@ -259,29 +268,29 @@ export const jobSlice = createSlice({
         state[payload].status = STATUS.IDLE;
         state[payload].error = null;
       })
-      .addCase(getJobAll.pending, (state) => {
-        state[getJobAll.typePrefix].status = STATUS.LOADING;
-        state[getJobAll.typePrefix].error = null;
+      .addCase(fetchJobAll.pending, (state) => {
+        state[fetchJobAll.typePrefix].status = STATUS.LOADING;
+        state[fetchJobAll.typePrefix].error = null;
       })
-      .addCase(getJobAll.fulfilled, (state, { payload }) => {
-        state[getJobAll.typePrefix].status = STATUS.SUCCEED;
-        state[getJobAll.typePrefix].error = null;
+      .addCase(fetchJobAll.fulfilled, (state, { payload }) => {
+        state[fetchJobAll.typePrefix].status = STATUS.SUCCEED;
+        state[fetchJobAll.typePrefix].error = null;
 
         const jobs = payload.map(convertJobResponse);
 
         state.entities = jobs;
       })
-      .addCase(getJobAll.rejected, (state, action) => {
-        state[getJobAll.typePrefix].status = STATUS.SUCCEED;
-        state[getJobAll.typePrefix].error = action.payload;
+      .addCase(fetchJobAll.rejected, (state, action) => {
+        state[fetchJobAll.typePrefix].status = STATUS.SUCCEED;
+        state[fetchJobAll.typePrefix].error = action.payload;
       })
-      .addCase(getJobById.pending, (state) => {
-        state[getJobById.typePrefix].status = STATUS.LOADING;
-        state[getJobById.typePrefix].error = null;
+      .addCase(fetchJobById.pending, (state) => {
+        state[fetchJobById.typePrefix].status = STATUS.LOADING;
+        state[fetchJobById.typePrefix].error = null;
       })
-      .addCase(getJobById.fulfilled, (state, { payload }) => {
-        state[getJobById.typePrefix].status = STATUS.SUCCEED;
-        state[getJobById.typePrefix].error = null;
+      .addCase(fetchJobById.fulfilled, (state, { payload }) => {
+        state[fetchJobById.typePrefix].status = STATUS.SUCCEED;
+        state[fetchJobById.typePrefix].error = null;
 
         const data = convertJobResponse(payload);
 
@@ -293,9 +302,9 @@ export const jobSlice = createSlice({
           state.entities.push(data);
         }
       })
-      .addCase(getJobById.rejected, (state, action) => {
-        state[getJobById.typePrefix].status = STATUS.FAILED;
-        state[getJobById.typePrefix].error = action.payload;
+      .addCase(fetchJobById.rejected, (state, action) => {
+        state[fetchJobById.typePrefix].status = STATUS.FAILED;
+        state[fetchJobById.typePrefix].error = action.payload;
       })
       .addCase(registerJob.pending, (state) => {
         state[registerJob.typePrefix].status = STATUS.LOADING;
