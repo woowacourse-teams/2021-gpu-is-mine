@@ -1,10 +1,10 @@
+import { PATH } from "../../../constants";
+import { cancelJobById, selectJobActionState } from "../jobSlice";
 import { useBoolean, useMoveToPage } from "../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Button, CalendarIcon, Dialog, Text, useToast, VerticalBox } from "../../../components";
 import { StyledJobInfoItem } from "./JobInfoItem.styled";
-import { PATH } from "../../../constants";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { cancelJobById, Job, selectJobActionState } from "../jobSlice";
-import type { RequiredSerializedError } from "../jobSlice";
+import type { Job, RequiredSerializedError } from "../jobSlice";
 import type { RootState } from "../../../app/store";
 import type { JobStatus } from "../../../types";
 
