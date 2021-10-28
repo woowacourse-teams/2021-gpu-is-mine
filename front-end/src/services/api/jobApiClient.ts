@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { API_ENDPOINT } from "../../constants";
 import { httpClient } from "../../utils";
 import type { JobRegisterRequest, JobViewResponse, JobViewResponses } from "../../types";

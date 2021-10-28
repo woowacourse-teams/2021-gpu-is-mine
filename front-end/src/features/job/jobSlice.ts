@@ -6,8 +6,7 @@ import {
   createAction,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../app/hooks";
-import type { JobRegisterRequest, JobStatus } from "../../types";
+import type { JobRegisterRequest, JobStatus, JobViewResponse } from "../../types";
 import type { RootState } from "../../app/store";
 import type { CustomError, DefaultError } from "../../utils/error";
 import { jobApiClient } from "../../services";
@@ -30,27 +29,6 @@ export interface Job {
   createdTime: string;
   startTime: string;
   endTime: string;
-}
-
-interface JobViewResponse {
-  id: number;
-  name: string;
-  status: JobStatus;
-
-  memberId: number;
-  memberName: string;
-  gpuServerId: number;
-  gpuServerName: string;
-
-  metaData: string;
-  expectedTime: string;
-  calculatedTime: {
-    createdTime: string | null;
-    startedTime: string | null;
-    expectedStartedTime: string | null;
-    completedTime: string | null;
-    expectedCompletedTime: string | null;
-  };
 }
 
 interface ApiState {
@@ -197,7 +175,6 @@ export const registerJob = createAsyncThunk<
   JobRegisterRequest,
   {
     state: RootState;
-    dispatch: ReturnType<typeof useAppDispatch>;
     rejectValue: RejectValueError | DefaultError;
   }
 >(
@@ -238,7 +215,6 @@ export const cancelJobById = createAsyncThunk<
   { jobId: number },
   {
     state: RootState;
-    dispatch: ReturnType<typeof useAppDispatch>;
     rejectValue: RejectValueError | DefaultError;
   }
 >(CANCEL_JOB_BY_ID, async ({ jobId }, { getState, dispatch, rejectWithValue }) => {
