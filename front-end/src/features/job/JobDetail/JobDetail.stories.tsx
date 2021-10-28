@@ -18,6 +18,4 @@ const Template: ComponentStory<typeof JobDetail> = (args) => <JobDetail {...args
 
 export const Default = Template.bind({});
 
-Default.args = {
-  labId: 1,
-};
+Default.args = {};
