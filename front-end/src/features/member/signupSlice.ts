@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import type { SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
 import { defaultError } from "../../utils";
 import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
 import type { CustomError } from "../../utils";
+import type { RequiredSerializedError } from "../job/jobSlice";
 
 type SignupState =
   | { status: typeof STATUS.IDLE; error: null }
   | { status: typeof STATUS.LOADING; error: null }
   | { status: typeof STATUS.SUCCEED; error: null }
-  | { status: typeof STATUS.FAILED; error: SerializedError };
+  | { status: typeof STATUS.FAILED; error: RequiredSerializedError };
 
 const generateStatusBoolean = (status: typeof STATUS[keyof typeof STATUS]) => ({
   status,
@@ -31,7 +31,7 @@ export const selectSignupStatus = (state: RootState) => generateStatusBoolean(st
 export const signup = createAsyncThunk<
   void,
   { email: string; password: string; name: string },
-  { rejectValue: SerializedError }
+  { rejectValue: RequiredSerializedError }
   // eslint-disable-next-line consistent-return
 >("signup/signup", async ({ email, password, name }, { rejectWithValue }) => {
   try {

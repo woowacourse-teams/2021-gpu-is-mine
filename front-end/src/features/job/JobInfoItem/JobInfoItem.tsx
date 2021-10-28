@@ -4,8 +4,8 @@ import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import { PATH } from "../../../constants";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { cancelJobById, Job, selectJobActionState } from "../jobSlice";
-import { RootState } from "../../../app/store";
-import { CustomError } from "../../../utils";
+import type { RequiredSerializedError } from "../jobSlice";
+import type { RootState } from "../../../app/store";
 
 interface JobInfoItemProps extends Job {
   className?: string;
@@ -60,7 +60,7 @@ const JobInfoItem = ({
         message: `${jobName}이(가) 취소되었습니다.`,
       });
     } catch (err) {
-      const error = err as CustomError;
+      const error = err as RequiredSerializedError;
 
       showToast({
         type: "error",

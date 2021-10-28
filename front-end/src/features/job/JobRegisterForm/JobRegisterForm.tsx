@@ -6,6 +6,14 @@ import {
   jobNameValidator,
   minPerformanceValidator,
 } from "./validator";
+import { RootState } from "../../../app/store";
+import {
+  registerJob,
+  RequiredSerializedError,
+  selectJobActionState,
+} from "../../../features/job/jobSlice";
+import { updateValue } from "../../../hooks/useForm/useForm";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { getFormProps, getInputProps, useForm, useBoolean } from "../../../hooks";
 import { Button, Dimmer, Input, Loading, Text, useToast } from "../../../components";
 import InfoIcon from "../../../components/Toast/ToastTypeIcon/info.svg";
@@ -17,12 +25,7 @@ import {
   ToolTipContainer,
 } from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
-import { Values } from "./JobRegisterForm.type";
-import { updateValue } from "../../../hooks/useForm/useForm";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { registerJob, selectJobActionState } from "../../../features/job/jobSlice";
-import { RootState } from "../../../app/store";
-import { CustomError } from "../../../utils";
+import type { Values } from "./JobRegisterForm.type";
 
 interface JobRegisterFormProps extends FormHTMLAttributes<HTMLFormElement> {
   labId: number;
@@ -67,7 +70,7 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         message: `${jobName}이(가) 성공적으로 등록되었습니다`,
       });
     } catch (err) {
-      const error = err as CustomError;
+      const error = err as RequiredSerializedError;
 
       showToast({
         type: "error",

@@ -6,13 +6,13 @@ import {
   createAction,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import type { RootState } from "../../app/store";
-import type { CustomError, DefaultError } from "../../utils/error";
 import { jobApiClient } from "../../services";
 import { SLICE_NAME, STATUS } from "../../constants";
-import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
 import { defaultError, formatDate } from "../../utils";
-import type { JobRegisterRequest, JobStatus, JobViewResponse } from "../../types";
+import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
+import type { RootState } from "../../app/store";
+import type { CustomError } from "../../utils/error";
+import type { JobRegisterRequest, JobStatus, Require, JobViewResponse } from "../../types";
 
 export interface Job {
   id: number;
@@ -33,7 +33,7 @@ export interface Job {
 
 interface ApiState {
   status: typeof STATUS[keyof typeof STATUS];
-  error: SerializedError | null;
+  error: RequiredSerializedError | null | undefined;
 }
 
 type JobSliceState = {
@@ -42,10 +42,7 @@ type JobSliceState = {
   entities: Job[];
 };
 
-interface RejectValueError {
-  name: string;
-  message: string;
-}
+export type RequiredSerializedError = Require<SerializedError, "name" | "message">;
 
 const GET_JOB_ALL = "job/getAll" as const;
 const GET_JOB_BY_ID = "job/getById" as const;
@@ -109,7 +106,7 @@ export const resetJobActionState = createAction<string>("job/reset");
 export const getJobAll = createAsyncThunk<
   JobViewResponse[],
   void,
-  { state: RootState; rejectValue: RejectValueError | DefaultError }
+  { state: RootState; rejectValue: RequiredSerializedError }
 >(GET_JOB_ALL, async (_, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
 
@@ -141,7 +138,7 @@ export const getJobAll = createAsyncThunk<
 export const getJobById = createAsyncThunk<
   JobViewResponse,
   { jobId: number },
-  { state: RootState; rejectValue: RejectValueError | DefaultError }
+  { state: RootState; rejectValue: RequiredSerializedError }
 >(GET_JOB_BY_ID, async ({ jobId }, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
 
@@ -175,7 +172,7 @@ export const registerJob = createAsyncThunk<
   JobRegisterRequest,
   {
     state: RootState;
-    rejectValue: RejectValueError | DefaultError;
+    rejectValue: RequiredSerializedError;
   }
 >(
   REGISTER_JOB,
@@ -215,7 +212,7 @@ export const cancelJobById = createAsyncThunk<
   { jobId: number },
   {
     state: RootState;
-    rejectValue: RejectValueError | DefaultError;
+    rejectValue: RequiredSerializedError;
   }
 >(CANCEL_JOB_BY_ID, async ({ jobId }, { getState, dispatch, rejectWithValue }) => {
   const { labId } = selectMyInfo(getState());
@@ -276,7 +273,7 @@ export const jobSlice = createSlice({
       })
       .addCase(getJobAll.rejected, (state, action) => {
         state[getJobAll.typePrefix].status = STATUS.SUCCEED;
-        state[getJobAll.typePrefix].error = action.payload!;
+        state[getJobAll.typePrefix].error = action.payload;
       })
       .addCase(getJobById.pending, (state) => {
         state[getJobById.typePrefix].status = STATUS.LOADING;
@@ -298,7 +295,7 @@ export const jobSlice = createSlice({
       })
       .addCase(getJobById.rejected, (state, action) => {
         state[getJobById.typePrefix].status = STATUS.FAILED;
-        state[getJobById.typePrefix].error = action.payload!;
+        state[getJobById.typePrefix].error = action.payload;
       })
       .addCase(registerJob.pending, (state) => {
         state[registerJob.typePrefix].status = STATUS.LOADING;
@@ -310,7 +307,7 @@ export const jobSlice = createSlice({
       })
       .addCase(registerJob.rejected, (state, action) => {
         state[registerJob.typePrefix].status = STATUS.FAILED;
-        state[registerJob.typePrefix].error = action.payload!;
+        state[registerJob.typePrefix].error = action.payload;
       })
       .addCase(cancelJobById.pending, (state) => {
         state[cancelJobById.typePrefix].status = STATUS.LOADING;
@@ -322,7 +319,7 @@ export const jobSlice = createSlice({
       })
       .addCase(cancelJobById.rejected, (state, action) => {
         state[cancelJobById.typePrefix].status = STATUS.FAILED;
-        state[cancelJobById.typePrefix].error = action.payload!;
+        state[cancelJobById.typePrefix].error = action.payload;
       });
   },
 });
