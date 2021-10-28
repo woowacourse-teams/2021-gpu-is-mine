@@ -167,6 +167,14 @@ public class Job extends BaseEntity {
         this.endedTime = LocalDateTime.now();
     }
 
+    public void fail() {
+        if (!this.status.isRunning()) {
+            throw JobException.JOB_NOT_RUNNING.getException();
+        }
+        this.status = JobStatus.FAILED;
+        this.endedTime = LocalDateTime.now();
+    }
+
     public GpuServer getGpuServer() {
         return gpuBoard.getGpuServer();
     }

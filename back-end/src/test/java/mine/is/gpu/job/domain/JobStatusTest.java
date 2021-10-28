@@ -48,4 +48,12 @@ class JobStatusTest {
         JobStatus jobStatus = JobStatus.ignoreCaseValueOf(input);
         assertThat(jobStatus).isEqualTo(JobStatus.CANCELED);
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"failed", "Failed", "FAILED"})
+    @DisplayName("Enum: FAILED")
+    void failedValueOf(String input) {
+        JobStatus jobStatus = JobStatus.ignoreCaseValueOf(input);
+        assertThat(jobStatus).isEqualTo(JobStatus.FAILED);
+    }
 }

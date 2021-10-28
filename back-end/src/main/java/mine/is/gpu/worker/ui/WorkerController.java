@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,24 +52,9 @@ public class WorkerController {
         if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
             mailService.sendJobMail(JobStatus.COMPLETED, mailDto);
         }
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("jobs/{jobId}/start")
-    public ResponseEntity<Void> start(@PathVariable Long jobId) {
-        workerService.start(jobId);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.RUNNING, mailDto);
-        logger.info("job #" + jobId + " is started");
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("jobs/{jobId}/complete")
-    public ResponseEntity<Void> complete(@PathVariable Long jobId) {
-        workerService.complete(jobId);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.COMPLETED, mailDto);
-        logger.info("job #" + jobId + " is completed");
+        if (workerJobRequest.getJobStatus() == JobStatus.FAILED) {
+            mailService.sendJobMail(JobStatus.FAILED, mailDto);
+        }
         return ResponseEntity.ok().build();
     }
 
