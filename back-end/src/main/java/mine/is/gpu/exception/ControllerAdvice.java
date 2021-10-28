@@ -53,7 +53,7 @@ public class ControllerAdvice {
     public ResponseEntity<ExceptionResponse> globalHandle(Exception exception) {
         logger.error("Unhandled Exception", exception);
 
-        ExceptionResponse response = ExceptionResponse.of(exception.getMessage());
+        ExceptionResponse response = ExceptionResponse.of("서버 에러가 발생하였습니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
