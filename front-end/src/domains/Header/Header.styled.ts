@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { up } from "styled-breakpoints";
+import { Text } from "../../components";
 
 export const StyledHeader = styled.header`
   width: 100%;
@@ -12,15 +13,19 @@ export const StyledHeader = styled.header`
   color: var(--on-primary-900);
   padding: 0.5rem 1rem 0.5rem 0.5rem;
 
+  flex-direction: column;
+
   ${up("tablet")} {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    padding: 0.5rem 2.5rem 0.5rem 1.5rem;
+    flex-direction: row;
   }
 
-  .lab-name {
-    ${up("tablet")} {
-      display: none;
-    }
+  ${up("laptop")} {
+    padding: 0.5rem 2.5rem 0.5rem 1.5rem;
+  }
+`;
+
+export const StyledLabName = styled(Text)`
+  ${up("laptop")} {
+    display: none;
   }
 `;

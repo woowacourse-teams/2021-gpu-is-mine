@@ -80,9 +80,9 @@ const JobInfoItem = ({
 
   const details = [
     { label: "할당 서버", content: gpuServerName },
+    { label: "예약자", content: memberName },
     { label: startTimeLabel[jobStatus], content: startTime },
     { label: endTimeLabel[jobStatus], content: endTime },
-    { label: "예약자", content: memberName },
   ];
 
   const isCancelable = jobStatus === "WAITING";
