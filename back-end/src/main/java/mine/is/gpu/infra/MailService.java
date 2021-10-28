@@ -26,36 +26,40 @@ public class MailService {
     @Async("mailExecutor")
     public void sendJobReserveMail(MailDto mailDto) {
         Context context = new Context();
+        context.setVariable("title", "예약이 완료 되었습니다.");
         context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 예약 완료 메일";
-        String body = templateEngine.process("job-reserve.html", context);
+        String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
     public void sendJobCancelMail(MailDto mailDto) {
         Context context = new Context();
+        context.setVariable("title", "예약이 취소 되었습니다.");
         context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 취소 완료 메일";
-        String body = templateEngine.process("job-cancel.html", context);
+        String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
     public void sendJobStartMail(MailDto mailDto) {
         Context context = new Context();
+        context.setVariable("title", "학습이 시작 되었습니다.");
         context.setVariable("jobName", mailDto.getJobName());
         String subject = "[GPU-IS_MINE] Job 시작 알림 메일";
-        String body = templateEngine.process("job-start.html", context);
+        String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
 
     @Async("mailExecutor")
     public void sendJobEndMail(MailDto mailDto) {
         Context context = new Context();
-        context.setVariable("jobName", mailDto.getJobName());
-        String subject = "[GPU-IS_MINE] Job 종료 알림 메일";
-        String body = templateEngine.process("job-end.html", context);
+        String subject = "[GPU-IS_MINE] Job 종료 알림";
+        context.setVariable("title", subject);
+        context.setVariable("content", mailDto.getJobName() + "가 종료 되었습니다.");
+        String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }
 
