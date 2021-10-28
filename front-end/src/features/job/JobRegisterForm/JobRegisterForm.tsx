@@ -15,7 +15,7 @@ import {
 import { updateValue } from "../../../hooks/useForm/useForm";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { getFormProps, getInputProps, useForm, useBoolean } from "../../../hooks";
-import { Button, Dimmer, Input, Loading, Text, useToast } from "../../../components";
+import { Dimmer, Input, Loading, Text, useToast } from "../../../components";
 import InfoIcon from "../../../components/Toast/ToastTypeIcon/info.svg";
 import {
   DockerHubImageSection,
@@ -23,6 +23,7 @@ import {
   StyledForm,
   ToolTipBox,
   ToolTipContainer,
+  StyledButton,
 } from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import type { Values } from "./JobRegisterForm.type";
@@ -189,9 +190,9 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={isLoading}>
+        <StyledButton color="secondary" disabled={isLoading}>
           제출
-        </Button>
+        </StyledButton>
       </StyledForm>
     </>
   );
