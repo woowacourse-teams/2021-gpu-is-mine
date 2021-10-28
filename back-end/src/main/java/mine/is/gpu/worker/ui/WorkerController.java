@@ -46,7 +46,7 @@ public class WorkerController {
         workerService.updateJobStatus(jobId, workerJobRequest);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
         if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
-            mailService.sendJobMail(JobStatus.RUNNING,mailDto);
+            mailService.sendJobMail(JobStatus.RUNNING, mailDto);
         }
         if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
             mailService.sendJobMail(JobStatus.COMPLETED, mailDto);
@@ -58,7 +58,7 @@ public class WorkerController {
     public ResponseEntity<Void> start(@PathVariable Long jobId) {
         workerService.start(jobId);
         MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        mailService.sendJobMail(JobStatus.RUNNING,mailDto);
+        mailService.sendJobMail(JobStatus.RUNNING, mailDto);
         logger.info("job #" + jobId + " is started");
         return ResponseEntity.ok().build();
     }

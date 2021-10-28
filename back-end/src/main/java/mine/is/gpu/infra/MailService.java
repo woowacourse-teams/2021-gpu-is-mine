@@ -16,7 +16,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service
 @PropertySource(value = {"classpath:application-mail.properties"})
 public class MailService {
-    private final static Map<JobStatus, MailComponent> mailContentMapper = new HashMap<>();
+
+    private static final Map<JobStatus, MailComponent> mailContentMapper = new HashMap<>();
 
     static {
         mailContentMapper.put(JobStatus.WAITING, new MailComponent("[GPU-IS_MINE] Job 예약 알림", "예약 되었습니다."));

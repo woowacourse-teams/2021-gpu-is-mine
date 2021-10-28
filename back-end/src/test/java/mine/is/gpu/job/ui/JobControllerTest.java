@@ -89,7 +89,7 @@ public class JobControllerTest {
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
 
-            Mockito.verify(mailService).sendJobMail(Mockito.any(),Mockito.any());
+            Mockito.verify(mailService).sendJobMail(Mockito.any(), Mockito.any());
         }
 
         @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")
