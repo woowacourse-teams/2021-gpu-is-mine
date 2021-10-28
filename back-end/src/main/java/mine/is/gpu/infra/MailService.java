@@ -20,10 +20,10 @@ public class MailService {
     private static final Map<JobStatus, MailComponent> mailContentMapper = new HashMap<>();
 
     static {
-        mailContentMapper.put(JobStatus.WAITING, new MailComponent("[GPU-IS_MINE] Job 예약 알림", "예약 되었습니다."));
-        mailContentMapper.put(JobStatus.CANCELED, new MailComponent("[GPU-IS_MINE] Job 취소 알림", "취소 되었습니다."));
-        mailContentMapper.put(JobStatus.RUNNING, new MailComponent("[GPU-IS_MINE] Job 시작 알림", "시작 되었습니다."));
-        mailContentMapper.put(JobStatus.COMPLETED, new MailComponent("[GPU-IS_MINE] Job 종료 알림", "종료 되었습니다."));
+        mailContentMapper.put(JobStatus.WAITING, new MailComponent("[GPU-IS-MINE] Job 예약 알림", "예약 되었습니다."));
+        mailContentMapper.put(JobStatus.CANCELED, new MailComponent("[GPU-IS-MINE] Job 취소 알림", "취소 되었습니다."));
+        mailContentMapper.put(JobStatus.RUNNING, new MailComponent("[GPU-IS-MINE] Job 시작 알림", "시작 되었습니다."));
+        mailContentMapper.put(JobStatus.COMPLETED, new MailComponent("[GPU-IS-MINE] Job 종료 알림", "종료 되었습니다."));
     }
 
     @Value("${spring.mail.from}")
