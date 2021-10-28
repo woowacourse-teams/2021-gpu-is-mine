@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import { useEffect } from "react";
-import { SerializedError } from "@reduxjs/toolkit";
 import { Text, Loading, useToast } from "../../../components";
 import JobInfoItem from "../JobInfoItem/JobInfoItem";
 import { StyledJobInfoList } from "./JobInfoList.styled";
-import type { MemberType } from "../../../types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { getJobAll, Job, selectJobActionState, selectJobAll } from "../jobSlice";
-import { RootState } from "../../../app/store";
+import type { RequiredSerializedError } from "../jobSlice";
+import type { RootState } from "../../../app/store";
+import type { JobStatus, MemberType } from "../../../types";
 
 interface JobInfoListProps {
   className?: string;
@@ -16,14 +16,37 @@ interface JobInfoListProps {
   memberType: MemberType;
 }
 
-const priority = {
+const priority: Record<JobStatus, number> = {
   RUNNING: 0, // highest
   WAITING: 1,
   COMPLETED: 2,
-  CANCELED: 3, // lowest
+  CANCELED: 3,
+  FAILED: 4, // lowest
 } as const;
 
-const sortByResponse = (a: Job, b: Job) => priority[a.status] - priority[b.status];
+const parseDate = (str: string): number => {
+  const num = Date.parse(str);
+
+  return Number.isNaN(num) ? 0 : num;
+};
+
+const sortByResponse = (a: Job, b: Job) => {
+  const diffStatus = priority[a.status] - priority[b.status];
+
+  if (diffStatus !== 0) {
+    return diffStatus;
+  }
+
+  const startTimeDiff = parseDate(b.startTime) - parseDate(a.startTime);
+
+  if (startTimeDiff !== 0) {
+    return diffStatus;
+  }
+
+  const endDiff = parseDate(b.endTime) - parseDate(a.endTime);
+
+  return endDiff;
+};
 
 const filterByMember = (response: Job, memberType: MemberType, memberId: number) =>
   memberType === "MANAGER" || response.memberId === memberId;
@@ -43,9 +66,9 @@ const JobInfoList = ({ labId, memberId, memberType, ...rest }: JobInfoListProps)
     appDispatch(getJobAll())
       .unwrap()
       .catch((err) => {
-        const error = err as SerializedError;
+        const error = err as RequiredSerializedError;
 
-        showToast({ type: "error", title: error.name!, message: error.message });
+        showToast({ type: "error", title: error.name, message: error.message });
       });
   }, [appDispatch, showToast]);
 
