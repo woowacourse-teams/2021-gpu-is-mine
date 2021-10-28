@@ -1,5 +1,8 @@
 package mine.is.gpu.infra;
 
+import java.util.HashMap;
+import java.util.Map;
+import mine.is.gpu.job.domain.JobStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +16,15 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service
 @PropertySource(value = {"classpath:application-mail.properties"})
 public class MailService {
+    private final static Map<JobStatus, MailComponent> mailContentMapper = new HashMap<>();
+
+    static {
+        mailContentMapper.put(JobStatus.WAITING, new MailComponent("[GPU-IS_MINE] Job 예약 알림", "예약 되었습니다."));
+        mailContentMapper.put(JobStatus.CANCELED, new MailComponent("[GPU-IS_MINE] Job 취소 알림", "취소 되었습니다."));
+        mailContentMapper.put(JobStatus.RUNNING, new MailComponent("[GPU-IS_MINE] Job 시작 알림", "시작 되었습니다."));
+        mailContentMapper.put(JobStatus.COMPLETED, new MailComponent("[GPU-IS_MINE] Job 종료 알림", "종료 되었습니다."));
+    }
+
     @Value("${spring.mail.from}")
     private String fromEmail;
     private final JavaMailSender mailSender;
@@ -24,49 +36,15 @@ public class MailService {
     }
 
     @Async("mailExecutor")
-    public void sendJobReserveMail(MailDto mailDto) {
-        Context context = new Context();
-        String subject = "[GPU-IS_MINE] Job 예약 알림";
-        context.setVariable("title", subject);
-        context.setVariable("jobName", mailDto.getJobName());
-        context.setVariable("content", "예약 되었습니다.");
-        context.setVariable("url","https://www.gpuismine.com/job/view/188");
-        String body = templateEngine.process("basic-template.html", context);
-        sendMail(mailDto.getEmail(), subject, body);
-    }
+    public void sendJobMail(JobStatus status, MailDto mailDto) {
+        MailComponent mailComponent = mailContentMapper.get(status);
 
-    @Async("mailExecutor")
-    public void sendJobCancelMail(MailDto mailDto) {
         Context context = new Context();
-        String subject = "[GPU-IS_MINE] Job 취소 알림";
+        String subject = mailComponent.getSubject();
         context.setVariable("title", subject);
         context.setVariable("jobName", mailDto.getJobName());
-        context.setVariable("content", "취소 되었습니다.");
-        context.setVariable("url","https://www.gpuismine.com/job/view/188");
-        String body = templateEngine.process("basic-template.html", context);
-        sendMail(mailDto.getEmail(), subject, body);
-    }
-
-    @Async("mailExecutor")
-    public void sendJobStartMail(MailDto mailDto) {
-        Context context = new Context();
-        String subject = "[GPU-IS_MINE] Job 시작 알림";
-        context.setVariable("title", subject);
-        context.setVariable("jobName", mailDto.getJobName());
-        context.setVariable("content", "시작 되었습니다.");
-        context.setVariable("url","https://www.gpuismine.com/job/view/188");
-        String body = templateEngine.process("basic-template.html", context);
-        sendMail(mailDto.getEmail(), subject, body);
-    }
-
-    @Async("mailExecutor")
-    public void sendJobEndMail(MailDto mailDto) {
-        Context context = new Context();
-        String subject = "[GPU-IS_MINE] Job 종료 알림";
-        context.setVariable("title", subject);
-        context.setVariable("jobName", mailDto.getJobName());
-        context.setVariable("content", "종료 되었습니다.");
-        context.setVariable("url","https://www.gpuismine.com/job/view/188");
+        context.setVariable("content", mailComponent.getContent());
+        context.setVariable("url", "https://www.gpuismine.com/job/view/" + mailDto.getJobId());
         String body = templateEngine.process("basic-template.html", context);
         sendMail(mailDto.getEmail(), subject, body);
     }

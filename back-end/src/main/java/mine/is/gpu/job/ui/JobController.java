@@ -7,6 +7,7 @@ import mine.is.gpu.auth.domain.AuthenticationPrincipal;
 import mine.is.gpu.infra.MailDto;
 import mine.is.gpu.infra.MailService;
 import mine.is.gpu.job.application.JobService;
+import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
@@ -45,7 +46,7 @@ public class JobController {
         memberService.checkMemberOfServer(member.getId(), jobRequest.getGpuServerId());
 
         Long jobId = jobService.save(member.getId(), jobRequest);
-        mailService.sendJobReserveMail(new MailDto(member.getEmail(), jobRequest.getName()));
+        mailService.sendJobMail(JobStatus.WAITING, new MailDto(member.getEmail(), jobRequest.getName(), jobId));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
@@ -90,7 +91,7 @@ public class JobController {
         memberService.checkEditableJob(member.getId(), jobId);
         JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);
-        mailService.sendJobCancelMail(new MailDto(member.getEmail(), job.getName()));
+        mailService.sendJobMail(JobStatus.CANCELED, new MailDto(member.getEmail(), job.getName(), jobId));
         return ResponseEntity.noContent().build();
     }
 
