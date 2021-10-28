@@ -202,7 +202,7 @@ public class JobService {
     public MailDto mailDtoOfJob(Long jobId) {
         Job job = findJobById(jobId);
         Member member = job.getMember();
-        return new MailDto(member.getEmail(), job.getName());
+        return new MailDto(member.getEmail(), job.getName(), jobId);
     }
 
     public LogsResponse findLogAllById(Long jobId) {
