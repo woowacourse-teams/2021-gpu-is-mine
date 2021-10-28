@@ -61,6 +61,15 @@ const getJobStatusCell = (status: JobStatus) => {
           </StatusText>
         ),
       };
+    case "FAILED":
+      return {
+        priority: 5,
+        value: (
+          <StatusText size="md" weight="bold" status={status}>
+            실패함
+          </StatusText>
+        ),
+      };
   }
 };
 
