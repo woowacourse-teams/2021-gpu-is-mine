@@ -146,7 +146,7 @@ class JobTest {
         assertThat(job.getStatus()).isEqualTo(JobStatus.FAILED);
     }
 
-    @DisplayName("Job 실패 실패")
+    @DisplayName("Job FAILED 실패")
     @ParameterizedTest(name = "{displayName} [status={arguments}] ")
     @ValueSource(strings = {"WAITING", "CANCELED", "COMPLETED", "FAILED"})
     void failJobFailure(String status) {
