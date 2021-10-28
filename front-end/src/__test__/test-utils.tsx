@@ -9,6 +9,7 @@ import { ThemeProvider } from "../styles";
 import { ToastProvider } from "../components";
 import gpuServerReducer from "../features/gpuServer/gpuServerSlice";
 import jobReducer from "../features/job/jobSlice";
+import "../__mocks__/matchMedia";
 
 type CustomRender = (
   ui: ReactElement,
