@@ -10,16 +10,8 @@ const Template: ComponentStory<typeof JobInfoList> = (args) => <JobInfoList {...
 
 export const Manager = Template.bind({});
 
-Manager.args = {
-  labId: 1,
-  memberId: 2,
-  memberType: "MANAGER",
-};
+Manager.args = {};
 
 export const User = Template.bind({});
 
-User.args = {
-  labId: 1,
-  memberId: 2,
-  memberType: "USER",
-};
+User.args = {};
