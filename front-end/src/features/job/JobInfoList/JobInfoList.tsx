@@ -24,7 +24,29 @@ const priority: Record<JobStatus, number> = {
   FAILED: 4, // lowest
 } as const;
 
-const sortByResponse = (a: Job, b: Job) => priority[a.status] - priority[b.status];
+const parseDate = (str: string): number => {
+  const num = Date.parse(str);
+
+  return Number.isNaN(num) ? 0 : num;
+};
+
+const sortByResponse = (a: Job, b: Job) => {
+  const diffStatus = priority[a.status] - priority[b.status];
+
+  if (diffStatus !== 0) {
+    return diffStatus;
+  }
+
+  const startTimeDiff = parseDate(b.startTime) - parseDate(a.startTime);
+
+  if (startTimeDiff !== 0) {
+    return diffStatus;
+  }
+
+  const endDiff = parseDate(b.endTime) - parseDate(a.endTime);
+
+  return endDiff;
+};
 
 const filterByMember = (response: Job, memberType: MemberType, memberId: number) =>
   memberType === "MANAGER" || response.memberId === memberId;
