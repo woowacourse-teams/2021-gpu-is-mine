@@ -110,7 +110,7 @@ class JobTest {
 
     @DisplayName("Job 실행 실패")
     @ParameterizedTest(name = "{displayName} [status={arguments}] ")
-    @ValueSource(strings = {"RUNNING", "CANCELED", "COMPLETED"})
+    @ValueSource(strings = {"RUNNING", "CANCELED", "COMPLETED", "FAILED"})
     void startJobFailure(String status) {
         Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
 
@@ -129,11 +129,30 @@ class JobTest {
 
     @DisplayName("Job 완료 실패")
     @ParameterizedTest(name = "{displayName} [status={arguments}] ")
-    @ValueSource(strings = {"WAITING", "CANCELED", "COMPLETED"})
+    @ValueSource(strings = {"WAITING", "CANCELED", "COMPLETED", "FAILED"})
     void completeJobFailure(String status) {
         Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
 
         assertThatThrownBy(job::complete).isEqualTo(JobException.JOB_NOT_RUNNING.getException());
+    }
+
+    @DisplayName("Job 정상 실패")
+    @Test
+    void failJob() {
+        Job job = new Job("잡1", JobStatus.RUNNING, gpuBoard, member, "metaData", "333");
+        job.fail();
+
+        assertThat(job.getEndedTime()).isNotNull();
+        assertThat(job.getStatus()).isEqualTo(JobStatus.FAILED);
+    }
+
+    @DisplayName("Job FAILED 실패")
+    @ParameterizedTest(name = "{displayName} [status={arguments}] ")
+    @ValueSource(strings = {"WAITING", "CANCELED", "COMPLETED", "FAILED"})
+    void failJobFailure(String status) {
+        Job job = new Job("잡1", JobStatus.ignoreCaseValueOf(status), gpuBoard, member, "metaData", "333");
+
+        assertThatThrownBy(job::fail).isEqualTo(JobException.JOB_NOT_RUNNING.getException());
     }
 
     @DisplayName("Job 예상 시간 검증 - 실패 케이스")
