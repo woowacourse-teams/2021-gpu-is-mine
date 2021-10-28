@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useState, ChangeEventHandler, FormHTMLAttributes } from "react";
+import { useState, ChangeEventHandler, FormHTMLAttributes, FocusEventHandler } from "react";
 import {
   dockerHubImageValidator,
   expectedTimeValidator,
@@ -135,6 +135,11 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     );
   };
 
+  const handleDockerHubImageBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+    closeToolTip();
+    dockerHubImageInputProps.onBlur(event);
+  };
+
   return (
     <>
       {isLoading && (
@@ -150,17 +155,18 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         <DockerHubImageSection>
           <Input
             size="sm"
+            autoComplete="off"
+            {...dockerHubImageInputProps}
             list="example-dockerhub-image"
             placeholder="계정명/저장소명:버전"
-            {...dockerHubImageInputProps}
             onChange={handleDockerHubImageChange}
             onFocus={openToolTip}
-            onBlur={closeToolTip}
+            onBlur={handleDockerHubImageBlur}
           />
           <datalist id="example-dockerhub-image">
-            <option value="aprn7950/mnist_epoch_30_auto" />
-            <option value="aprn7950/mnist_epoch_50_auto" />
-            <option value="aprn7950/mnist_epoch_100_auto" />
+            <option value="aprn7950/mnist_epoch_30_auto">빠른 학습</option>
+            <option value="aprn7950/mnist_epoch_50_auto">중간 학습</option>
+            <option value="aprn7950/mnist_epoch_100_auto">느린 학습</option>
           </datalist>
           <ToolTipContainer onMouseLeave={closeToolTip}>
             <SampleImageButton
