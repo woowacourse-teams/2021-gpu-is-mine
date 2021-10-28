@@ -70,8 +70,8 @@ public class JobControllerTest {
         memberRepository.save(userInLab);
         memberRepository.save(managerInLab);
 
-        Mockito.doNothing().when(mailService).sendJobCancelMail(Mockito.any());
-        Mockito.doNothing().when(mailService).sendJobReserveMail(Mockito.any());
+        Mockito.doNothing().when(mailService).sendJobMail(Mockito.any(), Mockito.any());
+        Mockito.doNothing().when(mailService).sendJobMail(Mockito.any(), Mockito.any());
     }
 
     @Nested
@@ -89,7 +89,7 @@ public class JobControllerTest {
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
 
-            Mockito.verify(mailService).sendJobCancelMail(Mockito.any());
+            Mockito.verify(mailService).sendJobMail(Mockito.any(), Mockito.any());
         }
 
         @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")
@@ -103,7 +103,7 @@ public class JobControllerTest {
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
 
-            Mockito.verify(mailService).sendJobCancelMail(Mockito.any());
+            Mockito.verify(mailService).sendJobMail(Mockito.any(), Mockito.any());
         }
 
         @DisplayName("일반 사용자는 같은 랩의 다른 사용자의 Job 예약을 취소할 수 없다.")
