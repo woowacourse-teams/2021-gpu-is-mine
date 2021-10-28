@@ -7,7 +7,7 @@ export const StyledLayout = styled.div`
   display: grid;
   grid-template: auto auto auto 1fr auto / 1fr;
 
-  ${up("tablet")} {
+  ${up("laptop")} {
     grid-template: auto 1fr auto / auto 1fr;
   }
 `;
@@ -19,7 +19,7 @@ export const HeaderContainer = styled.header`
 export const SubHeaderContainer = styled.section`
   grid-row: 2 / 3;
 
-  ${up("tablet")} {
+  ${up("laptop")} {
     grid-row: 1 / 2;
     grid-column: 2 / 4;
   }
@@ -28,7 +28,7 @@ export const SubHeaderContainer = styled.section`
 export const AsideContainer = styled.aside`
   display: none;
 
-  ${up("tablet")} {
+  ${up("laptop")} {
     display: inherit;
 
     grid-column: 1 / 2;
@@ -42,7 +42,7 @@ export const MainContainer = styled.main`
   padding: 1rem;
   background-color: var(--primary-50);
 
-  ${up("tablet")} {
+  ${up("laptop")} {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     display: flex;
@@ -57,7 +57,7 @@ export const FooterContainer = styled.footer`
   justify-content: center;
   align-items: center;
 
-  ${up("tablet")} {
+  ${up("laptop")} {
     grid-column: 2 / 3;
     grid-row: 3 / 4;
   }
