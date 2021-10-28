@@ -1,12 +1,11 @@
 /* eslint-disable consistent-return */
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import type { SerializedError } from "@reduxjs/toolkit";
 import { SLICE_NAME, STATUS } from "../../constants";
-import { defaultError } from "../../utils";
+import { CustomError, defaultError } from "../../utils";
 import { authApiClient } from "../../services";
 import type { RootState } from "../../app/store";
 import type { MemberType, MyInfoResponse } from "../../types";
-import type { CustomError } from "../../utils";
+import type { RequiredSerializedError } from "../job/jobSlice";
 
 interface MyInfo {
   memberId: number;
@@ -35,7 +34,7 @@ export type AuthState =
     }
   | {
       status: typeof STATUS.FAILED;
-      error: SerializedError;
+      error: RequiredSerializedError;
       myInfo: null;
     };
 
@@ -68,15 +67,22 @@ export const selectMyInfo = (state: RootState) => {
 
 export const selectMemberType = (state: RootState) => selectMyInfo(state).memberType;
 
-export const authorize = createAsyncThunk<MyInfoResponse, { accessToken: string; expires: Date }>(
-  "auth/authorize",
-  async (props) => authApiClient.fetchMyInfo(props)
-);
+export const authorize = createAsyncThunk<
+  MyInfoResponse,
+  { accessToken: string; expires: Date },
+  { rejectValue: RequiredSerializedError }
+>("auth/authorize", async (props, { rejectWithValue }) => {
+  try {
+    return await authApiClient.fetchMyInfo(props);
+  } catch (error) {
+    return rejectWithValue(defaultError(error as CustomError));
+  }
+});
 
 export const login = createAsyncThunk<
   void,
   { email: string; password: string },
-  { rejectValue: SerializedError }
+  { rejectValue: RequiredSerializedError }
 >("auth/login", async ({ email, password }, { dispatch, rejectWithValue }) => {
   let loginResponse: { accessToken: string; expires: Date };
 
@@ -142,7 +148,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(authorize.rejected, (state, action) => {
-        state.error = action.error;
+        state.error = action.payload!;
 
         if (action.error.name === "AuthorizationError") {
           state.status = STATUS.IDLE;
