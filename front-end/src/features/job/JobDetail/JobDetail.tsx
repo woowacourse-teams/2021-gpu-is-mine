@@ -1,6 +1,13 @@
 import { useEffect } from "react";
-import { useGoToPage } from "../../../hooks";
-import { useJobId } from "./useJobDetail";
+import {
+  selectJobActionState,
+  selectJobById,
+  fetchJobById,
+  resetJobActionState,
+} from "../jobSlice";
+import { selectMyInfo } from "../../member/authSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useGoToPage, useJobId } from "../../../hooks";
 import { Loading, Text, Dialog } from "../../../components";
 import {
   StyledJobDetail,
@@ -8,15 +15,7 @@ import {
   StyledJobDetailGraph,
   StyledJobDetailLog,
 } from "./JobDetail.styled";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  selectJobActionState,
-  selectJobById,
-  fetchJobById,
-  resetJobActionState,
-} from "../jobSlice";
-import { RootState } from "../../../app/store";
-import { selectMyInfo } from "../../member/authSlice";
+import type { RootState } from "../../../app/store";
 
 interface JobDetailProps {
   className?: string;
