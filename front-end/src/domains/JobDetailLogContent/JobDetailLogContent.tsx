@@ -1,24 +1,31 @@
+import { useMemo, useRef } from "react";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
-import { Text } from "../../components";
+import { useBreakpoints } from "../../hooks";
 import { StyledText } from "./JobDetailLogConent.styled";
 
 interface JobDetailLogContentProps {
-  logs?: string[];
+  logs: string[];
+  width: number;
   className?: string;
 }
 
-const maxOneLineLength = 150;
+const JobDetailLogContent = ({ width, logs, ...rest }: JobDetailLogContentProps) => {
+  const logsRef = useRef(logs);
 
-const JobDetailLogContent = ({ logs, ...rest }: JobDetailLogContentProps) => {
-  if (logs == null || logs.length === 0) {
-    return <Text size="sm">로그 데이터가 존재하지 않습니다.</Text>;
-  }
+  const { isLaptop } = useBreakpoints();
 
-  const replacedLogs = logs
-    .map((line) => line.replace(/(\n\r|\r)/g, "\n"))
-    .flatMap((line) => line.split("\n"))
-    .flatMap((line) => [line.slice(0, maxOneLineLength), line.slice(maxOneLineLength)])
-    .filter((line) => line !== "");
+  const maxOneLineLength = isLaptop ? Math.floor(width / 11) : Math.floor(width / 8.5);
+
+  const replacedLogs = useMemo(
+    () =>
+      logsRef.current
+        .map((line) => line.replace(/(\n\r|\r)/g, "\n"))
+        .flatMap((line) => line.split("\n"))
+        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+        .flatMap((line) => line.match(new RegExp(`.{1,${maxOneLineLength}}`, "g")) ?? [])
+        .filter((line) => line !== ""),
+    [maxOneLineLength]
+  );
 
   return (
     <List
@@ -30,11 +37,8 @@ const JobDetailLogContent = ({ logs, ...rest }: JobDetailLogContentProps) => {
       {...rest}
     >
       {({ index, data, ...args }: ListChildComponentProps<string[]>) => (
-        <StyledText forwardedAs="pre" size="sm" {...args}>
-          {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            data[index]
-          }
+        <StyledText forwardedAs="pre" size={isLaptop ? "sm" : "xs"} {...args}>
+          {data[index]}
         </StyledText>
       )}
     </List>
