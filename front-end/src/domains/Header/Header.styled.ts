@@ -20,8 +20,6 @@ export const StyledHeader = styled.header`
   }
 
   ${up("laptop")} {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
     padding: 0.5rem 2.5rem 0.5rem 1.5rem;
   }
 `;
