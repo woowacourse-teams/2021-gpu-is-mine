@@ -1,13 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { API_ENDPOINT } from "../../constants";
 import { httpClient } from "../../utils";
-import type {
-  JobDetailLogResponse,
-  JobRegisterRequest,
-  JobViewResponse,
-  JobViewResponses,
-  ParsedLogResponse,
-} from "../../types";
+import type { JobRegisterRequest, JobViewResponse, JobViewResponses } from "../../types";
 
 type RequestJobById = {
   [key in "labId" | "jobId"]: number;
@@ -48,22 +42,6 @@ const putJobById = async ({ labId, jobId }: RequestJobById) => {
   await httpClient.put(`${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/cancel`);
 };
 
-const getJobLogById = async ({ labId, jobId }: RequestJobById) => {
-  const { data } = await httpClient.get<JobDetailLogResponse>(
-    `${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs`
-  );
-
-  return data;
-};
-
-const getJobGraphById = async ({ labId, jobId }: RequestJobById) => {
-  const { data } = await httpClient.get<ParsedLogResponse>(
-    `${API_ENDPOINT.LABS(labId).JOBS}/${jobId}/logs-graph`
-  );
-
-  return data;
-};
-
-const client = { getJobAll, getJobById, postJob, putJobById, getJobLogById, getJobGraphById };
+const client = { getJobAll, getJobById, postJob, putJobById };
 
 export default client;
