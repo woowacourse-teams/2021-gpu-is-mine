@@ -7,6 +7,7 @@ import { StyledJobInfoItem } from "./JobInfoItem.styled";
 import type { Job, RequiredSerializedError } from "../jobSlice";
 import type { RootState } from "../../../app/store";
 import type { JobStatus } from "../../../types";
+import { selectMyInfo } from "../../member/authSlice";
 
 interface JobInfoItemProps extends Job {
   className?: string;
@@ -44,20 +45,24 @@ const JobInfoItem = ({
   memberName,
   startTime,
   endTime,
+  memberId,
   ...rest
 }: JobInfoItemProps) => {
   const appDispatch = useAppDispatch();
+
   const showToast = useToast();
 
   const { isLoading } = useAppSelector((state: RootState) =>
     selectJobActionState(state, cancelJobById)
   );
 
+  const { memberId: myId, memberType } = useAppSelector(selectMyInfo);
+
   const [isConfirmOpen, openConfirm, closeConfirm] = useBoolean(false);
 
   const onConfirm = async () => {
     try {
-      await appDispatch(cancelJobById({ jobId })).unwrap();
+      await appDispatch(cancelJobById({ jobId, jobMemberId: memberId })).unwrap();
       showToast({
         type: "success",
         title: "Job 취소 성공",
@@ -85,7 +90,9 @@ const JobInfoItem = ({
     { label: endTimeLabel[jobStatus], content: endTime },
   ];
 
-  const isCancelable = jobStatus === "WAITING";
+  const isCancelable =
+    (jobStatus === "WAITING" && memberId === myId) ||
+    (jobStatus === "WAITING" && memberType === "MANAGER");
 
   return (
     <>
