@@ -11,7 +11,7 @@ import { SLICE_NAME, STATUS } from "../../constants";
 import { defaultError, formatDate } from "../../utils";
 import { generateStatusBoolean, logout, selectMyInfo } from "../member/authSlice";
 import type { RootState } from "../../app/store";
-import { CustomError, throwError } from "../../utils/error";
+import { CustomError } from "../../utils/error";
 import type { JobRegisterRequest, JobStatus, Require, JobViewResponse } from "../../types";
 
 export interface Job {
@@ -227,7 +227,7 @@ export const cancelJobById = createAsyncThunk<
   const { labId, memberId: myId, memberType } = selectMyInfo(getState());
 
   if (memberType === "USER" && jobMemberId !== myId) {
-    throwError("AuthorizationError", "본인의 Job만 취소할 수 있습니다");
+    return rejectWithValue({ name: "Job 취소 실패", message: "본인의 Job만 취소할 수 있습니다." });
   }
 
   try {
