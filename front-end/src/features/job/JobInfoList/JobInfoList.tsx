@@ -1,14 +1,15 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import { useEffect } from "react";
-import { Text, Loading, useToast } from "../../../components";
-import JobInfoItem from "../JobInfoItem/JobInfoItem";
-import { StyledJobInfoList } from "./JobInfoList.styled";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchJobAll, selectJobActionState, selectJobAll, selectJobByMember } from "../jobSlice";
 import { selectMyInfo } from "../../member/authSlice";
-import type { Job, RequiredSerializedError } from "../jobSlice";
-import type { RootState } from "../../../app/store";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useToggle } from "../../../hooks";
+import { Text, Loading, useToast } from "../../../components";
+import JobInfoItem from "../JobInfoItem/JobInfoItem";
+import { Label, StyledJobInfoList } from "./JobInfoList.styled";
 import type { JobStatus } from "../../../types";
+import type { RootState } from "../../../app/store";
+import type { Job, RequiredSerializedError } from "../jobSlice";
 
 interface JobInfoListProps {
   className?: string;
@@ -57,8 +58,10 @@ const JobInfoList = ({ ...rest }: JobInfoListProps) => {
     selectJobActionState(state, fetchJobAll)
   );
 
+  const [checked, toggle] = useToggle(false);
+
   const jobs = useAppSelector(
-    memberType === "MANAGER"
+    memberType === "MANAGER" || checked
       ? selectJobAll
       : (state: RootState) => selectJobByMember(state, memberId)
   );
@@ -78,10 +81,19 @@ const JobInfoList = ({ ...rest }: JobInfoListProps) => {
       {isLoading && <Loading size="lg" />}
 
       <StyledJobInfoList {...rest}>
+        {memberType === "USER" && (
+          <Label>
+            <input type="checkbox" checked={checked} onChange={() => toggle()} />
+            <Text weight="medium" size="md">
+              {checked ? "전체 Job 보기 해제" : "전체 Job 보기"}
+            </Text>
+          </Label>
+        )}
+
         {isSettled && jobs.length === 0 ? (
           <Text size="lg" weight="bold">
             {isSucceed
-              ? "🚫 등록된 Job이 존재하지 않습니다. Job을 등록해주세요"
+              ? `🚫 등록된 ${memberType === "USER" ? "나의 Job" : "Job"}이 존재하지 않습니다`
               : "Job을 가져오는데 실패하였습니다 😞"}
           </Text>
         ) : (
