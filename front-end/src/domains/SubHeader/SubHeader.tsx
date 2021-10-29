@@ -2,9 +2,14 @@ import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useBreakpoints, useMyInfo, usePathTitle, useToggle } from "../../hooks";
 import { Text } from "../../components";
-import { StyledSubHeader } from "./SubHeader.styled";
-import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
-import UserNavigation from "../UserNavigation/UserNavigation";
+import {
+  StyledSubHeader,
+  StyledUserNavigation,
+  StyledManagerNavigation,
+  StyledButton,
+  TitleName,
+  Title,
+} from "./SubHeader.styled";
 
 type SubHeaderProps = HTMLAttributes<HTMLElement>;
 
@@ -59,42 +64,47 @@ const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
 
   const heading = usePathTitle();
 
-  const { isMobile } = useBreakpoints();
+  const { isMobile, isTablet } = useBreakpoints();
+
+  const isLessThanLaptop = isMobile || isTablet;
 
   const [isNavVisible, toggleIsNavVisible] = useToggle(false);
 
   return (
     <>
-      <StyledSubHeader {...rest}>
+      <StyledSubHeader {...rest} onClick={() => toggleIsNavVisible()} tabIndex={-1}>
         <Text as="h2" srOnly>
           {heading}
         </Text>
-        <div className="title">
+        <Title>
           {list.map(({ path, name }, index) => (
             <Fragment key={name}>
               {index > 0 && <Text size="md">{">"}</Text>}
               <Link to={path}>
-                <Text className="title__name" size="md" weight="medium">
+                <TitleName size="md" weight="medium">
                   {name}
-                </Text>
+                </TitleName>
               </Link>
             </Fragment>
           ))}
-        </div>
+        </Title>
 
-        {!isMobile && (
+        {isLessThanLaptop ? (
+          <StyledButton type="button">{isNavVisible ? "▲" : "▼"}</StyledButton>
+        ) : (
           <Text size="md" weight="medium">
             {labName}
           </Text>
         )}
-        {isMobile && (
-          <button type="button" onClick={() => toggleIsNavVisible()}>
-            {isNavVisible ? "▲" : "▼"}
-          </button>
-        )}
       </StyledSubHeader>
-      {isMobile && isNavVisible && memberType === "MANAGER" && <ManagerNavigation />}
-      {isMobile && isNavVisible && memberType === "USER" && <UserNavigation />}
+
+      {isLessThanLaptop &&
+        isNavVisible &&
+        (memberType === "MANAGER" ? (
+          <StyledManagerNavigation />
+        ) : memberType === "USER" ? (
+          <StyledUserNavigation />
+        ) : null)}
     </>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { useState, ChangeEventHandler, FormHTMLAttributes } from "react";
+import { useState, ChangeEventHandler, FormHTMLAttributes, FocusEventHandler } from "react";
 import {
   dockerHubImageValidator,
   expectedTimeValidator,
@@ -15,7 +15,7 @@ import {
 import { updateValue } from "../../../hooks/useForm/useForm";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { getFormProps, getInputProps, useForm, useBoolean } from "../../../hooks";
-import { Button, Dimmer, Input, Loading, Text, useToast } from "../../../components";
+import { Dimmer, Input, Loading, Text, useToast } from "../../../components";
 import InfoIcon from "../../../components/Toast/ToastTypeIcon/info.svg";
 import {
   DockerHubImageSection,
@@ -23,6 +23,7 @@ import {
   StyledForm,
   ToolTipBox,
   ToolTipContainer,
+  StyledButton,
 } from "./JobRegisterForm.styled";
 import JobRegisterRadioGroup from "../JobRegisterRadioGroup/JobRegisterRadioGroup";
 import type { Values } from "./JobRegisterForm.type";
@@ -135,6 +136,11 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
     );
   };
 
+  const handleDockerHubImageBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+    closeToolTip();
+    dockerHubImageInputProps.onBlur(event);
+  };
+
   return (
     <>
       {isLoading && (
@@ -150,17 +156,18 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
         <DockerHubImageSection>
           <Input
             size="sm"
+            autoComplete="off"
+            {...dockerHubImageInputProps}
             list="example-dockerhub-image"
             placeholder="계정명/저장소명:버전"
-            {...dockerHubImageInputProps}
             onChange={handleDockerHubImageChange}
             onFocus={openToolTip}
-            onBlur={closeToolTip}
+            onBlur={handleDockerHubImageBlur}
           />
           <datalist id="example-dockerhub-image">
-            <option value="aprn7950/mnist_epoch_30_auto" />
-            <option value="aprn7950/mnist_epoch_50_auto" />
-            <option value="aprn7950/mnist_epoch_100_auto" />
+            <option value="aprn7950/mnist_epoch_30_auto">빠른 학습</option>
+            <option value="aprn7950/mnist_epoch_50_auto">중간 학습</option>
+            <option value="aprn7950/mnist_epoch_100_auto">느린 학습</option>
           </datalist>
           <ToolTipContainer onMouseLeave={closeToolTip}>
             <SampleImageButton
@@ -189,9 +196,9 @@ const JobRegisterForm = ({ labId, ...rest }: JobRegisterFormProps) => {
           label="GPU 서버 선택"
           minPerformance={Number(minPerformanceInputProps.value)}
         />
-        <Button className="submit" color="secondary" disabled={isLoading}>
+        <StyledButton color="secondary" disabled={isLoading}>
           제출
-        </Button>
+        </StyledButton>
       </StyledForm>
     </>
   );

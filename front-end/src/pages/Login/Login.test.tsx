@@ -2,6 +2,7 @@ import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import Login from "./Login";
 import { emailValidator, passwordValidator } from "../../features/member/validator/validator";
 import { PublicRoute } from "../../routes";
+import "../../__mocks__/matchMedia";
 
 describe("pages/Login", () => {
   const setup = () => {

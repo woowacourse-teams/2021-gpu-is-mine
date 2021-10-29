@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import { up } from "styled-breakpoints";
+import { Text } from "../../../components";
 import GpuServerDetailSummary from "../GpuServerDetailSummary/GpuServerDetailSummary";
 import GpuServerDetailCurrentJob from "../GpuServerDetailCurrentJob/GpuServerDetailCurrentJob";
 import GpuServerDetailJobTable from "../GpuServerDetailJobTable/GpuServerDetailJobTable";
-import { Text } from "../../../components";
 import { cardStyle } from "../../../styles";
 
 export const StyledGpuServerDetail = styled.section`
@@ -10,13 +11,23 @@ export const StyledGpuServerDetail = styled.section`
 
   display: grid;
   grid-template-areas:
-    "summary         current-job"
-    "waiting-job     waiting-job";
+    "summary"
+    "current-job";
 
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: max-content;
+  grid-template-columns: 1fr;
   column-gap: 1rem;
   row-gap: 2rem;
+
+  ${up("tablet")} {
+    grid-template-areas: "summary current-job";
+    grid-template-columns: 1fr 1fr;
+  }
+
+  ${up("laptop")} {
+    grid-template-areas:
+      "summary         current-job"
+      "waiting-job     waiting-job";
+  }
 `;
 
 export const StyledGpuServerDetailSummary = styled(GpuServerDetailSummary)`
@@ -40,5 +51,10 @@ export const StyledNoContent = styled(Text)`
 `;
 
 export const StyledGpuServerDetailJobTable = styled(GpuServerDetailJobTable)`
+  display: none;
   grid-area: waiting-job;
+
+  ${up("laptop")} {
+    display: inherit;
+  }
 `;
