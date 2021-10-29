@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react";
-import { Logo, Text } from "../../components";
-import { StyledHeader } from "./Header.styled";
+import { Logo } from "../../components";
+import { StyledHeader, StyledLabName } from "./Header.styled";
 
 interface HeaderProps extends HTMLAttributes<HTMLElement> {
   labName: string;
@@ -10,9 +10,9 @@ interface HeaderProps extends HTMLAttributes<HTMLElement> {
 const Header = ({ labName, children, ...rest }: HeaderProps) => (
   <StyledHeader {...rest}>
     <Logo />
-    <Text className="lab-name" size="md" weight="medium">
+    <StyledLabName size="md" weight="medium">
       {labName}
-    </Text>
+    </StyledLabName>
   </StyledHeader>
 );
 

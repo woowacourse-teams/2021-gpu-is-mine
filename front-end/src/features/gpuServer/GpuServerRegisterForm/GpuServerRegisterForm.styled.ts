@@ -11,6 +11,7 @@ export const StyledForm = styled.form`
 
 export const StyledButton = styled(Button)`
   width: 15%;
+  min-width: 5rem;
   align-self: flex-end;
   margin-top: 0.75rem;
   height: 2.5rem;
