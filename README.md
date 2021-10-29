@@ -45,8 +45,6 @@
 
 ## 업데이트 로그
 
-- v1.1.0
-- v1.0.0
 - [업데이트 로그](https://github.com/woowacourse-teams/2021-gpu-is-mine/releases)
 
 ---
