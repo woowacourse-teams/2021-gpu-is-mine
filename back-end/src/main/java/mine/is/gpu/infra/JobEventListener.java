@@ -2,7 +2,6 @@ package mine.is.gpu.infra;
 
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.job.domain.Job;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -15,7 +14,6 @@ public class JobEventListener {
         this.mailService = mailService;
     }
 
-    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, classes = JobEvent.class)
     public void handle(JobEvent event) {
         Job job = event.getJob();
