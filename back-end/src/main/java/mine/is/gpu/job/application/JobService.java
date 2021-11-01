@@ -15,7 +15,7 @@ import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
-import mine.is.gpu.infra.MailDto;
+import mine.is.gpu.infra.JobEvent;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.WaitingJobs;
@@ -29,6 +29,8 @@ import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.dto.response.LogsResponse;
 import mine.is.gpu.job.dto.response.ParsedLogResponses;
 import mine.is.gpu.job.exception.JobException;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
-public class JobService {
+public class JobService implements ApplicationEventPublisherAware {
 
     private final JobRepository jobRepository;
     private final GpuServerRepository gpuServerRepository;
@@ -44,6 +46,7 @@ public class JobService {
     private final MemberRepository memberRepository;
     private final LogRepository logRepository;
     private final ParsedLogRepository parsedLogRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     public JobService(JobRepository jobRepository,
                       GpuServerRepository gpuServerRepository,
@@ -58,12 +61,18 @@ public class JobService {
         this.parsedLogRepository = parsedLogRepository;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
+
     @Transactional
     public Long save(Long memberId, JobRequest jobRequest) {
         Long serverId = jobRequest.getGpuServerId();
         Job job = jobRequest.toEntity(findBoardByServerId(serverId), findMemberById(memberId));
         job.calculateExpectation(findLastInGpuBoard(job.getGpuBoard()));
         jobRepository.save(job);
+        eventPublisher.publishEvent(new JobEvent(this, job));
         return job.getId();
     }
 
@@ -76,6 +85,7 @@ public class JobService {
         Job job = findJobById(jobId);
         job.cancel();
         updateJobExpectations(job.getGpuBoard());
+        eventPublisher.publishEvent(new JobEvent(this, job));
     }
 
     private void updateJobExpectations(GpuBoard gpuBoard) {
@@ -197,12 +207,6 @@ public class JobService {
         gpuServerRepository
                 .findByIdAndLabId(serverId, labId)
                 .orElseThrow(GpuServerException.UNMATCHED_SERVER_WITH_LAB::getException);
-    }
-
-    public MailDto mailDtoOfJob(Long jobId) {
-        Job job = findJobById(jobId);
-        Member member = job.getMember();
-        return new MailDto(member.getEmail(), job.getName(), jobId);
     }
 
     public LogsResponse findLogAllById(Long jobId) {

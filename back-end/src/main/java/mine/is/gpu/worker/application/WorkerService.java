@@ -6,6 +6,7 @@ import mine.is.gpu.gpuserver.domain.repository.GpuBoardRepository;
 import mine.is.gpu.gpuserver.domain.repository.GpuServerRepository;
 import mine.is.gpu.gpuserver.exception.GpuBoardException;
 import mine.is.gpu.gpuserver.exception.GpuServerException;
+import mine.is.gpu.infra.JobEvent;
 import mine.is.gpu.job.domain.Job;
 import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.domain.WaitingJobs;
@@ -14,14 +15,17 @@ import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.job.exception.JobException;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class WorkerService {
+public class WorkerService implements ApplicationEventPublisherAware {
     private final JobRepository jobRepository;
     private final GpuServerRepository serverRepository;
     private final GpuBoardRepository gpuBoardRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     public WorkerService(JobRepository jobRepository,
                          GpuServerRepository serverRepository,
@@ -29,6 +33,11 @@ public class WorkerService {
         this.jobRepository = jobRepository;
         this.serverRepository = serverRepository;
         this.gpuBoardRepository = gpuBoardRepository;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @Transactional(readOnly = true)
@@ -61,18 +70,21 @@ public class WorkerService {
         job.start();
         WaitingJobs jobs = waitingJobsInGpuBoard(job.getGpuBoard());
         jobs.syncExpectation(job.getExpectedCompletedTime());
+        eventPublisher.publishEvent(new JobEvent(this, job));
     }
 
     @Transactional
     public void complete(Long jobId) {
         Job job = findJobById(jobId);
         job.complete();
+        eventPublisher.publishEvent(new JobEvent(this, job));
     }
 
     @Transactional
     public void fail(Long jobId) {
         Job job = findJobById(jobId);
         job.fail();
+        eventPublisher.publishEvent(new JobEvent(this, job));
     }
 
     @Transactional
