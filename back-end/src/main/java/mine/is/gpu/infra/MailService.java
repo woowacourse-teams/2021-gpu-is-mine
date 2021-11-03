@@ -38,17 +38,17 @@ public class MailService {
     }
 
     @Async("mailExecutor")
-    public void sendJobMail(JobStatus status, MailDto mailDto) {
+    public void sendJobMail(String email, JobStatus status, SendableJobData sendableJobData) {
         MailComponent mailComponent = mailContentMapper.get(status);
 
         Context context = new Context();
         String subject = mailComponent.getSubject();
         context.setVariable("title", subject);
-        context.setVariable("jobName", mailDto.getJobName());
+        context.setVariable("jobName", sendableJobData.getJobName());
         context.setVariable("content", mailComponent.getContent());
-        context.setVariable("url", "https://www.gpuismine.com/job/view/" + mailDto.getJobId());
+        context.setVariable("url", "https://www.gpuismine.com/job/view/" + sendableJobData.getJobId());
         String body = templateEngine.process("basic-template.html", context);
-        sendMail(mailDto.getEmail(), subject, body);
+        sendMail(email, subject, body);
     }
 
     private void sendMail(String to, String subject, String body) {
@@ -61,5 +61,23 @@ public class MailService {
                     helper.setText(body, true);
                 };
         mailSender.send(messagePreparator);
+    }
+
+    private static class MailComponent {
+        private final String subject;
+        private final String content;
+
+        public MailComponent(String subject, String content) {
+            this.subject = subject;
+            this.content = content;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public String getContent() {
+            return content;
+        }
     }
 }

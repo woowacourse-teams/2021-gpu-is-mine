@@ -2,6 +2,7 @@ package mine.is.gpu.job.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import mine.is.gpu.job.dto.response.JobResponses;
 import mine.is.gpu.job.fixture.JobFixtures;
 import mine.is.gpu.lab.domain.Lab;
 import mine.is.gpu.lab.domain.repository.LabRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,12 +35,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 public class JobControllerTest {
+    private final Lab lab = new Lab("lab");
+    private final GpuServer serverInLab = new GpuServer("serverInLab", false, 600L, 1024L, lab);
+    private final GpuBoard boardInLab = new GpuBoard(true, 800L, "aaa", serverInLab);
+    private final Member userInLab = new Member("user@email.com", "password", "name", MemberType.USER, lab);
+    private final Member managerInLab = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);
     @Autowired
     private JobController jobController;
     @Autowired
@@ -51,15 +56,8 @@ public class JobControllerTest {
     private LabRepository labRepository;
     @Autowired
     private MemberRepository memberRepository;
-
     @MockBean
     private MailService mailService;
-
-    private Lab lab = new Lab("lab");
-    private GpuServer serverInLab = new GpuServer("serverInLab", false, 600L, 1024L, lab);
-    private GpuBoard boardInLab = new GpuBoard(true, 800L, "aaa", serverInLab);
-    private Member userInLab = new Member("user@email.com", "password", "name", MemberType.USER, lab);
-    private Member managerInLab = new Member("manager@email.com", "password", "name", MemberType.MANAGER, lab);
 
     @BeforeEach
     private void setUp() {
@@ -70,8 +68,17 @@ public class JobControllerTest {
         memberRepository.save(userInLab);
         memberRepository.save(managerInLab);
 
-        Mockito.doNothing().when(mailService).sendJobMail(Mockito.any(), Mockito.any());
-        Mockito.doNothing().when(mailService).sendJobMail(Mockito.any(), Mockito.any());
+        Mockito.doNothing().when(mailService).sendJobMail(any(), any(), any());
+        Mockito.doNothing().when(mailService).sendJobMail(any(), any(), any());
+    }
+
+    @AfterEach
+    void tearDown() {
+        jobRepository.deleteAllInBatch();
+        gpuBoardRepository.deleteAllInBatch();
+        gpuServerRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
+        labRepository.deleteAllInBatch();
     }
 
     @Nested
@@ -89,7 +96,7 @@ public class JobControllerTest {
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
 
-            Mockito.verify(mailService).sendJobMail(Mockito.any(), Mockito.any());
+            Mockito.verify(mailService).sendJobMail(any(), any(), any());
         }
 
         @DisplayName("관리자는 같은 랩의 다른 사용자가 작성한 Job을 예약 취소할 수 있다.")
@@ -103,7 +110,7 @@ public class JobControllerTest {
             int afterSize = numberOfWaitingJobs();
             assertThat(beforeSize - 1).isEqualTo(afterSize);
 
-            Mockito.verify(mailService).sendJobMail(Mockito.any(), Mockito.any());
+            Mockito.verify(mailService).sendJobMail(any(), any(), any());
         }
 
         @DisplayName("일반 사용자는 같은 랩의 다른 사용자의 Job 예약을 취소할 수 없다.")
@@ -111,6 +118,7 @@ public class JobControllerTest {
         void userCancelJobWithoutPermission() {
             Member otherInLab = new Member("OtherInLab@email.com", "password", "name", MemberType.USER, lab);
             Job jobFromOther = new Job("jobFromOther", boardInLab, otherInLab, "data", "10");
+            memberRepository.save(otherInLab);
             jobRepository.save(jobFromOther);
 
             assertThatThrownBy(() -> jobController.cancel(jobFromOther.getId(), userInLab))
