@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 import { useBreakpoints } from "../../../hooks";
 import { StyledText } from "./JobDetailLogConent.styled";
@@ -9,23 +9,31 @@ interface JobDetailLogContentProps {
   className?: string;
 }
 
-const JobDetailLogContent = ({ width, logs, ...rest }: JobDetailLogContentProps) => {
-  const logsRef = useRef(logs);
+const useMemoReplacedLogs = (logs: string[], maxOneLineLength: number) => {
+  const [replacedLogs, setReplacedLogs] = useState<string[]>([]);
+  const prevLogsLengthRef = useRef(0);
 
+  useEffect(() => {
+    if (prevLogsLengthRef.current === logs.length) return;
+
+    const oneLineRegExp = new RegExp(`([^\n\r]{1,${maxOneLineLength}})[\n\r]+`, "g");
+
+    const newLogs = logs.flatMap((line) => line.match(oneLineRegExp) ?? []);
+
+    prevLogsLengthRef.current = newLogs.length;
+    setReplacedLogs(newLogs);
+  }, [logs, maxOneLineLength]);
+
+  return replacedLogs;
+};
+
+const JobDetailLogContent = ({ width, logs, ...rest }: JobDetailLogContentProps) => {
   const { isLaptop } = useBreakpoints();
 
-  const maxOneLineLength = isLaptop ? Math.floor(width / 11) : Math.floor(width / 8.5);
+  const pxPerCharacter = isLaptop ? 11 : 8.5;
+  const maxOneLineLength = Math.floor(width / pxPerCharacter);
 
-  const replacedLogs = useMemo(
-    () =>
-      logsRef.current
-        .map((line) => line.replace(/(\n\r|\r)/g, "\n"))
-        .flatMap((line) => line.split("\n"))
-        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-        .flatMap((line) => line.match(new RegExp(`.{1,${maxOneLineLength}}`, "g")) ?? [])
-        .filter((line) => line !== ""),
-    [maxOneLineLength]
-  );
+  const replacedLogs = useMemoReplacedLogs(logs, maxOneLineLength);
 
   return (
     <List
