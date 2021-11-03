@@ -1,4 +1,5 @@
 import { render, screen, userEvent, waitFor } from "../../../__test__/test-utils";
+import { VALIDATION_MESSAGE } from "../validator/validator";
 import MemberSignupForm from "./MemberSignupForm";
 
 describe("Member/SignupForm", () => {
@@ -101,7 +102,52 @@ describe("Member/SignupForm", () => {
       expect(submitButton).toHaveTextContent("제출");
     });
 
-    test("valid한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, 회원가입이 성공했다는 Alert가 뜬다", async () => {
+    test("유효한 입력값을 모두 입력하지 않고 제출 버튼을 클릭하면 validationMessage가 표시되고 실제 제출되지 않는다", async () => {
+      const { emailInput, nameInput } = setup();
+
+      const validEmail = "test@dd.com";
+      const validName = "동동;";
+
+      userEvent.type(emailInput, validEmail);
+      userEvent.tab();
+      userEvent.type(nameInput, validName);
+      userEvent.tab();
+
+      expect(screen.getByText(VALIDATION_MESSAGE.PASSWORD.LENGTH)).toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
+    });
+
+    test("입력한 Input값이 모두 유효하지 않으면 validationMessage가 표시되고 실제 제출되지 않는다", async () => {
+      const { form, emailInput, passwordInput, passwordConfirmInput, nameInput, submitButton } =
+        setup();
+
+      const validEmail = "test@dd.com";
+      const validPassword = "123@cde!";
+      const invalidPasswordConfirm = "invalid";
+      const validName = "동동;";
+
+      userEvent.type(emailInput, validEmail);
+      userEvent.tab();
+      userEvent.type(passwordInput, validPassword);
+      userEvent.tab();
+      userEvent.type(passwordConfirmInput, invalidPasswordConfirm);
+      userEvent.tab();
+      userEvent.type(nameInput, validName);
+      userEvent.tab();
+      userEvent.click(submitButton);
+
+      expect(form).toHaveFormValues({
+        email: validEmail,
+        password: validPassword,
+        passwordConfirm: invalidPasswordConfirm,
+        name: validName,
+      });
+
+      expect(screen.getByText(VALIDATION_MESSAGE.PASSWORD_CONFIRM)).toBeInTheDocument();
+      await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
+    });
+
+    test("valid한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, 회원가입이 성공했다는 toast가 뜬다", async () => {
       const { form, emailInput, passwordInput, passwordConfirmInput, nameInput, submitButton } =
         setup();
 
