@@ -97,8 +97,11 @@ export const selectJobActionState = (state: RootState, thunk: JobThunk) => ({
   error: state.job[thunk.typePrefix].error,
 });
 
-export const selectJobByIds = (state: RootState, ids: number[]) =>
-  state.job.entities.filter(({ id }) => ids.includes(id));
+export const selectJobByIds = (state: RootState, ids: number[]) => {
+  const idSet = new Set(ids);
+
+  return state.job.entities.filter(({ id }) => idSet.has(id));
+};
 
 export const selectJobById = (state: RootState, targetId: number) =>
   state.job.entities.find(({ id }) => id === targetId);
