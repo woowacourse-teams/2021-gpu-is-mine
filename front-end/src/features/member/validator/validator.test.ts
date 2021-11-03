@@ -26,23 +26,28 @@ describe("validator", () => {
     expect(passwordValidator(`valid_password_\\3`)).toBe("");
   });
 
-  test("비밀번호는 알파벳을 1개 이상 포함하여야 한다", () => {
+  test("비밀번호는 알파벳(대소문자)을 1개 이상 포함하여야 한다", () => {
     expect(passwordValidator("1234567*0")).toBe(VALIDATION_MESSAGE.PASSWORD.ALPHABET_CHARACTER);
     expect(passwordValidator("!@#$%^&*()_+1")).toBe(VALIDATION_MESSAGE.PASSWORD.ALPHABET_CHARACTER);
 
     expect(passwordValidator("1234567*0a")).toBe("");
     expect(passwordValidator(`!@c#$%^&*()_+1`)).toBe("");
+    expect(passwordValidator(`DD4567890))`)).toBe("");
   });
 
-  test(`비밀번호는 특수문자(~!@#$%^&*()-_=+[{]}\\|;:'",<.>/?), 숫자, 영문자로만 구성된다 `, () => {
-    expect(passwordValidator("ㄱa1234567*0")).toBe(VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER);
-    expect(passwordValidator("1234567*0aアンドロイド")).toBe(
-      VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER
-    );
-    expect(passwordValidator(`!@c#$%^&*()_用+1`)).toBe(
-      VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER
-    );
-  });
+  test.each(["ㄱa1234567*0", "1234567*0aアンドロイド", `!@c#$%^&*()_用+1`])(
+    `비밀번호는 특수문자(~!@#$%^&*()-_=+[{]}\\|;:'",<.>/?), 숫자, 영문자로만 구성된다 `,
+    (password) => {
+      expect(passwordValidator(password)).toBe(VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER);
+    }
+  );
+
+  test.each(`(~!@#$%^&*()-_=+[{]}\\|;:'",<.>/?)`.split(""))(
+    `특수문자(~!@#$%^&*()-_=+[{]}\\|;:'",<.>/?)는 비밀번호로 허용된다`,
+    (ch) => {
+      expect(passwordValidator(ch.repeat(8) + "a1")).toBe("");
+    }
+  );
 
   test("비밀번호는 최소 8자 최대 32자로 이루어져 있다. ", () => {
     expect(passwordValidator("")).toBe(VALIDATION_MESSAGE.PASSWORD.LENGTH);

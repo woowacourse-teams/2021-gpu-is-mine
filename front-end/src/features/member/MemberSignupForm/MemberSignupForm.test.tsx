@@ -147,7 +147,24 @@ describe("Member/SignupForm", () => {
       await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
     });
 
-    test("valid한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, 회원가입이 성공했다는 toast가 뜬다", async () => {
+    test("아무것도 입력하지 않고 제출 버튼을 클릭하면, 모든 Input에 대한 validationMessage가 표시된다", async () => {
+      const { form, submitButton } = setup();
+
+      userEvent.click(submitButton);
+
+      expect(form).toHaveFormValues({
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        name: "",
+      });
+
+      expect(screen.getByText(VALIDATION_MESSAGE.EMAIL)).toBeInTheDocument();
+      expect(screen.getAllByText(VALIDATION_MESSAGE.PASSWORD.LENGTH)).toHaveLength(2);
+      expect(screen.getByText(VALIDATION_MESSAGE.NAME)).toBeInTheDocument();
+    });
+
+    test("valid한 입력값을 모두 입력한 후 제출 버튼을 클릭하면, 회원가입이 성공했다는 Alert가 뜬다", async () => {
       const { form, emailInput, passwordInput, passwordConfirmInput, nameInput, submitButton } =
         setup();
 

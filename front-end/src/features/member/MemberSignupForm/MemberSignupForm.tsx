@@ -90,7 +90,8 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
     dispatch,
     name: "passwordConfirm",
     label: "비밀번호 확인",
-    validator: (value) => passwordConfirmValidator(value, passwordInputProps.value),
+    validator: (value) =>
+      passwordConfirmValidator(value, passwordInputProps.value) || passwordValidator(value),
   });
 
   const nameProps = getInputProps({
