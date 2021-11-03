@@ -1,6 +1,5 @@
 import { HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
-import { SerializedError } from "@reduxjs/toolkit";
 import { useForm, getFormProps, getInputProps, useMoveToPage } from "../../../hooks";
 import { Input, Loading, Text, useToast } from "../../../components";
 import { StyledForm, SubmitButton } from "./MemberSignupForm.styled";
@@ -13,6 +12,7 @@ import {
 } from "../validator/validator";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectSignupStatus, signup } from "../signupSlice";
+import type { RequiredSerializedError } from "../../job/jobSlice";
 
 type MemberSignupFormProps = HTMLAttributes<HTMLFormElement>;
 
@@ -50,11 +50,11 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
 
       moveToLoginPage();
     } catch (err) {
-      const error = err as SerializedError;
+      const error = err as RequiredSerializedError;
 
       showToast({
         type: "error",
-        title: error.name!,
+        title: error.name,
         message: error.message,
       });
     }
@@ -66,8 +66,6 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
     passwordConfirm: "",
     name: "",
   });
-
-  const disabled = isLoading || !state.isFormValid;
 
   const formProps = getFormProps({ state, dispatch, handleSubmit });
 
@@ -92,7 +90,8 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
     dispatch,
     name: "passwordConfirm",
     label: "비밀번호 확인",
-    validator: (value) => passwordConfirmValidator(value, passwordInputProps.value),
+    validator: (value) =>
+      passwordConfirmValidator(value, passwordInputProps.value) || passwordValidator(value),
   });
 
   const nameProps = getInputProps({
@@ -111,7 +110,7 @@ const MemberSignupForm = ({ ...rest }: MemberSignupFormProps) => {
       <Input size="sm" {...passwordInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...passwordConfirmInputProps} type="password" autoComplete="new-password" />
       <Input size="sm" {...nameProps} autoComplete="name" />
-      <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={disabled}>
+      <SubmitButton type="submit" aria-label="submit" color="secondary" disabled={isLoading}>
         제출
       </SubmitButton>
       <Link to={PATH.MEMBER.LOGIN}>

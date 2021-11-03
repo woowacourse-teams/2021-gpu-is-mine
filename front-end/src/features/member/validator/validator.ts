@@ -38,12 +38,12 @@ export const passwordValidator = (value: string) => {
     return VALIDATION_MESSAGE.PASSWORD.ALPHABET_CHARACTER;
   }
 
-  if (
-    value
-      .replace(new RegExp(specialCharacterRegex, "g"), "")
-      .replace(new RegExp(numberRegex, "g"), "")
-      .replace(new RegExp(alphabetRegex, "g"), "") !== ""
-  ) {
+  const invalidValues = value
+    .replace(new RegExp(specialCharacterRegex, "g"), "")
+    .replace(new RegExp(numberRegex, "g"), "")
+    .replace(new RegExp(alphabetRegex, "gi"), "");
+
+  if (invalidValues !== "") {
     return VALIDATION_MESSAGE.PASSWORD.INVALID_CHARACTER;
   }
 
