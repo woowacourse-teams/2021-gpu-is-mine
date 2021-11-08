@@ -17,7 +17,7 @@ const GpuServerDetailJobTable = ({ jobIds, ...rest }: GpuServerDetailJobTablePro
       <Text as="h3" weight="bold" size="lg">
         Job 목록
       </Text>
-      {jobs.length ? (
+      {jobs.length > 0 ? (
         <JobTable jobs={jobs} rowCountPerPage={10} />
       ) : (
         <EmptyJobContainer>

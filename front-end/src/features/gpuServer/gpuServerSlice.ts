@@ -243,8 +243,13 @@ const gpuServerSlice = createSlice({
       .addCase(fetchAllGpuServer.fulfilled, (state, { payload }) => {
         state[fetchAllGpuServer.typePrefix].status = STATUS.SUCCEED;
 
+        const byIds = Object.fromEntries(
+          state.entities.map((gpuServer) => [gpuServer.id, gpuServer])
+        );
+
         state.entities = payload.map(
           ({ gpuBoard: { isWorking, id, ...board }, runningJobs, ...rest }) => ({
+            ...byIds[id],
             ...rest,
             ...board,
             runningJob: runningJobs[0],
