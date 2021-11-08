@@ -2,10 +2,10 @@ import { Location } from "history";
 import { Route } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import { render, screen, userEvent, waitFor } from "../../__test__/test-utils";
-import UserNavigation from "./UserNavigation";
 import { PATH } from "../../constants";
 import authReducer from "../../features/member/authSlice";
 import { PrivateRoute } from "../../routes";
+import UserNavigation from "./UserNavigation";
 import { succeedAuthState } from "../../__fixtures__";
 
 const store = configureStore({

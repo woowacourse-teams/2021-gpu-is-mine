@@ -1,7 +1,7 @@
 import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useBreakpoints, useMyInfo, usePathTitle, useToggle } from "../../hooks";
-import { Text } from "..";
+import Text from "../Text/Text";
 import {
   StyledSubHeader,
   StyledUserNavigation,
