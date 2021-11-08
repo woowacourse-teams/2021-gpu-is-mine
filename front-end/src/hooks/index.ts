@@ -1,5 +1,4 @@
 export * from "./useApi/useApi";
-export { default as useMyInfo } from "./useAuth/useMyInfo";
 export { default as useAuthorize } from "./useAuthorize/useAuthorize";
 export { default as useBoolean } from "./useBoolean/useBoolean";
 export { default as useBreakpoints } from "./useBreakpoints/useBreakpoints";

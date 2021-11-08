@@ -1,6 +1,8 @@
 import { Fragment, HTMLAttributes } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useBreakpoints, useMyInfo, usePathTitle, useToggle } from "../../hooks";
+import { selectMyInfo } from "../../features/member/authSlice";
+import { useBreakpoints, usePathTitle, useToggle } from "../../hooks";
+import { useAppSelector } from "../../app/hooks";
 import { Text } from "../../components";
 import {
   StyledSubHeader,
@@ -53,7 +55,7 @@ const useParsePathname = ({
 };
 
 const SubHeader = ({ children, ...rest }: SubHeaderProps) => {
-  const { labName, memberType } = useMyInfo();
+  const { labName, memberType } = useAppSelector(selectMyInfo);
   const { pathname } = useLocation();
   const { jobId, serverId } = useParams<{ jobId?: string; serverId?: string }>();
   const list = useParsePathname({
