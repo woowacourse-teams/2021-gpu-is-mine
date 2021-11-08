@@ -1,7 +1,6 @@
-import { Layout } from "../../components";
+import { Layout, Header, SubHeader } from "../../components";
 import { selectMyInfo } from "../../features/member/authSlice";
 import { useAppSelector } from "../../app/hooks";
-import { Header, SubHeader } from "../../domains/Common";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
 import { GpuServerInfoList } from "../../features/gpuServer";

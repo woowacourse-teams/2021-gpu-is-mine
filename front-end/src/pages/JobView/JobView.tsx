@@ -1,6 +1,5 @@
 import { useMyInfo } from "../../hooks";
-import { Layout } from "../../components";
-import { Header, SubHeader } from "../../domains/Common";
+import { Layout, Header, SubHeader } from "../../components";
 import { ManagerNavigation } from "../../domains/Manager";
 import { UserNavigation } from "../../domains/User";
 import { JobInfoList } from "../../features/job";
