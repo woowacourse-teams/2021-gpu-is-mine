@@ -4,10 +4,7 @@ import java.net.URI;
 import mine.is.gpu.account.application.MemberService;
 import mine.is.gpu.account.domain.Member;
 import mine.is.gpu.auth.domain.AuthenticationPrincipal;
-import mine.is.gpu.infra.MailDto;
-import mine.is.gpu.infra.MailService;
 import mine.is.gpu.job.application.JobService;
-import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.dto.request.JobRequest;
 import mine.is.gpu.job.dto.request.JobUpdateRequest;
 import mine.is.gpu.job.dto.response.JobResponse;
@@ -29,14 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/labs/{labId}")
 public class JobController {
-    private JobService jobService;
-    private MailService mailService;
-    private MemberService memberService;
+    private final JobService jobService;
+    private final MemberService memberService;
 
-    public JobController(JobService jobService, MailService mailService,
-                         MemberService memberService) {
+    public JobController(JobService jobService, MemberService memberService) {
         this.jobService = jobService;
-        this.mailService = mailService;
         this.memberService = memberService;
     }
 
@@ -46,7 +40,6 @@ public class JobController {
         memberService.checkMemberOfServer(member.getId(), jobRequest.getGpuServerId());
 
         Long jobId = jobService.save(member.getId(), jobRequest);
-        mailService.sendJobMail(JobStatus.WAITING, new MailDto(member.getEmail(), jobRequest.getName(), jobId));
         URI uri = URI.create("/api/labs/" + labId + "/jobs/" + jobId);
         return ResponseEntity.created(uri).build();
     }
@@ -89,9 +82,7 @@ public class JobController {
     public ResponseEntity<Void> cancel(@PathVariable Long jobId,
                                        @AuthenticationPrincipal Member member) {
         memberService.checkEditableJob(member.getId(), jobId);
-        JobResponse job = jobService.findById(jobId);
         jobService.cancel(jobId);
-        mailService.sendJobMail(JobStatus.CANCELED, new MailDto(member.getEmail(), job.getName(), jobId));
         return ResponseEntity.noContent().build();
     }
 

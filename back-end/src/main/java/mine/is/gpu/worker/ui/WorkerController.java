@@ -1,19 +1,12 @@
 package mine.is.gpu.worker.ui;
 
-import mine.is.gpu.infra.MailDto;
-import mine.is.gpu.infra.MailService;
-import mine.is.gpu.job.application.JobService;
-import mine.is.gpu.job.domain.JobStatus;
 import mine.is.gpu.job.dto.response.JobResponse;
 import mine.is.gpu.worker.application.WorkerService;
 import mine.is.gpu.worker.dto.WorkerJobRequest;
 import mine.is.gpu.worker.dto.WorkerRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,16 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/workers/")
 public class WorkerController {
     private final WorkerService workerService;
-    private final MailService mailService;
-    private final JobService jobService;
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
-
-    public WorkerController(WorkerService workerService, MailService mailService,
-                            JobService jobService) {
+    public WorkerController(WorkerService workerService) {
         this.workerService = workerService;
-        this.mailService = mailService;
-        this.jobService = jobService;
     }
 
     @GetMapping("gpus/{serverId}/job")
@@ -45,16 +31,6 @@ public class WorkerController {
     public ResponseEntity<Void> updateJobStatus(@PathVariable Long jobId,
                                                 @RequestBody WorkerJobRequest workerJobRequest) {
         workerService.updateJobStatus(jobId, workerJobRequest);
-        MailDto mailDto = jobService.mailDtoOfJob(jobId);
-        if (workerJobRequest.getJobStatus() == JobStatus.RUNNING) {
-            mailService.sendJobMail(JobStatus.RUNNING, mailDto);
-        }
-        if (workerJobRequest.getJobStatus() == JobStatus.COMPLETED) {
-            mailService.sendJobMail(JobStatus.COMPLETED, mailDto);
-        }
-        if (workerJobRequest.getJobStatus() == JobStatus.FAILED) {
-            mailService.sendJobMail(JobStatus.FAILED, mailDto);
-        }
         return ResponseEntity.ok().build();
     }
 
