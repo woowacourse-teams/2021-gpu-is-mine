@@ -1,7 +1,5 @@
 import { useMyInfo } from "../../hooks";
-import { Layout, Header, SubHeader } from "../../components";
-import { ManagerNavigation } from "../../domains/Manager";
-import { UserNavigation } from "../../domains/User";
+import { Layout, Header, SubHeader, ManagerNavigation, UserNavigation } from "../../components";
 import { StyledRegisterForm } from "./GpuServerRegister.styled";
 
 const GpuServerRegister = () => {

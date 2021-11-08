@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import { up } from "styled-breakpoints";
 import { Text } from "..";
-import ManagerNavigation from "../../domains/ManagerNavigation/ManagerNavigation";
-import UserNavigation from "../../domains/UserNavigation/UserNavigation";
+import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
+import UserNavigation from "../UserNavigation/UserNavigation";
 
 export const StyledSubHeader = styled.header`
   cursor: pointer;

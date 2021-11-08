@@ -1,8 +1,6 @@
-import { Layout, Header, SubHeader } from "../../components";
 import { selectMyInfo } from "../../features/member/authSlice";
 import { useAppSelector } from "../../app/hooks";
-import { ManagerNavigation } from "../../domains/Manager";
-import { UserNavigation } from "../../domains/User";
+import { Layout, Header, SubHeader, ManagerNavigation, UserNavigation } from "../../components";
 import { GpuServerInfoList } from "../../features/gpuServer";
 
 const GpuServerView = () => {
