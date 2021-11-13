@@ -1,11 +1,11 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { Location } from "history";
 import { Route } from "react-router-dom";
-import { configureStore } from "@reduxjs/toolkit";
-import { render, screen, userEvent, waitFor } from "../../__test__/test-utils";
-import UserNavigation from "./UserNavigation";
+import { render, screen, waitFor, userEvent } from "../../__test__/test-utils";
 import { PATH } from "../../constants";
-import authReducer from "../../features/member/authSlice";
 import { PrivateRoute } from "../../routes";
+import authReducer from "../../features/member/authSlice";
+import ManagerNavigation from "./ManagerNavigation";
 import { succeedAuthState } from "../../__fixtures__";
 
 const store = configureStore({
@@ -13,13 +13,13 @@ const store = configureStore({
   preloadedState: { auth: succeedAuthState },
 });
 
-describe("UserNavigation", () => {
+describe("ManagerNavigation", () => {
   const renderWithRouter = () => {
     let testLocation = {} as Location;
 
     render(
       <>
-        <UserNavigation />
+        <ManagerNavigation />
         <Route
           path="*"
           render={({ location }: { location: Location }) => {
@@ -28,6 +28,7 @@ describe("UserNavigation", () => {
             return null;
           }}
         />
+        ,
       </>,
       { initialEntries: ["/"] }
     );
@@ -41,6 +42,14 @@ describe("UserNavigation", () => {
     userEvent.click(screen.getByRole("link", { name: "gpu-server-view" }));
 
     expect(getLocation().pathname).toBe(PATH.GPU_SERVER.VIEW);
+  });
+
+  test("Gpu 서버 관리 등록 Route 테스트", () => {
+    const getLocation = renderWithRouter();
+
+    userEvent.click(screen.getByRole("link", { name: "gpu-server-register" }));
+
+    expect(getLocation().pathname).toBe(PATH.GPU_SERVER.REGISTER);
   });
 
   test("Job 관리 조회  Route 테스트", () => {
@@ -62,7 +71,7 @@ describe("UserNavigation", () => {
   test("로그아웃 버튼을 클릭하면 로그아웃된다", async () => {
     render(
       <PrivateRoute exact path="/">
-        <UserNavigation />
+        <ManagerNavigation />
       </PrivateRoute>,
       { store, initialEntries: ["/"] }
     );

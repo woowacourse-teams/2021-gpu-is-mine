@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Text } from "../../components";
+import Text from "../Text/Text";
 
 export const StyledUserNavigation = styled.nav`
   display: flex;

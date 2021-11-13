@@ -1,6 +1,6 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import { Text } from "../../components";
+import Text from "../Text/Text";
 import {
   StyledUserNavigation,
   Menu,
