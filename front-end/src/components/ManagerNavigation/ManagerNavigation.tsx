@@ -1,10 +1,10 @@
 import { HTMLAttributes } from "react";
 import { NavLink } from "react-router-dom";
-import { Text } from "../../components";
-import { StyledManagerNavigation } from "./ManagerNavigation.styled";
 import { PATH } from "../../constants";
-import { useAppDispatch } from "../../app/hooks";
 import { logout } from "../../features/member/authSlice";
+import { useAppDispatch } from "../../app/hooks";
+import Text from "../Text/Text";
+import { StyledManagerNavigation } from "./ManagerNavigation.styled";
 
 type NavigationProps = HTMLAttributes<HTMLElement>;
 

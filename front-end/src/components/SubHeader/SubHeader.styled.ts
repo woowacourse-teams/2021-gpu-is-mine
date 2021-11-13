@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import { up } from "styled-breakpoints";
-import { Text } from "../../components";
+import Text from "../Text/Text";
 import ManagerNavigation from "../ManagerNavigation/ManagerNavigation";
 import UserNavigation from "../UserNavigation/UserNavigation";
 

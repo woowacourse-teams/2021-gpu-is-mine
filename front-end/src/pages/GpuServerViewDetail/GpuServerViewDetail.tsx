@@ -1,8 +1,5 @@
 import { useMyInfo, useServerId } from "../../hooks";
-import { Layout } from "../../components";
-import { Header, SubHeader } from "../../domains/Common";
-import { ManagerNavigation } from "../../domains/Manager";
-import { UserNavigation } from "../../domains/User";
+import { Layout, Header, SubHeader, ManagerNavigation, UserNavigation } from "../../components";
 import { GpuServerDetail } from "../../features/gpuServer";
 
 const GpuServerViewDetail = () => {
