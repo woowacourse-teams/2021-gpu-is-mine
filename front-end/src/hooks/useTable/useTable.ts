@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { Order } from "../../types";
+import type { Order } from "../../types";
 
 const useTable = () => {
   const [order, setOrder] = useState<Order>("asc");
   const [selectedField, setSelectedField] = useState("");
 
-  const isASC = order === "asc";
-
   const onFieldClick = (field: string, isSortable: boolean) => {
     if (!isSortable) return;
 
     setSelectedField(field);
-    setOrder(isASC ? "desc" : "asc");
+    setOrder((prev) => (prev === "desc" ? "asc" : "desc"));
   };
 
   return {

@@ -1,9 +1,10 @@
-import { useMyInfo } from "../../hooks";
+import { selectMyInfo } from "../../features/member/authSlice";
+import { useAppSelector } from "../../app/hooks";
 import { Layout, Header, SubHeader, ManagerNavigation, UserNavigation } from "../../components";
 import { StyledRegisterForm } from "./GpuServerRegister.styled";
 
 const GpuServerRegister = () => {
-  const { memberType, labName } = useMyInfo();
+  const { memberType, labName } = useAppSelector(selectMyInfo);
 
   return (
     <Layout

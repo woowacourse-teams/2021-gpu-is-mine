@@ -1,9 +1,10 @@
-import { useMyInfo } from "../../hooks";
+import { selectMyInfo } from "../../features/member/authSlice";
+import { useAppSelector } from "../../app/hooks";
 import { Layout, Header, SubHeader, ManagerNavigation, UserNavigation } from "../../components";
 import { JobInfoList } from "../../features/job";
 
 const JobView = () => {
-  const { labName, memberType } = useMyInfo();
+  const { labName, memberType } = useAppSelector(selectMyInfo);
 
   return (
     <Layout
