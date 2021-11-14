@@ -6,6 +6,7 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
 const styledComponentsTransformer = createStyledComponentsTransformer();
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = (env) => {
   const isDevelopment = !env.production;
@@ -33,6 +34,7 @@ module.exports = (env) => {
             getCustomTransformers: () => ({
               before: [styledComponentsTransformer],
             }),
+            transpileOnly: true,
           },
           exclude: [/__fixtures__/, /__mocks__/, /__test__/, /stories.tsx?/],
         },
@@ -55,6 +57,7 @@ module.exports = (env) => {
       new dotenvWebpack(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin(),
     ].filter(Boolean),
     resolve: {
       extensions: [".tsx", ".ts", ".js", "jsx"],
