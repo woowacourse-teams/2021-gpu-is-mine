@@ -4802,7 +4802,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-redux@npm:^7.1.16, @types/react-redux@npm:^7.1.18":
+"@types/react-redux@npm:^7.1.16":
   version: 7.1.18
   resolution: "@types/react-redux@npm:7.1.18"
   dependencies:
@@ -4811,6 +4811,18 @@ __metadata:
     hoist-non-react-statics: ^3.3.0
     redux: ^4.0.0
   checksum: 8aa24c15df711e2a20f903843f42491316094c3a49a90dcae86dcafa8fdb2318fdfaa983e23d67840986f11131b9b8856a5d6971288d68fa8aa592adc348a942
+  languageName: node
+  linkType: hard
+
+"@types/react-redux@npm:^7.1.20":
+  version: 7.1.20
+  resolution: "@types/react-redux@npm:7.1.20"
+  dependencies:
+    "@types/hoist-non-react-statics": ^3.3.0
+    "@types/react": "*"
+    hoist-non-react-statics: ^3.3.0
+    redux: ^4.0.0
+  checksum: 5e0405d0d312f1b5e2dd48ab5833d3226295931fe8d276bd0891fafe4dd7ba9efbc74b1e8b30685ba96e9dc1a63d57444ae335785ce6fda96900d5fc9f800dcf
   languageName: node
   linkType: hard
 
@@ -7442,7 +7454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.5, classnames@npm:^2.3.1":
+"classnames@npm:^2.2.5":
   version: 2.3.1
   resolution: "classnames@npm:2.3.1"
   checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
@@ -11032,7 +11044,7 @@ fsevents@^1.2.7:
     "@types/node": ^16.4.13
     "@types/react": ^17.0.13
     "@types/react-dom": ^17.0.8
-    "@types/react-redux": ^7.1.18
+    "@types/react-redux": ^7.1.20
     "@types/react-router-dom": ^5.1.8
     "@types/react-window": ^1.8.5
     "@types/redux-logger": ^3.0.9
@@ -11043,7 +11055,6 @@ fsevents@^1.2.7:
     axios: ^0.21.1
     chart.js: ^3.5.0
     chartjs-plugin-zoom: ^1.1.1
-    classnames: ^2.3.1
     cypress: ^8.3.1
     debug: ^4.3.2
     dotenv: ^10.0.0
