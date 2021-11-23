@@ -84,6 +84,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-testing-library", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.0.0"],
             ["favicons", "npm:6.2.2"],
             ["favicons-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.0.2"],
+            ["fork-ts-checker-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.4.0"],
             ["history", "npm:5.0.1"],
             ["html-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.3.2"],
             ["husky", "npm:7.0.2"],
@@ -15996,6 +15997,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:6.4.0", {
+          "packageLocation": "./.yarn/cache/fork-ts-checker-webpack-plugin-npm-6.4.0-ab2140673b-feba541453.zip/node_modules/fork-ts-checker-webpack-plugin/",
+          "packageDependencies": [
+            ["fork-ts-checker-webpack-plugin", "npm:6.4.0"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:01e2e6f82e4eeb112434f8140fdfb91d29afcd7ceff8a9c3bd500405b53c9c81d4044d74afb6d44b55975311cbf1362bdd9dd61788b3c48eae3846eaff60a55c#npm:4.1.6", {
           "packageLocation": "./.yarn/__virtual__/fork-ts-checker-webpack-plugin-virtual-1988e28182/0/cache/fork-ts-checker-webpack-plugin-npm-4.1.6-eab9dd8e44-4cc4fa7919.zip/node_modules/fork-ts-checker-webpack-plugin/",
           "packageDependencies": [
@@ -16155,6 +16163,44 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", null],
             ["vue-template-compiler", null],
             ["webpack", "virtual:01e2e6f82e4eeb112434f8140fdfb91d29afcd7ceff8a9c3bd500405b53c9c81d4044d74afb6d44b55975311cbf1362bdd9dd61788b3c48eae3846eaff60a55c#npm:4.46.0"]
+          ],
+          "packagePeers": [
+            "@types/eslint",
+            "@types/typescript",
+            "@types/vue-template-compiler",
+            "@types/webpack",
+            "eslint",
+            "typescript",
+            "vue-template-compiler",
+            "webpack"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.4.0", {
+          "packageLocation": "./.yarn/__virtual__/fork-ts-checker-webpack-plugin-virtual-f3a33184bb/0/cache/fork-ts-checker-webpack-plugin-npm-6.4.0-ab2140673b-feba541453.zip/node_modules/fork-ts-checker-webpack-plugin/",
+          "packageDependencies": [
+            ["fork-ts-checker-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.4.0"],
+            ["@babel/code-frame", "npm:7.14.5"],
+            ["@types/eslint", null],
+            ["@types/json-schema", "npm:7.0.7"],
+            ["@types/typescript", null],
+            ["@types/vue-template-compiler", null],
+            ["@types/webpack", null],
+            ["chalk", "npm:4.1.1"],
+            ["chokidar", "npm:3.5.2"],
+            ["cosmiconfig", "npm:6.0.0"],
+            ["deepmerge", "npm:4.2.2"],
+            ["eslint", "npm:7.30.0"],
+            ["fs-extra", "npm:9.1.0"],
+            ["glob", "npm:7.1.7"],
+            ["memfs", "npm:3.2.2"],
+            ["minimatch", "npm:3.0.4"],
+            ["schema-utils", "npm:2.7.0"],
+            ["semver", "npm:7.3.5"],
+            ["tapable", "npm:1.1.3"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
+            ["vue-template-compiler", null],
+            ["webpack", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.42.0"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -16809,6 +16855,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-testing-library", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.0.0"],
             ["favicons", "npm:6.2.2"],
             ["favicons-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.0.2"],
+            ["fork-ts-checker-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:6.4.0"],
             ["history", "npm:5.0.1"],
             ["html-webpack-plugin", "virtual:e4837ad80ea865654442f4ae7802500e03888811f630592b221e7fff9c3e1faa7dcc861fb157dc5bf3bf362aa12cda3c0f7783ee1cd0fb48df904d4f54ae7ca4#npm:5.3.2"],
             ["husky", "npm:7.0.2"],
